@@ -1,0 +1,9 @@
+kafka:
+  bootstrap_servers: localhost:9092
+  group_id: gold-price-api
+  auto_offset_reset: earliest
+  topic: gold-price-stream
+
+app:
+  host: localhost
+  port: 8000

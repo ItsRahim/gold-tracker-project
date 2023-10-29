@@ -1,0 +1,17 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: rgts-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: gold
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./base/DDL:/docker-entrypoint-initdb.d
+      - ./base/DATA:/docker-entrypoint-initdb.d
+      - ./migrations/DDL:/docker-entrypoint-initdb.d/DATA
+      - ./migrations/DATA:/docker-entrypoint-initdb.d/DDL
+    entrypoint: [ "/usr/local/bin/docker-entrypoint.sh", "postgres" ]
