@@ -1,0 +1,4 @@
+1) Implement endpoint to update user profile
+2) Implement functions to login and update tables
+3) Create unit tests
+4) Create integration tests
