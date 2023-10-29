@@ -10,8 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./base/DDL:/docker-entrypoint-initdb.d
-      - ./base/DATA:/docker-entrypoint-initdb.d
+      - ./base:/docker-entrypoint-initdb.d
       - ./migrations/DDL:/docker-entrypoint-initdb.d/DATA
       - ./migrations/DATA:/docker-entrypoint-initdb.d/DDL
     entrypoint: [ "/usr/local/bin/docker-entrypoint.sh", "postgres" ]
