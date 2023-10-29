@@ -8,10 +8,6 @@
     <artifactId>gold-project</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <modules>
-        <module>config-server</module>
-        <module>database</module>
-    </modules>
 
     <properties>
         <java.version>17</java.version>
@@ -36,6 +32,7 @@
         <spring-context-support.version>6.0.12</spring-context-support.version>
         <HikariCP.version>5.0.1</HikariCP.version>
         <lombok.version>1.18.30</lombok.version>
+        <log4j2.version>2.17.1</log4j2.version>
         <hibernate-core.version>6.3.1.Final</hibernate-core.version>
         <flyway-core.version>9.22.2</flyway-core.version>
         <logback-classic.version>1.4.11</logback-classic.version>
@@ -57,12 +54,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
             <version>${spring-boot.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -93,6 +84,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring-web.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            <version>${spring-cloud-starter-netflix-eureka-client.version}</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -152,10 +148,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback-classic.version}</version>
-            <scope>test</scope>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
         </dependency>
         <dependency>
             <groupId>io.zipkin.java</groupId>
@@ -244,5 +239,8 @@
             </plugin>
         </plugins>
     </build>
-
+    <modules>
+        <module>config-server</module>
+        <module>user-service</module>
+    </modules>
 </project>
