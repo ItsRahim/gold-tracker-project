@@ -9,5 +9,5 @@ public interface IUserProfileService {
     void save(UserProfile userProfile);
     Optional<UserProfile> findById(int id);
     List<UserProfile> findAllUserProfiles();
-    void update(UserProfile userProfile);
+    void updateExistingUserProfile(UserProfile userProfile);
 }
