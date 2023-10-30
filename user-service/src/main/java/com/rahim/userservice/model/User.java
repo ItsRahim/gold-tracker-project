@@ -47,4 +47,10 @@ public class User {
     @Column(name = "login_attempts")
     private Integer loginAttempts;
 
+    @Column(name = "deleted")
+    private Boolean deleted;
+
+    @Column(name = "delete_date")
+    private OffsetDateTime deleteDate;
+
 }

@@ -13,7 +13,7 @@ CREATE TABLE rgts.users (
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     login_attempts INT DEFAULT 0,
     deleted BOOLEAN DEFAULT false,
-    deleteDate TIMESTAMPTZ DEFAULT null
+    delete_date TIMESTAMPTZ DEFAULT null
 );
 
 CREATE OR REPLACE FUNCTION rgts.update_updated_at()
