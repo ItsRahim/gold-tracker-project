@@ -11,7 +11,9 @@ CREATE TABLE rgts.users (
     notification_setting INT DEFAULT 1,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
-    login_attempts INT DEFAULT 0
+    login_attempts INT DEFAULT 0,
+    deleted BOOLEAN DEFAULT false,
+    deleteDate TIMESTAMPTZ DEFAULT null
 );
 
 CREATE OR REPLACE FUNCTION rgts.update_updated_at()
