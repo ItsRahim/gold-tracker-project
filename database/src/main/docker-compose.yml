@@ -11,6 +11,6 @@ services:
       - "5432:5432"
     volumes:
       - ./base:/docker-entrypoint-initdb.d
-      - ./migrations/DDL:/docker-entrypoint-initdb.d/DATA
-      - ./migrations/DATA:/docker-entrypoint-initdb.d/DDL
+      - ./migrations:/docker-entrypoint-initdb.d
+      - ./data:/docker-entrypoint-initdb.d
     entrypoint: [ "/usr/local/bin/docker-entrypoint.sh", "postgres" ]
