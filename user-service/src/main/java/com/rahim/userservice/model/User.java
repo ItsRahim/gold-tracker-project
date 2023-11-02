@@ -1,5 +1,6 @@
 package com.rahim.userservice.model;
 
+import com.rahim.userservice.enums.AccountStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,20 +24,20 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(name = "account_non_expired")
-    private Boolean accountNonExpired;
+    @Column(name = "account_status", nullable = false)
+    private AccountStatus accountStatus;
 
-    @Column(name = "account_non_locked")
-    private Boolean accountNonLocked;
+    @Column(name = "account_locked")
+    private Boolean accountLocked;
 
-    @Column(name = "credentials_non_expired")
-    private Boolean credentialsNonExpired;
+    @Column(name = "credentials_expired")
+    private Boolean credentialsExpired;
 
     @Column(name = "last_login")
     private Instant lastLogin;
 
     @Column(name = "notification_setting")
-    private Integer notificationSetting;
+    private Boolean notificationSetting;
 
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
@@ -47,13 +48,7 @@ public class User {
     @Column(name = "login_attempts")
     private Integer loginAttempts;
 
-    @Column(name = "to_delete")
-    private Boolean toDelete;
-
     @Column(name = "delete_date")
     private OffsetDateTime deleteDate;
-
-    @Column(name = "account_status", nullable = false)
-    private String accountStatus;
 
 }
