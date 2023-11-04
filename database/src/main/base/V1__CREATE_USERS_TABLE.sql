@@ -7,10 +7,10 @@ CREATE TABLE rgts.users (
     account_status VARCHAR(255) NOT NULL DEFAULT 'ACTIVE',
     account_locked BOOLEAN DEFAULT false,
     credentials_expired BOOLEAN DEFAULT false,
-    last_login TIMESTAMP,
+    last_login TIMESTAMP(0) NULL,
     notification_setting BOOLEAN DEFAULT false,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    created_at TIMESTAMPTZ(0) DEFAULT NOW(),
+    updated_at TIMESTAMPTZ(0) DEFAULT NOW(),
     login_attempts INT DEFAULT 0,
     delete_date TIMESTAMPTZ DEFAULT NULL
 );
