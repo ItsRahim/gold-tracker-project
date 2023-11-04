@@ -10,8 +10,8 @@ CREATE TABLE rgts.audit_log (
 CREATE OR REPLACE FUNCTION rgts.capture_user_changes()
 RETURNS TRIGGER AS $$
 BEGIN
-INSERT INTO rgts.audit_log (user_id, action, change_timestamp, old_data, new_data)
-VALUES (NEW.user_id, TG_OP, NOW(), to_jsonb(OLD), to_jsonb(NEW));
+    INSERT INTO rgts.audit_log (user_id, action, change_timestamp, old_data, new_data)
+    VALUES (NEW.user_id, TG_OP, NOW(), to_jsonb(OLD), to_jsonb(NEW));
 
 RETURN NEW;
 END;
@@ -26,8 +26,8 @@ CREATE TRIGGER user_audit_trigger
 CREATE OR REPLACE FUNCTION rgts.capture_user_profiles_changes()
 RETURNS TRIGGER AS $$
 BEGIN
-INSERT INTO rgts.audit_log (user_id, action, change_timestamp, old_data, new_data)
-VALUES (NEW.user_id, TG_OP, NOW(), to_jsonb(OLD), to_jsonb(NEW));
+    INSERT INTO rgts.audit_log (user_id, action, change_timestamp, old_data, new_data)
+    VALUES (NEW.user_id, TG_OP, NOW(), to_jsonb(OLD), to_jsonb(NEW));
 
 RETURN NEW;
 END;
