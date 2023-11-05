@@ -28,7 +28,6 @@ import java.util.Optional;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final UserProfileService userProfileService;
-    private final IAuditLog auditLog;
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Override
@@ -77,13 +76,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean deleteUserRequest(int userId) throws JsonProcessingException {
+    public boolean deleteUserRequest(int userId) {
         Optional<User> existingUserOptional = userRepository.findById(userId);
 
         if (existingUserOptional.isPresent()) {
-            User currentUser = existingUserOptional.get();
-            User oldUser = new User(currentUser);
-            User user = new User(currentUser);
+            User user = existingUserOptional.get();
 
             String accountStatus = user.getAccountStatus();
 
@@ -96,7 +93,6 @@ public class UserService implements IUserService {
                 user.setDeleteDate(deletionDate);
 
                 userRepository.save(user);
-                auditLog.initialise(oldUser, user, AuditAction.DELETE_REQUEST.getAction());
 
                 log.info("User with ID {} is pending deletion on {}", userId, deletionDate);
 
@@ -116,20 +112,17 @@ public class UserService implements IUserService {
         Optional<User> existingUserOptional = findUserById(userId);
 
         if (existingUserOptional.isPresent()) {
-            User currentUser = existingUserOptional.get();
-            User oldUser = new User(currentUser);
-            User newUser = new User(currentUser);
+            User user = existingUserOptional.get();
 
             try {
                 if (updatedData.containsKey("email")) {
-                    newUser.setEmail(updatedData.get("email"));
+                    user.setEmail(updatedData.get("email"));
                 }
                 if (updatedData.containsKey("passwordHash")) {
-                    newUser.setPasswordHash(updatedData.get("passwordHash"));
+                    user.setPasswordHash(updatedData.get("passwordHash"));
                 }
 
-                userRepository.save(newUser);
-                auditLog.initialise(oldUser, newUser, AuditAction.UPDATE.getAction());
+                userRepository.save(user);
 
                 log.info("User with ID {} updated successfully", userId);
             } catch (Exception e) {

@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.OffsetDateTime;
 
+@Deprecated
 @Getter
 @Setter
 @Entity
@@ -28,7 +29,7 @@ public class AuditLog {
     @Column(name = "action", length = 10)
     private String action;
 
-    @Column(name = "change_timestamp", columnDefinition = "TIMESTAMPTZ(0)")
+    @Column(name = "change_timestamp")
     private OffsetDateTime changeTimestamp;
 
     @Column(name = "old_data", length = 500)

@@ -3,6 +3,7 @@ package com.rahim.userservice.enums;
 
 import lombok.Getter;
 
+@Deprecated
 @Getter
 public enum AuditAction {
     INSERT("INSERT"),

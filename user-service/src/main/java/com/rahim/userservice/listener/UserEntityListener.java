@@ -6,9 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
-
 @Component
 public class UserEntityListener {
     private static final Logger log = LoggerFactory.getLogger(UserEntityListener.class);
@@ -20,8 +17,6 @@ public class UserEntityListener {
 
     @PreUpdate
     public void preUpdate(User user) {
-        OffsetDateTime now = OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-        user.setUpdatedAt(now);
         log.info("Attempting to update user with ID: {}", user.getId());
     }
 

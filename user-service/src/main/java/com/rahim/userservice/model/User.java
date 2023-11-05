@@ -31,31 +31,31 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(name = "account_status", columnDefinition = "VARCHAR(255) DEFAULT 'ACTIVE'")
+    @Column(name = "account_status")
     private String accountStatus;
 
-    @Column(name = "account_locked", columnDefinition = "BOOLEAN DEFAULT false")
+    @Column(name = "account_locked")
     private Boolean accountLocked;
 
-    @Column(name = "credentials_expired", columnDefinition = "BOOLEAN DEFAULT false")
+    @Column(name = "credentials_expired")
     private Boolean credentialsExpired;
 
     @Column(name = "last_login")
     private Instant lastLogin;
 
-    @Column(name = "notification_setting", columnDefinition = "BOOLEAN DEFAULT false")
+    @Column(name = "notification_setting")
     private Boolean notificationSetting;
 
-    @Column(name = "created_at", columnDefinition = "TIMESTAMPTZ(0) DEFAULT NOW()")
+    @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMPTZ(0) DEFAULT NOW()")
+    @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @Column(name = "login_attempts", columnDefinition = "INT DEFAULT 0")
+    @Column(name = "login_attempts")
     private Integer loginAttempts;
 
-    @Column(name = "delete_date", columnDefinition = "TIMESTAMPTZ(0)")
+    @Column(name = "delete_date")
     private OffsetDateTime deleteDate;
 
     public User(User user) {

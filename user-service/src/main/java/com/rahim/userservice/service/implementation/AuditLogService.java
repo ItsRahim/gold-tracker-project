@@ -18,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 @Service
 @RequiredArgsConstructor
 public class AuditLogService implements IAuditLog {
