@@ -1,12 +1,15 @@
-package com.rahim.userservice.service;
+package com.rahim.userservice.service.implementation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.enums.AuditAction;
-import com.rahim.userservice.model.AuditLog;
+import com.rahim.userservice.model.AuditLogData;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.UserRepository;
+import com.rahim.userservice.service.IAuditLog;
+import com.rahim.userservice.service.IUserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,12 +18,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService{
+public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final UserProfileService userProfileService;
     private final IAuditLog auditLog;
@@ -48,7 +53,6 @@ public class UserService implements IUserService{
         }
     }
 
-
     @Override
     public Optional<User> findUserById(int userId) throws Exception {
         try {
@@ -63,7 +67,7 @@ public class UserService implements IUserService{
     public List<User> findAllUsers() {
         List<User> users = userRepository.findAll();
 
-        if(!users.isEmpty()) {
+        if (!users.isEmpty()) {
             log.info("Found {} users in the database", users.size());
         } else {
             log.info("No users found in the database");
@@ -73,15 +77,18 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public boolean deleteUserRequest(int userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public boolean deleteUserRequest(int userId) throws JsonProcessingException {
+        Optional<User> existingUserOptional = userRepository.findById(userId);
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
+        if (existingUserOptional.isPresent()) {
+            User currentUser = existingUserOptional.get();
+            User oldUser = new User(currentUser);
+            User user = new User(currentUser);
+
             String accountStatus = user.getAccountStatus();
 
             if (accountStatus.equals(AccountState.ACTIVE.getStatus())) {
-                OffsetDateTime deletionDate = OffsetDateTime.now().plusDays(30);
+                OffsetDateTime deletionDate = OffsetDateTime.now().plusDays(30).truncatedTo(ChronoUnit.SECONDS);
 
                 user.setAccountStatus(AccountState.PENDING_DELETE.getStatus());
                 user.setAccountLocked(true);
@@ -89,6 +96,7 @@ public class UserService implements IUserService{
                 user.setDeleteDate(deletionDate);
 
                 userRepository.save(user);
+                auditLog.initialise(oldUser, user, AuditAction.DELETE_REQUEST.getAction());
 
                 log.info("User with ID {} is pending deletion on {}", userId, deletionDate);
 
@@ -103,14 +111,34 @@ public class UserService implements IUserService{
         return false;
     }
 
-    //TODO: Check if details have been updated before persisting
     @Override
-    public void updateUser(User newUser) {
-        userRepository.findById(newUser.getId()).ifPresent(existingUser -> {
-            existingUser.setEmail(newUser.getEmail());
-            existingUser.setPasswordHash(newUser.getPasswordHash());
-            userRepository.save(existingUser);
-            auditLog.updateAuditLog(existingUser, newUser, AuditAction.UPDATE.getAction());
-        });
+    public void updateUser(int userId, Map<String, String> updatedData) throws Exception {
+        Optional<User> existingUserOptional = findUserById(userId);
+
+        if (existingUserOptional.isPresent()) {
+            User currentUser = existingUserOptional.get();
+            User oldUser = new User(currentUser);
+            User newUser = new User(currentUser);
+
+            try {
+                if (updatedData.containsKey("email")) {
+                    newUser.setEmail(updatedData.get("email"));
+                }
+                if (updatedData.containsKey("passwordHash")) {
+                    newUser.setPasswordHash(updatedData.get("passwordHash"));
+                }
+
+                userRepository.save(newUser);
+                auditLog.initialise(oldUser, newUser, AuditAction.UPDATE.getAction());
+
+                log.info("User with ID {} updated successfully", userId);
+            } catch (Exception e) {
+                log.error("Error updating user with ID {}: {}", userId, e.getMessage());
+                throw new RuntimeException("Failed to update user.", e);
+            }
+        } else {
+            log.warn("User with ID {} not found.", userId);
+            throw new RuntimeException("User not found.");
+        }
     }
 }
