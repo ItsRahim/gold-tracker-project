@@ -14,18 +14,3 @@ ALTER TABLE rgts.user_profiles
             REFERENCES rgts.users(user_id)
             ON DELETE CASCADE;
 
-CREATE OR REPLACE FUNCTION rgts.update_users_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE rgts.users
-    SET updated_at = NOW()
-    WHERE user_id = NEW.user_id;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_users_updated_at_trigger
-    AFTER UPDATE ON rgts.user_profiles
-    FOR EACH ROW
-    EXECUTE FUNCTION rgts.update_users_updated_at();

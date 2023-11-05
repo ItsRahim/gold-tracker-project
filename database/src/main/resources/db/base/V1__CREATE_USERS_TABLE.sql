@@ -4,7 +4,7 @@ CREATE TABLE rgts.users (
     user_id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    account_status VARCHAR(255) NOT NULL DEFAULT 'ACTIVE',
+    account_status VARCHAR(255) DEFAULT 'ACTIVE' NOT NULL,
     account_locked BOOLEAN DEFAULT false,
     credentials_expired BOOLEAN DEFAULT false,
     last_login TIMESTAMP(0) NULL,
@@ -16,7 +16,6 @@ CREATE TABLE rgts.users (
 );
 
 COMMENT ON TABLE rgts.users IS 'The user accounts table';
-
 COMMENT ON COLUMN rgts.users.user_id IS 'The user ID';
 COMMENT ON COLUMN rgts.users.email IS 'Unique user email';
 COMMENT ON COLUMN rgts.users.password_hash IS 'Hashed user password';
@@ -29,16 +28,3 @@ COMMENT ON COLUMN rgts.users.created_at IS 'User account creation time';
 COMMENT ON COLUMN rgts.users.updated_at IS 'Last update time';
 COMMENT ON COLUMN rgts.users.login_attempts IS 'Number of login attempts';
 COMMENT ON COLUMN rgts.users.delete_date IS 'Deletion date of user account and profile';
-
-CREATE OR REPLACE FUNCTION rgts.update_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_updated_at_trigger
-    BEFORE UPDATE ON rgts.users
-    FOR EACH ROW
-    EXECUTE FUNCTION rgts.update_updated_at();

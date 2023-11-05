@@ -1,0 +1,18 @@
+package com.rahim.userservice.enums;
+
+
+import lombok.Getter;
+
+@Getter
+public enum AuditAction {
+    INSERT("INSERT"),
+    UPDATE("UPDATE"),
+    DELETE_REQUEST("DELETE REQUEST"),
+    DELETE("DELETE");
+
+    private final String action;
+
+    AuditAction(String action) {
+        this.action = action;
+    }
+}
