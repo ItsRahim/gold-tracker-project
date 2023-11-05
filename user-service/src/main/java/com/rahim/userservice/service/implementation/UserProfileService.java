@@ -1,7 +1,8 @@
-package com.rahim.userservice.service;
+package com.rahim.userservice.service.implementation;
 
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.repository.UserProfileRepository;
+import com.rahim.userservice.service.IUserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserProfileService implements  IUserProfileService {
+public class UserProfileService implements IUserProfileService {
 
     private final UserProfileRepository userProfileRepository;
     private static final Logger log = LoggerFactory.getLogger(UserProfileService.class);
