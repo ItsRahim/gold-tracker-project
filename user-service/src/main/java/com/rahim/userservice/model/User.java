@@ -57,19 +57,4 @@ public class User {
 
     @Column(name = "delete_date")
     private OffsetDateTime deleteDate;
-
-    public User(User user) {
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.passwordHash = user.getPasswordHash();
-        this.accountStatus = user.getAccountStatus();
-        this.accountLocked = user.getAccountLocked();
-        this.credentialsExpired = user.getCredentialsExpired();
-        this.lastLogin = user.getLastLogin();
-        this.notificationSetting = user.getNotificationSetting();
-        this.createdAt = user.getCreatedAt();
-        this.updatedAt = user.getUpdatedAt();
-        this.loginAttempts = user.getLoginAttempts();
-        this.deleteDate = user.getDeleteDate();
-    }
 }
