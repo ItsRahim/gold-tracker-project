@@ -43,7 +43,6 @@ public class AuditLogService implements IAuditLog {
         log.info("Audit Log created for user with ID: {}", userId);
     }
 
-
     private ArrayList<String> convertToJson(User oldUser, User newUser) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
         String oldUserJson = mapper.writeValueAsString(oldUser);
