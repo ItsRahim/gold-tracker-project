@@ -5,9 +5,7 @@ spring:
     import: "configserver:http://localhost:8088"
   jpa:
     database: postgresql
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
+    show-sql: false
   datasource:
     url: jdbc:postgresql://localhost:5432/gold
     username: postgres
