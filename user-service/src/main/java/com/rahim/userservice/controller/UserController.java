@@ -96,10 +96,10 @@ public class UserController {
     @GetMapping("/profile/{profileId}")
     public ResponseEntity<?> findProfileById(@PathVariable int profileId) {
         try {
-            Optional<UserProfile> userOptional = userProfileService.getProfileById(profileId);
+            Optional<UserProfile> profileOptional = userProfileService.getProfileById(profileId);
 
-            if (userOptional.isPresent()) {
-                return ResponseEntity.ok(userOptional.get());
+            if (profileOptional.isPresent()) {
+                return ResponseEntity.ok(profileOptional.get());
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found for ID: " + profileId);
             }
@@ -110,20 +110,29 @@ public class UserController {
     }
 
     @PutMapping("/profile/{profileId}")
-    public ResponseEntity<String> updateUserProfile(@PathVariable int profileId, @RequestBody UserProfile userProfile) {
+    public ResponseEntity<String> updateUserProfile(@PathVariable int profileId, @RequestBody Map<String, String> updatedData) {
         try {
-            Optional<UserProfile> existingProfile = userProfileService.getProfileById(profileId);
+            userProfileService.updateUserProfile(profileId, updatedData);
+            return ResponseEntity.ok("User Profile updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found");
+        }
+    }
 
-            if (existingProfile.isPresent()) {
-                userProfile.setId(profileId);
-                userProfileService.updateUserProfile(userProfile);
-                return ResponseEntity.ok("User Profile updated successfully");
+    @GetMapping("/profile/{username}")
+    public ResponseEntity<?> findProfileByUsername(@PathVariable String username) {
+        try {
+            Optional<UserProfile> profileOptional = userProfileService.getProfileByUsername(username);
+
+            if (profileOptional.isPresent()) {
+                return ResponseEntity.ok(profileOptional.get());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found with username: " + username);
             }
         } catch (Exception e) {
-            log.error("Error updating user profile: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user profile");
+            log.error("Error finding user profile: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user profile");
+
         }
     }
 }

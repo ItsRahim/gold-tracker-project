@@ -1,5 +1,6 @@
 package com.rahim.userservice.service.implementation;
 
+import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.repository.UserProfileRepository;
 import com.rahim.userservice.service.IUserProfileService;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -42,18 +44,37 @@ public class UserProfileService implements IUserProfileService {
     }
 
     @Override
-    public void updateUserProfile(UserProfile userProfile) {
-        log.info("Updating profile with ID: {}", userProfile.getId());
+    public void updateUserProfile(int profileId, Map<String, String> updatedData) {
+        Optional<UserProfile> existingProfileOptional = getProfileById(profileId);
 
-        userProfileRepository.findById(userProfile.getId())
-                .ifPresent(existingUserProfile -> {
-                    existingUserProfile.setUsername(userProfile.getUsername());
-                    existingUserProfile.setFirstName(userProfile.getFirstName());
-                    existingUserProfile.setLastName(userProfile.getLastName());
-                    existingUserProfile.setContactNumber(userProfile.getContactNumber());
-                    existingUserProfile.setAddress(userProfile.getAddress());
-                    userProfileRepository.save(existingUserProfile);
-                });
+        if (existingProfileOptional.isPresent()) {
+            UserProfile profile = existingProfileOptional.get();
+
+            try {
+                if (updatedData.containsKey("firstName")) {
+                    profile.setFirstName(updatedData.get("firstName"));
+                }
+                if (updatedData.containsKey("lastName")) {
+                    profile.setFirstName(updatedData.get("firstName"));
+                }
+                if (updatedData.containsKey("contactNumber")) {
+                    profile.setContactNumber(updatedData.get("contactNumber"));
+                }
+                if (updatedData.containsKey("address")) {
+                    profile.setAddress(updatedData.get("address"));
+                }
+
+                userProfileRepository.save(profile);
+
+                log.info("Profile with ID {} updated successfully", profileId);
+            } catch (Exception e) {
+                log.error("Error updating profile with ID {}: {}", profileId, e.getMessage());
+                throw new RuntimeException("Failed to update user.", e);
+            }
+        } else {
+            log.warn("Profile with ID {} not found.", profileId);
+            throw new RuntimeException("User not found.");
+        }
     }
 
     @Override
