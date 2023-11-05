@@ -57,7 +57,7 @@ public class UserProfileService implements IUserProfileService {
     }
 
     @Override
-    public Optional<UserProfile> findByUserProfileByUsername(String username) {
+    public Optional<UserProfile> getProfileByUsername(String username) {
         return userProfileRepository.findByUsername(username);
     }
 
