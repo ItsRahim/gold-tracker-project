@@ -26,22 +26,6 @@ public class UserProfileController {
         return ResponseEntity.ok(userProfiles);
     }
 
-    @GetMapping("/{profileId}")
-    public ResponseEntity<?> findProfileById(@PathVariable int profileId) {
-        try {
-            Optional<UserProfile> profileOptional = userProfileService.getProfileById(profileId);
-
-            if (profileOptional.isPresent()) {
-                return ResponseEntity.ok(profileOptional.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found for ID: " + profileId);
-            }
-        } catch (Exception e) {
-            log.error("Error finding user profile: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user profile");
-        }
-    }
-
     @PutMapping("/{profileId}")
     public ResponseEntity<String> updateUserProfile(@PathVariable int profileId, @RequestBody Map<String, String> updatedData) {
         try {
@@ -65,7 +49,6 @@ public class UserProfileController {
         } catch (Exception e) {
             log.error("Error finding user profile: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user profile");
-
         }
     }
 }

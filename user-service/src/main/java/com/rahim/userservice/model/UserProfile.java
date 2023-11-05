@@ -1,5 +1,7 @@
 package com.rahim.userservice.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.rahim.userservice.helper.UserProfileSerialiser;
 import com.rahim.userservice.listener.UserProfileEntityListener;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,13 +12,14 @@ import lombok.Setter;
 @Entity
 @EntityListeners(UserProfileEntityListener.class)
 @Table(name = "user_profiles", schema = "rgts")
+@JsonSerialize(using = UserProfileSerialiser.class)
 public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id", nullable = false)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

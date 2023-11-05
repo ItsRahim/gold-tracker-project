@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/gold/user-service")
+@RequestMapping("/api/v1/gold/user-service/user")
 public class UserController {
     private final IUserService userService;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);

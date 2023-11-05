@@ -1,5 +1,7 @@
 package com.rahim.userservice.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.rahim.userservice.helper.UserSerialiser;
 import com.rahim.userservice.listener.UserEntityListener;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @EntityListeners(UserEntityListener.class)
 @Table(name = "users", schema = "rgts")
+@JsonSerialize(using = UserSerialiser.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
