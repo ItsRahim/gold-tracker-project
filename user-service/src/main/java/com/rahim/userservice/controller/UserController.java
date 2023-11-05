@@ -1,9 +1,7 @@
 package com.rahim.userservice.controller;
 
 import com.rahim.userservice.model.User;
-import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
-import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,7 +19,6 @@ import java.util.Optional;
 @RequestMapping("/api/v1/gold/user-service")
 public class UserController {
     private final IUserService userService;
-    private final IUserProfileService userProfileService;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping()
@@ -84,55 +81,6 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("/profile")
-    public ResponseEntity<List<UserProfile>> findAllProfiles() {
-        List<UserProfile> userProfiles = userProfileService.getAllProfiles();
-        return ResponseEntity.ok(userProfiles);
-    }
-
-    @GetMapping("/profile/{profileId}")
-    public ResponseEntity<?> findProfileById(@PathVariable int profileId) {
-        try {
-            Optional<UserProfile> profileOptional = userProfileService.getProfileById(profileId);
-
-            if (profileOptional.isPresent()) {
-                return ResponseEntity.ok(profileOptional.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found for ID: " + profileId);
-            }
-        } catch (Exception e) {
-            log.error("Error finding user profile: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user profile");
-        }
-    }
-
-    @PutMapping("/profile/{profileId}")
-    public ResponseEntity<String> updateUserProfile(@PathVariable int profileId, @RequestBody Map<String, String> updatedData) {
-        try {
-            userProfileService.updateUserProfile(profileId, updatedData);
-            return ResponseEntity.ok("User Profile updated successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found");
-        }
-    }
-
-    @GetMapping("/profile/{username}")
-    public ResponseEntity<?> findProfileByUsername(@PathVariable String username) {
-        try {
-            Optional<UserProfile> profileOptional = userProfileService.getProfileByUsername(username);
-
-            if (profileOptional.isPresent()) {
-                return ResponseEntity.ok(profileOptional.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found with username: " + username);
-            }
-        } catch (Exception e) {
-            log.error("Error finding user profile: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user profile");
-
         }
     }
 }
