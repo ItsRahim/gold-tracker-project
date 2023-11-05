@@ -4,14 +4,14 @@ package com.rahim.userservice.enums;
 import lombok.Getter;
 
 @Getter
-public enum AccountStatus {
+public enum AccountState {
     ACTIVE("ACTIVE"),
     INACTIVE("INACTIVE"),
-    PENDING_DELETE("PENDING_DELETE");
+    PENDING_DELETE("PENDING DELETE");
 
     private final String status;
 
-    AccountStatus(String status) {
+    AccountState(String status) {
         this.status = status;
     }
 }
