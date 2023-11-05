@@ -11,5 +11,5 @@ spring:
 
   flyway:
     enabled: true
-    clean-disabled: true
-    locations: classpath:db/base, classpath:db/migration
+    clean-disabled: false
+    locations: classpath:db/base
