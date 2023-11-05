@@ -11,7 +11,7 @@ public class UserEntityListener {
     private static final Logger log = LoggerFactory.getLogger(UserEntityListener.class);
 
     @PrePersist
-    public void logNewUser(User user) {
+    public void prePersist(User user) {
         log.debug("Server attempting to add new user with ID: {}", user.getId());
     }
 
