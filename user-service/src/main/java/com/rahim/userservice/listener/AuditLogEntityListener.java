@@ -12,36 +12,36 @@ public class AuditLogEntityListener {
 
     @PrePersist
     public void prePersist(Object o) {
-        log.info("Entity will be persisted: {}", o);
+        log.debug("Entity will be persisted: {}", o);
     }
 
     @PreUpdate
     public void preUpdate(Object o) {
-        log.info("Entity will be updated: {}", o);
+        log.debug("Entity will be updated: {}", o);
     }
 
     @PreRemove
     public void preRemove(Object o) {
-        log.info("Entity will be removed: {}", o);
+        log.debug("Entity will be removed: {}", o);
     }
 
     @PostLoad
     public void postLoad(Object o) {
-        log.info("Entity has been loaded: {}", o);
+        log.debug("Entity has been loaded: {}", o);
     }
 
     @PostRemove
     public void postRemove(Object o) {
-        log.info("Entity has been removed: {}", o);
+        log.debug("Entity has been removed: {}", o);
     }
 
     @PostUpdate
     public void postUpdate(Object o) {
-        log.info("Entity has been updated: {}", o);
+        log.debug("Entity has been updated: {}", o);
     }
 
     @PostPersist
     public void postPersist(Object o) {
-        log.info("Entity has been persisted: {}", o);
+        log.debug("Entity has been persisted: {}", o);
     }
 }
