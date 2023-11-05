@@ -14,7 +14,7 @@ public class UserProfile {
     @Column(name = "profile_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -32,5 +32,4 @@ public class UserProfile {
 
     @Column(name = "address", length = Integer.MAX_VALUE)
     private String address;
-
 }
