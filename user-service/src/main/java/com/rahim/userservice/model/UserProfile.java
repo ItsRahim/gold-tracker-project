@@ -1,5 +1,6 @@
 package com.rahim.userservice.model;
 
+import com.rahim.userservice.listener.UserProfileEntityListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@EntityListeners(UserProfileEntityListener.class)
 @Table(name = "user_profiles", schema = "rgts")
 public class UserProfile {
     @Id
