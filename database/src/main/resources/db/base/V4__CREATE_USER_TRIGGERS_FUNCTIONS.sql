@@ -14,8 +14,8 @@ EXECUTE FUNCTION rgts.update_updated_at();
 CREATE OR REPLACE FUNCTION rgts.capture_user_changes()
     RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO rgts.audit_log (user_id, action, change_timestamp, old_data, new_data)
-    VALUES (NEW.user_id, TG_OP, NOW(), to_jsonb(OLD), to_jsonb(NEW));
+    INSERT INTO rgts.audit_log (user_id, action, "table", change_timestamp, old_data, new_data)
+    VALUES (NEW.user_id, TG_OP, TG_TABLE_NAME, NOW(), to_jsonb(OLD), to_jsonb(NEW));
 
     RETURN NEW;
 END;
@@ -45,8 +45,8 @@ EXECUTE FUNCTION rgts.update_users_updated_at();
 CREATE OR REPLACE FUNCTION rgts.capture_user_profiles_changes()
     RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO rgts.audit_log (user_id, action, change_timestamp, old_data, new_data)
-    VALUES (NEW.user_id, TG_OP, NOW(), to_jsonb(OLD), to_jsonb(NEW));
+    INSERT INTO rgts.audit_log (user_id, action, "table", change_timestamp, old_data, new_data)
+    VALUES (NEW.user_id, TG_OP, TG_TABLE_NAME, NOW(), to_jsonb(OLD), to_jsonb(NEW));
 
     RETURN NEW;
 END;
