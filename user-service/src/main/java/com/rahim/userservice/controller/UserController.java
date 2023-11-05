@@ -1,13 +1,11 @@
 package com.rahim.userservice.controller;
 
-import com.rahim.userservice.listener.UserEntityListener;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -91,14 +89,14 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<List<UserProfile>> findAllProfiles() {
-        List<UserProfile> userProfiles = userProfileService.findAllUserProfiles();
+        List<UserProfile> userProfiles = userProfileService.getAllProfiles();
         return ResponseEntity.ok(userProfiles);
     }
 
     @GetMapping("/profile/{profileId}")
     public ResponseEntity<?> findProfileById(@PathVariable int profileId) {
         try {
-            Optional<UserProfile> userOptional = userProfileService.findUserProfileById(profileId);
+            Optional<UserProfile> userOptional = userProfileService.getProfileById(profileId);
 
             if (userOptional.isPresent()) {
                 return ResponseEntity.ok(userOptional.get());
@@ -114,7 +112,7 @@ public class UserController {
     @PutMapping("/profile/{profileId}")
     public ResponseEntity<String> updateUserProfile(@PathVariable int profileId, @RequestBody UserProfile userProfile) {
         try {
-            Optional<UserProfile> existingProfile = userProfileService.findUserProfileById(profileId);
+            Optional<UserProfile> existingProfile = userProfileService.getProfileById(profileId);
 
             if (existingProfile.isPresent()) {
                 userProfile.setId(profileId);

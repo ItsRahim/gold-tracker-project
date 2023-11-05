@@ -7,10 +7,10 @@ import java.util.Optional;
 
 public interface IUserProfileService {
     void createUserProfile(UserProfile userProfile);
-    Optional<UserProfile> findUserProfileById(int id);
-    List<UserProfile> findAllUserProfiles();
+    Optional<UserProfile> getProfileById(int id);
+    List<UserProfile> getAllProfiles();
     void updateUserProfile(UserProfile userProfile);
-    Optional<UserProfile> findByUserProfileByUsername(String username);
+    Optional<UserProfile> getProfileByUsername(String username);
 
     void deleteUserProfile(int userId);
 }

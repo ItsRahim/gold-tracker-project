@@ -24,12 +24,12 @@ public class UserProfileService implements IUserProfileService {
     }
 
     @Override
-    public Optional<UserProfile> findUserProfileById(int id) {
+    public Optional<UserProfile> getProfileById(int id) {
         return userProfileRepository.findById(id);
     }
 
     @Override
-    public List<UserProfile> findAllUserProfiles() {
+    public List<UserProfile> getAllProfiles() {
         List<UserProfile> userProfiles = userProfileRepository.findAll();
 
         if(!userProfiles.isEmpty()) {
