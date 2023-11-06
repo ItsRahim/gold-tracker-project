@@ -7,6 +7,7 @@ import com.rahim.userservice.model.User;
 
 import java.io.IOException;
 
+@Deprecated
 public class UserSerialiser extends JsonSerializer<User> {
 
     public void serialize(User user, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {

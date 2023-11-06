@@ -2,3 +2,5 @@
 2) Implement functions to login and update tables
 3) Create unit tests
 4) Create integration tests
+5) Fix endpoints to support / at end or no /
+6) Improve response body returned. Create a builder for it
