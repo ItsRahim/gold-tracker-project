@@ -1,4 +1,4 @@
-package com.rahim.userservice.helper;
+package com.rahim.userservice.serialiser;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
