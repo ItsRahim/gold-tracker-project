@@ -1,10 +1,10 @@
 package com.rahim.userservice.service.implementation;
 
-import com.rahim.userservice.quartz.model.TimerInfo;
+import com.rahim.userservice.scheduler.model.TimerInfo;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.repository.UserProfileRepository;
-import com.rahim.userservice.quartz.jobs.DeleteUserJob;
-import com.rahim.userservice.quartz.service.ISchedulerService;
+import com.rahim.userservice.scheduler.jobs.DeleteUserJob;
+import com.rahim.userservice.scheduler.service.ISchedulerService;
 import com.rahim.userservice.service.IUserProfileService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

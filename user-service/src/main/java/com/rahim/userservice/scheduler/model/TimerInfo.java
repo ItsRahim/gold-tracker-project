@@ -1,4 +1,4 @@
-package com.rahim.userservice.quartz.model;
+package com.rahim.userservice.scheduler.model;
 
 import lombok.Getter;
 import lombok.Setter;

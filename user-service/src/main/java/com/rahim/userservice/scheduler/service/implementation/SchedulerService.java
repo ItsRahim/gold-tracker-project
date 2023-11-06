@@ -1,8 +1,8 @@
-package com.rahim.userservice.quartz.service.implementation;
+package com.rahim.userservice.scheduler.service.implementation;
 
-import com.rahim.userservice.quartz.model.TimerInfo;
-import com.rahim.userservice.quartz.service.ISchedulerService;
-import com.rahim.userservice.quartz.utils.TimerUtils;
+import com.rahim.userservice.scheduler.model.TimerInfo;
+import com.rahim.userservice.scheduler.service.ISchedulerService;
+import com.rahim.userservice.scheduler.config.SchedulerConfiguration;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class SchedulerService implements ISchedulerService {
     private final Scheduler scheduler;
 
     public void schedule(final Class clazz, final TimerInfo info) {
-        final JobDetail jobDetail = TimerUtils.buildJobDetails(clazz, info);
-        final Trigger trigger = TimerUtils.buildTrigger(clazz, info);
+        final JobDetail jobDetail = SchedulerConfiguration.buildJobDetails(clazz, info);
+        final Trigger trigger = SchedulerConfiguration.buildTrigger(clazz, info);
 
         try {
             scheduler.scheduleJob(jobDetail, trigger);

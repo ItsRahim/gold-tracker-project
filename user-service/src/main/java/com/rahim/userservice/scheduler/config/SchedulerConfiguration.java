@@ -1,12 +1,12 @@
-package com.rahim.userservice.quartz.utils;
+package com.rahim.userservice.scheduler.config;
 
-import com.rahim.userservice.quartz.model.TimerInfo;
+import com.rahim.userservice.scheduler.model.TimerInfo;
 import org.quartz.*;
 
 import java.util.Date;
 
-public class TimerUtils {
-    private TimerUtils() {}
+public class SchedulerConfiguration {
+    private SchedulerConfiguration() {}
 
     public static JobDetail buildJobDetails(final Class clazz, final TimerInfo info) {
         final JobDataMap jobDataMap = new JobDataMap();
