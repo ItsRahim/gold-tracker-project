@@ -1,20 +1,36 @@
-package com.rahim.userservice.service.implementation;
+package com.rahim.userservice.quartz.service.implementation;
 
+import com.rahim.userservice.quartz.model.TimerInfo;
+import com.rahim.userservice.quartz.service.ISchedulerService;
+import com.rahim.userservice.quartz.utils.TimerUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
+import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SchedulerService {
+public class SchedulerService implements ISchedulerService {
     private static final Logger log = LoggerFactory.getLogger(SchedulerService.class);
 
     private final Scheduler scheduler;
+
+    public void schedule(final Class clazz, final TimerInfo info) {
+        final JobDetail jobDetail = TimerUtils.buildJobDetails(clazz, info);
+        final Trigger trigger = TimerUtils.buildTrigger(clazz, info);
+
+        try {
+            scheduler.scheduleJob(jobDetail, trigger);
+        } catch (SchedulerException e) {
+            log.error("An error has occurred with the scheduler: {}", e.getMessage());
+        }
+    }
 
     @PostConstruct
     public void init() {

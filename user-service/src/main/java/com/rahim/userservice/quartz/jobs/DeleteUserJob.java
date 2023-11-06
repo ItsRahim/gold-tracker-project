@@ -1,6 +1,8 @@
-package com.rahim.userservice.scheduler;
+package com.rahim.userservice.quartz.jobs;
 
+import com.rahim.userservice.quartz.model.TimerInfo;
 import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,8 @@ public class DeleteUserJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-        log.info("HELLO WORLD!");
+        JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
+        TimerInfo timerInfo = (TimerInfo) jobDataMap.get(DeleteUserJob.class.getSimpleName());
+        log.info(timerInfo.getCallbackData());
     }
 }

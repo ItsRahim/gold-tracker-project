@@ -1,9 +1,12 @@
 package com.rahim.userservice.service.implementation;
 
-import com.rahim.userservice.model.User;
+import com.rahim.userservice.quartz.model.TimerInfo;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.repository.UserProfileRepository;
+import com.rahim.userservice.quartz.jobs.DeleteUserJob;
+import com.rahim.userservice.quartz.service.ISchedulerService;
 import com.rahim.userservice.service.IUserProfileService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +21,19 @@ import java.util.Optional;
 public class UserProfileService implements IUserProfileService {
 
     private final UserProfileRepository userProfileRepository;
+    private final ISchedulerService schedulerService;
     private static final Logger log = LoggerFactory.getLogger(UserProfileService.class);
 
+    @PostConstruct
+    private void startScheduler () {
+        final TimerInfo timerInfo = new TimerInfo();
+        timerInfo.setRunForever(true);
+        timerInfo.setInitialOffsetMs(1000);
+        timerInfo.setRepeatIntervalMs(2000);
+        timerInfo.setCallbackData("Some data");
+
+        schedulerService.schedule(DeleteUserJob.class, timerInfo);
+    }
     @Override
     public void createUserProfile(UserProfile userProfile) {
         userProfileRepository.save(userProfile);
