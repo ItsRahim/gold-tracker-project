@@ -1,4 +1,4 @@
-package com.rahim.userservice.scheduler.config;
+package com.rahim.serviceregistry.config;
 
 import com.rahim.userservice.scheduler.model.TimerInfo;
 import org.quartz.*;

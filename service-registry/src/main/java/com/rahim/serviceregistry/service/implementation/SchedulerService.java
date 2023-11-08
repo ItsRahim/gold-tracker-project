@@ -1,7 +1,7 @@
-package com.rahim.userservice.scheduler.service.implementation;
+package com.rahim.serviceregistry.service.implementation;
 
+import com.rahim.serviceregistry.service.ISchedulerService;
 import com.rahim.userservice.scheduler.model.TimerInfo;
-import com.rahim.userservice.scheduler.service.ISchedulerService;
 import com.rahim.userservice.scheduler.config.SchedulerConfiguration;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -10,9 +10,15 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +36,33 @@ public class SchedulerService implements ISchedulerService {
         } catch (SchedulerException e) {
             log.error("An error has occurred with the scheduler: {}", e.getMessage());
         }
+    }
+
+    @Override
+    public List<TimerInfo> getAllRunningTimers() {
+        try {
+            return scheduler.getJobKeys(GroupMatcher.anyGroup())
+                    .stream()
+                    .map(jobKey -> {
+                        try {
+                            final JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+                            return (TimerInfo) jobDetail.getJobDataMap().get(jobKey.getName());
+                        } catch (SchedulerException e) {
+                            log.error("Some error has occurred: {}", e.getMessage());
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        } catch(SchedulerException e) {
+            log.error("An error has occurred fetching jobs: {}", e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public TimerInfo getRunningTimer(String timerId) {
+
     }
 
     @PostConstruct
