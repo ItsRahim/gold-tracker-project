@@ -1,8 +1,9 @@
-package com.rahim.serviceregistry.service.implementation;
+package com.rahim.schedulerservice.service.implementation;
 
-import com.rahim.serviceregistry.service.ISchedulerService;
-import com.rahim.userservice.scheduler.model.TimerInfo;
-import com.rahim.userservice.scheduler.config.SchedulerConfiguration;
+import com.rahim.schedulerservice.model.TimerInfo;
+import com.rahim.schedulerservice.service.ISchedulerService;
+
+import com.rahim.schedulerservice.util.SchedulerFactory;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,8 @@ public class SchedulerService implements ISchedulerService {
     private final Scheduler scheduler;
 
     public void schedule(final Class clazz, final TimerInfo info) {
-        final JobDetail jobDetail = SchedulerConfiguration.buildJobDetails(clazz, info);
-        final Trigger trigger = SchedulerConfiguration.buildTrigger(clazz, info);
+        final JobDetail jobDetail = SchedulerFactory.buildJobDetails(clazz, info);
+        final Trigger trigger = SchedulerFactory.buildTrigger(clazz, info);
 
         try {
             scheduler.scheduleJob(jobDetail, trigger);
@@ -62,7 +63,7 @@ public class SchedulerService implements ISchedulerService {
 
     @Override
     public TimerInfo getRunningTimer(String timerId) {
-
+        return null;
     }
 
     @PostConstruct

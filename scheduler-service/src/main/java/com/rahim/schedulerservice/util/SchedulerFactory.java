@@ -1,12 +1,14 @@
-package com.rahim.serviceregistry.config;
+package com.rahim.schedulerservice.util;
 
-import com.rahim.userservice.scheduler.model.TimerInfo;
+import com.rahim.schedulerservice.model.TimerInfo;
 import org.quartz.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-public class SchedulerConfiguration {
-    private SchedulerConfiguration() {}
+@Component
+public class SchedulerFactory {
+    private SchedulerFactory() {}
 
     public static JobDetail buildJobDetails(final Class clazz, final TimerInfo info) {
         final JobDataMap jobDataMap = new JobDataMap();

@@ -1,6 +1,6 @@
-package com.rahim.serviceregistry.service;
+package com.rahim.schedulerservice.service;
 
-import com.rahim.userservice.scheduler.model.TimerInfo;
+import com.rahim.schedulerservice.model.TimerInfo;
 
 import java.util.List;
 

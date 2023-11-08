@@ -1,4 +1,4 @@
-package com.rahim.serviceregistry.model;
+package com.rahim.schedulerservice.model;
 
 import lombok.Getter;
 import lombok.Setter;

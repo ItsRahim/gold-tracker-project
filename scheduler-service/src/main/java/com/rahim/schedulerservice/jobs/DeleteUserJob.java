@@ -1,6 +1,6 @@
-package com.rahim.serviceregistry.jobs;
+package com.rahim.schedulerservice.jobs;
 
-import com.rahim.userservice.scheduler.model.TimerInfo;
+import com.rahim.schedulerservice.model.TimerInfo;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
