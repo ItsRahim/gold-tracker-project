@@ -1,14 +1,10 @@
 package com.rahim.userservice.service.implementation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rahim.userservice.enums.AccountState;
-import com.rahim.userservice.enums.AuditAction;
-import com.rahim.userservice.model.AuditLogData;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.UserRepository;
-import com.rahim.userservice.service.IAuditLog;
 import com.rahim.userservice.service.IUserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
