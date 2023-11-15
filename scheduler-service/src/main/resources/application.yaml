@@ -12,5 +12,3 @@ spring:
     password: password
   kafka:
     bootstrap-servers: localhost:9092
-    topic:
-      user-deletion: user-deletion-topic
