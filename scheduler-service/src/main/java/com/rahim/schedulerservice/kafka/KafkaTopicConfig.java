@@ -11,7 +11,7 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic userServiceTopic() {
         return TopicBuilder
-                .name("userService")
+                .name("user-deletion-topic")
                 .build();
     }
 }
