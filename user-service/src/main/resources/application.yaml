@@ -10,3 +10,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/gold
     username: postgres
     password: password
+  kafka:
+    bootstrap-servers: localhost:9092
