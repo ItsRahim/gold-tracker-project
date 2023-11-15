@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
     @Modifying
-    @Query(value = "DELETE FROM rgts.users WHERE user_id = :id?", nativeQuery = true)
+    @Query(value = "DELETE FROM rgts.users WHERE user_id = :id", nativeQuery = true)
     void deleteByUserId(@Param("id") int id);
 }
