@@ -6,3 +6,4 @@
 6) Improve response body returned. Create a builder for it
 7) Alter user audit log to track ip of the request
 8) For security after development, SSL on the springboot application, kafka, db and custom api - FINAL
+9) Create Quartz job to get gold price
