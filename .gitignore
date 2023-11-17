@@ -273,3 +273,5 @@ pyrightconfig.json
 *.priv
 
 /logs/*
+
+gold-config-server
