@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -81,7 +82,7 @@ public class UserService implements IUserService {
             String accountStatus = user.getAccountStatus();
 
             if (accountStatus.equals(AccountState.ACTIVE.getStatus())) {
-                OffsetDateTime deletionDate = OffsetDateTime.now().plusDays(30).truncatedTo(ChronoUnit.SECONDS);
+                LocalDate deletionDate = LocalDate.now().plusDays(30);
 
                 user.setAccountStatus(AccountState.PENDING_DELETE.getStatus());
                 user.setAccountLocked(true);
