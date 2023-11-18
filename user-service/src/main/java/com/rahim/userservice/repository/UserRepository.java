@@ -16,13 +16,12 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query(value = "DELETE FROM rgts.users WHERE user_id = :id", nativeQuery = true)
     void deleteByUserId(@Param("id") int id);
 
-    @Query(value = "SELECT u FROM rgts.users u WHERE u.lastLogin < :cutoffDate AND u.status = 'ACTIVE'", nativeQuery = true)
+    @Query(value = "SELECT * FROM rgts.users WHERE last_login < :cutoffDate AND account_status = 'ACTIVE'", nativeQuery = true)
     List<User> findInactiveUsers(@Param("cutoffDate") LocalDate cutoffDate);
 
-    @Query(value = "SELECT u FROM rgts.users u WHERE u.lastLogin < :cutoffDate AND u.status = 'INACTIVE'", nativeQuery = true)
+    @Query(value = "SELECT * FROM rgts.users WHERE last_login < :cutoffDate AND account_status = 'INACTIVE'", nativeQuery = true)
     List<User> findUsersToDelete(@Param("cutoffDate") LocalDate cutoffDate);
 
-
-    @Query(value = "SELECT u FROM rgts.users u WHERE u.account_status = 'PENDING DELETE'", nativeQuery = true)
+    @Query(value = "SELECT * FROM rgts.users WHERE account_status = 'PENDING DELETE'", nativeQuery = true)
     List<User> findPendingDeleteUsers();
 }
