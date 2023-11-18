@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+
 @Component
 @RequiredArgsConstructor
 public class DeleteUserJob implements Job {
@@ -20,8 +23,10 @@ public class DeleteUserJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) {
         JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
         TimerInfo timerInfo = (TimerInfo) jobDataMap.get(DeleteUserJob.class.getSimpleName());
+        OffsetDateTime jobTime = OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
         log.info(timerInfo.getCallbackData());
 
-        kafkaService.sendMessage("user-cleanup-topic", "Start Delete Job");
+        kafkaService.sendMessage("user-cleanup-topic", "Start Delete Job: " + jobTime);
     }
 }
