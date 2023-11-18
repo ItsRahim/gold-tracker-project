@@ -7,9 +7,22 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
     @Modifying
     @Query(value = "DELETE FROM rgts.users WHERE user_id = :id", nativeQuery = true)
     void deleteByUserId(@Param("id") int id);
+
+    @Query(value = "SELECT u FROM rgts.users u WHERE u.lastLogin < :cutoffDate AND u.status = 'ACTIVE'", nativeQuery = true)
+    List<User> findInactiveUsers(@Param("cutoffDate") LocalDate cutoffDate);
+
+    @Query(value = "SELECT u FROM rgts.users u WHERE u.lastLogin < :cutoffDate AND u.status = 'INACTIVE'", nativeQuery = true)
+    List<User> findUsersToDelete(@Param("cutoffDate") LocalDate cutoffDate);
+
+
+    @Query(value = "SELECT u FROM rgts.users u WHERE u.account_status = 'PENDING DELETE'", nativeQuery = true)
+    List<User> findPendingDeleteUsers();
 }

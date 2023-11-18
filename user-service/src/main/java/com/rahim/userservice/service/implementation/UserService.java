@@ -91,6 +91,7 @@ public class UserService implements IUserService {
 
                 userRepository.save(user);
 
+                //TODO: Send email to user that there account WILL be deleted
                 log.info("User with ID {} is pending deletion on {}", userId, deletionDate);
 
                 return true;
