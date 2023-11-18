@@ -13,7 +13,7 @@ CREATE TABLE rgts.users (
     created_at TIMESTAMPTZ(0) DEFAULT NOW(),
     updated_at TIMESTAMPTZ(0) DEFAULT NOW(),
     login_attempts INT DEFAULT 0,
-    delete_date TIMESTAMPTZ DEFAULT NULL
+    delete_date DATE DEFAULT NULL
 );
 
 COMMENT ON TABLE rgts.users IS 'The user accounts table';
