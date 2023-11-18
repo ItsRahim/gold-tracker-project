@@ -27,7 +27,6 @@ public class JobService {
                 .initialOffsetMs(1000)
                 .callbackData("User Microservice Job")
                 .build();
-
         schedulerService.schedule(DeleteUserJob.class, info);
     }
 }
