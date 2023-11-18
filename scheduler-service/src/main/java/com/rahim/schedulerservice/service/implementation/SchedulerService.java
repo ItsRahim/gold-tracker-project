@@ -7,10 +7,7 @@ import com.rahim.schedulerservice.util.SchedulerFactory;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +60,27 @@ public class SchedulerService implements ISchedulerService {
 
     @Override
     public TimerInfo getRunningTimer(String timerId) {
-        return null;
+        try {
+            final JobDetail jobDetail = scheduler.getJobDetail(new JobKey(timerId));
+            if (jobDetail == null) {
+                log.error("Failed to find timer with ID '{}'", timerId);
+                return null;
+            }
+
+            return (TimerInfo) jobDetail.getJobDataMap().get(timerId);
+        } catch (final SchedulerException e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    public Boolean deleteTimer(final String timerId) {
+        try {
+            return scheduler.deleteJob(new JobKey(timerId));
+        } catch (SchedulerException e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
     }
 
     @PostConstruct
