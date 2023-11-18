@@ -35,31 +35,6 @@ public class InternalUserService implements IInternalUserService {
     }
 
     @Override
-    public void processPendingDeleteUsers() {
-        try {
-            List<User> pendingDeleteUsers = userRepository.findPendingDeleteUsers();
-            LocalDate currentDate = LocalDate.now();
-
-            if (!pendingDeleteUsers.isEmpty()) {
-                log.info("Found {} users pending deletion.", pendingDeleteUsers.size());
-
-                for (User user : pendingDeleteUsers) {
-                    if (user.getDeleteDate() != null && user.getDeleteDate().isEqual(currentDate)) {
-                        log.info("Deleting user account with ID: {}", user.getId());
-                        deleteUserAccount(user.getId());
-                    } else {
-                        log.info("Skipping user with ID: {} as delete date is not today.", user.getId());
-                    }
-                }
-            } else {
-                log.info("No users found for deletion.");
-            }
-        } catch (Exception e) {
-            log.error("An error occurred during the cleanup of user accounts pending deletion: {}", e.getMessage());
-        }
-    }
-
-    @Override
     public void findAllInactiveUsers() {
         try {
             LocalDate cutoffDate = LocalDate.now().minusDays(30);
@@ -81,6 +56,31 @@ public class InternalUserService implements IInternalUserService {
             }
         } catch (Exception e) {
             log.error("An error has occurred during the deletion process: {}", e.getMessage());
+        }
+    }
+
+    @Override
+    public void processPendingDeleteUsers() {
+        try {
+            List<User> pendingDeleteUsers = userRepository.findPendingDeleteUsers();
+            LocalDate currentDate = LocalDate.now();
+
+            if (!pendingDeleteUsers.isEmpty()) {
+                log.info("Found {} users pending deletion.", pendingDeleteUsers.size());
+
+                for (User user : pendingDeleteUsers) {
+                    if (user.getDeleteDate() != null && user.getDeleteDate().isEqual(currentDate)) {
+                        log.info("Deleting user account with ID: {}", user.getId());
+                        deleteUserAccount(user.getId());
+                    } else {
+                        log.info("Skipping user with ID: {} as delete date is not today.", user.getId());
+                    }
+                }
+            } else {
+                log.info("No users found for deletion.");
+            }
+        } catch (Exception e) {
+            log.error("An error occurred during the cleanup of user accounts pending deletion: {}", e.getMessage());
         }
     }
 
