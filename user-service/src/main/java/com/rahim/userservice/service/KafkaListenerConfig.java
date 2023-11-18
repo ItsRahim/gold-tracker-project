@@ -15,6 +15,9 @@ public class KafkaListenerConfig {
     @KafkaListener(topics = "user-cleanup-topic", groupId = "group2")
     public void cleanupUserAccounts(String message) {
         log.info("Message received from Scheduler Service: {}", message);
+        internalUserService.findAllInactiveUsers();
+        internalUserService.processPendingDeleteUsers();
+        internalUserService.processInactiveUsers();
     }
 }
 
