@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Getter
@@ -70,5 +71,5 @@ public class User {
 
     @Column(name = "delete_date")
     @JsonProperty("deleteDate")
-    private OffsetDateTime deleteDate;
+    private LocalDate deleteDate;
 }
