@@ -18,8 +18,4 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Intege
     @Query(value = "SELECT profile_id FROM rgts.user_profiles WHERE user_id = :id", nativeQuery = true)
     int getProfileId(@Param("id") int id);
 
-    @Modifying
-    @Query(value = "DELETE FROM rgts.user_profiles WHERE user_id = :id", nativeQuery = true)
-    void deleteUserProfileByUserId(@Param("id") int id);
-
 }

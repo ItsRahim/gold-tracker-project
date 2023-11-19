@@ -12,9 +12,6 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
-    @Modifying
-    @Query(value = "DELETE FROM rgts.users WHERE user_id = :id", nativeQuery = true)
-    void deleteByUserId(@Param("id") int id);
 
     @Query(value = "SELECT * FROM rgts.users WHERE last_login < :cutoffDate AND account_status = 'ACTIVE'", nativeQuery = true)
     List<User> findInactiveUsers(@Param("cutoffDate") LocalDate cutoffDate);
