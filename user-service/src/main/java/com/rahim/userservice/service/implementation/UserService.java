@@ -1,6 +1,8 @@
 package com.rahim.userservice.service.implementation;
 
 import com.rahim.userservice.enums.AccountState;
+import com.rahim.userservice.exception.DuplicateUserException;
+import com.rahim.userservice.exception.UserNotFoundException;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
@@ -43,16 +45,15 @@ public class UserService implements IUserService {
 
                 log.info("Successfully created User and User Profile for: {}", userProfile.getUsername());
             } catch (DataIntegrityViolationException e) {
-                log.error("Error creating User and User Profile: {}", e.getMessage());
+                log.error("Error creating User and User Profile. Data integrity violation: {}", e.getMessage());
                 throw new DataIntegrityViolationException("Error creating User and User Profile.", e);
             } catch (Exception e) {
                 log.error("Unexpected error creating User and User Profile: {}", e.getMessage());
                 throw new Exception("Unexpected error creating User and User Profile.", e);
             }
         } else {
-            log.warn("User with email {} already exists. Not creating duplicate.", email);
-            // Optionally, you can throw an exception or handle the duplicate case as needed
-            // throw new DuplicateUserException("User with email " + email + " already exists.");
+            log.warn("User with email {} or username {} already exists. Not creating duplicate.", email, username);
+            throw new DuplicateUserException("User with email " + email + " or username " + username + " already exists.");
         }
     }
 
@@ -61,12 +62,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<User> findUserById(int userId) throws Exception {
+    public Optional<User> findUserById(int userId) {
         try {
             return userRepository.findById(userId);
         } catch (Exception e) {
             log.error("Error while finding a user with ID: {}", userId, e);
-            throw new Exception("Error finding a user by ID");
+            throw new UserNotFoundException("Error finding a user by ID");
         }
     }
 
@@ -117,7 +118,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUser(int userId, Map<String, String> updatedData) throws Exception {
+    public void updateUser(int userId, Map<String, String> updatedData) {
         Optional<User> existingUserOptional = findUserById(userId);
 
         if (existingUserOptional.isPresent()) {
@@ -140,7 +141,7 @@ public class UserService implements IUserService {
             }
         } else {
             log.warn("User with ID {} not found.", userId);
-            throw new RuntimeException("User not found.");
+            throw new UserNotFoundException("User with ID " + userId + " not found");
         }
     }
 
