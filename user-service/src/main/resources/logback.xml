@@ -1,14 +1,15 @@
 <configuration>
-    <property name="LOGS_DIRECTORY" value="logs" />
 
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <property name="LOG_PATH" value="logs"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_PATH}/user-service.log</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/user-service.log</file>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
@@ -16,9 +17,7 @@
 
     <root level="info">
         <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
     </root>
 
-    <root level="info">
-        <appender-ref ref="CONSOLE" />
-    </root>
 </configuration>

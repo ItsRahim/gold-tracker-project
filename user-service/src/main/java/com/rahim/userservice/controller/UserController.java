@@ -1,5 +1,6 @@
 package com.rahim.userservice.controller;
 
+import com.rahim.userservice.dto.UserDTO;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.service.IUserService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,8 +42,10 @@ public class UserController {
 
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
+                UserDTO userDTO = new UserDTO(user);
+
                 log.info("User found with ID: {}", userId);
-                return ResponseEntity.ok(user);
+                return ResponseEntity.ok(userDTO);
             } else {
                 log.info("User not found with ID: {}", userId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -64,9 +68,13 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> findAllUsers() {
+    public ResponseEntity<List<UserDTO>> findAllUsers() {
         List<User> users = userService.findAllUsers();
-        return ResponseEntity.ok(users);
+        List<UserDTO> userDTOs = users.stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(userDTOs);
     }
 
     @DeleteMapping("/{userId}")
