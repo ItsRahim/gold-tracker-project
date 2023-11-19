@@ -21,4 +21,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     @Query(value = "SELECT * FROM rgts.users WHERE account_status = 'PENDING DELETE'", nativeQuery = true)
     List<User> findPendingDeleteUsers();
+
+    boolean existsByEmail(String email);
 }

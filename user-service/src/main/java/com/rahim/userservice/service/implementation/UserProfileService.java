@@ -21,12 +21,30 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public void createUserProfile(UserProfile userProfile) {
-        userProfileRepository.save(userProfile);
+        try {
+            userProfileRepository.save(userProfile);
+            log.info("User profile created successfully. ID: {}", userProfile.getId());
+        } catch (Exception e) {
+            log.error("An error occurred while creating user profile.", e);
+        }
     }
 
     @Override
     public Optional<UserProfile> getProfileById(int id) {
-        return userProfileRepository.findById(id);
+        try {
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findById(id);
+
+            if (userProfileOptional.isPresent()) {
+                log.info("User profile retrieved successfully. ID: {}", id);
+            } else {
+                log.info("User profile not found for ID: {}", id);
+            }
+
+            return userProfileOptional;
+        } catch (Exception e) {
+            log.error("An error occurred while retrieving user profile with ID: {}", id, e);
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -103,5 +121,10 @@ public class UserProfileService implements IUserProfileService {
         } catch (Exception e) {
             log.error("Error deleting user profile for user ID {}: {}", userId, e.getMessage(), e);
         }
+    }
+
+    @Override
+    public boolean checkUsernameExists(String username) {
+        return userProfileRepository.existsByUsername(username);
     }
 }

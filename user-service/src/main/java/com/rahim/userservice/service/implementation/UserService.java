@@ -5,6 +5,7 @@ import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.UserRepository;
+import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
     private final UserRepository userRepository;
-    private final UserProfileService userProfileService;
+    private final IUserProfileService userProfileService;
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Override
@@ -31,20 +32,32 @@ public class UserService implements IUserService {
         User user = userRequest.getUser();
         UserProfile userProfile = userRequest.getUserProfile();
 
-        try {
-            userRepository.save(user);
+        String email = user.getEmail();
+        String username = userProfile.getUsername();
+        if (!userExist(email, username)) {
+            try {
+                userRepository.save(user);
 
-            userProfile.setUser(user);
-            userProfileService.createUserProfile(userProfile);
+                userProfile.setUser(user);
+                userProfileService.createUserProfile(userProfile);
 
-            log.info("Successfully created User and User Profile for: {}", userProfile.getUsername());
-        } catch (DataIntegrityViolationException e) {
-            log.error("Error creating User and User Profile: {}", e.getMessage());
-            throw new DataIntegrityViolationException("Error creating User and User Profile.");
-        } catch (Exception e) {
-            log.error("Unexpected error creating User and User Profile: {}", e.getMessage());
-            throw new Exception("Unexpected error creating User and User Profile.");
+                log.info("Successfully created User and User Profile for: {}", userProfile.getUsername());
+            } catch (DataIntegrityViolationException e) {
+                log.error("Error creating User and User Profile: {}", e.getMessage());
+                throw new DataIntegrityViolationException("Error creating User and User Profile.", e);
+            } catch (Exception e) {
+                log.error("Unexpected error creating User and User Profile: {}", e.getMessage());
+                throw new Exception("Unexpected error creating User and User Profile.", e);
+            }
+        } else {
+            log.warn("User with email {} already exists. Not creating duplicate.", email);
+            // Optionally, you can throw an exception or handle the duplicate case as needed
+            // throw new DuplicateUserException("User with email " + email + " already exists.");
         }
+    }
+
+    private boolean userExist(String email, String username) {
+        return userRepository.existsByEmail(email) || userProfileService.checkUsernameExists(username);
     }
 
     @Override

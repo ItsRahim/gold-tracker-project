@@ -14,4 +14,5 @@ public interface IUserProfileService {
     Optional<UserProfile> getProfileByUsername(String username);
 
     void deleteUserProfile(int userId);
+    boolean checkUsernameExists(String username);
 }
