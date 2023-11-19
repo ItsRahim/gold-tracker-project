@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile, Integer> {
 
-    @Query(value = "SELECT * FROM rgts.user_profiles WHERE username = :username", nativeQuery = true)
+    @Query(value = "SELECT * FROM rgts.user_profiles WHERE LOWER(username) = LOWER(:username)", nativeQuery = true)
     Optional<UserProfile> findByUsername(@Param("username") String username);
 
     @Query(value = "SELECT profile_id FROM rgts.user_profiles WHERE user_id = :id", nativeQuery = true)
