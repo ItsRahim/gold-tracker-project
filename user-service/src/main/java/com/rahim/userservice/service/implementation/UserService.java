@@ -130,4 +130,14 @@ public class UserService implements IUserService {
             throw new RuntimeException("User not found.");
         }
     }
+
+    @Override
+    public void deleteUserAccount(int userId) {
+        try {
+            userRepository.deleteById(userId);
+            log.info("User account with ID {} deleted successfully.", userId);
+        } catch (Exception e) {
+            log.error("Error deleting user account with ID {}: {}", userId, e.getMessage(), e);
+        }
+    }
 }

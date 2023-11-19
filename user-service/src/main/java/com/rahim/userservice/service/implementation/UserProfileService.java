@@ -78,12 +78,30 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public Optional<UserProfile> getProfileByUsername(String username) {
-        return userProfileRepository.findByUsername(username);
+        try {
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findByUsername(username);
+
+            if (userProfileOptional.isPresent()) {
+                log.info("User profile found for username: {}", username);
+            } else {
+                log.info("User profile not found for username: {}", username);
+            }
+
+            return userProfileOptional;
+        } catch (Exception e) {
+            log.error("Error fetching user profile for username {}: {}", username, e.getMessage(), e);
+            return Optional.empty();
+        }
     }
 
     @Override
     public void deleteUserProfile(int userId) {
-        int profileId = userProfileRepository.getProfileId(userId);
-        userProfileRepository.deleteById(profileId);
+        try {
+            int profileId = userProfileRepository.getProfileId(userId);
+            userProfileRepository.deleteById(profileId);
+            log.info("User profile with ID {} deleted successfully.", profileId);
+        } catch (Exception e) {
+            log.error("Error deleting user profile for user ID {}: {}", userId, e.getMessage(), e);
+        }
     }
 }

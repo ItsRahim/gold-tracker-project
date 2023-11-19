@@ -5,6 +5,7 @@ import com.rahim.userservice.model.User;
 import com.rahim.userservice.repository.UserProfileRepository;
 import com.rahim.userservice.repository.UserRepository;
 import com.rahim.userservice.service.IInternalUserService;
+import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,14 +20,14 @@ import java.util.List;
 public class InternalUserService implements IInternalUserService {
     private static final Logger log = LoggerFactory.getLogger(InternalUserService.class);
     private final IUserService userService;
+    private final IUserProfileService userProfileService;
     private final UserRepository userRepository;
-    private final UserProfileRepository userProfileRepository;
 
     @Override
     public void deleteUserAccount(int userId) {
         try {
-            userProfileRepository.deleteUserProfileByUserId(userId);
-            userRepository.deleteByUserId(userId);
+            userProfileService.deleteUserProfile(userId);
+            userService.deleteUserAccount(userId);
 
             log.info("User account with ID {} deleted successfully.", userId);
         } catch (Exception e) {
@@ -50,12 +51,12 @@ public class InternalUserService implements IInternalUserService {
                     userRepository.save(user);
                 }
 
-                log.info("Inactive user deletion process has been completed successfully");
+                log.info("Inactive user deletion request process has been completed successfully");
             } else {
-                log.info("No inactive users found for deletion");
+                log.info("No inactive users found for deletion request");
             }
         } catch (Exception e) {
-            log.error("An error has occurred during the deletion process: {}", e.getMessage());
+            log.error("An error has occurred during the deletion request process: {}", e.getMessage());
         }
     }
 
