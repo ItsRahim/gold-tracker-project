@@ -6,3 +6,11 @@ CREATE TABLE rgts.email_history (
     status VARCHAR(50) NOT NULL,
     retention_date DATE NOT NULL
 );
+
+COMMENT ON TABLE rgts.email_history IS 'The email history table';
+COMMENT ON COLUMN rgts.email_history.id IS 'The unique identifier for the email history table';
+COMMENT ON COLUMN rgts.email_history.email_template_id IS 'The foreign key associated to the email template sent';
+COMMENT ON COLUMN rgts.email_history.recipient_email IS 'The email address the email was sent to';
+COMMENT ON COLUMN rgts.email_history.sent_at IS 'The date the email was sent';
+COMMENT ON COLUMN rgts.email_history.sent_at IS 'The status of the email';
+COMMENT ON COLUMN rgts.email_history.retention_date IS 'The date the record of the email being sent will be deleted';
