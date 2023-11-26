@@ -9,3 +9,6 @@ spring:
           uri: https://github.com/ItsRahim/gold-config-server
           username: itsrahim
           password: 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
+
+  kafka:
+    bootstrap-servers: localhost:9092
