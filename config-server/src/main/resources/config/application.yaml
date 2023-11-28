@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    database: postgresql
+    show-sql: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gold
+    username: postgres
+    password: password
+  kafka:
+    bootstrap-servers: localhost:9092

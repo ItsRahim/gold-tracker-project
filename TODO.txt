@@ -8,3 +8,10 @@
 8) For security after development, SSL on the springboot application, kafka, db and custom api - FINAL
 9) Create Quartz job to get gold price
 10) Enable vault for secrets
+
+notification-service
+transaction-service
+report-service
+email-service
+authentication-service
+holdings-service
