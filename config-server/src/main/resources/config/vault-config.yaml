@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    vault:
+      enabled: true
+      kv:
+        enabled: true
+        backend: secret
+        default-context: config-server
+      host: localhost
+      port: 8200
+      scheme: http
+      authentication: TOKEN
+      token: hvs.lsYCUUsKecLjj0q9OLag8onW
+#      ssl:
+#        key-store: file://{location}
+#        key-store-password: password
+#        trust-store: file://{location}
+#        trust-store-password: password
