@@ -1,3 +1,8 @@
 spring:
   application:
     name: user-service
+  cloud:
+    config:
+      enabled: true
+  config:
+    import: configserver:http://localhost:8888
