@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8888
+  config:
+    import: configserver:http://localhost:8888/vault-config
