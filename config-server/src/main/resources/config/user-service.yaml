@@ -10,10 +10,3 @@ management:
   tracing:
     sampling:
       probability: 1.0
-
-logging:
-  level:
-    root: INFO
-  file:
-    name: logs/user-service.log
-  pattern: //%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n
