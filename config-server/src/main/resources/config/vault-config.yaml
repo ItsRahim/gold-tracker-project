@@ -10,7 +10,7 @@ spring:
       port: 8200
       scheme: http
       authentication: TOKEN
-      token: hvs.lsYCUUsKecLjj0q9OLag8onW
+      token: hvs.zLyPID1klP2OFLBsk5hwhFUg
 #      ssl:
 #        key-store: file://{location}
 #        key-store-password: password
