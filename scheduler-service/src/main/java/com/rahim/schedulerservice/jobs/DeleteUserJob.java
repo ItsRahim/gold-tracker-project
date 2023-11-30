@@ -27,6 +27,6 @@ public class DeleteUserJob implements Job {
 
         log.info(timerInfo.getCallbackData());
 
-        kafkaService.sendMessage("user-cleanup-topic", "Start Delete Job: " + jobTime);
+        kafkaService.sendMessage("user-service-cleanup-accounts", "Start Delete Job: " + jobTime);
     }
 }
