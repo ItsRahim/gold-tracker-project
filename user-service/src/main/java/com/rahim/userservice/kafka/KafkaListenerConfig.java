@@ -1,5 +1,6 @@
-package com.rahim.userservice.service;
+package com.rahim.userservice.kafka;
 
+import com.rahim.userservice.service.IInternalUserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
