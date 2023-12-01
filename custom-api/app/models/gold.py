@@ -1,7 +1,7 @@
+import json
 from dataclasses import dataclass
 from datetime import datetime
 from app.config.logging import log
-
 
 @dataclass
 class Gold:
@@ -32,5 +32,5 @@ class Gold:
         return {
             'source': self.source,
             'price': self.price,
-            'request_date': self.date
+            'requestDate': self.date
         }
