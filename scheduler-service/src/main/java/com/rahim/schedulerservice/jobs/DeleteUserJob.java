@@ -16,7 +16,7 @@ import java.time.temporal.ChronoUnit;
 @Component
 @RequiredArgsConstructor
 public class DeleteUserJob implements Job {
-    private static final Logger log = LoggerFactory.getLogger(DeleteUserJob.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DeleteUserJob.class);
     private final IKafkaService kafkaService;
 
     @Override
@@ -25,7 +25,7 @@ public class DeleteUserJob implements Job {
         TimerInfo timerInfo = (TimerInfo) jobDataMap.get(DeleteUserJob.class.getSimpleName());
         OffsetDateTime jobTime = OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
-        log.info(timerInfo.getCallbackData());
+        LOG.info(timerInfo.getCallbackData());
 
         kafkaService.sendMessage("user-service-cleanup-accounts", "Start Delete Job: " + jobTime);
     }

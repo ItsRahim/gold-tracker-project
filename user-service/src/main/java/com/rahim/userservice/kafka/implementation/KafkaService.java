@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 @RequiredArgsConstructor
 public class KafkaService implements IKafkaService {
-    private static final Logger log = LoggerFactory.getLogger(KafkaService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaService.class);
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
@@ -28,16 +28,16 @@ public class KafkaService implements IKafkaService {
 
             future.whenComplete((result, ex) -> {
                 if (ex != null) {
-                    log.error("Error sending message to topic '{}': {}", topic, ex.getMessage(), ex);
+                    LOG.error("Error sending message to topic '{}': {}", topic, ex.getMessage(), ex);
                 } else {
-                    log.info("Message sent to topic '{}' successfully. Partition: {}, Offset: {}",
+                    LOG.info("Message sent to topic '{}' successfully. Partition: {}, Offset: {}",
                             topic, result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
                 }
             });
 
             future.get();
         } catch (InterruptedException | ExecutionException e) {
-            log.error("Error occurred in sending message: {}", e.getMessage(), e);
+            LOG.error("Error occurred in sending message: {}", e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }

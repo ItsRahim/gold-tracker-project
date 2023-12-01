@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SchedulerService implements ISchedulerService {
-    private static final Logger log = LoggerFactory.getLogger(SchedulerService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SchedulerService.class);
 
     private final Scheduler scheduler;
 
@@ -32,7 +32,7 @@ public class SchedulerService implements ISchedulerService {
         try {
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
-            log.error("An error has occurred with the scheduler: {}", e.getMessage());
+            LOG.error("An error has occurred with the scheduler: {}", e.getMessage());
         }
     }
 
@@ -46,14 +46,14 @@ public class SchedulerService implements ISchedulerService {
                             final JobDetail jobDetail = scheduler.getJobDetail(jobKey);
                             return (TimerInfo) jobDetail.getJobDataMap().get(jobKey.getName());
                         } catch (SchedulerException e) {
-                            log.error("Some error has occurred: {}", e.getMessage());
+                            LOG.error("Some error has occurred: {}", e.getMessage());
                             return null;
                         }
                     })
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
         } catch(SchedulerException e) {
-            log.error("An error has occurred fetching jobs: {}", e.getMessage());
+            LOG.error("An error has occurred fetching jobs: {}", e.getMessage());
             return Collections.emptyList();
         }
     }
@@ -63,13 +63,13 @@ public class SchedulerService implements ISchedulerService {
         try {
             final JobDetail jobDetail = scheduler.getJobDetail(new JobKey(timerId));
             if (jobDetail == null) {
-                log.error("Failed to find timer with ID '{}'", timerId);
+                LOG.error("Failed to find timer with ID '{}'", timerId);
                 return null;
             }
 
             return (TimerInfo) jobDetail.getJobDataMap().get(timerId);
         } catch (final SchedulerException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             return null;
         }
     }
@@ -78,7 +78,7 @@ public class SchedulerService implements ISchedulerService {
         try {
             return scheduler.deleteJob(new JobKey(timerId));
         } catch (SchedulerException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             return false;
         }
     }
@@ -88,7 +88,7 @@ public class SchedulerService implements ISchedulerService {
         try {
             scheduler.start();
         } catch (SchedulerException e) {
-            log.error("An error has occurred with starting the scheduler: {}", e.getMessage());
+            LOG.error("An error has occurred with starting the scheduler: {}", e.getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ public class SchedulerService implements ISchedulerService {
         try {
             scheduler.shutdown();
         } catch (SchedulerException e) {
-            log.error("An error has occurred with shutting the scheduler: {}", e.getMessage());
+            LOG.error("An error has occurred with shutting the scheduler: {}", e.getMessage());
         }
     }
 }

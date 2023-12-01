@@ -17,15 +17,15 @@ import java.util.Optional;
 public class UserProfileService implements IUserProfileService {
 
     private final UserProfileRepository userProfileRepository;
-    private static final Logger log = LoggerFactory.getLogger(UserProfileService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserProfileService.class);
 
     @Override
     public void createUserProfile(UserProfile userProfile) {
         try {
             userProfileRepository.save(userProfile);
-            log.info("User profile created successfully. ID: {}", userProfile.getId());
+            LOG.info("User profile created successfully. ID: {}", userProfile.getId());
         } catch (Exception e) {
-            log.error("An error occurred while creating user profile.", e);
+            LOG.error("An error occurred while creating user profile.", e);
         }
     }
 
@@ -35,14 +35,14 @@ public class UserProfileService implements IUserProfileService {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findById(id);
 
             if (userProfileOptional.isPresent()) {
-                log.info("User profile retrieved successfully. ID: {}", id);
+                LOG.info("User profile retrieved successfully. ID: {}", id);
             } else {
-                log.info("User profile not found for ID: {}", id);
+                LOG.info("User profile not found for ID: {}", id);
             }
 
             return userProfileOptional;
         } catch (Exception e) {
-            log.error("An error occurred while retrieving user profile with ID: {}", id, e);
+            LOG.error("An error occurred while retrieving user profile with ID: {}", id, e);
             return Optional.empty();
         }
     }
@@ -52,9 +52,9 @@ public class UserProfileService implements IUserProfileService {
         List<UserProfile> userProfiles = userProfileRepository.findAll();
 
         if(!userProfiles.isEmpty()) {
-            log.info("Found {} users in the database", userProfiles.size());
+            LOG.info("Found {} users in the database", userProfiles.size());
         } else {
-            log.info("No users found in the database");
+            LOG.info("No users found in the database");
         }
 
         return userProfiles;
@@ -83,13 +83,13 @@ public class UserProfileService implements IUserProfileService {
 
                 userProfileRepository.save(profile);
 
-                log.info("Profile with ID {} updated successfully", profileId);
+                LOG.info("Profile with ID {} updated successfully", profileId);
             } catch (Exception e) {
-                log.error("Error updating profile with ID {}: {}", profileId, e.getMessage());
+                LOG.error("Error updating profile with ID {}: {}", profileId, e.getMessage());
                 throw new RuntimeException("Failed to update user.", e);
             }
         } else {
-            log.warn("Profile with ID {} not found.", profileId);
+            LOG.warn("Profile with ID {} not found.", profileId);
             throw new RuntimeException("User not found.");
         }
     }
@@ -100,14 +100,14 @@ public class UserProfileService implements IUserProfileService {
             Optional<UserProfile> userProfileOptional = userProfileRepository.findByUsername(username);
 
             if (userProfileOptional.isPresent()) {
-                log.info("User profile found for username: {}", username);
+                LOG.info("User profile found for username: {}", username);
             } else {
-                log.info("User profile not found for username: {}", username);
+                LOG.info("User profile not found for username: {}", username);
             }
 
             return userProfileOptional;
         } catch (Exception e) {
-            log.error("Error fetching user profile for username {}: {}", username, e.getMessage(), e);
+            LOG.error("Error fetching user profile for username {}: {}", username, e.getMessage(), e);
             return Optional.empty();
         }
     }
@@ -117,9 +117,9 @@ public class UserProfileService implements IUserProfileService {
         try {
             int profileId = userProfileRepository.getProfileId(userId);
             userProfileRepository.deleteById(profileId);
-            log.info("User profile with ID {} deleted successfully.", profileId);
+            LOG.info("User profile with ID {} deleted successfully.", profileId);
         } catch (Exception e) {
-            log.error("Error deleting user profile for user ID {}: {}", userId, e.getMessage(), e);
+            LOG.error("Error deleting user profile for user ID {}: {}", userId, e.getMessage(), e);
         }
     }
 

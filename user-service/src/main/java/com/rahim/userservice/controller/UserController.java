@@ -21,16 +21,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/gold/user-service/user")
 public class UserController {
     private final IUserService userService;
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping()
     public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest) {
         try {
             userService.createUserAndProfile(userRequest);
-            log.info("Successfully Created User: {}", userRequest.getUserProfile().getUsername());
+            LOG.info("Successfully Created User: {}", userRequest.getUserProfile().getUsername());
             return ResponseEntity.status(HttpStatus.CREATED).body("User and User Profile created successfully");
         } catch (Exception e) {
-            log.error("Error creating User and User Profile: {}", e.getMessage());
+            LOG.error("Error creating User and User Profile: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating User and User Profile");
         }
     }
@@ -44,14 +44,14 @@ public class UserController {
                 User user = userOptional.get();
                 UserDTO userDTO = new UserDTO(user);
 
-                log.info("User found with ID: {}", userId);
+                LOG.info("User found with ID: {}", userId);
                 return ResponseEntity.ok(userDTO);
             } else {
-                log.info("User not found with ID: {}", userId);
+                LOG.info("User not found with ID: {}", userId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
         } catch (Exception e) {
-            log.error("Error finding user with ID: {}", userId, e);
+            LOG.error("Error finding user with ID: {}", userId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user");
         }
     }
@@ -62,7 +62,7 @@ public class UserController {
             userService.updateUser(userId, updatedData);
             return ResponseEntity.ok("User updated successfully");
         } catch (Exception e) {
-            log.error("Error updating user: {}", e.getMessage());
+            LOG.error("Error updating user: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user");
         }
     }

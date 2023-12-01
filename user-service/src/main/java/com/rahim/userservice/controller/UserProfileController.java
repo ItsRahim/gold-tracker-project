@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/gold/user-service/profile")
 public class UserProfileController {
     private final IUserProfileService userProfileService;
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping()
     public ResponseEntity<List<UserProfile>> findAllProfiles() {
@@ -47,7 +47,7 @@ public class UserProfileController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found with username: " + username);
             }
         } catch (Exception e) {
-            log.error("Error finding user profile: {}", e.getMessage());
+            LOG.error("Error finding user profile: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user profile");
         }
     }

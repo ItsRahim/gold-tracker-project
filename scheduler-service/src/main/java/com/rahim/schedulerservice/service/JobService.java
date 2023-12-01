@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class JobService {
-    private static final Logger log = LoggerFactory.getLogger(JobService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JobService.class);
     private final ISchedulerService schedulerService;
 
     @PostConstruct

@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuditLogService implements IAuditLog {
     private final AuditLogRepository auditLogRepository;
-    private static final Logger log = LoggerFactory.getLogger(AuditLogService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AuditLogService.class);
 
     @Override
     public void initialise(User oldUser, User newUser, String action) throws JsonProcessingException {
@@ -40,7 +40,7 @@ public class AuditLogService implements IAuditLog {
         AuditLog auditLog = new AuditLog(userId, auditLogData.getActionPerformed(), now, auditData.get(0), auditData.get(1));
 
         auditLogRepository.save(auditLog);
-        log.info("Audit Log created for user with ID: {}", userId);
+        LOG.info("Audit Log created for user with ID: {}", userId);
     }
 
     private ArrayList<String> convertToJson(User oldUser, User newUser) throws JsonProcessingException {

@@ -26,7 +26,7 @@ import java.util.Optional;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final IUserProfileService userProfileService;
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     @Override
     @Transactional
@@ -43,16 +43,16 @@ public class UserService implements IUserService {
                 userProfile.setUser(user);
                 userProfileService.createUserProfile(userProfile);
 
-                log.info("Successfully created User and User Profile for: {}", userProfile.getUsername());
+                LOG.info("Successfully created User and User Profile for: {}", userProfile.getUsername());
             } catch (DataIntegrityViolationException e) {
-                log.error("Error creating User and User Profile. Data integrity violation: {}", e.getMessage());
+                LOG.error("Error creating User and User Profile. Data integrity violation: {}", e.getMessage());
                 throw new DataIntegrityViolationException("Error creating User and User Profile.", e);
             } catch (Exception e) {
-                log.error("Unexpected error creating User and User Profile: {}", e.getMessage());
+                LOG.error("Unexpected error creating User and User Profile: {}", e.getMessage());
                 throw new Exception("Unexpected error creating User and User Profile.", e);
             }
         } else {
-            log.warn("User with email {} or username {} already exists. Not creating duplicate.", email, username);
+            LOG.warn("User with email {} or username {} already exists. Not creating duplicate.", email, username);
             throw new DuplicateUserException("User with email " + email + " or username " + username + " already exists.");
         }
     }
@@ -66,7 +66,7 @@ public class UserService implements IUserService {
         try {
             return userRepository.findById(userId);
         } catch (Exception e) {
-            log.error("Error while finding a user with ID: {}", userId, e);
+            LOG.error("Error while finding a user with ID: {}", userId, e);
             throw new UserNotFoundException("Error finding a user by ID");
         }
     }
@@ -76,9 +76,9 @@ public class UserService implements IUserService {
         List<User> users = userRepository.findAll();
 
         if (!users.isEmpty()) {
-            log.info("Found {} users in the database", users.size());
+            LOG.info("Found {} users in the database", users.size());
         } else {
-            log.info("No users found in the database");
+            LOG.info("No users found in the database");
         }
 
         return users;
@@ -104,14 +104,14 @@ public class UserService implements IUserService {
                 userRepository.save(user);
 
                 //TODO: Send email to user that there account WILL be deleted
-                log.info("User with ID {} is pending deletion on {}", userId, deletionDate);
+                LOG.info("User with ID {} is pending deletion on {}", userId, deletionDate);
 
                 return true;
             } else {
-                log.info("User with ID {} is not eligible for deletion", userId);
+                LOG.info("User with ID {} is not eligible for deletion", userId);
             }
         } else {
-            log.warn("User with ID {} not found.", userId);
+            LOG.warn("User with ID {} not found.", userId);
         }
 
         return false;
@@ -134,13 +134,13 @@ public class UserService implements IUserService {
 
                 userRepository.save(user);
 
-                log.info("User with ID {} updated successfully", userId);
+                LOG.info("User with ID {} updated successfully", userId);
             } catch (Exception e) {
-                log.error("Error updating user with ID {}: {}", userId, e.getMessage());
+                LOG.error("Error updating user with ID {}: {}", userId, e.getMessage());
                 throw new RuntimeException("Failed to update user.", e);
             }
         } else {
-            log.warn("User with ID {} not found.", userId);
+            LOG.warn("User with ID {} not found.", userId);
             throw new UserNotFoundException("User with ID " + userId + " not found");
         }
     }
@@ -149,9 +149,9 @@ public class UserService implements IUserService {
     public void deleteUserAccount(int userId) {
         try {
             userRepository.deleteById(userId);
-            log.info("User account with ID {} deleted successfully.", userId);
+            LOG.info("User account with ID {} deleted successfully.", userId);
         } catch (Exception e) {
-            log.error("Error deleting user account with ID {}: {}", userId, e.getMessage(), e);
+            LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage(), e);
         }
     }
 }

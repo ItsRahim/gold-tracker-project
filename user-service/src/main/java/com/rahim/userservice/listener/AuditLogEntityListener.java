@@ -8,40 +8,40 @@ import org.springframework.stereotype.Component;
 @Deprecated
 @Component
 public class AuditLogEntityListener {
-    private static final Logger log = LoggerFactory.getLogger(AuditLogEntityListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AuditLogEntityListener.class);
 
     @PrePersist
     public void prePersist(Object o) {
-        log.debug("Entity will be persisted: {}", o);
+        LOG.debug("Entity will be persisted: {}", o);
     }
 
     @PreUpdate
     public void preUpdate(Object o) {
-        log.debug("Entity will be updated: {}", o);
+        LOG.debug("Entity will be updated: {}", o);
     }
 
     @PreRemove
     public void preRemove(Object o) {
-        log.debug("Entity will be removed: {}", o);
+        LOG.debug("Entity will be removed: {}", o);
     }
 
     @PostLoad
     public void postLoad(Object o) {
-        log.debug("Entity has been loaded: {}", o);
+        LOG.debug("Entity has been loaded: {}", o);
     }
 
     @PostRemove
     public void postRemove(Object o) {
-        log.debug("Entity has been removed: {}", o);
+        LOG.debug("Entity has been removed: {}", o);
     }
 
     @PostUpdate
     public void postUpdate(Object o) {
-        log.debug("Entity has been updated: {}", o);
+        LOG.debug("Entity has been updated: {}", o);
     }
 
     @PostPersist
     public void postPersist(Object o) {
-        log.debug("Entity has been persisted: {}", o);
+        LOG.debug("Entity has been persisted: {}", o);
     }
 }

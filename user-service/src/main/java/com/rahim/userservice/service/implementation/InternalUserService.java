@@ -2,7 +2,6 @@ package com.rahim.userservice.service.implementation;
 
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.model.User;
-import com.rahim.userservice.repository.UserProfileRepository;
 import com.rahim.userservice.repository.UserRepository;
 import com.rahim.userservice.service.IInternalUserService;
 import com.rahim.userservice.service.IUserProfileService;
@@ -18,7 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class InternalUserService implements IInternalUserService {
-    private static final Logger log = LoggerFactory.getLogger(InternalUserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InternalUserService.class);
     private final IUserService userService;
     private final IUserProfileService userProfileService;
     private final UserRepository userRepository;
@@ -29,9 +28,9 @@ public class InternalUserService implements IInternalUserService {
             userProfileService.deleteUserProfile(userId);
             userService.deleteUserAccount(userId);
 
-            log.info("User account with ID {} deleted successfully.", userId);
+            LOG.info("User account with ID {} deleted successfully.", userId);
         } catch (Exception e) {
-            log.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
+            LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
         }
     }
 
@@ -43,7 +42,7 @@ public class InternalUserService implements IInternalUserService {
             List<User> inactiveUsers = userRepository.findInactiveUsers(cutoffDate);
 
             if (!inactiveUsers.isEmpty()) {
-                log.info("Found {} inactive users.", inactiveUsers.size());
+                LOG.info("Found {} inactive users.", inactiveUsers.size());
 
                 for (User user : inactiveUsers) {
                     user.setAccountStatus(AccountState.INACTIVE.getStatus());
@@ -51,12 +50,12 @@ public class InternalUserService implements IInternalUserService {
                     userRepository.save(user);
                 }
 
-                log.info("Inactive user deletion request process has been completed successfully");
+                LOG.info("Inactive user deletion request process has been completed successfully");
             } else {
-                log.info("No inactive users found for deletion request");
+                LOG.info("No inactive users found for deletion");
             }
         } catch (Exception e) {
-            log.error("An error has occurred during the deletion request process: {}", e.getMessage());
+            LOG.error("An error has occurred during the deletion request process: {}", e.getMessage());
         }
     }
 
@@ -67,21 +66,21 @@ public class InternalUserService implements IInternalUserService {
             LocalDate currentDate = LocalDate.now();
 
             if (!pendingDeleteUsers.isEmpty()) {
-                log.info("Found {} users pending deletion.", pendingDeleteUsers.size());
+                LOG.info("Found {} users pending deletion.", pendingDeleteUsers.size());
 
                 for (User user : pendingDeleteUsers) {
                     if (user.getDeleteDate() != null && user.getDeleteDate().isEqual(currentDate)) {
-                        log.info("Deleting user account with ID: {}", user.getId());
+                        LOG.info("Deleting user account with ID: {}", user.getId());
                         deleteUserAccount(user.getId());
                     } else {
-                        log.info("Skipping user with ID: {} as delete date is not today.", user.getId());
+                        LOG.info("Skipping user with ID: {} as delete date is not today.", user.getId());
                     }
                 }
             } else {
-                log.info("No users found for deletion.");
+                LOG.info("No users found for deletion.");
             }
         } catch (Exception e) {
-            log.error("An error occurred during the cleanup of user accounts pending deletion: {}", e.getMessage());
+            LOG.error("An error occurred during the cleanup of user accounts pending deletion: {}", e.getMessage());
         }
     }
 
@@ -93,19 +92,19 @@ public class InternalUserService implements IInternalUserService {
             List<User> usersToDelete = userRepository.findUsersToDelete(cutoffDate);
 
             if (!usersToDelete.isEmpty()) {
-                log.info("Found {} users to be deleted.", usersToDelete.size());
+                LOG.info("Found {} users to be deleted.", usersToDelete.size());
 
                 for (User user : usersToDelete) {
                     userService.deleteUserRequest(user.getId());
-                    log.info("Sending delete request to user with ID: {}", user.getId());
+                    LOG.info("Sending delete request to user with ID: {}", user.getId());
                 }
 
-                log.info("User deletion requests sent successfully");
+                LOG.info("User deletion requests sent successfully");
             } else {
-                log.info("No users found for deletion requests");
+                LOG.info("No users found for deletion requests");
             }
         } catch (Exception e) {
-            log.error("An error occurred during the user deletion request process: {}", e.getMessage());
+            LOG.error("An error occurred during the user deletion request process: {}", e.getMessage());
         }
     }
 }
