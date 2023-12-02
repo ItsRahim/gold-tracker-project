@@ -13,13 +13,4 @@ public class KafkaListenerConfig {
     public void updateGoldPriceJob(String message) {
         LOG.info("Message received from Scheduler Service: {}", message);
     }
-
-    @KafkaListener(topics = "gold-price-stream", groupId = "group2")
-    public void processPriceChange(String priceData) {
-        if (priceData.isEmpty()) {
-            LOG.error("No gold price data received from the custom pricing API.");
-        } else {
-            LOG.info("Successfully received the latest gold prices. Processing data...");
-        }
-    }
 }
