@@ -20,7 +20,7 @@ public class GoldPriceCalculator {
             BigDecimal result = ouncesBigDecimal.divide(gramsPerOunce, 2, RoundingMode.HALF_UP);
             pricePerGram = result.doubleValue();
 
-            LOG.info("Conversion successful: {} per ounce is {} per gram", ouncesBigDecimal, pricePerGram);
+            LOG.info("Conversion successful: £{} per ounce is £{} per gram", ouncesBigDecimal, pricePerGram);
 
         } catch (ArithmeticException ex) {
             LOG.error("Error converting price per ounce to per gram: {}", ex.getMessage());
