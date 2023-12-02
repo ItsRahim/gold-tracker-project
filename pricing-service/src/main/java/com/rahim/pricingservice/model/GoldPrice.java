@@ -17,7 +17,7 @@ public class GoldPrice {
     @Column(name = "price_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gold_type_id")
     private GoldType goldType;
 
