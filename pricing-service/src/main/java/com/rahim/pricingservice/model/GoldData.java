@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -11,7 +13,7 @@ import lombok.*;
 @ToString
 public class GoldData {
     private String source;
-    private double price;
+    private BigDecimal price;
     private String requestDate;
 
     public GoldData(String data) throws JsonProcessingException {
