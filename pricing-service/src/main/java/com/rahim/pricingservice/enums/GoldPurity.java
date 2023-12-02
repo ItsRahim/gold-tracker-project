@@ -30,10 +30,19 @@ public enum GoldPurity {
     K1(1.0 / 24, "1K");
 
     private final double purity;
-    private final String label;
+    private final String carat;
 
-    GoldPurity(double purity, String label) {
+    GoldPurity(double purity, String carat) {
         this.purity = purity;
-        this.label = label;
+        this.carat = carat;
+    }
+
+    public static double getPurityByCarat(String carat) {
+        for (GoldPurity goldPurity : GoldPurity.values()) {
+            if (goldPurity.getCarat().equalsIgnoreCase(carat)) {
+                return goldPurity.getPurity();
+            }
+        }
+        throw new IllegalArgumentException("Invalid gold purity label: " + carat);
     }
 }
