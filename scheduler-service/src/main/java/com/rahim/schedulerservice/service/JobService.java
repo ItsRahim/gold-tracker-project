@@ -27,7 +27,7 @@ public class JobService {
                 .runForever(true)
                 .repeatIntervalMs(12 * 60 * 60 * 1000)
                 .initialOffsetMs(1000)
-                .callbackData("User Microservice Job")
+                .callbackData("User Microservice Job - Cleanup Accounts")
                 .build();
         schedulerService.schedule(DeleteUserJob.class, info);
     }
@@ -38,7 +38,7 @@ public class JobService {
                 .runForever(true)
                 .repeatIntervalMs(60000)
                 .initialOffsetMs(1000)
-                .callbackData("User Microservice Job")
+                .callbackData("Pricing Microservice Job - Update Gold Prices")
                 .build();
         schedulerService.schedule(UpdateGoldPriceJob.class, info);
     }
