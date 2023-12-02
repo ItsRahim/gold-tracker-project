@@ -36,4 +36,3 @@ INSERT INTO rgts.gold_prices(gold_type_id, current_price) VALUES (22, 0);
 INSERT INTO rgts.gold_prices(gold_type_id, current_price) VALUES (23, 0);
 INSERT INTO rgts.gold_prices(gold_type_id, current_price) VALUES (24, 0);
 INSERT INTO rgts.gold_prices(gold_type_id, current_price) VALUES (25, 0);
-INSERT INTO rgts.gold_prices(gold_type_id, current_price) VALUES (26, 0);
