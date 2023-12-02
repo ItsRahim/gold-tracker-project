@@ -63,8 +63,6 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
 
                 BigDecimal newPrice = apiData.getPrice().setScale(2, RoundingMode.HALF_UP);
 
-                LOG.info(String.valueOf(newPrice));
-
                 goldTicker.setCurrentPrice(newPrice);
                 goldTicker.setUpdatedAt(updatedTime);
 
@@ -81,7 +79,6 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
             LOG.error("Error updating gold ticker price: {}", e.getMessage(), e);
         }
     }
-
 
     @Override
     public void updateGoldPrices() {
