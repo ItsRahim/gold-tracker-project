@@ -37,7 +37,7 @@ public class GoldPriceCalculator {
             LOG.error("Invalid input values. Carat purity: {}, Net weight: {}, Price per gram: {}", caratPurity, netWeight, pricePerGram);
             throw new IllegalArgumentException("Invalid input values. Carat purity, net weight, and price per gram must be non-negative.");
         }
-
+    
         double goldPrice = caratPurity * netWeight * pricePerGram;
         LOG.info("Calculated Gold Price: Carat Purity: {}, Net Weight: {} grams, Price per gram: ${}, Total Price: ${}", caratPurity, netWeight, pricePerGram, goldPrice);
 
