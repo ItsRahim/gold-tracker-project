@@ -13,4 +13,13 @@ COMMENT ON COLUMN rgts.gold_types.net_weight IS 'The net weight of the gold item
 COMMENT ON COLUMN rgts.gold_types.carat IS 'The purity of the item (e.g., 18k, 24k)';
 COMMENT ON COLUMN rgts.gold_types.description IS 'The description of the item';
 
-INSERT INTO rgts.gold_types(name, net_weight, carat, description) VALUES ('XAUGBP', NULL, '24K', 'Pure Gold (24K)')
+INSERT INTO rgts.gold_types(name, net_weight, carat, description) VALUES ('XAUGBP', NULL, '24K', 'Pure Gold (24K)');
+
+DO $$
+    DECLARE
+        carat INT;
+    BEGIN
+        FOR carat IN 1..24 LOOP
+                EXECUTE 'INSERT INTO rgts.gold_types(name, net_weight, carat, description) VALUES (''' || carat || 'K'', NULL, ''' || carat || 'K'', ''' || carat || '.0 / 24'')';
+            END LOOP;
+    END $$;
