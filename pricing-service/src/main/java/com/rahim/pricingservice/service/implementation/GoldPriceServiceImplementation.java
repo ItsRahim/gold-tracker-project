@@ -8,8 +8,8 @@ import com.rahim.pricingservice.repository.GoldPriceRepository;
 import com.rahim.pricingservice.service.IGoldPriceService;
 import com.rahim.pricingservice.service.IGoldTypeService;
 import com.rahim.pricingservice.util.GoldPriceCalculator;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -22,7 +22,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-@Setter
 @Service
 @RequiredArgsConstructor
 public class GoldPriceServiceImplementation implements IGoldPriceService {
@@ -135,6 +134,35 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
         } catch (DataAccessException e) {
             LOG.error("Error fetching gold item with ID: {}", goldId, e);
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public void processNewGoldType(int goldTypeId) {
+        try {
+            LOG.info("Processing new gold type with ID: {}", goldTypeId);
+            goldPriceRepository.insertGoldType(goldTypeId);
+            LOG.info("Insert operation successful for gold type with ID: {}", goldTypeId);
+        } catch (Exception e) {
+            LOG.error("Error processing new gold type with ID {}: {}", goldTypeId, e.getMessage());
+            throw new RuntimeException("Error processing new gold type", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteGoldType(int goldTypeId) {
+        try {
+            Integer priceId = goldPriceRepository.getPriceIdByTypeId(goldTypeId);
+            if (priceId != null) {
+                goldPriceRepository.deleteById(priceId);
+                LOG.info("Gold type with ID {} and associated price deleted successfully.", goldTypeId);
+            } else {
+                LOG.warn("Gold type with ID {} not found. Unable to delete associated price.", goldTypeId);
+            }
+        } catch (Exception e) {
+            LOG.error("Error deleting gold type with ID {}: {}", goldTypeId, e.getMessage());
+            throw new RuntimeException("Error deleting gold type", e);
         }
     }
 }

@@ -8,5 +8,7 @@ public interface IGoldPriceService {
     void setKafkaData(String data);
     void updateGoldTickerPrice();
     Optional<GoldPrice> getGoldPrice(int goldId);
+    void processNewGoldType(int goldTypeId);
+    void deleteGoldType(int goldTypeId);
 
 }
