@@ -1,14 +1,16 @@
 package com.rahim.pricingservice.service;
 
-import com.rahim.pricingservice.model.GoldPrice;
+import com.rahim.pricingservice.dto.GoldPriceDTO;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 public interface IGoldPriceService {
     void setKafkaData(String data);
     void updateGoldTickerPrice();
-    Optional<GoldPrice> getGoldPrice(int goldId);
+    Optional<GoldPriceDTO> getGoldPrice(int goldId);
+    List<GoldPriceDTO> getAllGoldPrices();
     void processNewGoldType(int goldTypeId);
-    void deleteGoldType(int goldTypeId);
-
+    void deleteGoldPrice(int goldTypeId);
 }

@@ -30,4 +30,16 @@ public class KafkaListenerConfig {
             goldPriceService.setKafkaData(priceData);
         }
     }
+
+    @KafkaListener(topics = "pricing-service-new-type", groupId = "group2")
+    public void addNewGoldPrice(String message) {
+        LOG.info("Message received from Scheduler Service: {}", message);
+        goldPriceService.processNewGoldType(Integer.parseInt(message));
+    }
+
+    @KafkaListener(topics = "pricing-service-delete-type", groupId = "group2")
+    public void removeGoldPrice(String message) {
+        LOG.info("Message received from Scheduler Service: {}", message);
+        goldPriceService.deleteGoldPrice(Integer.parseInt(message));
+    }
 }

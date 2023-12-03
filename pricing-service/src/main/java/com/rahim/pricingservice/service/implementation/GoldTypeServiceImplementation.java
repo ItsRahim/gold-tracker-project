@@ -1,5 +1,6 @@
 package com.rahim.pricingservice.service.implementation;
 
+import com.rahim.pricingservice.kafka.IKafkaService;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
 import com.rahim.pricingservice.service.IGoldPriceService;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public class GoldTypeServiceImplementation implements IGoldTypeService {
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeServiceImplementation.class);
     private final GoldTypeRepository goldTypeRepository;
-    private final IGoldPriceService goldPriceService;
+    private final IKafkaService kafkaService;
 
     @Override
     public List<Integer> getAllIds() {
@@ -45,7 +46,7 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
         try {
             GoldType savedGoldType = goldTypeRepository.save(goldType);
             LOG.info("Successfully added new gold type: {}", savedGoldType.getName());
-            goldPriceService.processNewGoldType(savedGoldType.getId());
+            kafkaService.sendMessage("pricing-service-new-type", String.valueOf(savedGoldType.getId()));
         } catch (Exception e) {
             LOG.error("Unexpected error adding new gold type: {}", e.getMessage());
             throw new Exception("Unexpected error adding new gold type", e);
@@ -99,7 +100,7 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
                 LOG.warn("Gold type with ID: {} does not exist. Unable to delete.", goldId);
                 return;
             }
-            goldPriceService.deleteGoldType(goldId);
+            kafkaService.sendMessage("pricing-service-delete-type", String.valueOf(goldId));
             goldTypeRepository.deleteById(goldId);
             LOG.info("Gold type with ID {} deleted successfully.", goldId);
         } catch (Exception e) {
@@ -112,9 +113,9 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
         List<GoldType> goldTypes = goldTypeRepository.findAll();
 
         if (!goldTypes.isEmpty()) {
-            LOG.info("Found {} users in the database", goldTypes.size());
+            LOG.info("Found {} gold types in the database", goldTypes.size());
         } else {
-            LOG.info("No users found in the database");
+            LOG.info("No gold types found in the database");
         }
 
         return goldTypes;

@@ -3,6 +3,7 @@ package com.rahim.pricingservice.service.implementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
+import com.rahim.pricingservice.dto.GoldPriceDTO;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldPriceRepository;
 import com.rahim.pricingservice.service.IGoldPriceService;
@@ -12,7 +13,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,6 +21,7 @@ import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +72,8 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
 
                 LOG.info("Gold ticker price updated successfully. New price: {}, Updated time: {}", newPrice, updatedTime);
 
-                updateGoldPrices();
+                List<Integer> idsToUpdate = goldTypeService.getAllIds();
+                updateGoldPrices(idsToUpdate);
 
             } else {
                 LOG.warn("Gold ticker with ID 1 not found in the repository. Unable to update.");
@@ -81,9 +83,8 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
         }
     }
 
-    private void updateGoldPrices() {
+    private void updateGoldPrices(List<Integer> idsToUpdate) {
         try {
-            List<Integer> idsToUpdate = goldTypeService.getAllIds();
             int numOfUpdates = idsToUpdate.size();
 
             for (int id : idsToUpdate) {
@@ -120,20 +121,37 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
     }
 
     @Override
-    public Optional<GoldPrice> getGoldPrice(int goldId) {
+    public Optional<GoldPriceDTO> getGoldPrice(int goldId) {
         try {
-            Optional<GoldPrice> goldPrice = goldPriceRepository.findById(goldId);
+            Optional<GoldPrice> goldPriceOptional = goldPriceRepository.findById(goldId);
+            return goldPriceOptional.map(goldPrice -> new GoldPriceDTO(
+                    goldPrice.getId(),
+                    goldPrice.getGoldType().getName(),
+                    goldPrice.getCurrentPrice(),
+                    goldPrice.getUpdatedAt())
+            );
+        } catch (Exception e) {
+            LOG.error("Error getting gold price with ID {}: {}", goldId, e.getMessage(), e);
+            throw new RuntimeException("Error getting gold price", e);
+        }
+    }
 
-            if (goldPrice.isPresent()) {
-                LOG.info("Found gold item with ID: {}", goldId);
-            } else {
-                LOG.info("Gold item with ID: {} Not found", goldId);
-            }
+    @Override
+    public List<GoldPriceDTO> getAllGoldPrices() {
+        try {
+            List<GoldPrice> goldPrices = goldPriceRepository.findAll();
 
-            return goldPrice;
-        } catch (DataAccessException e) {
-            LOG.error("Error fetching gold item with ID: {}", goldId, e);
-            return Optional.empty();
+            return goldPrices.stream()
+                    .map(goldPrice -> new GoldPriceDTO(
+                            goldPrice.getId(),
+                            goldPrice.getGoldType().getName(),
+                            goldPrice.getCurrentPrice(),
+                            goldPrice.getUpdatedAt())
+                    )
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            LOG.error("Error getting all gold prices: {}", e.getMessage(), e);
+            throw new RuntimeException("Error getting all gold prices", e);
         }
     }
 
@@ -141,7 +159,7 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
     public void processNewGoldType(int goldTypeId) {
         try {
             LOG.info("Processing new gold type with ID: {}", goldTypeId);
-            goldPriceRepository.insertGoldType(goldTypeId);
+            goldPriceRepository.addNewGoldPrice(goldTypeId);
             LOG.info("Insert operation successful for gold type with ID: {}", goldTypeId);
         } catch (Exception e) {
             LOG.error("Error processing new gold type with ID {}: {}", goldTypeId, e.getMessage());
@@ -151,7 +169,7 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
 
     @Override
     @Transactional
-    public void deleteGoldType(int goldTypeId) {
+    public void deleteGoldPrice(int goldTypeId) {
         try {
             Integer priceId = goldPriceRepository.getPriceIdByTypeId(goldTypeId);
             if (priceId != null) {
