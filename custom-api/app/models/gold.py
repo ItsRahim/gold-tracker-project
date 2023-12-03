@@ -1,7 +1,7 @@
-import json
 from dataclasses import dataclass
 from datetime import datetime
 from app.config.logging import log
+
 
 @dataclass
 class Gold:
