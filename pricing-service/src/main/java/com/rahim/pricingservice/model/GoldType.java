@@ -1,5 +1,6 @@
 package com.rahim.pricingservice.model;
 
+import com.rahim.pricingservice.listener.GoldTypeEntityListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "gold_types", schema = "rgts")
+@EntityListeners(GoldTypeEntityListener.class)
 public class GoldType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
