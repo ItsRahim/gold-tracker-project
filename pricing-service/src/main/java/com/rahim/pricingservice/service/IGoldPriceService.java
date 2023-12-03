@@ -5,8 +5,8 @@ import com.rahim.pricingservice.model.GoldPrice;
 import java.util.Optional;
 
 public interface IGoldPriceService {
+    void setKafkaData(String data);
     void updateGoldTickerPrice();
-    void updateGoldPrices();
     Optional<GoldPrice> getGoldPrice(int goldId);
 
 }

@@ -9,10 +9,10 @@ import com.rahim.pricingservice.service.IGoldPriceService;
 import com.rahim.pricingservice.service.IGoldTypeService;
 import com.rahim.pricingservice.util.GoldPriceCalculator;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
+@Setter
 @Service
 @RequiredArgsConstructor
 public class GoldPriceServiceImplementation implements IGoldPriceService {
@@ -31,23 +32,24 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
     private final GoldPriceCalculator goldPriceCalculator;
     private final String GOLD_TICKER = "XAUGBP";
     private GoldData apiData;
+    private String kafkaData;
 
-    @KafkaListener(topics = "gold-price-stream", groupId = "group2")
-    public void processPriceChange(String priceData) {
+
+    @Override
+    public void setKafkaData(String data) {
+        this.kafkaData = data;
+        processApiData();
+    }
+
+    public void processApiData() {
         try {
-            if (priceData.isEmpty()) {
-                LOG.error("No gold price data received from the custom pricing API.");
-            } else {
-                LOG.info("Successfully received the latest gold prices. Processing data...");
-                apiData = new GoldData(priceData);
-                goldPriceCalculator.calculatePricePerGram(apiData.getPrice());
-
-                LOG.debug("Received GoldData: {}", apiData);
-
-                updateGoldTickerPrice();
-            }
+            apiData = new GoldData(kafkaData);
+            goldPriceCalculator.calculatePricePerGram(apiData.getPrice());
+            updateGoldTickerPrice();
         } catch (JsonProcessingException e) {
-            LOG.error("Error processing gold price data. Invalid JSON format: {}", priceData, e);
+            LOG.error("Error processing API data: {}", e.getMessage(), e);
+        } catch (Exception e) {
+            LOG.error("Unexpected error processing API data: {}", e.getMessage(), e);
         }
     }
 
@@ -80,8 +82,7 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
         }
     }
 
-    @Override
-    public void updateGoldPrices() {
+    private void updateGoldPrices() {
         try {
             List<Integer> idsToUpdate = goldTypeService.getAllIds();
             int numOfUpdates = idsToUpdate.size();
