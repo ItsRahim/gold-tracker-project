@@ -44,13 +44,22 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
     @Transactional
     public void addGoldType(GoldType goldType) throws Exception {
         try {
-            GoldType savedGoldType = goldTypeRepository.save(goldType);
-            LOG.info("Successfully added new gold type: {}", savedGoldType.getName());
-            kafkaService.sendMessage("pricing-service-new-type", String.valueOf(savedGoldType.getId()));
+            String goldName = goldType.getName();
+            if(goldTypeExists(goldName)){
+                LOG.warn("Gold type with name {} already exists. Not creating duplicate.", goldName);
+            } else {
+                GoldType savedGoldType = goldTypeRepository.save(goldType);
+                LOG.info("Successfully added new gold type: {}", savedGoldType.getName());
+                kafkaService.sendMessage("pricing-service-new-type", String.valueOf(savedGoldType.getId()));
+            }
         } catch (Exception e) {
             LOG.error("Unexpected error adding new gold type: {}", e.getMessage());
             throw new Exception("Unexpected error adding new gold type", e);
         }
+    }
+    
+    private boolean goldTypeExists(String name) {
+        return goldTypeRepository.existsByGoldName(name);
     }
 
     @Override
