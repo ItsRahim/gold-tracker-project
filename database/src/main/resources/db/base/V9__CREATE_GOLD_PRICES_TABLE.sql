@@ -1,7 +1,7 @@
 CREATE TABLE rgts.gold_prices (
     price_id SERIAL PRIMARY KEY,
     gold_type_id INT REFERENCES rgts.gold_types(gold_type_id) ON DELETE CASCADE,
-    current_price NUMERIC(8,2) NOT NULL,
+    current_price NUMERIC(10,2) NOT NULL,
     updated_at TIMESTAMPTZ(0) DEFAULT NOW()
 );
 
