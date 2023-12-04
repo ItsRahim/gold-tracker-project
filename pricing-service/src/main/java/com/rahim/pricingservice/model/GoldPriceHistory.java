@@ -2,7 +2,9 @@ package com.rahim.pricingservice.model;
 
 import com.rahim.pricingservice.listener.GoldPriceHistoryEntityListener;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "gold_price_history", schema = "rgts")
 @EntityListeners(GoldPriceHistoryEntityListener.class)
 public class GoldPriceHistory {
@@ -28,4 +31,9 @@ public class GoldPriceHistory {
     @Column(name = "effective_date")
     private LocalDate effectiveDate;
 
+    public GoldPriceHistory(BigDecimal priceOunce, BigDecimal priceGram, LocalDate effectiveDate) {
+        this.priceOunce = priceOunce;
+        this.priceGram = priceGram;
+        this.effectiveDate = effectiveDate;
+    }
 }

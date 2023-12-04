@@ -1,12 +1,14 @@
 package com.rahim.pricingservice.util;
 
 import com.rahim.pricingservice.enums.GoldPurity;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Getter
 public class GoldPriceCalculator {
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceCalculator.class);
     private double pricePerGram;
