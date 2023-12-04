@@ -65,16 +65,10 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
     }
 
     @Override
-    @Transactional
-    public void updateGoldType(int goldId, Map<String, String> updatedData) throws Exception {
+    public void updateGoldType(int goldId, Map<String, String> updatedData) {
         try {
-            if (!existsById(goldId)) {
-                LOG.warn("GoldType with ID {} not found. Unable to update.", goldId);
-                return;
-            }
-
-            GoldType existingGoldType = goldTypeRepository.findById(goldId).orElseThrow(
-                    () -> new IllegalArgumentException("GoldType with ID " + goldId + " not found"));
+            GoldType existingGoldType = goldTypeRepository.findById(goldId)
+                    .orElseThrow(() -> new IllegalArgumentException("GoldType with ID " + goldId + " not found"));
 
             updatedData.forEach((key, value) -> {
                 switch (key) {
@@ -99,8 +93,8 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
 
             LOG.info("Successfully updated gold type with ID {}: {}", goldId, existingGoldType);
         } catch (Exception e) {
-            LOG.error("Unexpected error updating gold type: {}", e.getMessage());
-            throw new Exception("Unexpected error updating gold type", e);
+            LOG.error("Error updating gold type: {}", e.getMessage());
+            throw new RuntimeException("Failed to update gold type.", e);
         }
     }
 

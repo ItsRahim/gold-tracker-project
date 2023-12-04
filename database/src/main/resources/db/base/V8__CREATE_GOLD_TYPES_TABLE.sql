@@ -1,7 +1,7 @@
 CREATE TABLE rgts.gold_types (
     gold_type_id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
-    net_weight NUMERIC(5, 2) NULL,
+    net_weight NUMERIC(10, 2) NULL,
     carat VARCHAR(3) NOT NULL,
     description TEXT NOT NULL
 );

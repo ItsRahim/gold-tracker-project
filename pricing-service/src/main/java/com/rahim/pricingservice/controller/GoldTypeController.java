@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +24,19 @@ public class GoldTypeController {
     public ResponseEntity<List<GoldType>> getAllGoldTypes() {
         List<GoldType> goldTypes = goldTypeService.getAllGoldTypes();
         return ResponseEntity.status(HttpStatus.OK).body(goldTypes);
+    }
+
+    @GetMapping("/{goldId}")
+    public ResponseEntity<GoldType> getGoldTypeById(@PathVariable int goldId) {
+        try {
+            Optional<GoldType> goldTypeOptional = goldTypeService.findById(goldId);
+
+            return goldTypeOptional.map(goldType -> ResponseEntity.status(HttpStatus.OK).body(goldType))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping
