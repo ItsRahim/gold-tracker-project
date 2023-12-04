@@ -19,11 +19,11 @@ public class GoldPriceHistory {
     @Column(name = "price_id", nullable = false)
     private Integer id;
 
-    @Column(name = "open_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal openPrice;
+    @Column(name = "price_ounce", nullable = false, precision = 10, scale = 2)
+    private BigDecimal priceOunce;
 
-    @Column(name = "close_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal closePrice;
+    @Column(name = "price_gram", nullable = false, precision = 10, scale = 2)
+    private BigDecimal priceGram;
 
     @Column(name = "effective_date")
     private LocalDate effectiveDate;
