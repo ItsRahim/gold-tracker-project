@@ -4,6 +4,7 @@ import com.rahim.pricingservice.model.GoldType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface IGoldTypeService {
     List<Integer> getAllIds();
@@ -11,4 +12,5 @@ public interface IGoldTypeService {
     void updateGoldType(int goldId, Map<String, String> updatedData) throws Exception;
     void deleteGoldType(int goldId);
     List<GoldType> getAllGoldTypes();
+    Optional<GoldType> findById(int goldId);
 }

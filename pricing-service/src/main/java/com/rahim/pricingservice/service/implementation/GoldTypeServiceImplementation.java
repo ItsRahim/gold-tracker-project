@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,20 +47,21 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
         try {
             String goldName = goldType.getName();
             if(goldTypeExists(goldName)){
-                LOG.warn("Gold type with name {} already exists. Not creating duplicate.", goldName);
+                LOG.warn("Gold type with name {} already exists. Not creating duplicate.", goldType.getName());
             } else {
                 GoldType savedGoldType = goldTypeRepository.save(goldType);
+                Integer savedGoldTypeId = savedGoldType.getId();
                 LOG.info("Successfully added new gold type: {}", savedGoldType.getName());
-                kafkaService.sendMessage("pricing-service-new-type", String.valueOf(savedGoldType.getId()));
+                kafkaService.sendMessage("pricing-service-new-type", String.valueOf(savedGoldTypeId));
             }
         } catch (Exception e) {
             LOG.error("Unexpected error adding new gold type: {}", e.getMessage());
             throw new Exception("Unexpected error adding new gold type", e);
         }
     }
-    
+
     private boolean goldTypeExists(String name) {
-        return goldTypeRepository.existsByGoldName(name);
+        return goldTypeRepository.existsByName(name);
     }
 
     @Override
@@ -128,6 +130,25 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
         }
 
         return goldTypes;
+    }
+
+    @Override
+    public Optional<GoldType> findById(int goldId) {
+        try {
+            Optional<GoldType> optionalGoldType = goldTypeRepository.findById(goldId);
+
+            if (optionalGoldType.isPresent()) {
+                GoldType goldType = optionalGoldType.get();
+                LOG.info("Gold type with ID {} found: {}", goldId, goldType);
+                return Optional.of(goldType);
+            } else {
+                LOG.warn("Gold type with ID {} not found", goldId);
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            LOG.error("Error occurred while finding gold type with ID {}: {}", goldId, e.getMessage(), e);
+            throw new RuntimeException("Error finding gold type", e);
+        }
     }
 
     private boolean existsById(int goldId) {

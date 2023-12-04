@@ -20,6 +20,7 @@ import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -142,12 +143,17 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
             List<GoldPrice> goldPrices = goldPriceRepository.findAll();
 
             return goldPrices.stream()
-                    .map(goldPrice -> new GoldPriceDTO(
-                            goldPrice.getId(),
-                            goldPrice.getGoldType().getName(),
-                            goldPrice.getCurrentPrice(),
-                            goldPrice.getUpdatedAt())
-                    )
+                    .map(goldPrice -> {
+                        GoldType goldType = goldTypeService.findById(goldPrice.getGoldType().getId())
+                                .orElseThrow(() -> new NoSuchElementException("GoldType not found"));
+
+                        return new GoldPriceDTO(
+                                goldPrice.getId(),
+                                goldType.getName(),
+                                goldPrice.getCurrentPrice(),
+                                goldPrice.getUpdatedAt()
+                        );
+                    })
                     .collect(Collectors.toList());
         } catch (Exception e) {
             LOG.error("Error getting all gold prices: {}", e.getMessage(), e);
@@ -159,7 +165,9 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
     public void processNewGoldType(int goldTypeId) {
         try {
             LOG.info("Processing new gold type with ID: {}", goldTypeId);
-            goldPriceRepository.addNewGoldPrice(goldTypeId);
+
+            goldPriceRepository.insertGoldPrice(goldTypeId, BigDecimal.ZERO);
+
             LOG.info("Insert operation successful for gold type with ID: {}", goldTypeId);
         } catch (Exception e) {
             LOG.error("Error processing new gold type with ID {}: {}", goldTypeId, e.getMessage());
