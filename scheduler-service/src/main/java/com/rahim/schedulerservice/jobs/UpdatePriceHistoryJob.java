@@ -1,6 +1,7 @@
 package com.rahim.schedulerservice.jobs;
 
 import com.rahim.schedulerservice.kafka.IKafkaService;
+import com.rahim.schedulerservice.model.TimerInfo;
 import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -8,6 +9,9 @@ import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 
 
 @Component
@@ -19,9 +23,9 @@ public class UpdatePriceHistoryJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
-        String callbackData = (String) jobDataMap.get(UpdatePriceHistoryJob.class.getSimpleName());
+        TimerInfo timerInfo = (TimerInfo) jobDataMap.get(UpdatePriceHistoryJob.class.getSimpleName());
 
-        LOG.info(callbackData);
+        LOG.info(timerInfo.getCallbackData());
 
         kafkaService.sendMessage("pricing-service-history-table", "Update Gold Price History Table: ");
     }

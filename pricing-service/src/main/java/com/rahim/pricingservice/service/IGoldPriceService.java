@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IGoldPriceService {
-    void setKafkaData(String data);
     void updateGoldTickerPrice();
     Optional<GoldPriceDTO> getGoldPrice(int goldId);
     List<GoldPriceDTO> getAllGoldPrices();

@@ -1,8 +1,10 @@
 package com.rahim.pricingservice.service.implementation;
 
+import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPriceHistory;
 import com.rahim.pricingservice.repository.GoldPriceHistoryRepository;
 import com.rahim.pricingservice.service.IGoldPriceHistoryService;
+import com.rahim.pricingservice.util.ApiDataProcessor;
 import com.rahim.pricingservice.util.GoldPriceCalculator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,19 +20,21 @@ public class GoldPriceHistoryServiceImplementation implements IGoldPriceHistoryS
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceHistoryServiceImplementation.class);
     private final GoldPriceHistoryRepository goldPriceHistoryRepository;
     private final GoldPriceCalculator goldPriceCalculator;
+    private final ApiDataProcessor apiDataProcessor;
+    private BigDecimal pricePerOunce;
 
     @Override
-    public void updateHistoryTable(BigDecimal pricePerOunce) {
+    public void updateHistoryTable() {
         try {
-            goldPriceCalculator.calculatePricePerGram(pricePerOunce);
+            GoldData apiData = apiDataProcessor.getApiData();
+            pricePerOunce = apiData.getPrice();
             LocalDate effectiveDate = LocalDate.now();
             BigDecimal pricePerGram = BigDecimal.valueOf(goldPriceCalculator.getPricePerGram());
 
             GoldPriceHistory priceHistory = new GoldPriceHistory(pricePerOunce, pricePerGram, effectiveDate);
             goldPriceHistoryRepository.save(priceHistory);
 
-            LOG.info("Gold price history updated successfully. Price per Ounce: {}, Price per Gram: {}, Effective Date: {}",
-                    pricePerOunce, pricePerGram, effectiveDate);
+            LOG.info("Gold price history updated successfully");
         } catch (Exception e) {
             LOG.error("An error occurred while updating gold price history. Price per Ounce: {}", pricePerOunce, e);
             throw new RuntimeException(e);

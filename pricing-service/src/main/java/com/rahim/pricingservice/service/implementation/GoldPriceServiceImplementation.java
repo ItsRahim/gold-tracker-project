@@ -1,6 +1,5 @@
 package com.rahim.pricingservice.service.implementation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.dto.GoldPriceDTO;
@@ -8,6 +7,7 @@ import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldPriceRepository;
 import com.rahim.pricingservice.service.IGoldPriceService;
 import com.rahim.pricingservice.service.IGoldTypeService;
+import com.rahim.pricingservice.util.ApiDataProcessor;
 import com.rahim.pricingservice.util.GoldPriceCalculator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,32 +31,13 @@ public class GoldPriceServiceImplementation implements IGoldPriceService {
     private final GoldPriceRepository goldPriceRepository;
     private final IGoldTypeService goldTypeService;
     private final GoldPriceCalculator goldPriceCalculator;
+    private final ApiDataProcessor apiDataProcessor;
     private final String GOLD_TICKER = "XAUGBP";
-    private GoldData apiData;
-    private String kafkaData;
-
-
-    @Override
-    public void setKafkaData(String data) {
-        this.kafkaData = data;
-        processApiData();
-    }
-
-    public void processApiData() {
-        try {
-            apiData = new GoldData(kafkaData);
-            goldPriceCalculator.calculatePricePerGram(apiData.getPrice());
-            updateGoldTickerPrice();
-        } catch (JsonProcessingException e) {
-            LOG.error("Error processing API data: {}", e.getMessage(), e);
-        } catch (Exception e) {
-            LOG.error("Unexpected error processing API data: {}", e.getMessage(), e);
-        }
-    }
 
     @Override
     public void updateGoldTickerPrice() {
         try {
+            GoldData apiData = apiDataProcessor.getApiData();
             Optional<GoldPrice> goldPriceOptional = goldPriceRepository.findById(1);
 
             if (goldPriceOptional.isPresent()) {

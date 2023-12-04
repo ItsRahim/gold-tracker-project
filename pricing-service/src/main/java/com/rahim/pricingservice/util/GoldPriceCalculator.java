@@ -2,6 +2,7 @@ package com.rahim.pricingservice.util;
 
 import com.rahim.pricingservice.enums.GoldPurity;
 import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,11 +10,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Getter
+@Setter
 public class GoldPriceCalculator {
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceCalculator.class);
     private double pricePerGram;
+    private BigDecimal pricePerOunce;
 
-    public void calculatePricePerGram(BigDecimal pricePerOunce) {
+    public void calculatePricePerGram() {
         try {
             double GRAMS_PER_TROY_OUNCE = 31.1035;
             BigDecimal ouncesBigDecimal = pricePerOunce.setScale(2, RoundingMode.HALF_UP);

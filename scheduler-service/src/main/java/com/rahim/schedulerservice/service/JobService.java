@@ -2,6 +2,7 @@ package com.rahim.schedulerservice.service;
 
 import com.rahim.schedulerservice.jobs.DeleteUserJob;
 import com.rahim.schedulerservice.jobs.UpdateGoldPriceJob;
+import com.rahim.schedulerservice.jobs.UpdatePriceHistoryJob;
 import com.rahim.schedulerservice.model.TimerInfo;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -56,12 +57,12 @@ public class JobService {
                 .initialOffsetMs(calculateInitialOffsetForNightlyRun())
                 .callbackData("Pricing Microservice Job - Update Gold Prices")
                 .build();
-        schedulerService.schedule(UpdateGoldPriceJob.class, info);
+        schedulerService.schedule(UpdatePriceHistoryJob.class, info);
     }
 
     private long calculateInitialOffsetForNightlyRun() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime nextRun = LocalDateTime.of(now.toLocalDate(), LocalTime.of(23, 59));
+        LocalDateTime nextRun = LocalDateTime.of(now.toLocalDate(), LocalTime.of(23, 58));
 
         if (nextRun.isBefore(now)) {
             nextRun = nextRun.plusDays(1);
