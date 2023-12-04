@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GoldTypeRepository extends JpaRepository<GoldType, Integer> {
+    boolean existsByName(String name);
 }
