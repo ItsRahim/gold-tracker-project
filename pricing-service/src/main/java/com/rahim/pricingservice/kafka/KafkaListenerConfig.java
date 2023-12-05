@@ -37,15 +37,15 @@ public class KafkaListenerConfig {
     }
 
     @KafkaListener(topics = "pricing-service-new-type", groupId = "group2")
-    public void addNewGoldPrice(String message) {
-        LOG.info("Message received from Scheduler Service: {}", message);
-        goldPriceService.processNewGoldType(Integer.parseInt(message));
+    public void addNewGoldPrice(String goldTypeId) {
+        LOG.info("Message received. New Gold Type added: {}", goldTypeId);
+        goldPriceService.processNewGoldType(Integer.parseInt(goldTypeId));
     }
 
     @KafkaListener(topics = "pricing-service-delete-type", groupId = "group2")
-    public void removeGoldPrice(String message) {
-        LOG.info("Message received from Scheduler Service: {}", message);
-        goldPriceService.deleteGoldPrice(Integer.parseInt(message));
+    public void removeGoldPrice(String goldTypeId) {
+        LOG.info("Message received to remove gold type with ID: {}", goldTypeId);
+        goldPriceService.deleteGoldPrice(Integer.parseInt(goldTypeId));
     }
 
     @KafkaListener(topics = "pricing-service-history-table", groupId = "group2")
