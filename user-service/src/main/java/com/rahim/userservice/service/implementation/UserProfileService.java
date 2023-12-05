@@ -72,7 +72,7 @@ public class UserProfileService implements IUserProfileService {
                     profile.setFirstName(updatedData.get("firstName"));
                 }
                 if (updatedData.containsKey("lastName")) {
-                    profile.setFirstName(updatedData.get("firstName"));
+                    profile.setFirstName(updatedData.get("lastName"));
                 }
                 if (updatedData.containsKey("contactNumber")) {
                     profile.setContactNumber(updatedData.get("contactNumber"));
