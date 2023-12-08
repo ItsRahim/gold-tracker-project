@@ -3,10 +3,10 @@ package com.rahim.pricingservice.service.implementation;
 import com.rahim.pricingservice.kafka.IKafkaService;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
-import com.rahim.pricingservice.service.IGoldPriceService;
 import com.rahim.pricingservice.service.IGoldTypeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,10 +49,15 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
             if(goldTypeExists(goldName)){
                 LOG.warn("Gold type with name {} already exists. Not creating duplicate.", goldType.getName());
             } else {
-                GoldType savedGoldType = goldTypeRepository.save(goldType);
-                Integer savedGoldTypeId = savedGoldType.getId();
-                LOG.info("Successfully added new gold type: {}", savedGoldType.getName());
-                kafkaService.sendMessage("pricing-service-new-type", String.valueOf(savedGoldTypeId));
+                boolean anyNull = ObjectUtils.anyNull(goldType);
+                if(anyNull) {
+                    GoldType savedGoldType = goldTypeRepository.save(goldType);
+                    Integer savedGoldTypeId = savedGoldType.getId();
+                    LOG.info("Successfully added new gold type: {}", savedGoldType.getName());
+                    kafkaService.sendMessage("pricing-service-new-type", String.valueOf(savedGoldTypeId));
+                } else {
+                    LOG.warn("Given gold types has one or more null values. Not adding to database");
+                }
             }
         } catch (Exception e) {
             LOG.error("Unexpected error adding new gold type: {}", e.getMessage());
