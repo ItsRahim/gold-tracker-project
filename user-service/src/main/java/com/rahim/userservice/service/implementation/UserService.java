@@ -11,6 +11,7 @@ import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,13 +31,18 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
-    public void createUserAndProfile(UserRequest userRequest) throws Exception {
+    public void createUserAndProfile(UserRequest userRequest) throws DuplicateUserException {
         User user = userRequest.getUser();
         UserProfile userProfile = userRequest.getUserProfile();
 
         String email = user.getEmail();
         String username = userProfile.getUsername();
-        if (!userExist(email, username)) {
+
+        boolean userExists = userExist(email, username);
+        boolean anyNullUser = ObjectUtils.anyNull(user);
+        boolean anyNullProfile = ObjectUtils.anyNull(userProfile);
+
+        if (!userExists && (!anyNullUser || !anyNullProfile)) {
             try {
                 userRepository.save(user);
 
@@ -46,14 +52,14 @@ public class UserService implements IUserService {
                 LOG.info("Successfully created User and User Profile for: {}", userProfile.getUsername());
             } catch (DataIntegrityViolationException e) {
                 LOG.error("Error creating User and User Profile. Data integrity violation: {}", e.getMessage());
-                throw new DataIntegrityViolationException("Error creating User and User Profile.", e);
+                throw new DuplicateUserException("User with email " + email + " or username " + username + " already exists.", e);
             } catch (Exception e) {
                 LOG.error("Unexpected error creating User and User Profile: {}", e.getMessage());
-                throw new Exception("Unexpected error creating User and User Profile.", e);
+                throw new RuntimeException("Unexpected error creating User and User Profile.", e);
             }
         } else {
-            LOG.warn("User with email {} or username {} already exists. Not creating duplicate.", email, username);
-            throw new DuplicateUserException("User with email " + email + " or username " + username + " already exists.");
+            LOG.warn("User with email {} or username {} already exists or null values found. Not creating duplicate.", email, username);
+            throw new DuplicateUserException("User with email " + email + " or username " + username + " already exists or null values found.");
         }
     }
 
