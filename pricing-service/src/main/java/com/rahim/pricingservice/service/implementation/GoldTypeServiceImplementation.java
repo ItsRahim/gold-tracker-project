@@ -23,6 +23,8 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeServiceImplementation.class);
     private final GoldTypeRepository goldTypeRepository;
     private final IKafkaService kafkaService;
+    private static final String ADD_TYPE_TOPIC = "pricing-service-new-type";
+    private static final String DELETE_TYPE_TOPIC = "pricing-service-delete-type";
 
     @Override
     public List<Integer> getAllIds() {
@@ -57,7 +59,7 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
 
                     LOG.info("Successfully added new gold type: {}", savedGoldType.getName());
 
-                    kafkaService.sendMessage("pricing-service-new-type", savedGoldTypeId);
+                    kafkaService.sendMessage(ADD_TYPE_TOPIC, savedGoldTypeId);
                 } else {
                     LOG.warn("Given gold types has one or more null values. Not adding to database");
                 }
@@ -111,9 +113,8 @@ public class GoldTypeServiceImplementation implements IGoldTypeService {
         try {
             if (!existsById(goldId)) {
                 LOG.warn("Gold type with ID: {} does not exist. Unable to delete.", goldId);
-                return;
             }
-            kafkaService.sendMessage("pricing-service-delete-type", String.valueOf(goldId));
+            kafkaService.sendMessage(DELETE_TYPE_TOPIC, String.valueOf(goldId));
             goldTypeRepository.deleteById(goldId);
             LOG.info("Gold type with ID {} deleted successfully.", goldId);
         } catch (Exception e) {
