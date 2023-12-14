@@ -27,5 +27,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     @Query(value = "SELECT :columnName FROM rgts.users WHERE user_id = :userId", nativeQuery = true)
     Optional<LocalDate> findDateByUserId(@Param("userId") int userId, @Param("columnName") String columnName);
-
+    @Query(value = "SELECT email FROM rgts.users WHERE user_id = :userId", nativeQuery = true)
+    Optional<String> findEmailById(@Param("userId") int userId);
 }

@@ -3,6 +3,8 @@ package com.rahim.userservice.service.implementation;
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.exception.DuplicateUserException;
+import com.rahim.userservice.exception.EmailNotFoundException;
+import com.rahim.userservice.exception.EmailRetrievalException;
 import com.rahim.userservice.exception.UserNotFoundException;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
@@ -20,6 +22,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -185,4 +188,27 @@ public class UserService implements IUserService {
             throw new RuntimeException("Error retrieving date", e);
         }
     }
+
+    @Override
+    public String getEmailById(int userId) {
+        try {
+            LOG.info("Getting email for user with ID: {}", userId);
+
+            Optional<String> emailOptional = userRepository.findEmailById(userId);
+
+            if (emailOptional.isPresent()) {
+                LOG.info("Email found for user with ID {}: {}", userId, emailOptional.get());
+                return emailOptional.get();
+            } else {
+                LOG.warn("No email found for user with ID: {}", userId);
+                throw new EmailNotFoundException("Email not found for user with ID: " + userId);
+            }
+
+        } catch (Exception e) {
+            LOG.error("Error retrieving email for user with ID: {}", userId, e);
+            throw new EmailRetrievalException("Error retrieving email for user with ID: " + userId, e);
+        }
+    }
+
+
 }

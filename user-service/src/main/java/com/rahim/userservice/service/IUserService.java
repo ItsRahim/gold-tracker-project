@@ -15,4 +15,5 @@ public interface IUserService {
     void updateUser(int userId, Map<String, String> updatedData) throws Exception;
     void deleteUserAccount(int userId);
     String getDate(int userId, String columnName);
+    String getEmailById(int userId);
 }

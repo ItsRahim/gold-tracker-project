@@ -135,6 +135,7 @@ public class UserProfileService implements IUserProfileService {
             Map<String, Object> tokens = tokensOptional.orElseGet(Collections::emptyMap);
 
             Map<String, Object> modifiedTokens = new HashMap<>(tokens);
+            String email = userService.getEmailById(userId);
 
             if ("Account Deletion".equals(templateName) && includeDate) {
                 String date = userService.getDate(userId, "deletion_date");
@@ -144,6 +145,7 @@ public class UserProfileService implements IUserProfileService {
                 modifiedTokens.put("date", date);
             }
 
+            modifiedTokens.put("email", email);
             modifiedTokens.put("templateName", templateName);
 
             if (!includeUsername) {
