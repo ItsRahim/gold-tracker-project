@@ -16,7 +16,6 @@ import java.util.*;
 public class UserProfileService implements IUserProfileService {
 
     private final UserProfileRepository userProfileRepository;
-    private final IUserService userService;
     private static final Logger LOG = LoggerFactory.getLogger(UserProfileService.class);
 
     @Override
@@ -129,23 +128,13 @@ public class UserProfileService implements IUserProfileService {
     }
 
     @Override
-    public Map<String, Object> getEmailTokens(String templateName, int userId, boolean includeUsername, boolean includeDate) {
+    public Map<String, Object> getEmailTokens(String templateName, int userId, boolean includeUsername) {
         try {
             Optional<Map<String, Object>> tokensOptional = userProfileRepository.getEmailTokens(userId);
             Map<String, Object> tokens = tokensOptional.orElseGet(Collections::emptyMap);
 
             Map<String, Object> modifiedTokens = new HashMap<>(tokens);
-            String email = userService.getEmailById(userId);
 
-            if ("Account Deletion".equals(templateName) && includeDate) {
-                String date = userService.getDate(userId, "deletion_date");
-                modifiedTokens.put("date", date);
-            } else if ("Account Update".equals(templateName) && includeDate) {
-                String date = userService.getDate(userId, "updated_at");
-                modifiedTokens.put("date", date);
-            }
-
-            modifiedTokens.put("email", email);
             modifiedTokens.put("templateName", templateName);
 
             if (!includeUsername) {

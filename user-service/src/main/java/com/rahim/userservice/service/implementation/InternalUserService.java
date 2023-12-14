@@ -4,10 +4,10 @@ import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.repository.UserRepository;
+import com.rahim.userservice.service.IEmailService;
 import com.rahim.userservice.service.IInternalUserService;
 import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
-import com.rahim.userservice.util.KafkaDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class InternalUserService implements IInternalUserService {
     private final IUserService userService;
     private final IUserProfileService userProfileService;
     private final UserRepository userRepository;
-    private final KafkaDataUtil kafkaDataUtil;
+    private final IEmailService emailService;
 
     @Override
     public void deleteUserAccount(int userId) {
@@ -33,7 +33,7 @@ public class InternalUserService implements IInternalUserService {
 
             LOG.info("User account with ID {} deleted successfully.", userId);
 
-            kafkaDataUtil.prepareEmailData(TemplateNameEnum.ACCOUNT_DELETED, userId);
+            emailService.generateEmailData(TemplateNameEnum.ACCOUNT_DELETED, userId);
         } catch (Exception e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
         }
@@ -54,7 +54,7 @@ public class InternalUserService implements IInternalUserService {
                     user.setCredentialsExpired(true);
                     userRepository.save(user);
 
-                    kafkaDataUtil.prepareEmailData(TemplateNameEnum.ACCOUNT_INACTIVITY, user.getId());
+                    emailService.generateEmailData(TemplateNameEnum.ACCOUNT_INACTIVITY, user.getId());
                 }
 
                 LOG.info("Inactive users found. Account status successfully updated");

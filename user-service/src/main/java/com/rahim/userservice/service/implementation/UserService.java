@@ -10,9 +10,9 @@ import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.UserRepository;
+import com.rahim.userservice.service.IEmailService;
 import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
-import com.rahim.userservice.util.KafkaDataUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -22,17 +22,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final IUserProfileService userProfileService;
-    private final KafkaDataUtil kafkaDataUtil;
+    private final IEmailService emailService;
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     @Override
@@ -114,8 +111,7 @@ public class UserService implements IUserService {
                 user.setDeleteDate(deletionDate);
 
                 userRepository.save(user);
-                kafkaDataUtil.prepareEmailData(TemplateNameEnum.ACCOUNT_DELETION, user.getId());
-
+                emailService.generateEmailData(TemplateNameEnum.ACCOUNT_DELETION, userId);
                 LOG.info("User with ID {} is pending deletion on {}", userId, deletionDate);
 
                 return true;
@@ -145,8 +141,7 @@ public class UserService implements IUserService {
                 }
 
                 userRepository.save(user);
-                kafkaDataUtil.prepareEmailData(TemplateNameEnum.ACCOUNT_UPDATE, user.getId());
-
+                emailService.generateEmailData(TemplateNameEnum.ACCOUNT_UPDATE, userId);
                 LOG.info("User with ID {} updated successfully", userId);
             } catch (Exception e) {
                 LOG.error("Error updating user with ID {}: {}", userId, e.getMessage());
@@ -168,8 +163,7 @@ public class UserService implements IUserService {
         }
     }
 
-    @Override
-    public String getDate(int userId, String columnName) {
+    private String getDate(int userId, String columnName) {
         try {
             Optional<LocalDate> dateOptional = userRepository.findDateByUserId(userId, columnName);
 
@@ -189,8 +183,7 @@ public class UserService implements IUserService {
         }
     }
 
-    @Override
-    public String getEmailById(int userId) {
+    private String getEmailById(int userId) {
         try {
             LOG.info("Getting email for user with ID: {}", userId);
 
@@ -210,5 +203,24 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public Map<String, Object> getEmailToken(int userId, TemplateNameEnum templateName) {
+        Map<String, Object> userData = new HashMap<>();
 
+        try {
+            String email = getEmailById(userId);
+            userData.put("email", email);
+
+            String dateFieldName = templateName == TemplateNameEnum.ACCOUNT_DELETION ? "deletion_date" : "updated_at";
+            String date = getDate(userId, dateFieldName);
+            userData.put("date", date);
+            userData.put("templateName", templateName);
+
+            LOG.info("Successfully retrieved email token for user " + userId);
+        } catch (Exception e) {
+            LOG.error("Error while retrieving email token for user " + userId, e);
+            throw new RuntimeException(e);
+        }
+        return userData;
+    }
 }

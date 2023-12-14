@@ -12,8 +12,7 @@ public interface IUserProfileService {
     List<UserProfile> getAllProfiles();
     void updateUserProfile(int userId, Map<String, String> updatedData);
     Optional<UserProfile> getProfileByUsername(String username);
-
     void deleteUserProfile(int userId);
     boolean checkUsernameExists(String username);
-    Map<String, Object> getEmailTokens(String templateName, int userId, boolean includeUsername, boolean includeDate);
+    Map<String, Object> getEmailTokens(String templateName, int userId, boolean includeUsername);
 }

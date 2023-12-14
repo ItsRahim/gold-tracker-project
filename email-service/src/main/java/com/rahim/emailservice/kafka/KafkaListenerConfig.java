@@ -11,8 +11,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 public class KafkaListenerConfig {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
 
-    @KafkaListener(topics = "email-service-inactive-account", groupId = "group2")
-    public void sendInactiveEmail(String emailData) {
+    @KafkaListener(topics = "email-service-send-email", groupId = "group2")
+    public void sendEmail(String emailData) {
         LOG.info("Message received from User Microservice");
     }
 }
