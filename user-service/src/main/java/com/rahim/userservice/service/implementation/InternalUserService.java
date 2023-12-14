@@ -24,8 +24,6 @@ public class InternalUserService implements IInternalUserService {
     private final IUserProfileService userProfileService;
     private final UserRepository userRepository;
     private final KafkaDataUtil kafkaDataUtil;
-    private static final String ACCOUNT_DELETED_TEMPLATE = "Account Deleted";
-    private static final String ACCOUNT_INACTIVE_TEMPLATE = "Account Inactivity";
 
     @Override
     public void deleteUserAccount(int userId) {

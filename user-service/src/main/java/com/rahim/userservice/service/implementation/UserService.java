@@ -30,8 +30,6 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final IUserProfileService userProfileService;
     private final KafkaDataUtil kafkaDataUtil;
-    private static final String ACCOUNT_DELETION_TEMPLATE = "Account Deletion";
-    private static final String ACCOUNT_UPDATE_TEMPLATE = "Account Update";
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     @Override
