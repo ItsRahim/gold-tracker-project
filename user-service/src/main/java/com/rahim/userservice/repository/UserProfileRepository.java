@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -16,6 +18,9 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Intege
 
     @Query(value = "SELECT profile_id FROM rgts.user_profiles WHERE user_id = :id", nativeQuery = true)
     int getProfileId(@Param("id") int id);
+
+    @Query(value = "SELECT first_name as firstName, last_name as lastName, username FROM rgts.user_profiles WHERE user_id = :id", nativeQuery = true)
+    Optional<Map<String, Object>> getEmailTokens(@Param("id") int id);
 
     boolean existsByUsername(String username);
 }

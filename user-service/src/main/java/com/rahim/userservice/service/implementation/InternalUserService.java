@@ -1,11 +1,13 @@
 package com.rahim.userservice.service.implementation;
 
 import com.rahim.userservice.enums.AccountState;
+import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.repository.UserRepository;
 import com.rahim.userservice.service.IInternalUserService;
 import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
+import com.rahim.userservice.util.KafkaDataUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,9 @@ public class InternalUserService implements IInternalUserService {
     private final IUserService userService;
     private final IUserProfileService userProfileService;
     private final UserRepository userRepository;
+    private final KafkaDataUtil kafkaDataUtil;
+    private static final String ACCOUNT_DELETED_TEMPLATE = "Account Deleted";
+    private static final String ACCOUNT_INACTIVE_TEMPLATE = "Account Inactivity";
 
     @Override
     public void deleteUserAccount(int userId) {
@@ -29,6 +34,8 @@ public class InternalUserService implements IInternalUserService {
             userService.deleteUserAccount(userId);
 
             LOG.info("User account with ID {} deleted successfully.", userId);
+
+            kafkaDataUtil.prepareEmailData(TemplateNameEnum.ACCOUNT_DELETED, userId);
         } catch (Exception e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
         }
@@ -48,9 +55,11 @@ public class InternalUserService implements IInternalUserService {
                     user.setAccountStatus(AccountState.INACTIVE.getStatus());
                     user.setCredentialsExpired(true);
                     userRepository.save(user);
+
+                    kafkaDataUtil.prepareEmailData(TemplateNameEnum.ACCOUNT_INACTIVITY, user.getId());
                 }
 
-                LOG.info("Inactive user deletion request process has been completed successfully");
+                LOG.info("Inactive users found. Account status successfully updated");
             } else {
                 LOG.info("No inactive users found for deletion");
             }

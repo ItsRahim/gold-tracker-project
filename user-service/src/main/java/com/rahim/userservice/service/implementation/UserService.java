@@ -1,6 +1,7 @@
 package com.rahim.userservice.service.implementation;
 
 import com.rahim.userservice.enums.AccountState;
+import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.exception.DuplicateUserException;
 import com.rahim.userservice.exception.UserNotFoundException;
 import com.rahim.userservice.model.User;
@@ -9,6 +10,7 @@ import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.UserRepository;
 import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
+import com.rahim.userservice.util.KafkaDataUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -27,6 +29,9 @@ import java.util.Optional;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final IUserProfileService userProfileService;
+    private final KafkaDataUtil kafkaDataUtil;
+    private static final String ACCOUNT_DELETION_TEMPLATE = "Account Deletion";
+    private static final String ACCOUNT_UPDATE_TEMPLATE = "Account Update";
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     @Override
@@ -108,8 +113,8 @@ public class UserService implements IUserService {
                 user.setDeleteDate(deletionDate);
 
                 userRepository.save(user);
+                kafkaDataUtil.prepareEmailData(TemplateNameEnum.ACCOUNT_DELETION, user.getId());
 
-                //TODO: Send email to user that there account WILL be deleted
                 LOG.info("User with ID {} is pending deletion on {}", userId, deletionDate);
 
                 return true;
@@ -139,6 +144,7 @@ public class UserService implements IUserService {
                 }
 
                 userRepository.save(user);
+                kafkaDataUtil.prepareEmailData(TemplateNameEnum.ACCOUNT_UPDATE, user.getId());
 
                 LOG.info("User with ID {} updated successfully", userId);
             } catch (Exception e) {
@@ -158,6 +164,27 @@ public class UserService implements IUserService {
             LOG.info("User account with ID {} deleted successfully.", userId);
         } catch (Exception e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String getDate(int userId, String columnName) {
+        try {
+            Optional<LocalDate> dateOptional = userRepository.findDateByUserId(userId, columnName);
+
+            if (dateOptional.isPresent()) {
+                LocalDate date = dateOptional.get();
+                String dateString = date.toString();
+
+                LOG.info("Date retrieved successfully for user ID {}: {} ({})", userId, dateString, columnName);
+                return dateString;
+            } else {
+                LOG.warn("No date found for user ID {} and column: {}", userId, columnName);
+                return "No Date Found";
+            }
+        } catch (Exception e) {
+            LOG.error("Error retrieving date for user ID {} and column: {}", userId, columnName, e);
+            throw new RuntimeException("Error retrieving date", e);
         }
     }
 }

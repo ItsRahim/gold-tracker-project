@@ -8,6 +8,8 @@ import com.rahim.emailservice.util.EmailUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,10 +23,17 @@ public class EmailServiceImplementation implements IEmailService {
     private final EmailTemplateRepository emailTemplateRepository;
     private final EmailHistoryRepository emailHistoryRepository;
     private final EmailUtil emailUtil;
+    JavaMailSender javaMailSender;
 
     @Override
     public void sendEmail(String recipientEmail) {
-        // Implement your sendEmail logic here
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("${spring.mail.username}");
+        message.setTo("rahim1605@gmail.com");
+        message.setSubject("TEST");
+        message.setText("TEST");
+
+        javaMailSender.send(message);
     }
 
     @Override

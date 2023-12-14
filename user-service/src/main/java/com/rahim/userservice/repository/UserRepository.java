@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
@@ -23,4 +24,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     List<User> findPendingDeleteUsers();
 
     boolean existsByEmail(String email);
+
+    @Query(value = "SELECT :columnName FROM rgts.users WHERE user_id = :userId", nativeQuery = true)
+    Optional<LocalDate> findDateByUserId(@Param("userId") int userId, @Param("columnName") String columnName);
+
 }

@@ -41,7 +41,7 @@ INSERT INTO rgts.email_template(template_name, subject, body, placeholders)
 VALUES (
         'Account Deleted',
         'Account Deletion Confirmation',
-        'Dear @firstName @lastName,\n' ||
+        'Dear @firstName @lastName,' ||
         'We hope this message finds you well. This is to inform you that your account, @username, at our service has been successfully deleted.' ||
         'If you believe this is an error or if you have any questions, please contact our support team for further assistance.',
         ARRAY['@firstName', '@lastName', '@username']

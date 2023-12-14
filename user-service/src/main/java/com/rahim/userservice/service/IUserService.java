@@ -14,4 +14,5 @@ public interface IUserService {
     boolean deleteUserRequest(int id);
     void updateUser(int userId, Map<String, String> updatedData) throws Exception;
     void deleteUserAccount(int userId);
+    String getDate(int userId, String columnName);
 }

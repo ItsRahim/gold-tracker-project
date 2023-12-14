@@ -3,20 +3,20 @@ package com.rahim.userservice.service.implementation;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.repository.UserProfileRepository;
 import com.rahim.userservice.service.IUserProfileService;
+import com.rahim.userservice.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserProfileService implements IUserProfileService {
 
     private final UserProfileRepository userProfileRepository;
+    private final IUserService userService;
     private static final Logger LOG = LoggerFactory.getLogger(UserProfileService.class);
 
     @Override
@@ -126,5 +126,35 @@ public class UserProfileService implements IUserProfileService {
     @Override
     public boolean checkUsernameExists(String username) {
         return userProfileRepository.existsByUsername(username);
+    }
+
+    @Override
+    public Map<String, Object> getEmailTokens(String templateName, int userId, boolean includeUsername, boolean includeDate) {
+        try {
+            Optional<Map<String, Object>> tokensOptional = userProfileRepository.getEmailTokens(userId);
+            Map<String, Object> tokens = tokensOptional.orElseGet(Collections::emptyMap);
+
+            Map<String, Object> modifiedTokens = new HashMap<>(tokens);
+
+            if ("Account Deletion".equals(templateName) && includeDate) {
+                String date = userService.getDate(userId, "deletion_date");
+                modifiedTokens.put("date", date);
+            } else if ("Account Update".equals(templateName) && includeDate) {
+                String date = userService.getDate(userId, "updated_at");
+                modifiedTokens.put("date", date);
+            }
+
+            modifiedTokens.put("templateName", templateName);
+
+            if (!includeUsername) {
+                modifiedTokens.remove("username");
+            }
+
+            LOG.info("Generated tokens for user ID {}: {}", userId, modifiedTokens);
+            return modifiedTokens;
+        } catch (Exception e) {
+            LOG.error("Error generating email tokens for user ID {}: {}", userId, e.getMessage(), e);
+            throw new RuntimeException("Unexpected error", e);
+        }
     }
 }
