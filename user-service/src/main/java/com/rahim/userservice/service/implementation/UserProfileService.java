@@ -1,9 +1,10 @@
 package com.rahim.userservice.service.implementation;
 
+import com.rahim.userservice.enums.TemplateNameEnum;
+import com.rahim.userservice.kafka.IKafkaService;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.repository.UserProfileRepository;
 import com.rahim.userservice.service.IUserProfileService;
-import com.rahim.userservice.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,8 @@ import java.util.*;
 public class UserProfileService implements IUserProfileService {
 
     private final UserProfileRepository userProfileRepository;
+    private final IKafkaService kafkaService;
+    private static final String SEND_EMAIL_TOPIC = "email-service-send-email";
     private static final Logger LOG = LoggerFactory.getLogger(UserProfileService.class);
 
     @Override
@@ -103,6 +106,20 @@ public class UserProfileService implements IUserProfileService {
             } else {
                 LOG.info("User profile not found for username: {}", username);
             }
+            Optional<Map<String, Object>> someProfile = userProfileRepository.getUserProfileDetails(1);
+
+            someProfile.ifPresent(profile -> {
+                String sa = (String) profile.get("username");
+                String firstName = (String) profile.get("first_name");
+                String lastName = (String) profile.get("last_name");
+                String email = (String) profile.get("email");
+
+                LOG.info("Username: {}", sa);
+                LOG.info("First Name: {}", firstName);
+                LOG.info("Last Name: {}", lastName);
+                LOG.info("Email: {}", email);
+                LOG.info("--------------");
+            });
 
             return userProfileOptional;
         } catch (Exception e) {
@@ -128,21 +145,35 @@ public class UserProfileService implements IUserProfileService {
     }
 
     @Override
-    public Map<String, Object> getEmailTokens(String templateName, int userId, boolean includeUsername) {
+    public void generateEmailTokens(String templateName, int userId, boolean includeUsername, boolean includeDate) {
         try {
-            Optional<Map<String, Object>> tokensOptional = userProfileRepository.getEmailTokens(userId);
-            Map<String, Object> tokens = tokensOptional.orElseGet(Collections::emptyMap);
+            Optional<Map<String, Object>> emailDataOptional = userProfileRepository.getUserProfileDetails(userId);
 
-            Map<String, Object> modifiedTokens = new HashMap<>(tokens);
+            if (emailDataOptional.isPresent()) {
+                Map<String, Object> emailData = new HashMap<>(emailDataOptional.get());
 
-            modifiedTokens.put("templateName", templateName);
+                if (!includeUsername) {
+                    emailData.remove("username");
+                }
 
-            if (!includeUsername) {
-                modifiedTokens.remove("username");
+                if (!includeDate) {
+                    emailData.keySet().removeAll(Arrays.asList("deleteDate", "updatedAt"));
+                }
+
+                if (TemplateNameEnum.ACCOUNT_DELETION.getTemplateName().equals(templateName) && includeDate) {
+                    emailData.remove("updatedAt");
+                }
+
+                if (TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName().equals(templateName) && includeDate) {
+                    emailData.remove("deleteDate");
+                }
+
+                LOG.info("Generated tokens for user ID {}: {}", userId, emailData);
+
+                kafkaService.sendMessage(SEND_EMAIL_TOPIC, emailData.toString());
+            } else {
+                LOG.info("No email data found for user ID {}", userId);
             }
-
-            LOG.info("Generated tokens for user ID {}: {}", userId, modifiedTokens);
-            return modifiedTokens;
         } catch (Exception e) {
             LOG.error("Error generating email tokens for user ID {}: {}", userId, e.getMessage(), e);
             throw new RuntimeException("Unexpected error", e);

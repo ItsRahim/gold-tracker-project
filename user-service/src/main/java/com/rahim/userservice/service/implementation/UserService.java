@@ -3,14 +3,11 @@ package com.rahim.userservice.service.implementation;
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.exception.DuplicateUserException;
-import com.rahim.userservice.exception.EmailNotFoundException;
-import com.rahim.userservice.exception.EmailRetrievalException;
 import com.rahim.userservice.exception.UserNotFoundException;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.UserRepository;
-import com.rahim.userservice.service.IEmailService;
 import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
 import jakarta.transaction.Transactional;
@@ -29,7 +26,6 @@ import java.util.*;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final IUserProfileService userProfileService;
-    private final IEmailService emailService;
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     @Override
@@ -111,7 +107,7 @@ public class UserService implements IUserService {
                 user.setDeleteDate(deletionDate);
 
                 userRepository.save(user);
-                emailService.generateEmailData(TemplateNameEnum.ACCOUNT_DELETION, userId);
+                userProfileService.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETION.getTemplateName(), userId, true, true);
                 LOG.info("User with ID {} is pending deletion on {}", userId, deletionDate);
 
                 return true;
@@ -141,7 +137,7 @@ public class UserService implements IUserService {
                 }
 
                 userRepository.save(user);
-                emailService.generateEmailData(TemplateNameEnum.ACCOUNT_UPDATE, userId);
+                userProfileService.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), userId, true, true);
                 LOG.info("User with ID {} updated successfully", userId);
             } catch (Exception e) {
                 LOG.error("Error updating user with ID {}: {}", userId, e.getMessage());
@@ -161,66 +157,5 @@ public class UserService implements IUserService {
         } catch (Exception e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage(), e);
         }
-    }
-
-    private String getDate(int userId, String columnName) {
-        try {
-            Optional<LocalDate> dateOptional = userRepository.findDateByUserId(userId, columnName);
-
-            if (dateOptional.isPresent()) {
-                LocalDate date = dateOptional.get();
-                String dateString = date.toString();
-
-                LOG.info("Date retrieved successfully for user ID {}: {} ({})", userId, dateString, columnName);
-                return dateString;
-            } else {
-                LOG.warn("No date found for user ID {} and column: {}", userId, columnName);
-                return "No Date Found";
-            }
-        } catch (Exception e) {
-            LOG.error("Error retrieving date for user ID {} and column: {}", userId, columnName, e);
-            throw new RuntimeException("Error retrieving date", e);
-        }
-    }
-
-    private String getEmailById(int userId) {
-        try {
-            LOG.info("Getting email for user with ID: {}", userId);
-
-            Optional<String> emailOptional = userRepository.findEmailById(userId);
-
-            if (emailOptional.isPresent()) {
-                LOG.info("Email found for user with ID {}: {}", userId, emailOptional.get());
-                return emailOptional.get();
-            } else {
-                LOG.warn("No email found for user with ID: {}", userId);
-                throw new EmailNotFoundException("Email not found for user with ID: " + userId);
-            }
-
-        } catch (Exception e) {
-            LOG.error("Error retrieving email for user with ID: {}", userId, e);
-            throw new EmailRetrievalException("Error retrieving email for user with ID: " + userId, e);
-        }
-    }
-
-    @Override
-    public Map<String, Object> getEmailToken(int userId, TemplateNameEnum templateName) {
-        Map<String, Object> userData = new HashMap<>();
-
-        try {
-            String email = getEmailById(userId);
-            userData.put("email", email);
-
-            String dateFieldName = templateName == TemplateNameEnum.ACCOUNT_DELETION ? "deletion_date" : "updated_at";
-            String date = getDate(userId, dateFieldName);
-            userData.put("date", date);
-            userData.put("templateName", templateName);
-
-            LOG.info("Successfully retrieved email token for user " + userId);
-        } catch (Exception e) {
-            LOG.error("Error while retrieving email token for user " + userId, e);
-            throw new RuntimeException(e);
-        }
-        return userData;
     }
 }
