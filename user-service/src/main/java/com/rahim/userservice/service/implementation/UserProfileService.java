@@ -143,16 +143,18 @@ public class UserProfileService implements IUserProfileService {
                 }
 
                 if (!includeDate) {
-                    emailData.keySet().removeAll(Arrays.asList("deleteDate", "updatedAt"));
+                    emailData.keySet().removeAll(Arrays.asList("deletedate", "updatedat"));
                 }
 
                 if (TemplateNameEnum.ACCOUNT_DELETION.getTemplateName().equals(templateName) && includeDate) {
-                    emailData.remove("updatedAt");
+                    emailData.remove("updatedat");
                 }
 
                 if (TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName().equals(templateName) && includeDate) {
-                    emailData.remove("deleteDate");
+                    emailData.remove("deletedate");
                 }
+
+                emailData.put("templateName", templateName);
 
                 LOG.info("Generated tokens for user ID {}: {}", userId, emailData);
 
