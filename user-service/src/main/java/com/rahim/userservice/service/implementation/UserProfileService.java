@@ -106,20 +106,6 @@ public class UserProfileService implements IUserProfileService {
             } else {
                 LOG.info("User profile not found for username: {}", username);
             }
-            Optional<Map<String, Object>> someProfile = userProfileRepository.getUserProfileDetails(1);
-
-            someProfile.ifPresent(profile -> {
-                String sa = (String) profile.get("username");
-                String firstName = (String) profile.get("first_name");
-                String lastName = (String) profile.get("last_name");
-                String email = (String) profile.get("email");
-
-                LOG.info("Username: {}", sa);
-                LOG.info("First Name: {}", firstName);
-                LOG.info("Last Name: {}", lastName);
-                LOG.info("Email: {}", email);
-                LOG.info("--------------");
-            });
 
             return userProfileOptional;
         } catch (Exception e) {
