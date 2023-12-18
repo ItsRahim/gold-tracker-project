@@ -1,5 +1,6 @@
-package com.rahim.emailservice.util;
+package com.rahim.emailservice.util.implementation;
 
+import com.rahim.emailservice.util.ITokenMapPopulator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
