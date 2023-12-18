@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class GoldTypeServiceImplementation implements IGoldTypeService {
-    private static final Logger LOG = LoggerFactory.getLogger(GoldTypeServiceImplementation.class);
+public class GoldTypeService implements IGoldTypeService {
+    private static final Logger LOG = LoggerFactory.getLogger(GoldTypeService.class);
     private final GoldTypeRepository goldTypeRepository;
     private final IKafkaService kafkaService;
     private static final String ADD_TYPE_TOPIC = "pricing-service-new-type";

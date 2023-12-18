@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class GoldPriceServiceImplementation implements IGoldPriceService {
-    private static final Logger LOG = LoggerFactory.getLogger(GoldPriceServiceImplementation.class);
+public class GoldPriceService implements IGoldPriceService {
+    private static final Logger LOG = LoggerFactory.getLogger(GoldPriceService.class);
     private final GoldPriceRepository goldPriceRepository;
     private final IGoldTypeService goldTypeService;
     private final GoldPriceCalculator goldPriceCalculator;

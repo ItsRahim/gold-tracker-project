@@ -16,8 +16,8 @@ import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
-public class GoldPriceHistoryServiceImplementation implements IGoldPriceHistoryService {
-    private static final Logger LOG = LoggerFactory.getLogger(GoldPriceHistoryServiceImplementation.class);
+public class GoldPriceHistoryService implements IGoldPriceHistoryService {
+    private static final Logger LOG = LoggerFactory.getLogger(GoldPriceHistoryService.class);
     private final GoldPriceHistoryRepository goldPriceHistoryRepository;
     private final GoldPriceCalculator goldPriceCalculator;
     private final ApiDataProcessor apiDataProcessor;

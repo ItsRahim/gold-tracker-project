@@ -1,4 +1,4 @@
 package com.rahim.emailservice.service;
 
-public interface IEmailTemplate {
+public interface IEmailTemplateService {
 }
