@@ -2,7 +2,6 @@ package com.rahim.emailservice.util;
 
 import com.rahim.emailservice.model.EmailTemplate;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-@Setter
 @RequiredArgsConstructor
 public class EmailUtil {
 
@@ -37,16 +35,16 @@ public class EmailUtil {
         return result.toString();
     }
 
-    public EmailTemplate populateTemplate(EmailTemplate emailTemplate, List<String> tokens) {
+    public EmailTemplate populateTemplate(EmailTemplate emailTemplate, List<String> placeholders, List<String> tokens) {
         if (emailTemplate != null) {
             LOG.info("Populating email template with ID: {} - {}", emailTemplate.getId(), emailTemplate.getTemplateName());
 
-            boolean isValidEmail = emailValidator.isValid(emailTemplate.getBody(), emailTemplate.getPlaceholders(), tokens);
+            boolean isValidEmail = emailValidator.isValid(emailTemplate.getBody(), placeholders, tokens);
 
             if (isValidEmail) {
                 LOG.info("Information provided is sufficient to populate email");
 
-                tokenMapPopulator.populateTokenMap(emailTemplate.getPlaceholders(), tokens);
+                tokenMapPopulator.populateTokenMap(placeholders, tokens);
 
                 String replacedBody = replacePlaceholders(emailTemplate.getBody(), tokenMapPopulator.getPlaceholderTokenMap());
                 emailTemplate.setBody(replacedBody);

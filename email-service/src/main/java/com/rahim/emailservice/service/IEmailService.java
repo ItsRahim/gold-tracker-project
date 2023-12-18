@@ -5,7 +5,7 @@ import com.rahim.emailservice.model.EmailTemplate;
 import java.util.List;
 
 public interface IEmailService {
-    void sendEmail(String recipientEmail);
+    void sendEmail(String recipientEmail, EmailTemplate emailContent);
     EmailTemplate populateTemplate(int templateId, List<String> tokens);
     void processKafkaData(String emailData);
 }

@@ -25,6 +25,7 @@ public class EmailTemplate {
     @Column(name = "body", nullable = false, length = Integer.MAX_VALUE)
     private String body;
 
+    @ElementCollection
     @Column(name = "placeholders", nullable = false)
     private List<String> placeholders;
 
