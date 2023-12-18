@@ -1,5 +1,7 @@
 package com.rahim.userservice.service.implementation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.kafka.IKafkaService;
 import com.rahim.userservice.model.UserProfile;
@@ -162,9 +164,12 @@ public class UserProfileService implements IUserProfileService {
 
                 emailData.put("templateName", templateName);
 
-                LOG.info("Generated tokens for user ID {}: {}", userId, emailData);
+                ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
+                String jsonEmailData = objectMapper.writeValueAsString(emailData);
 
-                kafkaService.sendMessage(SEND_EMAIL_TOPIC, emailData.toString());
+                LOG.info("Generated tokens for user ID {}: {}", userId, jsonEmailData);
+
+                kafkaService.sendMessage(SEND_EMAIL_TOPIC, jsonEmailData);
             } else {
                 LOG.info("No email data found for user ID {}", userId);
             }
