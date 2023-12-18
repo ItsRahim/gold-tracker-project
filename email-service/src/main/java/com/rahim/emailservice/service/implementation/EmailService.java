@@ -17,9 +17,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class EmailServiceImplementation implements IEmailService {
+public class EmailService implements IEmailService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmailServiceImplementation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmailService.class);
     private final EmailTemplateRepository emailTemplateRepository;
     private final EmailHistoryRepository emailHistoryRepository;
     private final EmailUtil emailUtil;

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class EmailTemplateServiceImplementation {
-    private static final Logger LOG = LoggerFactory.getLogger(EmailTemplateServiceImplementation.class);
+public class EmailTemplateService {
+    private static final Logger LOG = LoggerFactory.getLogger(EmailTemplateService.class);
 }
