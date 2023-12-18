@@ -138,20 +138,26 @@ public class UserProfileService implements IUserProfileService {
             if (emailDataOptional.isPresent()) {
                 Map<String, Object> emailData = new HashMap<>(emailDataOptional.get());
 
+                updateMapKey(emailData, "first_name", "firstName");
+                updateMapKey(emailData, "last_name", "lastName");
+                updateMapKey(emailData, "delete_date", "deleteDate");
+                updateMapKey(emailData, "updated_at", "updatedAt");
+
                 if (!includeUsername) {
                     emailData.remove("username");
                 }
 
                 if (!includeDate) {
-                    emailData.keySet().removeAll(Arrays.asList("deletedate", "updatedat"));
+                    List<String> keysToRemove = Arrays.asList("deleteDate", "updatedAt");
+                    emailData.keySet().removeAll(keysToRemove);
                 }
 
                 if (TemplateNameEnum.ACCOUNT_DELETION.getTemplateName().equals(templateName) && includeDate) {
-                    emailData.remove("updatedat");
+                    emailData.remove("updatedAt");
                 }
 
                 if (TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName().equals(templateName) && includeDate) {
-                    emailData.remove("deletedate");
+                    emailData.remove("deleteDate");
                 }
 
                 emailData.put("templateName", templateName);
@@ -165,6 +171,14 @@ public class UserProfileService implements IUserProfileService {
         } catch (Exception e) {
             LOG.error("Error generating email tokens for user ID {}: {}", userId, e.getMessage(), e);
             throw new RuntimeException("Unexpected error", e);
+        }
+    }
+
+    private void updateMapKey(Map<String, Object> map, String oldKey, String newKey) {
+        if (map.containsKey(oldKey)) {
+            Object value = map.remove(oldKey);
+
+            map.put(newKey, value);
         }
     }
 }
