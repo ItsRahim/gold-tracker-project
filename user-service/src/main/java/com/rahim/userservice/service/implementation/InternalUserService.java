@@ -28,12 +28,13 @@ public class InternalUserService implements IInternalUserService {
     @Override
     public void deleteUserAccount(int userId) {
         try {
+            emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
+
             userProfileService.deleteUserProfile(userId);
             userService.deleteUserAccount(userId);
 
             LOG.info("User account with ID {} deleted successfully.", userId);
 
-            emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
         } catch (Exception e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
         }
