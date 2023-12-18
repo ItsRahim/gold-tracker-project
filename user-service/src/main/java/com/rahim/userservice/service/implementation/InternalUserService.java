@@ -7,6 +7,7 @@ import com.rahim.userservice.repository.UserRepository;
 import com.rahim.userservice.service.IInternalUserService;
 import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
+import com.rahim.userservice.util.IEmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ public class InternalUserService implements IInternalUserService {
     private final IUserService userService;
     private final IUserProfileService userProfileService;
     private final UserRepository userRepository;
+    private final IEmailTokenGenerator emailTokenGenerator;
 
     @Override
     public void deleteUserAccount(int userId) {
@@ -31,7 +33,7 @@ public class InternalUserService implements IInternalUserService {
 
             LOG.info("User account with ID {} deleted successfully.", userId);
 
-            userProfileService.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
+            emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
         } catch (Exception e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
         }
@@ -52,7 +54,7 @@ public class InternalUserService implements IInternalUserService {
                     user.setCredentialsExpired(true);
                     userRepository.save(user);
 
-                    userProfileService.generateEmailTokens(TemplateNameEnum.ACCOUNT_INACTIVITY.getTemplateName(), user.getId(), false, false);
+                    emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_INACTIVITY.getTemplateName(), user.getId(), false, false);
                 }
 
                 LOG.info("Inactive users found. Account status successfully updated");

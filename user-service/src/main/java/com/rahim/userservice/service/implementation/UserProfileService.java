@@ -1,13 +1,8 @@
 package com.rahim.userservice.service.implementation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rahim.userservice.enums.TemplateNameEnum;
-import com.rahim.userservice.kafka.IKafkaService;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.repository.UserProfileRepository;
 import com.rahim.userservice.service.IUserProfileService;
-import com.rahim.userservice.util.IMessageFormatter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +15,6 @@ import java.util.*;
 public class UserProfileService implements IUserProfileService {
 
     private final UserProfileRepository userProfileRepository;
-    private final IKafkaService kafkaService;
-    private final IMessageFormatter messageFormatter;
-    private static final String SEND_EMAIL_TOPIC = "email-service-send-email";
     private static final Logger LOG = LoggerFactory.getLogger(UserProfileService.class);
 
     @Override
@@ -134,53 +126,22 @@ public class UserProfileService implements IUserProfileService {
         return userProfileRepository.existsByUsername(username);
     }
 
-    @Override
-    public void generateEmailTokens(String templateName, int userId, boolean includeUsername, boolean includeDate) {
+    public Map<String, Object> getUserProfileDetails(int userId) {
         try {
-            Optional<Map<String, Object>> emailDataOptional = userProfileRepository.getUserProfileDetails(userId);
+            Optional<Map<String, Object>> userProfileOptional = userProfileRepository.getUserProfileDetails(userId);
 
-            if (emailDataOptional.isPresent()) {
-                Map<String, Object> emailData = new HashMap<>(emailDataOptional.get());
-
-                messageFormatter.updateMapKey(emailData, "first_name", "firstName");
-                messageFormatter.updateMapKey(emailData, "last_name", "lastName");
-                messageFormatter.updateMapKey(emailData, "delete_date", "deleteDate");
-                messageFormatter.updateMapKey(emailData, "updated_at", "updatedAt");
-
-                messageFormatter.formatInstant(emailData, "deleteDate");
-                messageFormatter.formatInstant(emailData, "updatedAt");
-
-                if (!includeUsername) {
-                    emailData.remove("username");
-                }
-
-                if (!includeDate) {
-                    List<String> keysToRemove = Arrays.asList("deleteDate", "updatedAt");
-                    emailData.keySet().removeAll(keysToRemove);
-                }
-
-                if (TemplateNameEnum.ACCOUNT_DELETION.getTemplateName().equals(templateName) && includeDate) {
-                    emailData.remove("updatedAt");
-                }
-
-                if (TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName().equals(templateName) && includeDate) {
-                    emailData.remove("deleteDate");
-                }
-
-                emailData.put("templateName", templateName);
-
-                ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
-                String jsonEmailData = objectMapper.writeValueAsString(emailData);
-
-                LOG.info("Generated tokens for user ID {}: {}", userId, jsonEmailData);
-
-                kafkaService.sendMessage(SEND_EMAIL_TOPIC, jsonEmailData);
+            if (userProfileOptional.isPresent()) {
+                Map<String, Object> userProfileDetails = userProfileOptional.get();
+                LOG.info("User profile details retrieved successfully for user ID {}: {}", userId, userProfileDetails);
+                return userProfileDetails;
             } else {
-                LOG.info("No email data found for user ID {}", userId);
+                LOG.info("No user profile details found for user ID {}", userId);
+                return null;
             }
         } catch (Exception e) {
-            LOG.error("Error generating email tokens for user ID {}: {}", userId, e.getMessage(), e);
-            throw new RuntimeException("Unexpected error", e);
+            LOG.error("Error retrieving user profile details for user ID {}: {}", userId, e.getMessage(), e);
+            throw new RuntimeException("Unexpected error while retrieving user profile details", e);
         }
     }
+
 }

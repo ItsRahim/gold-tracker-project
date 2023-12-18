@@ -10,6 +10,7 @@ import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.UserRepository;
 import com.rahim.userservice.service.IUserProfileService;
 import com.rahim.userservice.service.IUserService;
+import com.rahim.userservice.util.IEmailTokenGenerator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -26,6 +27,7 @@ import java.util.*;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final IUserProfileService userProfileService;
+    private final IEmailTokenGenerator emailTokenGenerator;
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     @Override
@@ -107,7 +109,7 @@ public class UserService implements IUserService {
                 user.setDeleteDate(deletionDate);
 
                 userRepository.save(user);
-                userProfileService.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETION.getTemplateName(), userId, true, true);
+                emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETION.getTemplateName(), userId, true, true);
                 LOG.info("User with ID {} is pending deletion on {}", userId, deletionDate);
 
                 return true;
@@ -137,7 +139,7 @@ public class UserService implements IUserService {
                 }
 
                 userRepository.save(user);
-                userProfileService.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), userId, true, true);
+                emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), userId, true, true);
                 LOG.info("User with ID {} updated successfully", userId);
             } catch (Exception e) {
                 LOG.error("Error updating user with ID {}: {}", userId, e.getMessage());

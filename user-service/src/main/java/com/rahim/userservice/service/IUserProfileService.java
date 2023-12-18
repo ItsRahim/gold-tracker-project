@@ -14,5 +14,5 @@ public interface IUserProfileService {
     Optional<UserProfile> getProfileByUsername(String username);
     void deleteUserProfile(int userId);
     boolean checkUsernameExists(String username);
-    void generateEmailTokens(String templateName, int userId, boolean includeUsername, boolean includeDate);
+    Map<String, Object> getUserProfileDetails(int userId);
 }
