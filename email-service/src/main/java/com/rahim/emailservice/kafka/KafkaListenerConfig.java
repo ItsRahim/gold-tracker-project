@@ -15,7 +15,7 @@ public class KafkaListenerConfig {
 
     @KafkaListener(topics = "email-service-send-email", groupId = "group2")
     public void sendEmail(String emailData) {
-        LOG.info("Message received: {}", emailData);
+        LOG.info("Message received");
         emailService.processKafkaData(emailData);
     }
 }

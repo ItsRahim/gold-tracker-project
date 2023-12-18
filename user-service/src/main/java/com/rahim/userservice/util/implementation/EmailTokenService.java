@@ -67,7 +67,7 @@ public class EmailTokenService implements IEmailTokenService{
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
             String jsonEmailData = objectMapper.writeValueAsString(mutableEmailData);
 
-            LOG.info("Generated tokens: {}", jsonEmailData);
+            LOG.trace("Generated tokens: {}", jsonEmailData);
 
             kafkaService.sendMessage(SEND_EMAIL_TOPIC, jsonEmailData);
         } catch (Exception e) {
