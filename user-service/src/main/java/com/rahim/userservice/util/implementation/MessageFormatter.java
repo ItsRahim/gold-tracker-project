@@ -5,9 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.DateTimeException;
-import java.time.Instant;
-import java.time.ZoneOffset;
+import java.sql.Date;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
@@ -27,15 +26,22 @@ public class MessageFormatter implements IMessageFormatter {
     public void formatInstant(Map<String, Object> map, String key) {
         if (map.containsKey(key)) {
             Object value = map.get(key);
+            LOG.info("CLASS IS: {}", value.getClass());
             if (value != null) {
-                Instant instant = (Instant) value;
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC);
-                try {
+                if (value instanceof Instant instant) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC);
                     String formattedDate = formatter.format(instant);
                     map.put(key, formattedDate);
-                } catch (DateTimeException e) {
-                    LOG.error("Error formatting Instant value for key {}: {}", key, e.getMessage(), e);
+                } else if (value instanceof Date sqlDate) {
+                    LocalDate localDate = sqlDate.toLocalDate();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    String formattedDate = formatter.format(localDate);
+                    map.put(key, formattedDate);
+                } else {
+                    LOG.error("Unsupported type for key {}: {}", key, value.getClass().getName());
                 }
+            } else {
+                LOG.error("Value for key {} is null", key);
             }
         }
     }

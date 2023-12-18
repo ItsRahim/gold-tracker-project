@@ -37,9 +37,6 @@ public class EmailTokenService implements IEmailTokenService{
             messageFormatter.updateMapKey(mutableEmailData, "delete_date", "deleteDate");
             messageFormatter.updateMapKey(mutableEmailData, "updated_at", "updatedAt");
 
-            messageFormatter.formatInstant(mutableEmailData, "deleteDate");
-            messageFormatter.formatInstant(mutableEmailData, "updatedAt");
-
             if (!includeUsername) {
                 mutableEmailData.remove("username");
             }
@@ -51,10 +48,12 @@ public class EmailTokenService implements IEmailTokenService{
 
             if (TemplateNameEnum.ACCOUNT_DELETION.getTemplateName().equals(templateName) && includeDate) {
                 mutableEmailData.remove("updatedAt");
+                messageFormatter.formatInstant(mutableEmailData, "deleteDate");
             }
 
             if (TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName().equals(templateName) && includeDate) {
                 mutableEmailData.remove("deleteDate");
+                messageFormatter.formatInstant(mutableEmailData, "updatedAt");
             }
 
             mutableEmailData.put("templateName", templateName);
