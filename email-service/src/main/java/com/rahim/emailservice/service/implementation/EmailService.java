@@ -3,13 +3,13 @@ package com.rahim.emailservice.service.implementation;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rahim.emailservice.model.EmailTemplate;
-import com.rahim.emailservice.repository.EmailHistoryRepository;
 import com.rahim.emailservice.repository.EmailTemplateRepository;
 import com.rahim.emailservice.service.IEmailService;
 import com.rahim.emailservice.util.EmailUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,16 @@ public class EmailService implements IEmailService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmailService.class);
     private final EmailTemplateRepository emailTemplateRepository;
-    private final EmailHistoryRepository emailHistoryRepository;
     private final EmailUtil emailUtil;
     private final JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    String fromEmail;
 
     @Override
     public void sendEmail(String recipientEmail, EmailTemplate emailContent) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("rahim1605@gmail.com");
+        message.setFrom(fromEmail);
         message.setTo(recipientEmail);
         message.setSubject(emailContent.getSubject());
         message.setText(emailContent.getBody());
