@@ -7,6 +7,7 @@ import com.rahim.userservice.kafka.IKafkaService;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.repository.UserProfileRepository;
 import com.rahim.userservice.service.IUserProfileService;
+import com.rahim.userservice.util.IMessageFormatter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class UserProfileService implements IUserProfileService {
 
     private final UserProfileRepository userProfileRepository;
     private final IKafkaService kafkaService;
+    private final IMessageFormatter messageFormatter;
     private static final String SEND_EMAIL_TOPIC = "email-service-send-email";
     private static final Logger LOG = LoggerFactory.getLogger(UserProfileService.class);
 
@@ -140,10 +142,13 @@ public class UserProfileService implements IUserProfileService {
             if (emailDataOptional.isPresent()) {
                 Map<String, Object> emailData = new HashMap<>(emailDataOptional.get());
 
-                updateMapKey(emailData, "first_name", "firstName");
-                updateMapKey(emailData, "last_name", "lastName");
-                updateMapKey(emailData, "delete_date", "deleteDate");
-                updateMapKey(emailData, "updated_at", "updatedAt");
+                messageFormatter.updateMapKey(emailData, "first_name", "firstName");
+                messageFormatter.updateMapKey(emailData, "last_name", "lastName");
+                messageFormatter.updateMapKey(emailData, "delete_date", "deleteDate");
+                messageFormatter.updateMapKey(emailData, "updated_at", "updatedAt");
+
+                messageFormatter.formatInstant(emailData, "deleteDate");
+                messageFormatter.formatInstant(emailData, "updatedAt");
 
                 if (!includeUsername) {
                     emailData.remove("username");
@@ -176,14 +181,6 @@ public class UserProfileService implements IUserProfileService {
         } catch (Exception e) {
             LOG.error("Error generating email tokens for user ID {}: {}", userId, e.getMessage(), e);
             throw new RuntimeException("Unexpected error", e);
-        }
-    }
-
-    private void updateMapKey(Map<String, Object> map, String oldKey, String newKey) {
-        if (map.containsKey(oldKey)) {
-            Object value = map.remove(oldKey);
-
-            map.put(newKey, value);
         }
     }
 }
