@@ -1,5 +1,6 @@
 package com.rahim.pricingservice.service.implementation;
 
+import com.rahim.pricingservice.kafka.IKafkaService;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.dto.GoldPriceDTO;
@@ -32,7 +33,9 @@ public class GoldPriceService implements IGoldPriceService {
     private final IGoldTypeService goldTypeService;
     private final GoldPriceCalculator goldPriceCalculator;
     private final ApiDataProcessor apiDataProcessor;
+    private final IKafkaService kafkaService;
     private final String GOLD_TICKER = "XAUGBP";
+    private static final String SEND_NOTIFICATION_PRICE_TOPIC = "notification-service-price-update";
 
     @Override
     public void updateGoldTickerPrice() {
@@ -56,6 +59,7 @@ public class GoldPriceService implements IGoldPriceService {
 
                 List<Integer> idsToUpdate = goldTypeService.getAllIds();
                 updateGoldPrices(idsToUpdate);
+                kafkaService.sendMessage(SEND_NOTIFICATION_PRICE_TOPIC, newPrice.toString());
 
             } else {
                 LOG.warn("Gold ticker with ID 1 not found in the repository. Unable to update.");
