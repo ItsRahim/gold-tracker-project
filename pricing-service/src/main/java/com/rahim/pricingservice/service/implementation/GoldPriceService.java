@@ -12,6 +12,7 @@ import com.rahim.pricingservice.util.ApiDataProcessor;
 import com.rahim.pricingservice.util.GoldPriceCalculator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,14 +35,21 @@ public class GoldPriceService implements IGoldPriceService {
     private final GoldPriceCalculator goldPriceCalculator;
     private final ApiDataProcessor apiDataProcessor;
     private final IKafkaService kafkaService;
-    private final String GOLD_TICKER = "XAUGBP";
+    private static final String GOLD_TICKER = "XAUGBP";
+    private static final int GOLD_TICKER_ID = 1;
     private static final String SEND_NOTIFICATION_PRICE_TOPIC = "notification-service-price-update";
 
     @Override
     public void updateGoldTickerPrice() {
         try {
             GoldData apiData = apiDataProcessor.getApiData();
-            Optional<GoldPrice> goldPriceOptional = goldPriceRepository.findById(1);
+            boolean isApiDataNull = ObjectUtils.anyNull(apiData);
+
+            if (isApiDataNull) {
+                throw new RuntimeException("API data is null. Unable to update gold ticker price.");
+            }
+
+            Optional<GoldPrice> goldPriceOptional = goldPriceRepository.findById(GOLD_TICKER_ID);
 
             if (goldPriceOptional.isPresent()) {
                 OffsetDateTime updatedTime = OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS);

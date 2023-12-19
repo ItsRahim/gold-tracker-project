@@ -27,13 +27,8 @@ public class KafkaListenerConfig {
 
     @KafkaListener(topics = "gold-price-stream", groupId = "group2")
     public void processPriceChange(String priceData) {
-        if (priceData.isEmpty()) {
-            LOG.error("No gold price data received from the custom pricing API.");
-        } else {
-            LOG.info("Successfully received the latest gold prices. Processing data...");
-            apiDataProcessor.setKafkaData(priceData);
-            goldPriceService.updateGoldTickerPrice();
-        }
+        apiDataProcessor.setKafkaData(priceData);
+        goldPriceService.updateGoldTickerPrice();
     }
 
     @KafkaListener(topics = "pricing-service-new-type", groupId = "group2")
