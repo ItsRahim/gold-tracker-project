@@ -47,7 +47,9 @@ public class EmailUtil {
                 tokenMapPopulator.populateTokenMap(placeholders, tokens);
 
                 String replacedBody = replacePlaceholders(emailTemplate.getBody(), tokenMapPopulator.getPlaceholderTokenMap());
+                replacedBody = replacedBody.replace("\\n", "\n");
                 emailTemplate.setBody(replacedBody);
+
                 return emailTemplate;
             } else {
                 LOG.warn("Invalid information provided to populate email");
