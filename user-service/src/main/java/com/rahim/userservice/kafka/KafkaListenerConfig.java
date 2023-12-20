@@ -13,12 +13,10 @@ public class KafkaListenerConfig {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final IInternalUserService internalUserService;
 
-    @KafkaListener(topics = "user-service-cleanup-accounts", groupId = "group2")
+    @KafkaListener(topics = "${topics.scheduler-user-cleanup}", groupId = "group2")
     public void cleanupUserAccounts(String message) {
         LOG.info("Message received from Scheduler Service: {}", message);
-        internalUserService.findAllInactiveUsers();
-        internalUserService.processInactiveUsers();
-        internalUserService.processPendingDeleteUsers();
+        internalUserService.runCleanupJob();
     }
 }
 

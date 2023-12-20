@@ -41,7 +41,13 @@ public class InternalUserService implements IInternalUserService {
     }
 
     @Override
-    public void findAllInactiveUsers() {
+    public void runCleanupJob() {
+        findAllInactiveUsers();
+        processInactiveUsers();
+        processPendingDeleteUsers();
+    }
+
+    private void findAllInactiveUsers() {
         try {
             LocalDate cutoffDate = LocalDate.now().minusDays(30);
 
@@ -67,8 +73,7 @@ public class InternalUserService implements IInternalUserService {
         }
     }
 
-    @Override
-    public void processPendingDeleteUsers() {
+    private void processPendingDeleteUsers() {
         try {
             List<User> pendingDeleteUsers = userRepository.findPendingDeleteUsers();
             LocalDate currentDate = LocalDate.now();
@@ -92,8 +97,7 @@ public class InternalUserService implements IInternalUserService {
         }
     }
 
-    @Override
-    public void processInactiveUsers() {
+    private void processInactiveUsers() {
         try {
             LocalDate cutoffDate = LocalDate.now().minusDays(44);
 

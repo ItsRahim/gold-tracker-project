@@ -156,11 +156,11 @@ public class GoldPriceService implements IGoldPriceService {
     }
 
     @Override
-    public void processNewGoldType(int goldTypeId) {
+    public void processNewGoldType(String goldTypeId) {
         try {
             LOG.info("Processing new gold type with ID: {}", goldTypeId);
 
-            goldPriceRepository.insertGoldPrice(goldTypeId, BigDecimal.ZERO);
+            goldPriceRepository.insertGoldPrice(Integer.parseInt(goldTypeId), BigDecimal.ZERO);
 
             LOG.info("Insert operation successful for gold type with ID: {}", goldTypeId);
         } catch (Exception e) {
@@ -171,9 +171,9 @@ public class GoldPriceService implements IGoldPriceService {
 
     @Override
     @Transactional
-    public void deleteGoldPrice(int goldTypeId) {
+    public void deleteGoldPrice(String goldTypeId) {
         try {
-            Integer priceId = goldPriceRepository.getPriceIdByTypeId(goldTypeId);
+            Integer priceId = goldPriceRepository.getPriceIdByTypeId(Integer.parseInt(goldTypeId));
             if (priceId != null) {
                 goldPriceRepository.deleteById(priceId);
                 LOG.info("Gold type with ID {} and associated price deleted successfully.", goldTypeId);

@@ -11,6 +11,6 @@ public interface IGoldPriceService {
     void updateGoldTickerPrice();
     Optional<GoldPriceDTO> getGoldPrice(int goldId);
     List<GoldPriceDTO> getAllGoldPrices();
-    void processNewGoldType(int goldTypeId);
-    void deleteGoldPrice(int goldTypeId);
+    void processNewGoldType(String goldTypeId);
+    void deleteGoldPrice(String goldTypeId);
 }

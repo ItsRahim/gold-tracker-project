@@ -5,3 +5,5 @@ topics:
   update-price-history: pricing-service-history-table
   update-gold-price-job: pricing-service-update-prices
   custom-api-data: gold-price-stream
+  send-email-topic: email-service-send-email
+  scheduler-user-cleanup : user-service-cleanup-accounts

@@ -35,13 +35,13 @@ public class KafkaListenerConfig {
     @KafkaListener(topics = "${topics.add-gold-type}", groupId = "group2")
     public void addNewGoldPrice(String goldTypeId) {
         LOG.info("Message received. New Gold Type added: {}", goldTypeId);
-        goldPriceService.processNewGoldType(Integer.parseInt(goldTypeId));
+        goldPriceService.processNewGoldType(goldTypeId);
     }
 
     @KafkaListener(topics = "${topics.delete-gold-type}", groupId = "group2")
     public void removeGoldPrice(String goldTypeId) {
         LOG.info("Message received to remove gold type with ID: {}", goldTypeId);
-        goldPriceService.deleteGoldPrice(Integer.parseInt(goldTypeId));
+        goldPriceService.deleteGoldPrice(goldTypeId);
     }
 
     @KafkaListener(topics = "${topics.update-price-history}", groupId = "group2")

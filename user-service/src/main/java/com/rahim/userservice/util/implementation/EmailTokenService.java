@@ -1,5 +1,6 @@
 package com.rahim.userservice.util.implementation;
 
+import com.rahim.userservice.constant.TopicConstants;
 import com.rahim.userservice.util.IEmailTokenService;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class EmailTokenService implements IEmailTokenService{
     private static final Logger LOG = LoggerFactory.getLogger(EmailTokenService.class);
     private final IMessageFormatter messageFormatter;
     private final IKafkaService kafkaService;
-    private static final String SEND_EMAIL_TOPIC = "email-service-send-email";
+    private final TopicConstants topicConstants;
 
     @Override
     public void generateEmailTokens(Map<String, Object> emailData, String templateName, boolean includeUsername, boolean includeDate) {
@@ -68,7 +69,7 @@ public class EmailTokenService implements IEmailTokenService{
 
             LOG.trace("Generated tokens: {}", jsonEmailData);
 
-            kafkaService.sendMessage(SEND_EMAIL_TOPIC, jsonEmailData);
+            kafkaService.sendMessage(topicConstants.getSendEmailTopic(), jsonEmailData);
         } catch (Exception e) {
             LOG.error("Error generating email tokens: {}", e.getMessage(), e);
             throw new RuntimeException("Unexpected error", e);
