@@ -20,35 +20,34 @@ public class KafkaListenerConfig {
     private final IGoldPriceHistoryService goldPriceHistoryService;
     private final ApiDataProcessor apiDataProcessor;
 
-    @KafkaListener(topics = TopicConstants.UPDATE_GOLD_PRICE_JOB_TOPIC, groupId = "group2")
+    @KafkaListener(topics = "${topics.update-gold-price-job}", groupId = "group2")
     public void updateGoldPriceJob(String message) {
         LOG.info("Message received from Scheduler Service: {}", message);
         goldPriceFeignClient.getGoldPrice();
     }
 
-    @KafkaListener(topics = TopicConstants.CUSTOM_API_DATA_TOPIC, groupId = "group2")
+    @KafkaListener(topics = "${topics.custom-api-data}", groupId = "group2")
     public void processPriceChange(String priceData) {
         apiDataProcessor.setKafkaData(priceData);
         goldPriceService.updateGoldTickerPrice();
     }
 
-    @KafkaListener(topics = TopicConstants.ADD_GOLD_TYPE_TOPIC, groupId = "group2")
+    @KafkaListener(topics = "${topics.add-gold-type}", groupId = "group2")
     public void addNewGoldPrice(String goldTypeId) {
         LOG.info("Message received. New Gold Type added: {}", goldTypeId);
         goldPriceService.processNewGoldType(Integer.parseInt(goldTypeId));
     }
 
-    @KafkaListener(topics = TopicConstants.DELETE_GOLD_TYPE_TOPIC, groupId = "group2")
+    @KafkaListener(topics = "${topics.delete-gold-type}", groupId = "group2")
     public void removeGoldPrice(String goldTypeId) {
         LOG.info("Message received to remove gold type with ID: {}", goldTypeId);
         goldPriceService.deleteGoldPrice(Integer.parseInt(goldTypeId));
     }
 
-    @KafkaListener(topics = TopicConstants.UPDATE_PRICE_HISTORY_TOPIC, groupId = "group2")
+    @KafkaListener(topics = "${topics.update-price-history}", groupId = "group2")
     public void updateHistoryTable(String message) {
         LOG.info("Message received from Scheduler Service: {}", message);
         goldPriceFeignClient.getGoldPrice();
         goldPriceHistoryService.updateHistoryTable();
     }
 }
-

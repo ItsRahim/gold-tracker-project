@@ -36,6 +36,7 @@ public class GoldPriceService implements IGoldPriceService {
     private final GoldPriceCalculator goldPriceCalculator;
     private final ApiDataProcessor apiDataProcessor;
     private final IKafkaService kafkaService;
+    private final TopicConstants topicConstants;
     private static final String GOLD_TICKER = "XAUGBP";
     private static final int GOLD_TICKER_ID = 1;
 
@@ -67,7 +68,7 @@ public class GoldPriceService implements IGoldPriceService {
 
                 List<Integer> idsToUpdate = goldTypeService.getAllIds();
                 updateGoldPrices(idsToUpdate);
-                kafkaService.sendMessage(TopicConstants.SEND_NOTIFICATION_PRICE_TOPIC, newPrice.toString());
+                kafkaService.sendMessage(topicConstants.getSendNotificationPriceTopic(), newPrice.toString());
 
             } else {
                 LOG.warn("Gold ticker with ID 1 not found in the repository. Unable to update.");
