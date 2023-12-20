@@ -1,5 +1,6 @@
 package com.rahim.schedulerservice.jobs;
 
+import com.rahim.schedulerservice.constant.TopicConstants;
 import com.rahim.schedulerservice.kafka.IKafkaService;
 import com.rahim.schedulerservice.model.TimerInfo;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class UpdatePriceHistoryJob implements Job {
     private static final Logger LOG = LoggerFactory.getLogger(UpdatePriceHistoryJob.class);
     private final IKafkaService kafkaService;
+    private final TopicConstants topicConstants;
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
@@ -23,6 +25,6 @@ public class UpdatePriceHistoryJob implements Job {
 
         LOG.info(timerInfo.getCallbackData());
 
-        kafkaService.sendMessage("pricing-service-history-table", "Update Gold Price History Table: ");
+        kafkaService.sendMessage(topicConstants.getUpdatePriceHistoryTopic(), "Update Gold Price History Table: ");
     }
 }

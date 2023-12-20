@@ -1,5 +1,6 @@
 package com.rahim.schedulerservice.jobs;
 
+import com.rahim.schedulerservice.constant.TopicConstants;
 import com.rahim.schedulerservice.kafka.IKafkaService;
 import com.rahim.schedulerservice.model.TimerInfo;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 public class UpdateGoldPriceJob implements Job {
     private static final Logger LOG = LoggerFactory.getLogger(UpdateGoldPriceJob.class);
     private final IKafkaService kafkaService;
+    private final TopicConstants topicConstants;
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
@@ -27,6 +29,6 @@ public class UpdateGoldPriceJob implements Job {
 
         LOG.info(timerInfo.getCallbackData());
 
-        kafkaService.sendMessage("pricing-service-update-prices", "Start Update Price Job: " + jobTime);
+        kafkaService.sendMessage(topicConstants.getUpdatePriceTopic(), "Start Update Price Job: " + jobTime);
     }
 }
