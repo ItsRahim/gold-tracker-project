@@ -1,6 +1,5 @@
 package com.rahim.pricingservice.kafka;
 
-import com.rahim.pricingservice.constant.TopicConstants;
 import com.rahim.pricingservice.service.IGoldPriceHistoryService;
 import com.rahim.pricingservice.service.IGoldPriceService;
 import com.rahim.pricingservice.service.feign.IGoldPriceFeignClient;
