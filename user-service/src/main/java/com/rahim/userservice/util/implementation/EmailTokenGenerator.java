@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -18,12 +19,17 @@ public class EmailTokenGenerator implements IEmailTokenGenerator {
     private final IUserProfileService userProfileService;
 
     @Override
-    public void generateEmailTokens(String templateName, int userId, boolean includeUsername, boolean includeDate) {
+    public void generateEmailTokens(String templateName, int userId, boolean includeUsername, boolean includeDate, String... oldEmail) {
         try {
             Map<String, Object> emailData = userProfileService.getUserProfileDetails(userId);
+            Map<String, Object> mutableData = new HashMap<>(emailData);
 
-            if (emailData != null) {
-                emailTokenService.generateEmailTokens(emailData, templateName, includeUsername, includeDate);
+            if(templateName.equals("Account Update") && (oldEmail.length > 0)) {
+                mutableData.put("email", oldEmail[0]);
+            }
+
+            if (mutableData != null) {
+                emailTokenService.generateEmailTokens(mutableData, templateName, includeUsername, includeDate);
             } else {
                 LOG.info("No email data found for user ID {}", userId);
             }

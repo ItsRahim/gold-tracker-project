@@ -130,6 +130,8 @@ public class UserService implements IUserService {
         if (existingUserOptional.isPresent()) {
             User user = existingUserOptional.get();
 
+            String oldEmail = user.getEmail();
+
             try {
                 if (updatedData.containsKey("email")) {
                     user.setEmail(updatedData.get("email"));
@@ -139,7 +141,7 @@ public class UserService implements IUserService {
                 }
 
                 userRepository.save(user);
-                emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), userId, true, true);
+                emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), userId, true, true, oldEmail);
                 LOG.info("User with ID {} updated successfully", userId);
             } catch (Exception e) {
                 LOG.error("Error updating user with ID {}: {}", userId, e.getMessage());

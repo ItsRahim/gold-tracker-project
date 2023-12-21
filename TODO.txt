@@ -15,3 +15,7 @@ report-service
 email-service
 authentication-service
 holdings-service
+
+Issues:
+- User not able to update profile details, only user account details
+- If user email is updated, updated email is sent to new email not old
