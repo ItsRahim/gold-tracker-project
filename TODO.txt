@@ -9,12 +9,12 @@
 9) Create Quartz job to get gold price - DONE
 10) Enable vault for secrets - DONE
 
-notification-service
-transaction-service
-report-service
-email-service
-authentication-service
-holdings-service
+notification-service - WIP
+transaction-service - TODO
+report-service - TODO
+email-service - DONE
+authentication-service - TODO
+holdings-service - TODO
 
 Issues:
 - User not able to update profile details, only user account details
