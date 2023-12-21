@@ -46,3 +46,17 @@ VALUES (
         '\nIf you believe this is an error or if you have any questions, please contact our support team for further assistance.',
         ARRAY['@firstName', '@lastName', '@username']
        );
+
+INSERT INTO rgts.email_template(template_name, subject, body, placeholders)
+VALUES (
+           'Account Update',
+           'Account Update Alert',
+           'Dear @firstName @lastName,\n' ||
+           '\nWe hope this message finds you well. This is to inform you that your account information has been updated successfully.\n' ||
+           '\nPlease review the changes below:\n\n' ||
+           'Updated Username: @username\n' ||
+           'Last Update Time: @updatedAt\n\n' ||
+           'If you have any questions or concerns, please contact our support team for further assistance.\n\n' ||
+           'Best regards,\nYour Service Team',
+           ARRAY['@firstName', '@lastName', '@username', '@updatedAt']
+       );
