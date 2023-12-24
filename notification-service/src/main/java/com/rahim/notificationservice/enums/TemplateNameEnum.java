@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum TemplateNameEnum {
-    ACCOUNT_DELETED("Gold Price Alert");
+    PRICE_ALERT("Gold Price Alert");
 
     private final String templateName;
 

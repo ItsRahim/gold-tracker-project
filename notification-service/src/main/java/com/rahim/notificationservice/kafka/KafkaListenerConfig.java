@@ -1,5 +1,6 @@
 package com.rahim.notificationservice.kafka;
 
+import com.rahim.notificationservice.service.IThresholdService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +11,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
+    private final IThresholdService thresholdService;
 
     @KafkaListener(topics = "notification-service-price-update", groupId = "group2")
-    public void send(String priceData) {
+    public void priceListener(String priceData) {
         LOG.info("Message received from Pricing Service: {}", priceData);
+        thresholdService.processKafkaData(priceData);
     }
 }

@@ -16,6 +16,6 @@ email-service - DONE
 authentication-service - TODO
 holdings-service - TODO
 
-Issues:
+Issues/Enhancements:
 - User not able to update profile details, only user account details
 - If user email is updated, updated email is sent to new email not old - DONE
