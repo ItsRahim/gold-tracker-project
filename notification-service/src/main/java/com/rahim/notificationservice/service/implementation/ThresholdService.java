@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class ThresholdService implements IThresholdService {
     public List<String> processKafkaData(String priceData) {
         try {
             BigDecimal currentPrice = new BigDecimal(priceData);
+            String alertDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).toString();
             List<Map<String, Object>> notificationList = thresholdAlertRepository.getEmailTokens(currentPrice);
 
             for (Map<String, Object> notificationMap : notificationList) {
@@ -40,8 +42,8 @@ public class ThresholdService implements IThresholdService {
                 Map<String, Object> mutableEmailData = new HashMap<>(notificationMap);
 
                 updateKeys(mutableEmailData);
+                mutableEmailData.put("alertDateTime", alertDateTime);
                 mutableEmailData.put("templateName", TemplateNameEnum.PRICE_ALERT.getTemplateName());
-                mutableEmailData.put("alertDateTime", LocalDateTime.now());
 
                 LOG.info("Modified data: {}", mutableEmailData);
 
