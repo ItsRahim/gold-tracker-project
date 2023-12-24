@@ -26,7 +26,6 @@ public class MessageFormatter implements IMessageFormatter {
     public void formatInstant(Map<String, Object> map, String key) {
         if (map.containsKey(key)) {
             Object value = map.get(key);
-            LOG.info("CLASS IS: {}", value.getClass());
             if (value != null) {
                 if (value instanceof Instant instant) {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC);
