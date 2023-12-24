@@ -276,3 +276,5 @@ pyrightconfig.json
 /logs/*
 
 /vault/*
+
+TODO.txt
