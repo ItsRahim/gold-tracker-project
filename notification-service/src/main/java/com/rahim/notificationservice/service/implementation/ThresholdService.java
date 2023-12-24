@@ -33,7 +33,8 @@ public class ThresholdService implements IThresholdService {
     public List<String> processKafkaData(String priceData) {
         try {
             BigDecimal currentPrice = new BigDecimal(priceData);
-            String alertDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).toString();
+            String alertDateTime = getFormattedTime();
+
             List<Map<String, Object>> notificationList = thresholdAlertRepository.getEmailTokens(currentPrice);
 
             for (Map<String, Object> notificationMap : notificationList) {
@@ -72,5 +73,9 @@ public class ThresholdService implements IThresholdService {
     private String convertToJson(Map<String, Object> mutableEmailData) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         return objectMapper.writeValueAsString(mutableEmailData);
+    }
+
+    private String getFormattedTime() {
+        return LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).toString().replace("T", "");
     }
 }
