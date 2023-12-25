@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Repository
 public interface ThresholdAlertRepository extends JpaRepository<ThresholdAlert, Integer> {
-    @Query(value = "SELECT up.first_name AS firstName, up.last_name AS lastName, u.email, ta.threshold_price AS thresholdPrice " +
+    @Query(value = "SELECT up.first_name, up.last_name, u.email, ta.threshold_price, ta.is_active, ta.alert_id " +
             "FROM rgts.user_profiles up " +
             "JOIN rgts.threshold_alerts ta ON up.user_id = ta.user_id " +
             "JOIN rgts.users u ON up.user_id = u.user_id " +

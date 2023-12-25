@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rahim.notificationservice.constants.TopicConstants;
 import com.rahim.notificationservice.enums.TemplateNameEnum;
 import com.rahim.notificationservice.kafka.IKafkaService;
+import com.rahim.notificationservice.model.ThresholdAlert;
 import com.rahim.notificationservice.repository.ThresholdAlertRepository;
 import com.rahim.notificationservice.service.IThresholdService;
 import com.rahim.notificationservice.util.IMessageFormatter;
@@ -21,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,11 +42,19 @@ public class ThresholdService implements IThresholdService {
             List<Map<String, Object>> notificationList = thresholdAlertRepository.getEmailTokens(currentPrice);
 
             for (Map<String, Object> notificationMap : notificationList) {
+                boolean isActive = (boolean) notificationMap.get("is_active");
+                int alertId = (int) notificationMap.get("alert_id");
+
+                if(!isActive) {
+                    continue;
+                }
                 LOG.info("Found user to alert");
 
                 Map<String, Object> mutableEmailData = new HashMap<>(notificationMap);
 
+                deactivateAlert(alertId);
                 updateKeys(mutableEmailData);
+
                 mutableEmailData.put("alertDateTime", alertDateTime);
                 mutableEmailData.put("templateName", TemplateNameEnum.PRICE_ALERT.getTemplateName());
 
@@ -66,10 +76,31 @@ public class ThresholdService implements IThresholdService {
         return null;
     }
 
+    @Override
+    public Optional<ThresholdAlert> findById(int alertId) {
+        try {
+            Optional<ThresholdAlert> alertOptional = thresholdAlertRepository.findById(alertId);
+
+            if (alertOptional.isPresent()) {
+                LOG.info("Alert retrieved successfully. ID: {}", alertId);
+            } else {
+                LOG.info("Alert not found for ID: {}", alertId);
+            }
+
+            return alertOptional;
+        } catch (Exception e) {
+            LOG.error("An error occurred while retrieving alert with ID: {}", alertId, e);
+            return Optional.empty();
+        }
+    }
+
     private void updateKeys(Map<String, Object> data) {
-        messageFormatter.updateMapKey(data, "firstname", "firstName");
-        messageFormatter.updateMapKey(data, "lastname", "lastName");
-        messageFormatter.updateMapKey(data, "thresholdprice", "thresholdPrice");
+        messageFormatter.updateMapKey(data, "first_name", "firstName");
+        messageFormatter.updateMapKey(data, "last_name", "lastName");
+        messageFormatter.updateMapKey(data, "threshold_price", "thresholdPrice");
+
+        data.remove("alert_id");
+        data.remove("is_active");
     }
 
     private String convertToJson(Map<String, Object> mutableEmailData) throws JsonProcessingException {
@@ -82,5 +113,16 @@ public class ThresholdService implements IThresholdService {
                 .truncatedTo(ChronoUnit.MINUTES)
                 .toString()
                 .replace("T", "");
+    }
+
+    private void deactivateAlert(int alertId) {
+        try {
+            findById(alertId).ifPresent(thresholdAlert -> {
+                thresholdAlert.deactivate();
+                thresholdAlertRepository.save(thresholdAlert);
+            });
+        } catch (Exception e) {
+            LOG.error("An error occurred while deactivating alert with ID: {}", alertId, e);
+        }
     }
 }

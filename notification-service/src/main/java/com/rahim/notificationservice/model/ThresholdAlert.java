@@ -29,4 +29,7 @@ public class ThresholdAlert {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    public void deactivate() {
+        this.isActive = false;
+    }
 }

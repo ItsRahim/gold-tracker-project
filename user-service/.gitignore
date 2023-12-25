@@ -273,3 +273,5 @@ pyrightconfig.json
 *.priv
 
 /logs/*
+
+src/test/java/resources/*
