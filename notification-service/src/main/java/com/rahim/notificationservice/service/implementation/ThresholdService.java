@@ -76,6 +76,9 @@ public class ThresholdService implements IThresholdService {
     }
 
     private String getFormattedTime() {
-        return LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).toString().replace("T", "");
+        return LocalDateTime.now()
+                .truncatedTo(ChronoUnit.MINUTES)
+                .toString()
+                .replace("T", "");
     }
 }
