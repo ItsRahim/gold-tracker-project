@@ -3,6 +3,7 @@ package com.rahim.notificationservice.service.implementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.rahim.notificationservice.constants.TopicConstants;
 import com.rahim.notificationservice.enums.TemplateNameEnum;
 import com.rahim.notificationservice.kafka.IKafkaService;
 import com.rahim.notificationservice.repository.ThresholdAlertRepository;
@@ -28,6 +29,7 @@ public class ThresholdService implements IThresholdService {
     private final ThresholdAlertRepository thresholdAlertRepository;
     private final IMessageFormatter messageFormatter;
     private final IKafkaService kafkaService;
+    private final TopicConstants topicConstants;
 
     @Override
     public List<String> processKafkaData(String priceData) {
@@ -50,7 +52,7 @@ public class ThresholdService implements IThresholdService {
 
                 String jsonEmailData = convertToJson(mutableEmailData);
 
-                kafkaService.sendMessage("email-service-send-email", jsonEmailData);
+                kafkaService.sendMessage(topicConstants.getSendEmailTopic(), jsonEmailData);
             }
 
             LOG.info("Found {} users in total", notificationList.size());
