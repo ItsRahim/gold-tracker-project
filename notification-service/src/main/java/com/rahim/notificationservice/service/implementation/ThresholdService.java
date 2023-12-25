@@ -112,7 +112,7 @@ public class ThresholdService implements IThresholdService {
         return LocalDateTime.now()
                 .truncatedTo(ChronoUnit.MINUTES)
                 .toString()
-                .replace("T", "");
+                .replace("T", " ");
     }
 
     private void deactivateAlert(int alertId) {
