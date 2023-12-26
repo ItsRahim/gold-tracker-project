@@ -34,7 +34,7 @@ public class ThresholdService implements IThresholdService {
     private final TopicConstants topicConstants;
 
     @Override
-    public List<String> processKafkaData(String priceData) {
+    public void processKafkaData(String priceData) {
         try {
             BigDecimal currentPrice = new BigDecimal(priceData);
             String alertDateTime = getFormattedTime();
@@ -73,7 +73,6 @@ public class ThresholdService implements IThresholdService {
         } catch (Exception e) {
             LOG.error("An unexpected error occurred", e);
         }
-        return null;
     }
 
     @Override
