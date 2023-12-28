@@ -1,9 +1,11 @@
 package com.rahim.userservice.service.implementation;
 
+import com.rahim.userservice.constant.TopicConstants;
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.exception.DuplicateUserException;
 import com.rahim.userservice.exception.UserNotFoundException;
+import com.rahim.userservice.kafka.IKafkaService;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
@@ -28,6 +30,8 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final IUserProfileService userProfileService;
     private final IEmailTokenGenerator emailTokenGenerator;
+    private final IKafkaService kafkaService;
+    private final TopicConstants topicConstants;
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     @Override
@@ -162,4 +166,13 @@ public class UserService implements IUserService {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage(), e);
         }
     }
+
+    @Override
+    public void existsById(String userId) {
+        int id = Integer.parseInt(userId);
+        String found = String.valueOf(findUserById(id).isPresent());
+
+        kafkaService.sendMessage(topicConstants.getSendIdResult(), found);
+    }
+
 }

@@ -9,3 +9,5 @@ topics:
   scheduler-user-cleanup : user-service-cleanup-accounts
   scheduler-update-price : pricing-service-update-prices
   scheduler-update-price-history : pricing-service-history-table
+  check-user-id : user-service-check-id
+  send-id-result : notification-service-id-result

@@ -2,10 +2,10 @@ package com.rahim.notificationservice.service;
 
 import com.rahim.notificationservice.model.ThresholdAlert;
 
-import java.util.Optional;
+import java.util.Map;
 
 public interface IThresholdService {
-    void processKafkaData(String priceData);
-
-    Optional<ThresholdAlert> findById(int alertId);
+    void createNotification(ThresholdAlert thresholdAlert);
+    void updateNotification(Map<String, String> updatedData);
+    void deleteNotification(int alertId);
 }

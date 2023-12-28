@@ -1,21 +1,34 @@
 package com.rahim.notificationservice.kafka;
 
-import com.rahim.notificationservice.service.IThresholdService;
+import com.rahim.notificationservice.service.IKafkaDataProcessor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaListener;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+
+@Getter
 @Configuration
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
-    private final IThresholdService thresholdService;
+    private final IKafkaDataProcessor kafkaDataProcessor;
+    private final CompletableFuture<String> responseFuture = new CompletableFuture<>();
+    private final CountDownLatch latch = new CountDownLatch(1);
 
-    @KafkaListener(topics = "notification-service-price-update", groupId = "group2")
+    @KafkaListener(topics = "${topics.send-notification-price}", groupId = "group2")
     public void priceListener(String priceData) {
         LOG.info("Message received from Pricing Service: {}", priceData);
-        thresholdService.processKafkaData(priceData);
+        kafkaDataProcessor.processKafkaData(priceData);
+    }
+
+    @KafkaListener(topics = "${topics.send-id-result}", groupId = "group2")
+    public void idResultListener(String idResultData) {
+        LOG.info("Message received from ID Result Service: {}", idResultData);
+        responseFuture.complete(idResultData);
     }
 }
