@@ -1,4 +1,4 @@
-package com.rahim.userservice.service;
+package com.rahim.userservice.service.audit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rahim.userservice.model.User;

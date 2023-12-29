@@ -3,7 +3,7 @@ package com.rahim.userservice.controller;
 import com.rahim.userservice.dto.UserDTO;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserRequest;
-import com.rahim.userservice.service.IUserService;
+import com.rahim.userservice.service.account.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

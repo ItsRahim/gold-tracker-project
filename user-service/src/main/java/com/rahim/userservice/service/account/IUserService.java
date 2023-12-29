@@ -1,4 +1,4 @@
-package com.rahim.userservice.service;
+package com.rahim.userservice.service.account;
 
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserRequest;

@@ -1,4 +1,4 @@
-package com.rahim.userservice.service.implementation;
+package com.rahim.userservice.service.account.implementation;
 
 import com.rahim.userservice.constant.TopicConstants;
 import com.rahim.userservice.enums.AccountState;
@@ -10,8 +10,8 @@ import com.rahim.userservice.model.User;
 import com.rahim.userservice.model.UserProfile;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.UserRepository;
-import com.rahim.userservice.service.IUserProfileService;
-import com.rahim.userservice.service.IUserService;
+import com.rahim.userservice.service.account.IUserService;
+import com.rahim.userservice.service.profile.IUserProfileService;
 import com.rahim.userservice.util.IEmailTokenGenerator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

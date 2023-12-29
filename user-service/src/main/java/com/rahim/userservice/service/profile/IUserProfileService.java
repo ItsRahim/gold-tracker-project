@@ -1,4 +1,4 @@
-package com.rahim.userservice.service;
+package com.rahim.userservice.service.profile;
 
 import com.rahim.userservice.model.UserProfile;
 

@@ -1,4 +1,4 @@
-package com.rahim.userservice.service.implementation;
+package com.rahim.userservice.service.audit.implementation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import com.rahim.userservice.model.AuditLog;
 import com.rahim.userservice.model.AuditLogData;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.repository.AuditLogRepository;
-import com.rahim.userservice.service.IAuditLog;
+import com.rahim.userservice.service.audit.IAuditLog;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

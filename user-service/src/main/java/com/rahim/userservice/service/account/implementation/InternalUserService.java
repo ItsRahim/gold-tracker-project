@@ -1,12 +1,12 @@
-package com.rahim.userservice.service.implementation;
+package com.rahim.userservice.service.account.implementation;
 
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.model.User;
 import com.rahim.userservice.repository.UserRepository;
-import com.rahim.userservice.service.IInternalUserService;
-import com.rahim.userservice.service.IUserProfileService;
-import com.rahim.userservice.service.IUserService;
+import com.rahim.userservice.service.account.IInternalUserService;
+import com.rahim.userservice.service.account.IUserService;
+import com.rahim.userservice.service.profile.IUserProfileService;
 import com.rahim.userservice.util.IEmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

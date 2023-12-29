@@ -1,6 +1,6 @@
 package com.rahim.userservice.util.implementation;
 
-import com.rahim.userservice.service.IUserProfileService;
+import com.rahim.userservice.service.profile.IUserProfileService;
 import com.rahim.userservice.util.IEmailTokenGenerator;
 import com.rahim.userservice.util.IEmailTokenService;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.rahim.userservice.controller;
 
 import com.rahim.userservice.model.UserProfile;
-import com.rahim.userservice.service.IUserProfileService;
+import com.rahim.userservice.service.profile.IUserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
