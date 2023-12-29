@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +31,44 @@ public class ThresholdService implements IThresholdService {
         }
     }
     @Override
-    public void updateNotification(Map<String, String> updatedData) {
+    public void updateNotification(Map<String, String> updatedData, int alertId) {
+        Optional<ThresholdAlert> optionalAlert = thresholdAlertRepositoryHandler.findById(alertId);
+        if(optionalAlert.isPresent()) {
+            ThresholdAlert thresholdAlert = optionalAlert.get();
+            try {
+                if(updatedData.containsKey("thresholdPrice")) {
+                    BigDecimal price = new BigDecimal(updatedData.get("thresholdPrice"));
+                    thresholdAlert.setThresholdPrice(price);
+                }
+
+                thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
+
+                LOG.info("Successfully updated threshold alert with ID: {}", alertId);
+            } catch (Exception e) {
+                LOG.error("An error has occurred attempting to updated threshold alert with ID: {}", alertId);
+                throw new RuntimeException(e);
+            }
+        } else {
+            LOG.warn("Alert with ID {} not found.", alertId);
+            throw new RuntimeException("Alert not found.");
+        }
     }
 
     @Override
     public void deleteNotification(int alertId) {
-        thresholdAlertRepositoryHandler.deleteThresholdAlert(alertId);
+        Optional<ThresholdAlert> optionalAlert = thresholdAlertRepositoryHandler.findById(alertId);
+        if(optionalAlert.isPresent()) {
+            try {
+                thresholdAlertRepositoryHandler.deleteThresholdAlert(alertId);
+
+                LOG.info("Successfully deleted threshold alert with ID: {}", alertId);
+            } catch (Exception e) {
+                LOG.error("An error has occurred attempting to delete threshold alert with ID: {}", alertId);
+                throw new RuntimeException(e);
+            }
+        } else {
+            LOG.warn("Alert with ID {} not found.", alertId);
+            throw new RuntimeException("Alert not found.");
+        }
     }
 }

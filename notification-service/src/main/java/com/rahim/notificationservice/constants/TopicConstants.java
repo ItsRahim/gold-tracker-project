@@ -12,7 +12,7 @@ public class TopicConstants {
     @Value("${topics.send-email-topic}")
     private String sendEmailTopic;
 
-    @Value("${topics.check-user-id }")
+    @Value("${topics.check-user-id}")
     private String checkIdExists;
 
 }

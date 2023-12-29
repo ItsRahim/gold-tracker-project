@@ -6,6 +6,6 @@ import java.util.Map;
 
 public interface IThresholdService {
     void createNotification(ThresholdAlert thresholdAlert);
-    void updateNotification(Map<String, String> updatedData);
+    void updateNotification(Map<String, String> updatedData, int alertIds);
     void deleteNotification(int alertId);
 }
