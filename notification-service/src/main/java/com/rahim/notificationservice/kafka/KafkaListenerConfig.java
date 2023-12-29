@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
 
 @Getter
 @Configuration
@@ -18,7 +17,6 @@ public class KafkaListenerConfig {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final IKafkaDataProcessor kafkaDataProcessor;
     private final CompletableFuture<String> responseFuture = new CompletableFuture<>();
-    private final CountDownLatch latch = new CountDownLatch(1);
 
     @KafkaListener(topics = "${topics.send-notification-price}", groupId = "group2")
     public void priceListener(String priceData) {
