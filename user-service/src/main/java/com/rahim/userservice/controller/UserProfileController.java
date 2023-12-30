@@ -1,6 +1,6 @@
 package com.rahim.userservice.controller;
 
-import com.rahim.userservice.model.UserProfile;
+import com.rahim.userservice.model.Profile;
 import com.rahim.userservice.service.profile.IUserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,30 +21,30 @@ public class UserProfileController {
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping()
-    public ResponseEntity<List<UserProfile>> findAllProfiles() {
-        List<UserProfile> userProfiles = userProfileService.getAllProfiles();
-        return ResponseEntity.ok(userProfiles);
+    public ResponseEntity<List<Profile>> findAllProfiles() {
+        List<Profile> profiles = userProfileService.getAllProfiles();
+        return ResponseEntity.ok(profiles);
     }
 
     @PutMapping("/{profileId}")
     public ResponseEntity<String> updateUserProfile(@PathVariable int profileId, @RequestBody Map<String, String> updatedData) {
         try {
             userProfileService.updateUserProfile(profileId, updatedData);
-            return ResponseEntity.ok("User Profile updated successfully");
+            return ResponseEntity.ok("Account Profile updated successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account profile not found");
         }
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<?> findProfileByUsername(@PathVariable String username) {
         try {
-            Optional<UserProfile> profileOptional = userProfileService.getProfileByUsername(username);
+            Optional<Profile> profileOptional = userProfileService.getProfileByUsername(username);
 
             if (profileOptional.isPresent()) {
                 return ResponseEntity.ok(profileOptional.get());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User profile not found with username: " + username);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account profile not found with username: " + username);
             }
         } catch (Exception e) {
             LOG.error("Error finding user profile: {}", e.getMessage());

@@ -6,10 +6,10 @@ import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.exception.DuplicateUserException;
 import com.rahim.userservice.exception.UserNotFoundException;
 import com.rahim.userservice.kafka.IKafkaService;
-import com.rahim.userservice.model.User;
-import com.rahim.userservice.model.UserProfile;
+import com.rahim.userservice.model.Account;
+import com.rahim.userservice.model.Profile;
 import com.rahim.userservice.model.UserRequest;
-import com.rahim.userservice.repository.UserRepository;
+import com.rahim.userservice.repository.AccountRepository;
 import com.rahim.userservice.service.account.IUserService;
 import com.rahim.userservice.service.profile.IUserProfileService;
 import com.rahim.userservice.util.IEmailTokenGenerator;
@@ -27,7 +27,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final IUserProfileService userProfileService;
     private final IEmailTokenGenerator emailTokenGenerator;
     private final IKafkaService kafkaService;
@@ -37,45 +37,45 @@ public class UserService implements IUserService {
     @Override
     @Transactional
     public void createUserAndProfile(UserRequest userRequest) throws DuplicateUserException {
-        User user = userRequest.getUser();
-        UserProfile userProfile = userRequest.getUserProfile();
+        Account account = userRequest.getAccount();
+        Profile profile = userRequest.getProfile();
 
-        String email = user.getEmail();
-        String username = userProfile.getUsername();
+        String email = account.getEmail();
+        String username = profile.getUsername();
 
         boolean userExists = userExist(email, username);
-        boolean anyNullUser = ObjectUtils.anyNull(user);
-        boolean anyNullProfile = ObjectUtils.anyNull(userProfile);
+        boolean anyNullUser = ObjectUtils.anyNull(account);
+        boolean anyNullProfile = ObjectUtils.anyNull(profile);
 
         if (!userExists && (!anyNullUser || !anyNullProfile)) {
             try {
-                userRepository.save(user);
+                accountRepository.save(account);
 
-                userProfile.setUser(user);
-                userProfileService.createUserProfile(userProfile);
+                profile.setAccount(account);
+                userProfileService.createUserProfile(profile);
 
-                LOG.info("Successfully created User and User Profile for: {}", userProfile.getUsername());
+                LOG.info("Successfully created Account and Account Profile for: {}", profile.getUsername());
             } catch (DataIntegrityViolationException e) {
-                LOG.error("Error creating User and User Profile. Data integrity violation: {}", e.getMessage());
-                throw new DuplicateUserException("User with email " + email + " or username " + username + " already exists.", e);
+                LOG.error("Error creating Account and Account Profile. Data integrity violation: {}", e.getMessage());
+                throw new DuplicateUserException("Account with email " + email + " or username " + username + " already exists.", e);
             } catch (Exception e) {
-                LOG.error("Unexpected error creating User and User Profile: {}", e.getMessage());
-                throw new RuntimeException("Unexpected error creating User and User Profile.", e);
+                LOG.error("Unexpected error creating Account and Account Profile: {}", e.getMessage());
+                throw new RuntimeException("Unexpected error creating Account and Account Profile.", e);
             }
         } else {
-            LOG.warn("User with email {} or username {} already exists or null values found. Not creating duplicate.", email, username);
-            throw new DuplicateUserException("User with email " + email + " or username " + username + " already exists or null values found.");
+            LOG.warn("Account with email {} or username {} already exists or null values found. Not creating duplicate.", email, username);
+            throw new DuplicateUserException("Account with email " + email + " or username " + username + " already exists or null values found.");
         }
     }
 
     private boolean userExist(String email, String username) {
-        return userRepository.existsByEmail(email) || userProfileService.checkUsernameExists(username);
+        return accountRepository.existsByEmail(email) || userProfileService.checkUsernameExists(username);
     }
 
     @Override
-    public Optional<User> findUserById(int userId) {
+    public Optional<Account> findUserById(int userId) {
         try {
-            return userRepository.findById(userId);
+            return accountRepository.findById(userId);
         } catch (Exception e) {
             LOG.error("Error while finding a user with ID: {}", userId, e);
             throw new UserNotFoundException("Error finding a user by ID");
@@ -83,45 +83,45 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> findAllUsers() {
-        List<User> users = userRepository.findAll();
+    public List<Account> findAllUsers() {
+        List<Account> accounts = accountRepository.findAll();
 
-        if (!users.isEmpty()) {
-            LOG.info("Found {} users in the database", users.size());
+        if (!accounts.isEmpty()) {
+            LOG.info("Found {} accounts in the database", accounts.size());
         } else {
-            LOG.info("No users found in the database");
+            LOG.info("No accounts found in the database");
         }
 
-        return users;
+        return accounts;
     }
 
     @Override
     public boolean deleteUserRequest(int userId) {
-        Optional<User> existingUserOptional = userRepository.findById(userId);
+        Optional<Account> existingUserOptional = accountRepository.findById(userId);
 
         if (existingUserOptional.isPresent()) {
-            User user = existingUserOptional.get();
+            Account account = existingUserOptional.get();
 
-            String accountStatus = user.getAccountStatus();
+            String accountStatus = account.getAccountStatus();
 
             if (accountStatus.equals(AccountState.ACTIVE.getStatus())) {
                 LocalDate deletionDate = LocalDate.now().plusDays(30);
 
-                user.setAccountStatus(AccountState.PENDING_DELETE.getStatus());
-                user.setAccountLocked(true);
-                user.setNotificationSetting(false);
-                user.setDeleteDate(deletionDate);
+                account.setAccountStatus(AccountState.PENDING_DELETE.getStatus());
+                account.setAccountLocked(true);
+                account.setNotificationSetting(false);
+                account.setDeleteDate(deletionDate);
 
-                userRepository.save(user);
+                accountRepository.save(account);
                 emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETION.getTemplateName(), userId, true, true);
-                LOG.info("User with ID {} is pending deletion on {}", userId, deletionDate);
+                LOG.info("Account with ID {} is pending deletion on {}", userId, deletionDate);
 
                 return true;
             } else {
-                LOG.info("User with ID {} is not eligible for deletion", userId);
+                LOG.info("Account with ID {} is not eligible for deletion", userId);
             }
         } else {
-            LOG.warn("User with ID {} not found.", userId);
+            LOG.warn("Account with ID {} not found.", userId);
         }
 
         return false;
@@ -129,39 +129,39 @@ public class UserService implements IUserService {
 
     @Override
     public void updateUser(int userId, Map<String, String> updatedData) {
-        Optional<User> existingUserOptional = findUserById(userId);
+        Optional<Account> existingUserOptional = findUserById(userId);
 
         if (existingUserOptional.isPresent()) {
-            User user = existingUserOptional.get();
+            Account account = existingUserOptional.get();
 
-            String oldEmail = user.getEmail();
+            String oldEmail = account.getEmail();
 
             try {
                 if (updatedData.containsKey("email")) {
-                    user.setEmail(updatedData.get("email"));
+                    account.setEmail(updatedData.get("email"));
                 }
                 if (updatedData.containsKey("passwordHash")) {
-                    user.setPasswordHash(updatedData.get("passwordHash"));
+                    account.setPasswordHash(updatedData.get("passwordHash"));
                 }
 
-                userRepository.save(user);
+                accountRepository.save(account);
                 emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), userId, true, true, oldEmail);
-                LOG.info("User with ID {} updated successfully", userId);
+                LOG.info("Account with ID {} updated successfully", userId);
             } catch (Exception e) {
-                LOG.error("Error updating user with ID {}: {}", userId, e.getMessage());
-                throw new RuntimeException("Failed to update user.", e);
+                LOG.error("Error updating account with ID {}: {}", userId, e.getMessage());
+                throw new RuntimeException("Failed to update account.", e);
             }
         } else {
-            LOG.warn("User with ID {} not found.", userId);
-            throw new UserNotFoundException("User with ID " + userId + " not found");
+            LOG.warn("Account with ID {} not found.", userId);
+            throw new UserNotFoundException("Account with ID " + userId + " not found");
         }
     }
 
     @Override
     public void deleteUserAccount(int userId) {
         try {
-            userRepository.deleteById(userId);
-            LOG.info("User account with ID {} deleted successfully.", userId);
+            accountRepository.deleteById(userId);
+            LOG.info("Account account with ID {} deleted successfully.", userId);
         } catch (Exception e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage(), e);
         }

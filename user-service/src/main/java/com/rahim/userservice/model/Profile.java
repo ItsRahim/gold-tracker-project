@@ -13,7 +13,7 @@ import lombok.Setter;
 @EntityListeners(UserProfileEntityListener.class)
 @Table(name = "user_profiles", schema = "rgts")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserProfile {
+public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id", nullable = false)

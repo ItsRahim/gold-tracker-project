@@ -23,7 +23,7 @@ import java.time.OffsetDateTime;
 @EntityListeners(UserEntityListener.class)
 @Table(name = "users", schema = "rgts")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)

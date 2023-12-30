@@ -1,6 +1,6 @@
 package com.rahim.userservice.dto;
 
-import com.rahim.userservice.model.User;
+import com.rahim.userservice.model.Account;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,17 +23,17 @@ public class UserDTO {
     private Integer loginAttempts;
     private LocalDate deleteDate;
 
-    public UserDTO(User user) {
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.accountStatus = user.getAccountStatus();
-        this.accountLocked = user.getAccountLocked();
-        this.credentialsExpired = user.getCredentialsExpired();
-        this.lastLogin = user.getLastLogin();
-        this.notificationSetting = user.getNotificationSetting();
-        this.createdAt = user.getCreatedAt();
-        this.updatedAt = user.getUpdatedAt();
-        this.loginAttempts = user.getLoginAttempts();
-        this.deleteDate = user.getDeleteDate();
+    public UserDTO(Account account) {
+        this.id = account.getId();
+        this.email = account.getEmail();
+        this.accountStatus = account.getAccountStatus();
+        this.accountLocked = account.getAccountLocked();
+        this.credentialsExpired = account.getCredentialsExpired();
+        this.lastLogin = account.getLastLogin();
+        this.notificationSetting = account.getNotificationSetting();
+        this.createdAt = account.getCreatedAt();
+        this.updatedAt = account.getUpdatedAt();
+        this.loginAttempts = account.getLoginAttempts();
+        this.deleteDate = account.getDeleteDate();
     }
 }

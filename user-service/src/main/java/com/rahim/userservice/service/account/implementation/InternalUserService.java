@@ -2,8 +2,8 @@ package com.rahim.userservice.service.account.implementation;
 
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.enums.TemplateNameEnum;
-import com.rahim.userservice.model.User;
-import com.rahim.userservice.repository.UserRepository;
+import com.rahim.userservice.model.Account;
+import com.rahim.userservice.repository.AccountRepository;
 import com.rahim.userservice.service.account.IInternalUserService;
 import com.rahim.userservice.service.account.IUserService;
 import com.rahim.userservice.service.profile.IUserProfileService;
@@ -22,7 +22,7 @@ public class InternalUserService implements IInternalUserService {
     private static final Logger LOG = LoggerFactory.getLogger(InternalUserService.class);
     private final IUserService userService;
     private final IUserProfileService userProfileService;
-    private final UserRepository userRepository;
+    private final AccountRepository userRepository;
     private final IEmailTokenGenerator emailTokenGenerator;
 
     @Override
@@ -33,7 +33,7 @@ public class InternalUserService implements IInternalUserService {
             userProfileService.deleteUserProfile(userId);
             userService.deleteUserAccount(userId);
 
-            LOG.info("User account with ID {} deleted successfully.", userId);
+            LOG.info("Account account with ID {} deleted successfully.", userId);
 
         } catch (Exception e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
@@ -51,17 +51,17 @@ public class InternalUserService implements IInternalUserService {
         try {
             LocalDate cutoffDate = LocalDate.now().minusDays(30);
 
-            List<User> inactiveUsers = userRepository.findInactiveUsers(cutoffDate);
+            List<Account> inactiveAccounts = userRepository.findInactiveUsers(cutoffDate);
 
-            if (!inactiveUsers.isEmpty()) {
-                LOG.info("Found {} inactive users.", inactiveUsers.size());
+            if (!inactiveAccounts.isEmpty()) {
+                LOG.info("Found {} inactive users.", inactiveAccounts.size());
 
-                for (User user : inactiveUsers) {
-                    user.setAccountStatus(AccountState.INACTIVE.getStatus());
-                    user.setCredentialsExpired(true);
-                    userRepository.save(user);
+                for (Account account : inactiveAccounts) {
+                    account.setAccountStatus(AccountState.INACTIVE.getStatus());
+                    account.setCredentialsExpired(true);
+                    userRepository.save(account);
 
-                    emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_INACTIVITY.getTemplateName(), user.getId(), false, false);
+                    emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_INACTIVITY.getTemplateName(), account.getId(), false, false);
                 }
 
                 LOG.info("Inactive users found. Account status successfully updated");
@@ -75,18 +75,18 @@ public class InternalUserService implements IInternalUserService {
 
     private void processPendingDeleteUsers() {
         try {
-            List<User> pendingDeleteUsers = userRepository.findPendingDeleteUsers();
+            List<Account> pendingDeleteAccounts = userRepository.findPendingDeleteUsers();
             LocalDate currentDate = LocalDate.now();
 
-            if (!pendingDeleteUsers.isEmpty()) {
-                LOG.info("Found {} users pending deletion.", pendingDeleteUsers.size());
+            if (!pendingDeleteAccounts.isEmpty()) {
+                LOG.info("Found {} users pending deletion.", pendingDeleteAccounts.size());
 
-                for (User user : pendingDeleteUsers) {
-                    if (user.getDeleteDate() != null && user.getDeleteDate().isEqual(currentDate)) {
-                        LOG.info("Deleting user account with ID: {}", user.getId());
-                        deleteUserAccount(user.getId());
+                for (Account account : pendingDeleteAccounts) {
+                    if (account.getDeleteDate() != null && account.getDeleteDate().isEqual(currentDate)) {
+                        LOG.info("Deleting account account with ID: {}", account.getId());
+                        deleteUserAccount(account.getId());
                     } else {
-                        LOG.info("Skipping user with ID: {} as delete date is not today.", user.getId());
+                        LOG.info("Skipping account with ID: {} as delete date is not today.", account.getId());
                     }
                 }
             } else {
@@ -101,17 +101,17 @@ public class InternalUserService implements IInternalUserService {
         try {
             LocalDate cutoffDate = LocalDate.now().minusDays(44);
 
-            List<User> usersToDelete = userRepository.findUsersToDelete(cutoffDate);
+            List<Account> usersToDelete = userRepository.findUsersToDelete(cutoffDate);
 
             if (!usersToDelete.isEmpty()) {
                 LOG.info("Found {} users to be deleted.", usersToDelete.size());
 
-                for (User user : usersToDelete) {
-                    userService.deleteUserRequest(user.getId());
-                    LOG.info("Sending delete request to user with ID: {}", user.getId());
+                for (Account account : usersToDelete) {
+                    userService.deleteUserRequest(account.getId());
+                    LOG.info("Sending delete request to account with ID: {}", account.getId());
                 }
 
-                LOG.info("User deletion requests sent successfully");
+                LOG.info("Account deletion requests sent successfully");
             } else {
                 LOG.info("No users found for deletion requests");
             }

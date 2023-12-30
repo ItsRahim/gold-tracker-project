@@ -1,7 +1,7 @@
 package com.rahim.userservice.service.profile.implementation;
 
-import com.rahim.userservice.model.UserProfile;
-import com.rahim.userservice.repository.UserProfileRepository;
+import com.rahim.userservice.model.Profile;
+import com.rahim.userservice.repository.ProfileRepository;
 import com.rahim.userservice.service.profile.IUserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,28 +14,28 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserProfileService implements IUserProfileService {
 
-    private final UserProfileRepository userProfileRepository;
+    private final ProfileRepository profileRepository;
     private static final Logger LOG = LoggerFactory.getLogger(UserProfileService.class);
 
     @Override
-    public void createUserProfile(UserProfile userProfile) {
+    public void createUserProfile(Profile profile) {
         try {
-            userProfileRepository.save(userProfile);
-            LOG.info("User profile created successfully. ID: {}", userProfile.getId());
+            profileRepository.save(profile);
+            LOG.info("Account profile created successfully. ID: {}", profile.getId());
         } catch (Exception e) {
             LOG.error("An error occurred while creating user profile.", e);
         }
     }
 
     @Override
-    public Optional<UserProfile> getProfileById(int id) {
+    public Optional<Profile> getProfileById(int id) {
         try {
-            Optional<UserProfile> userProfileOptional = userProfileRepository.findById(id);
+            Optional<Profile> userProfileOptional = profileRepository.findById(id);
 
             if (userProfileOptional.isPresent()) {
-                LOG.info("User profile retrieved successfully. ID: {}", id);
+                LOG.info("Account profile retrieved successfully. ID: {}", id);
             } else {
-                LOG.info("User profile not found for ID: {}", id);
+                LOG.info("Account profile not found for ID: {}", id);
             }
 
             return userProfileOptional;
@@ -46,24 +46,24 @@ public class UserProfileService implements IUserProfileService {
     }
 
     @Override
-    public List<UserProfile> getAllProfiles() {
-        List<UserProfile> userProfiles = userProfileRepository.findAll();
+    public List<Profile> getAllProfiles() {
+        List<Profile> profiles = profileRepository.findAll();
 
-        if(!userProfiles.isEmpty()) {
-            LOG.info("Found {} users in the database", userProfiles.size());
+        if(!profiles.isEmpty()) {
+            LOG.info("Found {} users in the database", profiles.size());
         } else {
             LOG.info("No users found in the database");
         }
 
-        return userProfiles;
+        return profiles;
     }
 
     @Override
     public void updateUserProfile(int profileId, Map<String, String> updatedData) {
-        Optional<UserProfile> existingProfileOptional = getProfileById(profileId);
+        Optional<Profile> existingProfileOptional = getProfileById(profileId);
 
         if (existingProfileOptional.isPresent()) {
-            UserProfile profile = existingProfileOptional.get();
+            Profile profile = existingProfileOptional.get();
 
             try {
                 if (updatedData.containsKey("firstName")) {
@@ -79,7 +79,7 @@ public class UserProfileService implements IUserProfileService {
                     profile.setAddress(updatedData.get("address"));
                 }
 
-                userProfileRepository.save(profile);
+                profileRepository.save(profile);
 
                 LOG.info("Profile with ID {} updated successfully", profileId);
             } catch (Exception e) {
@@ -88,19 +88,19 @@ public class UserProfileService implements IUserProfileService {
             }
         } else {
             LOG.warn("Profile with ID {} not found.", profileId);
-            throw new RuntimeException("User not found.");
+            throw new RuntimeException("Account not found.");
         }
     }
 
     @Override
-    public Optional<UserProfile> getProfileByUsername(String username) {
+    public Optional<Profile> getProfileByUsername(String username) {
         try {
-            Optional<UserProfile> userProfileOptional = userProfileRepository.findByUsername(username);
+            Optional<Profile> userProfileOptional = profileRepository.findByUsername(username);
 
             if (userProfileOptional.isPresent()) {
-                LOG.info("User profile found for username: {}", username);
+                LOG.info("Account profile found for username: {}", username);
             } else {
-                LOG.info("User profile not found for username: {}", username);
+                LOG.info("Account profile not found for username: {}", username);
             }
 
             return userProfileOptional;
@@ -113,9 +113,9 @@ public class UserProfileService implements IUserProfileService {
     @Override
     public void deleteUserProfile(int userId) {
         try {
-            int profileId = userProfileRepository.getProfileId(userId);
-            userProfileRepository.deleteById(profileId);
-            LOG.info("User profile with ID {} deleted successfully.", profileId);
+            int profileId = profileRepository.getProfileId(userId);
+            profileRepository.deleteById(profileId);
+            LOG.info("Account profile with ID {} deleted successfully.", profileId);
         } catch (Exception e) {
             LOG.error("Error deleting user profile for user ID {}: {}", userId, e.getMessage(), e);
         }
@@ -123,16 +123,16 @@ public class UserProfileService implements IUserProfileService {
 
     @Override
     public boolean checkUsernameExists(String username) {
-        return userProfileRepository.existsByUsername(username);
+        return profileRepository.existsByUsername(username);
     }
 
     public Map<String, Object> getUserProfileDetails(int userId) {
         try {
-            Optional<Map<String, Object>> userProfileOptional = userProfileRepository.getUserProfileDetails(userId);
+            Optional<Map<String, Object>> userProfileOptional = profileRepository.getUserProfileDetails(userId);
 
             if (userProfileOptional.isPresent()) {
                 Map<String, Object> userProfileDetails = userProfileOptional.get();
-                LOG.info("User profile details retrieved successfully for user ID {}: {}", userId, userProfileDetails);
+                LOG.info("Account profile details retrieved successfully for user ID {}: {}", userId, userProfileDetails);
                 return userProfileDetails;
             } else {
                 LOG.info("No user profile details found for user ID {}", userId);

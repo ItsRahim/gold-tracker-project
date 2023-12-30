@@ -1,7 +1,7 @@
 package com.rahim.userservice.controller;
 
 import com.rahim.userservice.dto.UserDTO;
-import com.rahim.userservice.model.User;
+import com.rahim.userservice.model.Account;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.service.account.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -27,28 +27,28 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest) {
         try {
             userService.createUserAndProfile(userRequest);
-            LOG.info("Successfully Created User: {}", userRequest.getUserProfile().getUsername());
-            return ResponseEntity.status(HttpStatus.CREATED).body("User and User Profile created successfully");
+            LOG.info("Successfully Created Account: {}", userRequest.getProfile().getUsername());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Account and Account Profile created successfully");
         } catch (Exception e) {
-            LOG.error("Error creating User and User Profile: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating User and User Profile");
+            LOG.error("Error creating Account and Account Profile: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating Account and Account Profile");
         }
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> findUserById(@PathVariable int userId) {
         try {
-            Optional<User> userOptional = userService.findUserById(userId);
+            Optional<Account> userOptional = userService.findUserById(userId);
 
             if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                UserDTO userDTO = new UserDTO(user);
+                Account account = userOptional.get();
+                UserDTO userDTO = new UserDTO(account);
 
-                LOG.info("User found with ID: {}", userId);
+                LOG.info("Account found with ID: {}", userId);
                 return ResponseEntity.ok(userDTO);
             } else {
-                LOG.info("User not found with ID: {}", userId);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+                LOG.info("Account not found with ID: {}", userId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
             }
         } catch (Exception e) {
             LOG.error("Error finding user with ID: {}", userId, e);
@@ -60,7 +60,7 @@ public class UserController {
     public ResponseEntity<String> updateUser(@PathVariable int userId, @RequestBody Map<String, String> updatedData) {
         try {
             userService.updateUser(userId, updatedData);
-            return ResponseEntity.ok("User updated successfully");
+            return ResponseEntity.ok("Account updated successfully");
         } catch (Exception e) {
             LOG.error("Error updating user: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user");
@@ -69,8 +69,8 @@ public class UserController {
 
     @GetMapping()
     public ResponseEntity<List<UserDTO>> findAllUsers() {
-        List<User> users = userService.findAllUsers();
-        List<UserDTO> userDTOs = users.stream()
+        List<Account> accounts = userService.findAllUsers();
+        List<UserDTO> userDTOs = accounts.stream()
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
 
@@ -83,9 +83,9 @@ public class UserController {
             boolean deleted = userService.deleteUserRequest(userId);
 
             if (deleted) {
-                return ResponseEntity.ok("Successfully Requested to Delete User with ID: " + userId);
+                return ResponseEntity.ok("Successfully Requested to Delete Account with ID: " + userId);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found for ID: " + userId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found for ID: " + userId);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user: " + e.getMessage());

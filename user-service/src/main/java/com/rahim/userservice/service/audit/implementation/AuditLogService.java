@@ -3,9 +3,9 @@ package com.rahim.userservice.service.audit.implementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.rahim.userservice.model.Account;
 import com.rahim.userservice.model.AuditLog;
 import com.rahim.userservice.model.AuditLogData;
-import com.rahim.userservice.model.User;
 import com.rahim.userservice.repository.AuditLogRepository;
 import com.rahim.userservice.service.audit.IAuditLog;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +26,16 @@ public class AuditLogService implements IAuditLog {
     private static final Logger LOG = LoggerFactory.getLogger(AuditLogService.class);
 
     @Override
-    public void initialise(User oldUser, User newUser, String action) throws JsonProcessingException {
-        AuditLogData auditLogData = new AuditLogData(oldUser, newUser, action);
+    public void initialise(Account oldAccount, Account newAccount, String action) throws JsonProcessingException {
+        AuditLogData auditLogData = new AuditLogData(oldAccount, newAccount, action);
         updateAuditLog(auditLogData);
     }
 
     private void updateAuditLog(AuditLogData auditLogData) throws JsonProcessingException {
-        int userId = auditLogData.getOldUser().getId();
+        int userId = auditLogData.getOldAccount().getId();
         OffsetDateTime now = OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
-        ArrayList<String> auditData = convertToJson(auditLogData.getOldUser(), auditLogData.getNewUser());
+        ArrayList<String> auditData = convertToJson(auditLogData.getOldAccount(), auditLogData.getNewAccount());
 
         AuditLog auditLog = new AuditLog(userId, auditLogData.getActionPerformed(), now, auditData.get(0), auditData.get(1));
 
@@ -43,10 +43,10 @@ public class AuditLogService implements IAuditLog {
         LOG.info("Audit Log created for user with ID: {}", userId);
     }
 
-    private ArrayList<String> convertToJson(User oldUser, User newUser) throws JsonProcessingException {
+    private ArrayList<String> convertToJson(Account oldAccount, Account newAccount) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        String oldUserJson = mapper.writeValueAsString(oldUser);
-        String newUserJson = mapper.writeValueAsString(newUser);
+        String oldUserJson = mapper.writeValueAsString(oldAccount);
+        String newUserJson = mapper.writeValueAsString(newAccount);
 
         return new ArrayList<>(List.of(oldUserJson, newUserJson));
     }

@@ -1,12 +1,12 @@
 package com.rahim.userservice.service.repository;
 
-import com.rahim.userservice.model.User;
+import com.rahim.userservice.model.Account;
 
 import java.util.Optional;
 
 
-public interface IUserRepositoryHandler {
-    Optional<User> findById(int userId);
-    void saveUserAccount(User user);
-    void deleteUserAccount(int userId);
+public interface IAccountRepositoryHandler {
+    Optional<Account> findById(int accountId);
+    void saveAccount(Account account);
+    void deleteAccount(int accountId);
 }

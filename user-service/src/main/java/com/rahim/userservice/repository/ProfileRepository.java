@@ -1,6 +1,6 @@
 package com.rahim.userservice.repository;
 
-import com.rahim.userservice.model.UserProfile;
+import com.rahim.userservice.model.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,18 +10,18 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public interface UserProfileRepository extends JpaRepository<UserProfile, Integer> {
+public interface ProfileRepository extends JpaRepository<Profile, Integer> {
 
     @Query(value = "SELECT * FROM rgts.user_profiles WHERE LOWER(username) = LOWER(:username)", nativeQuery = true)
-    Optional<UserProfile> findByUsername(@Param("username") String username);
+    Optional<Profile> findByUsername(@Param("username") String username);
 
-    @Query(value = "SELECT profile_id FROM rgts.user_profiles WHERE user_id = :id", nativeQuery = true)
+    @Query(value = "SELECT profile_id FROM rgts.user_profiles WHERE account_id = :id", nativeQuery = true)
     int getProfileId(@Param("id") int id);
 
     boolean existsByUsername(String username);
 
-        @Query(value = "SELECT up.username, up.first_name, up.last_name, u.email, u.delete_date, u.updated_at " +
-                "FROM rgts.user_profiles up JOIN rgts.users u ON up.user_id = u.user_id " +
-                "WHERE up.user_id = :userId", nativeQuery = true)
+        @Query(value = "SELECT up.username, up.first_name, up.last_name, ua.email, ua.delete_date, ua.updated_at " +
+                "FROM rgts.user_profiles up JOIN rgts.user_accounts u ON up.account_id = ua.account_id " +
+                "WHERE up.account_id = :userId", nativeQuery = true)
         Optional<Map<String, Object>> getUserProfileDetails(@Param("userId") int userId);
 }
