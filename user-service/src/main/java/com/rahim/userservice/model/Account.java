@@ -21,13 +21,13 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(UserEntityListener.class)
-@Table(name = "users", schema = "rgts")
+@Table(name = "user_accounts", schema = "rgts")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
-    @JsonProperty("id")
+    @Column(name = "account_id", nullable = false)
+    @JsonProperty("accountId")
     private Integer id;
 
     @Column(name = "email", nullable = false)

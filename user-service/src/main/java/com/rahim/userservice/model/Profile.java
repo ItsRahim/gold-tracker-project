@@ -21,7 +21,7 @@ public class Profile {
     private Integer id;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "account_id")
     private Account account;
 
     @Column(name = "username")
