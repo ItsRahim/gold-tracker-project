@@ -1,5 +1,6 @@
 package com.rahim.userservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rahim.userservice.listener.UserProfileEntityListener;
@@ -20,6 +21,7 @@ public class Profile {
     @JsonProperty("id")
     private Integer id;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private Account account;

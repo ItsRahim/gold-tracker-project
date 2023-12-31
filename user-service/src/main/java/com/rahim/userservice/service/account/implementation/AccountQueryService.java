@@ -1,7 +1,6 @@
 package com.rahim.userservice.service.account.implementation;
 
 import com.rahim.userservice.constant.TopicConstants;
-import com.rahim.userservice.dto.UserDTO;
 import com.rahim.userservice.exception.UserNotFoundException;
 import com.rahim.userservice.kafka.IKafkaService;
 import com.rahim.userservice.model.Account;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +30,8 @@ public class AccountQueryService implements IAccountQueryService {
     }
 
     @Override
-    public List<UserDTO> getAllAccounts() {
+    public List<Account> getAllAccounts() {
         List<Account> accounts = accountRepositoryHandler.getAllAccounts();
-        List<UserDTO> userDTOs = accounts.stream()
-                .map(UserDTO::new)
-                .collect(Collectors.toList());
 
         if (!accounts.isEmpty()) {
             LOG.info("Found {} accounts in the database", accounts.size());
@@ -44,7 +39,7 @@ public class AccountQueryService implements IAccountQueryService {
             LOG.info("No accounts found in the database");
         }
 
-        return userDTOs;
+        return accounts;
     }
 
     @Override

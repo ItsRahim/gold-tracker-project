@@ -1,5 +1,6 @@
 package com.rahim.userservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rahim.userservice.listener.UserEntityListener;
@@ -34,6 +35,7 @@ public class Account {
     @JsonProperty("email")
     private String email;
 
+    @JsonIgnore
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 

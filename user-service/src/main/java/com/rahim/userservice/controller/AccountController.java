@@ -1,6 +1,5 @@
 package com.rahim.userservice.controller;
 
-import com.rahim.userservice.dto.UserDTO;
 import com.rahim.userservice.model.Account;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.service.account.*;
@@ -44,11 +43,10 @@ public class AccountController {
 
             if (accountOptional.isPresent()) {
                 Account account = accountOptional.get();
-                UserDTO userDTO = new UserDTO(account);
 
                 LOG.info("Account found with ID: {}", accountId);
 
-                return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+                return ResponseEntity.status(HttpStatus.OK).body(account);
             } else {
                 LOG.info("Account not found with ID: {}", accountId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
@@ -72,9 +70,9 @@ public class AccountController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<UserDTO>> getAllAccounts() {
-        List<UserDTO> userDTOs = accountQueryService.getAllAccounts();
-        return ResponseEntity.status(HttpStatus.OK).body(userDTOs);
+    public ResponseEntity<List<Account>> getAllAccounts() {
+        List<Account> accountDTOS = accountQueryService.getAllAccounts();
+        return ResponseEntity.status(HttpStatus.OK).body(accountDTOS);
     }
 
     @DeleteMapping("/{accountId}")
