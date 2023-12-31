@@ -23,8 +23,6 @@ public class InternalAccountService implements IInternalAccountService {
     private final IAccountDeletionService accountDeletionService;
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IEmailTokenGenerator emailTokenGenerator;
-
-    //TODO: Update This
     private final IProfileDeletionService profileDeletionService;
 
     @Override
