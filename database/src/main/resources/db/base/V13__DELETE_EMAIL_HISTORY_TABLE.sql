@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS rgts.email_history;

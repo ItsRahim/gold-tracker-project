@@ -31,3 +31,6 @@ Can be analysed after above is complete:
 - DB Indexes
 - Caching
 - Kafka Configurations(with and without SSL)
+
+Refactor:
+pricing-service
