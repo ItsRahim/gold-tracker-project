@@ -3,10 +3,10 @@ package com.rahim.userservice.service.account.implementation;
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.model.Account;
-import com.rahim.userservice.repository.AccountRepository;
-import com.rahim.userservice.service.account.IInternalUserService;
-import com.rahim.userservice.service.account.IUserService;
+import com.rahim.userservice.service.account.IAccountDeletionService;
+import com.rahim.userservice.service.account.IInternalAccountService;
 import com.rahim.userservice.service.profile.IUserProfileService;
+import com.rahim.userservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.userservice.util.IEmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,27 +18,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class InternalUserService implements IInternalUserService {
-    private static final Logger LOG = LoggerFactory.getLogger(InternalUserService.class);
-    private final IUserService userService;
-    private final IUserProfileService userProfileService;
-    private final AccountRepository userRepository;
+public class InternalAccountService implements IInternalAccountService {
+    private static final Logger LOG = LoggerFactory.getLogger(InternalAccountService.class);
+    private final IAccountDeletionService accountDeletionService;
+    private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IEmailTokenGenerator emailTokenGenerator;
 
-    @Override
-    public void deleteUserAccount(int userId) {
-        try {
-            emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
-
-            userProfileService.deleteUserProfile(userId);
-            userService.deleteUserAccount(userId);
-
-            LOG.info("Account account with ID {} deleted successfully.", userId);
-
-        } catch (Exception e) {
-            LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
-        }
-    }
+    //TODO: Update This
+    private final IUserProfileService userProfileService;
 
     @Override
     public void runCleanupJob() {
@@ -47,11 +34,25 @@ public class InternalUserService implements IInternalUserService {
         processPendingDeleteUsers();
     }
 
+    private void deleteUserAccount(int userId) {
+        try {
+            emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
+
+            userProfileService.deleteUserProfile(userId);
+            accountDeletionService.deleteAccount(userId);
+
+            LOG.info("Account account with ID {} deleted successfully.", userId);
+
+        } catch (Exception e) {
+            LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
+        }
+    }
+
     private void findAllInactiveUsers() {
         try {
             LocalDate cutoffDate = LocalDate.now().minusDays(30);
 
-            List<Account> inactiveAccounts = userRepository.findInactiveUsers(cutoffDate);
+            List<Account> inactiveAccounts = accountRepositoryHandler.getInactiveUsers(cutoffDate);
 
             if (!inactiveAccounts.isEmpty()) {
                 LOG.info("Found {} inactive users.", inactiveAccounts.size());
@@ -59,7 +60,7 @@ public class InternalUserService implements IInternalUserService {
                 for (Account account : inactiveAccounts) {
                     account.setAccountStatus(AccountState.INACTIVE.getStatus());
                     account.setCredentialsExpired(true);
-                    userRepository.save(account);
+                    accountRepositoryHandler.saveAccount(account);
 
                     emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_INACTIVITY.getTemplateName(), account.getId(), false, false);
                 }
@@ -75,7 +76,7 @@ public class InternalUserService implements IInternalUserService {
 
     private void processPendingDeleteUsers() {
         try {
-            List<Account> pendingDeleteAccounts = userRepository.findPendingDeleteUsers();
+            List<Account> pendingDeleteAccounts = accountRepositoryHandler.getPendingDeleteUsers();
             LocalDate currentDate = LocalDate.now();
 
             if (!pendingDeleteAccounts.isEmpty()) {
@@ -101,13 +102,13 @@ public class InternalUserService implements IInternalUserService {
         try {
             LocalDate cutoffDate = LocalDate.now().minusDays(44);
 
-            List<Account> usersToDelete = userRepository.findUsersToDelete(cutoffDate);
+            List<Account> usersToDelete = accountRepositoryHandler.getUsersToDelete(cutoffDate);
 
             if (!usersToDelete.isEmpty()) {
                 LOG.info("Found {} users to be deleted.", usersToDelete.size());
 
                 for (Account account : usersToDelete) {
-                    userService.deleteUserRequest(account.getId());
+                    accountDeletionService.requestAccountDelete(account.getId());
                     LOG.info("Sending delete request to account with ID: {}", account.getId());
                 }
 

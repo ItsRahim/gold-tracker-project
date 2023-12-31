@@ -3,6 +3,7 @@ package com.rahim.userservice.controller;
 import com.rahim.userservice.dto.UserDTO;
 import com.rahim.userservice.model.Account;
 import com.rahim.userservice.model.UserRequest;
+import com.rahim.userservice.service.account.IAccountCreation;
 import com.rahim.userservice.service.account.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,17 +22,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/gold/user-service/user")
 public class UserController {
     private final IUserService userService;
+    private final IAccountCreation accountCreation;
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping()
     public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest) {
         try {
-            userService.createUserAndProfile(userRequest);
+            accountCreation.createAccount(userRequest);
             LOG.info("Successfully Created Account: {}", userRequest.getProfile().getUsername());
             return ResponseEntity.status(HttpStatus.CREATED).body("Account and Account Profile created successfully");
         } catch (Exception e) {
             LOG.error("Error creating Account and Account Profile: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating Account and Account Profile");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error Creating Account and Profile");
         }
     }
 

@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/gold/user-service/profile")
 public class UserProfileController {
     private final IUserProfileService userProfileService;
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
 
     @GetMapping()
     public ResponseEntity<List<Profile>> findAllProfiles() {
