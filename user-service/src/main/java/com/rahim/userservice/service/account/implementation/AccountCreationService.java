@@ -5,8 +5,8 @@ import com.rahim.userservice.model.Account;
 import com.rahim.userservice.model.Profile;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.service.account.IAccountCreationService;
-import com.rahim.userservice.service.profile.IProfileCreation;
-import com.rahim.userservice.service.profile.IProfileQuery;
+import com.rahim.userservice.service.profile.IProfileCreationService;
+import com.rahim.userservice.service.profile.IProfileQueryService;
 import com.rahim.userservice.service.repository.IAccountRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountCreationService implements IAccountCreationService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountCreationService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
-    private final IProfileCreation profileCreation;
-    private final IProfileQuery profileQuery;
+    private final IProfileCreationService profileCreation;
+    private final IProfileQueryService profileQuery;
 
     @Override
     @Transactional

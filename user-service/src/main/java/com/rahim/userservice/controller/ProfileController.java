@@ -1,7 +1,8 @@
 package com.rahim.userservice.controller;
 
 import com.rahim.userservice.model.Profile;
-import com.rahim.userservice.service.profile.IUserProfileService;
+import com.rahim.userservice.service.profile.IProfileQueryService;
+import com.rahim.userservice.service.profile.IProfileUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,21 +17,22 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/gold/user-service/profile")
-public class UserProfileController {
-    private final IUserProfileService userProfileService;
-    private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
+public class ProfileController {
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileController.class);
+    private final IProfileQueryService profileQueryService;
+    private final IProfileUpdateService profileUpdateService;
 
     @GetMapping()
-    public ResponseEntity<List<Profile>> findAllProfiles() {
-        List<Profile> profiles = userProfileService.getAllProfiles();
-        return ResponseEntity.ok(profiles);
+    public ResponseEntity<List<Profile>> getAllProfiles() {
+        List<Profile> profiles = profileQueryService.getAllProfiles();
+        return ResponseEntity.status(HttpStatus.FOUND).body(profiles);
     }
 
     @PutMapping("/{profileId}")
     public ResponseEntity<String> updateUserProfile(@PathVariable int profileId, @RequestBody Map<String, String> updatedData) {
         try {
-            userProfileService.updateUserProfile(profileId, updatedData);
-            return ResponseEntity.ok("Account Profile updated successfully");
+            profileUpdateService.updateProfile(profileId, updatedData);
+            return ResponseEntity.status(HttpStatus.OK).body("Profile updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account profile not found");
         }
@@ -39,12 +41,12 @@ public class UserProfileController {
     @GetMapping("/{username}")
     public ResponseEntity<?> findProfileByUsername(@PathVariable String username) {
         try {
-            Optional<Profile> profileOptional = userProfileService.getProfileByUsername(username);
+            Optional<Profile> profileOptional = profileQueryService.getProfileByUsername(username);
 
             if (profileOptional.isPresent()) {
-                return ResponseEntity.ok(profileOptional.get());
+                return ResponseEntity.status(HttpStatus.OK).body(profileOptional.get());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account profile not found with username: " + username);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profile not found with username: " + username);
             }
         } catch (Exception e) {
             LOG.error("Error finding user profile: {}", e.getMessage());

@@ -8,25 +8,18 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account,Integer> {
 
     @Query(value = "SELECT * FROM rgts.user_accounts WHERE last_login < :cutoffDate AND account_status = 'ACTIVE'", nativeQuery = true)
-    List<Account> findInactiveUsers(@Param("cutoffDate") LocalDate cutoffDate);
+    List<Account> getInactiveUsers(@Param("cutoffDate") LocalDate cutoffDate);
 
     @Query(value = "SELECT * FROM rgts.user_accounts WHERE last_login < :cutoffDate AND account_status = 'INACTIVE'", nativeQuery = true)
-    List<Account> findUsersToDelete(@Param("cutoffDate") LocalDate cutoffDate);
+    List<Account> getUsersToDelete(@Param("cutoffDate") LocalDate cutoffDate);
 
     @Query(value = "SELECT * FROM rgts.user_accounts WHERE account_status = 'PENDING DELETE'", nativeQuery = true)
-    List<Account> findPendingDeleteUsers();
+    List<Account> getPendingDeleteUsers();
 
-    boolean existsByEmail(String email);
-
-    @Query(value = "SELECT :columnName FROM rgts.user_accounts WHERE account_Id = :accountId", nativeQuery = true)
-    Optional<LocalDate> findDateByUserId(@Param("accountId") int accountId, @Param("columnName") String columnName);
-
-    @Query(value = "SELECT email FROM rgts.user_accounts WHERE account_id = :accountId", nativeQuery = true)
-    Optional<String> findEmailById(@Param("accountId") int accountId);
+    boolean existsAccountByEmail(String email);
 }

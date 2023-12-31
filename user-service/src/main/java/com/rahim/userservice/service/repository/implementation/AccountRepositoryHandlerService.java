@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -65,5 +67,31 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
                 throw new EntityNotFoundException("Account with ID " + accountId + " not found");
             }
         });
+    }
+
+    @Override
+    public boolean hasAccount(String email) {
+        LOG.info("Checking if an account exists for email: {}", email);
+        return accountRepository.existsAccountByEmail(email);
+    }
+
+    @Override
+    public List<Account> getInactiveUsers(LocalDate cutoffDate) {
+        return accountRepository.getInactiveUsers(cutoffDate);
+    }
+
+    @Override
+    public List<Account> getUsersToDelete(LocalDate cutoffDate) {
+        return accountRepository.getUsersToDelete(cutoffDate);
+    }
+
+    @Override
+    public List<Account> getPendingDeleteUsers() {
+        return accountRepository.getPendingDeleteUsers();
+    }
+
+    @Override
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
     }
 }

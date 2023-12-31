@@ -5,7 +5,7 @@ import com.rahim.userservice.enums.TemplateNameEnum;
 import com.rahim.userservice.model.Account;
 import com.rahim.userservice.service.account.IAccountDeletionService;
 import com.rahim.userservice.service.account.IInternalAccountService;
-import com.rahim.userservice.service.profile.IUserProfileService;
+import com.rahim.userservice.service.profile.IProfileDeletionService;
 import com.rahim.userservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.userservice.util.IEmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class InternalAccountService implements IInternalAccountService {
     private final IEmailTokenGenerator emailTokenGenerator;
 
     //TODO: Update This
-    private final IUserProfileService userProfileService;
+    private final IProfileDeletionService profileDeletionService;
 
     @Override
     public void runCleanupJob() {
@@ -38,7 +38,7 @@ public class InternalAccountService implements IInternalAccountService {
         try {
             emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
 
-            userProfileService.deleteUserProfile(userId);
+            profileDeletionService.deleteProfile(userId);
             accountDeletionService.deleteAccount(userId);
 
             LOG.info("Account account with ID {} deleted successfully.", userId);

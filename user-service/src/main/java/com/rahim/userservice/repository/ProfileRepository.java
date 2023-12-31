@@ -16,12 +16,12 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
     Optional<Profile> findByUsername(@Param("username") String username);
 
     @Query(value = "SELECT profile_id FROM rgts.user_profiles WHERE account_id = :id", nativeQuery = true)
-    int getProfileId(@Param("id") int id);
+    int getProfileIdByUserId(@Param("id") int id);
 
     boolean existsByUsername(String username);
 
         @Query(value = "SELECT up.username, up.first_name, up.last_name, ua.email, ua.delete_date, ua.updated_at " +
                 "FROM rgts.user_profiles up JOIN rgts.user_accounts u ON up.account_id = ua.account_id " +
-                "WHERE up.account_id = :userId", nativeQuery = true)
-        Optional<Map<String, Object>> getUserProfileDetails(@Param("userId") int userId);
+                "WHERE up.account_id = :accountId", nativeQuery = true)
+        Optional<Map<String, Object>> getProfileDetails(@Param("accountId") int accountId);
 }
