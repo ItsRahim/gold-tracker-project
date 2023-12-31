@@ -44,7 +44,7 @@ public class ProfileQueryService implements IProfileQueryService {
     @Override
     public Optional<Profile> getProfileByUsername(String username) {
         try {
-            Optional<Profile> profileOptional = profileRepositoryHandler.findByUsername(username);
+            Optional<Profile> profileOptional = profileRepositoryHandler.getProfileByUsername(username);
 
             if (profileOptional.isPresent()) {
                 LOG.info("Profile found for username: {}", username);
@@ -61,7 +61,7 @@ public class ProfileQueryService implements IProfileQueryService {
 
     @Override
     public List<Profile> getAllProfiles() {
-        List<Profile> profiles = profileRepositoryHandler.findAll();
+        List<Profile> profiles = profileRepositoryHandler.getAllProfiles();
 
         if(!profiles.isEmpty()) {
             LOG.info("Found {} users in the database", profiles.size());
