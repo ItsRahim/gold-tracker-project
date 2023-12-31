@@ -1,5 +1,6 @@
 package com.rahim.userservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rahim.userservice.listener.UserProfileEntityListener;
@@ -13,16 +14,17 @@ import lombok.Setter;
 @EntityListeners(UserProfileEntityListener.class)
 @Table(name = "user_profiles", schema = "rgts")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserProfile {
+public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id", nullable = false)
     @JsonProperty("id")
     private Integer id;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @Column(name = "username")
     @JsonProperty("username")

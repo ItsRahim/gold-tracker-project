@@ -1,7 +1,7 @@
 package com.rahim.userservice.kafka;
 
-import com.rahim.userservice.service.account.IInternalUserService;
-import com.rahim.userservice.service.account.IUserService;
+import com.rahim.userservice.service.account.IAccountQueryService;
+import com.rahim.userservice.service.account.IInternalAccountService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
-    private final IInternalUserService internalUserService;
-    private final IUserService userService;
+    private final IInternalAccountService internalUserService;
+    private final IAccountQueryService accountQueryService;
 
     @KafkaListener(topics = "${topics.scheduler-user-cleanup}", groupId = "group2")
     public void cleanupUserAccounts(String message) {
@@ -24,7 +24,6 @@ public class KafkaListenerConfig {
     @KafkaListener(topics = "${topics.check-user-id}", groupId = "group2")
     public void checkForUserId(String userId) {
         LOG.info("Message received from Notification Service: {}", userId);
-        userService.existsById(userId);
+        accountQueryService.existsById(userId);
     }
 }
-

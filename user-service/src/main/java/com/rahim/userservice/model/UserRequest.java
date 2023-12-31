@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UserRequest {
-    private User user;
-    private UserProfile userProfile;
+    private Account account;
+    private Profile profile;
 }

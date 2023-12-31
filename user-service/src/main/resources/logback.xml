@@ -3,7 +3,7 @@
     <property name="LOG_PATH" value="logs"/>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_PATH}/user-service.log</file>
+        <file>${LOG_PATH}/account-service.log</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
         </encoder>

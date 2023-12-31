@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class AuditLogData {
-    private User oldUser;
-    private User newUser;
+    private Account oldAccount;
+    private Account newAccount;
     private String actionPerformed;
 }

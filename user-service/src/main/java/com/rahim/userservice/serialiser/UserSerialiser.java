@@ -3,32 +3,32 @@ package com.rahim.userservice.serialiser;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.rahim.userservice.model.User;
+import com.rahim.userservice.model.Account;
 
 import java.io.IOException;
 
 @Deprecated
-public class UserSerialiser extends JsonSerializer<User> {
+public class UserSerialiser extends JsonSerializer<Account> {
 
-    public void serialize(User user, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(Account account, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeNumberField("user_id", user.getId());
-        jsonGenerator.writeStringField("email", user.getEmail());
-        jsonGenerator.writeStringField("account_status", user.getAccountStatus());
-        jsonGenerator.writeBooleanField("account_locked", user.getAccountLocked());
-        jsonGenerator.writeBooleanField("credentials_expired", user.getCredentialsExpired());
+        jsonGenerator.writeNumberField("user_id", account.getId());
+        jsonGenerator.writeStringField("email", account.getEmail());
+        jsonGenerator.writeStringField("account_status", account.getAccountStatus());
+        jsonGenerator.writeBooleanField("account_locked", account.getAccountLocked());
+        jsonGenerator.writeBooleanField("credentials_expired", account.getCredentialsExpired());
 
-        if (user.getLastLogin() != null) {
-            jsonGenerator.writeStringField("last_login", user.getLastLogin().toString());
+        if (account.getLastLogin() != null) {
+            jsonGenerator.writeStringField("last_login", account.getLastLogin().toString());
         }
 
-        jsonGenerator.writeBooleanField("notification_setting", user.getNotificationSetting());
-        jsonGenerator.writeStringField("created_at", user.getCreatedAt().toString());
-        jsonGenerator.writeStringField("updated_at", user.getUpdatedAt().toString());
-        jsonGenerator.writeNumberField("login_attempts", user.getLoginAttempts());
+        jsonGenerator.writeBooleanField("notification_setting", account.getNotificationSetting());
+        jsonGenerator.writeStringField("created_at", account.getCreatedAt().toString());
+        jsonGenerator.writeStringField("updated_at", account.getUpdatedAt().toString());
+        jsonGenerator.writeNumberField("login_attempts", account.getLoginAttempts());
 
-        if (user.getDeleteDate() != null) {
-            jsonGenerator.writeStringField("delete_date", user.getDeleteDate().toString());
+        if (account.getDeleteDate() != null) {
+            jsonGenerator.writeStringField("delete_date", account.getDeleteDate().toString());
         }
 
         jsonGenerator.writeEndObject();

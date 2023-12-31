@@ -53,7 +53,7 @@ FORBES_DICT = {
     "element": ["span", {'class': 'amount'}]
 }
 
-# TODO: Fake user agent required
+# TODO: Fake account agent required
 GOLD_UK_DICT = {
     "name": "Gold UK",
     "request_name": "gold_uk",
@@ -61,7 +61,7 @@ GOLD_UK_DICT = {
     "element": ["span", {'class': 'QuoteStrip-lastPrice'}]
 }
 
-# TODO: Fake user agent required
+# TODO: Fake account agent required
 BULLION_BY_POST_DICT = {
     "name": "BullionByPost",
     "request_name": "bullion_by_post",
