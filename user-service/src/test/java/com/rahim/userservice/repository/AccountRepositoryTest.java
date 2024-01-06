@@ -36,31 +36,37 @@ public class AccountRepositoryTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16.0");
+    static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:16.0");
 
     @Container
-    static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    static KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
     @BeforeAll
     public static void beforeAll() {
-        kafka.start();
-        String bootstrapServer = kafka.getBootstrapServers();
+        kafkaContainer.start();
+        String bootstrapServer = kafkaContainer.getBootstrapServers();
         System.setProperty("spring.kafka.bootstrap-servers", bootstrapServer);
 
-        Flyway flyway = Flyway.configure().dataSource(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword())
+        Flyway flyway = Flyway.configure()
+                .dataSource(postgresContainer.getJdbcUrl(), postgresContainer.getUsername(), postgresContainer.getPassword())
                 .locations("classpath:tables")
                 .load();
+
         flyway.migrate();
     }
 
     @Test
-    @DisplayName("Testing Kafka and PostgreSQL Connection")
-    void connectionEstablished() {
-        assertThat(postgres.isCreated()).isTrue();
-        assertThat(postgres.isRunning()).isTrue();
+    @DisplayName("Testing PostgreSQL Connection")
+    void databaseConnectionEstablished() {
+        assertThat(postgresContainer.isCreated()).isTrue();
+        assertThat(postgresContainer.isRunning()).isTrue();
+    }
 
-        assertThat(kafka.isCreated()).isTrue();
-        assertThat(kafka.isRunning()).isTrue();
+    @Test
+    @DisplayName("Testing Kafka Connection")
+    void kafkaConnectionEstablished() {
+        assertThat(kafkaContainer.isCreated()).isTrue();
+        assertThat(kafkaContainer.isRunning()).isTrue();
     }
 
     @Test

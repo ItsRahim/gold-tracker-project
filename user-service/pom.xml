@@ -100,7 +100,7 @@
             <version>3.14.0</version>
         </dependency>
 
-        <!-- TEST DEPENDENCY -->
+        <!-- TEST DEPENDENCIES -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
