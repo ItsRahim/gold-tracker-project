@@ -1,0 +1,9 @@
+spring:
+  kafka:
+    bootstrap-servers:
+
+topics:
+  send-email-topic: email-service-send-email
+  check-user-id : user-service-check-id
+  send-id-result : notification-service-id-result
+  scheduler-user-cleanup : user-service-cleanup-accounts

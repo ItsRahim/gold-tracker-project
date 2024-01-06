@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "gold-price-api")
-public class GoldPriceFeignClientConfig {
+public class FeignConfig {
     private String url;
 }

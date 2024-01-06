@@ -47,6 +47,7 @@ public class GoldPriceService implements IGoldPriceService {
             boolean isApiDataNull = ObjectUtils.anyNull(apiData);
 
             if (isApiDataNull) {
+                LOG.error("API data is null. Unable to update gold ticker price");
                 throw new RuntimeException("API data is null. Unable to update gold ticker price.");
             }
 
@@ -159,10 +160,8 @@ public class GoldPriceService implements IGoldPriceService {
     public void processNewGoldType(String goldTypeId) {
         try {
             LOG.info("Processing new gold type with ID: {}", goldTypeId);
-
             goldPriceRepository.insertGoldPrice(Integer.parseInt(goldTypeId), BigDecimal.ZERO);
 
-            LOG.info("Insert operation successful for gold type with ID: {}", goldTypeId);
         } catch (Exception e) {
             LOG.error("Error processing new gold type with ID {}: {}", goldTypeId, e.getMessage());
             throw new RuntimeException("Error processing new gold type", e);

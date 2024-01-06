@@ -19,7 +19,8 @@ holdings-service - TODO
 Issues/Enhancements:
 - User not able to update profile details, only user account details
 - If user email is updated, updated email is sent to new email not old - DONE
-- Emails sent should use a HTML template - Thymeleaf
+- Emails sent should use an HTML template - Thymeleaf
+- When catching exceptions, throw specific exceptions not general ones
 
 Linked hashmap maintains the order in which keys are inserted
 

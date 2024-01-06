@@ -24,7 +24,6 @@ public class GoldTypeEntityListener {
     @PreRemove
     public void preRemove(Object o) {
         LOG.debug("Entity will be removed: {}", o);
-
     }
 
     @PostLoad
