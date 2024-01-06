@@ -70,8 +70,8 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    @DisplayName("SOMSOMS")
-    void test() {
+    @DisplayName("Successful Save")
+    void shouldSaveNewAccount() {
         Account account = new Account("jane.doe@gmail.com", "password1");
         accountRepository.save(account);
 
