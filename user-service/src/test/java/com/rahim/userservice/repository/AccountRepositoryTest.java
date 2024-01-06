@@ -24,7 +24,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @TestPropertySource("classpath:application-test.yaml")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AccountRepositoryTest {
+
     private static final Logger LOG = LoggerFactory.getLogger(AccountRepositoryTest.class);
+
+    @Autowired
+    AccountRepository accountRepository;
 
     @Container
     @ServiceConnection
@@ -32,10 +36,6 @@ public class AccountRepositoryTest {
 
     @Container
     static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
-
-
-    @Autowired
-    AccountRepository accountRepository;
 
     @BeforeAll
     public static void beforeAll() {
