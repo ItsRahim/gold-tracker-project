@@ -74,4 +74,9 @@ public class Account {
     @Column(name = "delete_date")
     @JsonProperty("deleteDate")
     private LocalDate deleteDate;
+
+    public Account(String email, String passwordHash) {
+        this.email = email;
+        this.passwordHash = passwordHash;
+    }
 }
