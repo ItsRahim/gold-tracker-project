@@ -2,10 +2,7 @@ package com.rahim.userservice.repository;
 
 import com.rahim.userservice.model.Account;
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,7 +38,9 @@ public class AccountRepositoryTest {
 
     @BeforeAll
     public static void beforeAll() {
+        postgresContainer.start();
         kafkaContainer.start();
+
         String bootstrapServer = kafkaContainer.getBootstrapServers();
         System.setProperty("spring.kafka.bootstrap-servers", bootstrapServer);
 
@@ -119,15 +118,17 @@ public class AccountRepositoryTest {
     @Test
     @DisplayName("Update Existing Account")
     void shouldUpdateExistingAccount() {
-        Optional<Account> accountOptional = accountRepository.findById(3);
-        assertTrue(accountOptional.isPresent());
+        Account newAccount = new Account("rahim.ahmed@gmail.com", "Password123!");
+        accountRepository.save(newAccount);
 
-        Account account = accountOptional.get();
+        Optional<Account> retrievedAccountOptional = accountRepository.findById(newAccount.getId());
+        assertTrue(retrievedAccountOptional.isPresent());
 
-        account.setEmail("newemail@gmail.com");
-        accountRepository.save(account);
+        Account retrievedAccount = retrievedAccountOptional.get();
+        retrievedAccount.setEmail("newemail@gmail.com");
+        accountRepository.save(retrievedAccount);
 
-        Optional<Account> updatedAccountOptional = accountRepository.findById(3);
+        Optional<Account> updatedAccountOptional = accountRepository.findById(retrievedAccount.getId());
         assertTrue(updatedAccountOptional.isPresent());
 
         Account updatedAccount = updatedAccountOptional.get();
