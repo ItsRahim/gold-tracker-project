@@ -1,5 +1,6 @@
 package com.rahim.userservice.service.account;
 
+import com.rahim.userservice.ContainerImage;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +15,6 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,10 +30,10 @@ public class AccountCreationServiceTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:16.0");
+    static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(ContainerImage.POSTGRES.getDockerImageName());
 
     @Container
-    static KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    static KafkaContainer kafkaContainer = new KafkaContainer(ContainerImage.KAFKA.getDockerImageName());
 
     @BeforeAll
     public static void beforeAll() {
