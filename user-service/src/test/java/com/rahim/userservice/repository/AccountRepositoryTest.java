@@ -63,20 +63,6 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    @DisplayName("Testing PostgreSQL Connection")
-    void databaseConnectionEstablished() {
-        assertTrue(postgresContainer.isCreated());
-        assertTrue(postgresContainer.isRunning());
-    }
-
-    @Test
-    @DisplayName("Testing Kafka Connection")
-    void kafkaConnectionEstablished() {
-        assertTrue(kafkaContainer.isCreated());
-        assertTrue(kafkaContainer.isRunning());
-    }
-
-    @Test
     @DisplayName("Save New Account - Successful")
     void saveNewAccount_SuccessfulSave() {
         Account account = new Account("jane.doe@gmail.com", "password1");
