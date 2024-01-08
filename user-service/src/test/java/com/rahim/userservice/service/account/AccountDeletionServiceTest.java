@@ -4,7 +4,6 @@ import com.rahim.userservice.ContainerImage;
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.model.Account;
 import com.rahim.userservice.repository.AccountRepository;
-import com.rahim.userservice.repository.ProfileRepository;
 import com.rahim.userservice.service.profile.IProfileQueryService;
 import com.rahim.userservice.util.IEmailTokenGenerator;
 import org.flywaydb.core.Flyway;
@@ -49,9 +48,6 @@ public class AccountDeletionServiceTest {
 
     @Autowired
     AccountRepository accountRepository;
-
-    @Autowired
-    ProfileRepository profileRepository;
 
     @Mock
     IEmailTokenGenerator emailTokenGenerator;
