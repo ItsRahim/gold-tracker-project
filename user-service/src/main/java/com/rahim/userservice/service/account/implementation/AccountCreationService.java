@@ -1,6 +1,6 @@
 package com.rahim.userservice.service.account.implementation;
 
-import com.rahim.userservice.exception.DuplicateUserException;
+import com.rahim.userservice.exception.DuplicateAccountException;
 import com.rahim.userservice.model.Account;
 import com.rahim.userservice.model.Profile;
 import com.rahim.userservice.model.UserRequest;
@@ -26,7 +26,7 @@ public class AccountCreationService implements IAccountCreationService {
 
     @Override
     @Transactional
-    public void createAccount(UserRequest userRequest) throws DuplicateUserException {
+    public void createAccount(UserRequest userRequest) throws DuplicateAccountException {
         Account account = userRequest.getAccount();
         Profile profile = userRequest.getProfile();
 
@@ -40,13 +40,13 @@ public class AccountCreationService implements IAccountCreationService {
 
         if (accountExists && profileExists) {
             LOG.warn("Account with email {} and username {} already exists. Not creating duplicate.", email, username);
-            throw new DuplicateUserException("Account with email " + email + " and username " + username + " already exists.");
+            throw new DuplicateAccountException("Account with email " + email + " and username " + username + " already exists.");
         } else if (accountExists) {
             LOG.warn("Account with email {} already exists. Not creating duplicate.", email);
-            throw new DuplicateUserException("Account with email " + email + " already exists.");
+            throw new DuplicateAccountException("Account with email " + email + " already exists.");
         } else if (profileExists) {
             LOG.warn("Account with username {} already exists. Not creating duplicate.", username);
-            throw new DuplicateUserException("Account with username " + username + " already exists.");
+            throw new DuplicateAccountException("Account with username " + username + " already exists.");
         }
 
         if (!anyNullUser || !anyNullProfile) {
@@ -57,14 +57,14 @@ public class AccountCreationService implements IAccountCreationService {
                 LOG.info("Successfully created Account and Account Profile for: {}", profile.getUsername());
             } catch (DataIntegrityViolationException e) {
                 LOG.error("Error creating Account and Account Profile. Data integrity violation: {}", e.getMessage());
-                throw new DuplicateUserException("Account with email " + email + " or username " + username + " already exists.", e);
+                throw new DuplicateAccountException("Account with email " + email + " or username " + username + " already exists.", e);
             } catch (Exception e) {
                 LOG.error("Unexpected error creating Account and Account Profile: {}", e.getMessage());
                 throw new RuntimeException("Unexpected error creating Account and Account Profile.", e);
             }
         } else {
             LOG.warn("Null values found. Not creating duplicate.");
-            throw new DuplicateUserException("Null values found in Account or Profile.");
+            throw new DuplicateAccountException("Null values found in Account or Profile.");
         }
     }
 

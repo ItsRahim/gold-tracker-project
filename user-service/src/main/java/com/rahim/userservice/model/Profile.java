@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rahim.userservice.listener.UserProfileEntityListener;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @EntityListeners(UserProfileEntityListener.class)
 @Table(name = "user_profiles", schema = "rgts")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -45,4 +47,13 @@ public class Profile {
     @Column(name = "address")
     @JsonProperty("address")
     private String address;
+
+    public Profile(Account account, String username, String firstName, String lastName, String contactNumber, String address) {
+        this.account = account;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.contactNumber = contactNumber;
+        this.address = address;
+    }
 }
