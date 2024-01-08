@@ -1,17 +1,20 @@
 package com.rahim.userservice.service.account;
 
 import com.rahim.userservice.ContainerImage;
-import com.rahim.userservice.exception.DuplicateAccountException;
+import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.model.Account;
-import com.rahim.userservice.model.Profile;
-import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.AccountRepository;
 import com.rahim.userservice.repository.ProfileRepository;
+import com.rahim.userservice.service.profile.IProfileQueryService;
+import com.rahim.userservice.util.IEmailTokenGenerator;
 import org.flywaydb.core.Flyway;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,9 +26,16 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Optional;
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @Testcontainers
 @ActiveProfiles("test")
@@ -39,6 +49,15 @@ public class AccountDeletionServiceTest {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    ProfileRepository profileRepository;
+
+    @Mock
+    IEmailTokenGenerator emailTokenGenerator;
+
+    @Mock
+    IProfileQueryService profileQueryService;
 
     @Container
     @ServiceConnection
@@ -63,8 +82,58 @@ public class AccountDeletionServiceTest {
     }
 
     @BeforeEach
-    void cleanupTestData() {
+    void setup() {
+        final int numOfData = 10;
         accountRepository.deleteAll();
+
+        List<Account> accountList = Instancio
+                .ofList(Account.class)
+                .size(numOfData)
+                .ignore(field(Account::getId))
+                .ignore(field(Account::getAccountStatus))
+                .ignore(field(Account::getCredentialsExpired))
+                .ignore(field(Account::getLastLogin))
+                .ignore(field(Account::getNotificationSetting))
+                .ignore(field(Account::getCreatedAt))
+                .ignore(field(Account::getUpdatedAt))
+                .ignore(field(Account::getAccountLocked))
+                .ignore(field(Account::getAccountStatus))
+                .create();
+
+        for (int i = 0; i < numOfData; i++) {
+            accountRepository.save(accountList.get(i));
+        }
+
+        MockitoAnnotations.openMocks(this);
+
+        doNothing().when(emailTokenGenerator).generateEmailTokens(anyString(), anyInt(), anyBoolean(), anyBoolean());
+        when(profileQueryService.getProfileDetails(anyInt())).thenReturn(generateMockProfileDetails());
     }
 
+    private Map<String, Object> generateMockProfileDetails() {
+        Map<String, Object> mockProfileDetails = new HashMap<>();
+        mockProfileDetails.put("username", "mockUsername");
+        mockProfileDetails.put("first_name", "mockFirstName");
+        mockProfileDetails.put("last_name", "mockLastName");
+        mockProfileDetails.put("email", "mockEmail@example.com");
+        mockProfileDetails.put("delete_date", OffsetDateTime.now());
+        mockProfileDetails.put("updated_at", OffsetDateTime.now());
+
+        return mockProfileDetails;
+    }
+
+    @Test
+    @DisplayName("Request Account Deletion - Successful")
+    void requestAccountDelete_Successful() {
+        int accountId = 1;
+
+        boolean result = accountDeletionService.requestAccountDelete(accountId);
+        assertTrue(result);
+
+        Account newData = accountRepository.findById(accountId).get();
+
+        assertEquals(AccountState.PENDING_DELETE.getStatus(), newData.getAccountStatus());
+        assertTrue(newData.getAccountLocked());
+        assertNotNull(newData.getDeleteDate());
+    }
 }
