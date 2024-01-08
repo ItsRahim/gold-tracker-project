@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rahim.userservice.listener.UserEntityListener;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.time.Instant;
@@ -17,6 +14,7 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @DynamicInsert
 @AllArgsConstructor
