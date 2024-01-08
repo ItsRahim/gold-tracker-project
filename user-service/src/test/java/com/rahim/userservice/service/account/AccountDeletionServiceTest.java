@@ -103,17 +103,15 @@ public class AccountDeletionServiceTest {
         MockitoAnnotations.openMocks(this);
 
         doNothing().when(emailTokenGenerator).generateEmailTokens(anyString(), anyInt(), anyBoolean(), anyBoolean());
-        when(profileQueryService.getProfileDetails(anyInt())).thenReturn(generateMockProfileDetails());
+        when(profileQueryService.getProfileDetails(anyInt())).thenReturn(generateMockEmailPlaceholders());
     }
 
-    private Map<String, Object> generateMockProfileDetails() {
+    private Map<String, Object> generateMockEmailPlaceholders() {
         Map<String, Object> mockProfileDetails = new HashMap<>();
+        mockProfileDetails.put("firstName", "mockFirstName");
+        mockProfileDetails.put("lastName", "mockLastName");
         mockProfileDetails.put("username", "mockUsername");
-        mockProfileDetails.put("first_name", "mockFirstName");
-        mockProfileDetails.put("last_name", "mockLastName");
-        mockProfileDetails.put("email", "mockEmail@example.com");
-        mockProfileDetails.put("delete_date", OffsetDateTime.now());
-        mockProfileDetails.put("updated_at", OffsetDateTime.now());
+        mockProfileDetails.put("deletionDate", OffsetDateTime.now());
 
         return mockProfileDetails;
     }
