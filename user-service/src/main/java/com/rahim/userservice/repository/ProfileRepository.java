@@ -21,7 +21,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
     boolean existsByUsername(String username);
 
         @Query(value = "SELECT up.username, up.first_name, up.last_name, ua.email, ua.delete_date, ua.updated_at " +
-                "FROM rgts.user_profiles up JOIN rgts.user_accounts u ON up.account_id = ua.account_id " +
+                "FROM rgts.user_profiles up JOIN rgts.user_accounts ua ON up.account_id = ua.account_id " +
                 "WHERE up.account_id = :accountId", nativeQuery = true)
         Optional<Map<String, Object>> getProfileDetails(@Param("accountId") int accountId);
 }
