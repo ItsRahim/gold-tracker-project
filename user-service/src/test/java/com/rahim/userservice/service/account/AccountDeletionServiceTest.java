@@ -149,7 +149,7 @@ public class AccountDeletionServiceTest {
         // Requesting to Delete Account
         assertTrue(accountDeletionService.requestAccountDelete(accountId));
 
-        // Re-requesting to delete same account again
+        // Re-requesting to delete same account
         assertFalse(accountDeletionService.requestAccountDelete(accountId));
         verifyNoInteractions(emailTokenGenerator);
 
