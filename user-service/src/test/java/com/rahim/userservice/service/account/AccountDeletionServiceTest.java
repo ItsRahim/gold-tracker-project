@@ -1,6 +1,7 @@
 package com.rahim.userservice.service.account;
 
 import com.rahim.userservice.ContainerImage;
+import com.rahim.userservice.TestDataGenerator;
 import com.rahim.userservice.enums.AccountState;
 import com.rahim.userservice.model.Account;
 import com.rahim.userservice.repository.AccountRepository;
@@ -81,20 +82,7 @@ public class AccountDeletionServiceTest {
     void setup() {
         final int numOfData = 10;
         accountRepository.deleteAll();
-
-        List<Account> accountList = Instancio
-                .ofList(Account.class)
-                .size(numOfData)
-                .ignore(field(Account::getId))
-                .ignore(field(Account::getAccountStatus))
-                .ignore(field(Account::getCredentialsExpired))
-                .ignore(field(Account::getLastLogin))
-                .ignore(field(Account::getNotificationSetting))
-                .ignore(field(Account::getCreatedAt))
-                .ignore(field(Account::getUpdatedAt))
-                .ignore(field(Account::getAccountLocked))
-                .ignore(field(Account::getAccountStatus))
-                .create();
+        List<Account> accountList = TestDataGenerator.getInstance().generateAccountData(numOfData);
 
         for (int i = 0; i < numOfData; i++) {
             accountRepository.save(accountList.get(i));
