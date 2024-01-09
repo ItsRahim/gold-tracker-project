@@ -145,8 +145,11 @@ public class AccountDeletionServiceTest {
     @DisplayName("Request Account Deletion - Already Pending Deletion")
     void requestAccountDelete_AlreadyPendingDeletion() {
         int accountId = 5;
+
+        // Requesting to Delete Account
         assertTrue(accountDeletionService.requestAccountDelete(accountId));
 
+        // Re-requesting to delete same account again
         assertFalse(accountDeletionService.requestAccountDelete(accountId));
         verifyNoInteractions(emailTokenGenerator);
 
