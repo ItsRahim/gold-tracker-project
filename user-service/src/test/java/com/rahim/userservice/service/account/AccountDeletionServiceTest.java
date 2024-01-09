@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -31,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
@@ -119,5 +119,7 @@ public class AccountDeletionServiceTest {
         assertEquals(AccountState.PENDING_DELETE.getStatus(), newData.getAccountStatus());
         assertTrue(newData.getAccountLocked());
         assertNotNull(newData.getDeleteDate());
+        Mockito.verify(emailTokenGenerator, Mockito.times(0))
+                .generateEmailTokens(anyString(), anyInt(), anyBoolean(), anyBoolean());
     }
 }
