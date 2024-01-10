@@ -35,3 +35,6 @@ Can be analysed after above is complete:
 
 Refactor:
 pricing-service
+
+@ServiceConnect - applies connection details to spring automatically
+@Container - restarts the container for each instance needed i.e. per test class

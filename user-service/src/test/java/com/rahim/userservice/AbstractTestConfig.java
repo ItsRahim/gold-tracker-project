@@ -1,27 +1,32 @@
 package com.rahim.userservice;
 
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 
+@SpringBootTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-public abstract class AbstractContainerConfig {
+public abstract class AbstractTestConfig {
 
-    @Container
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @ServiceConnection
-    static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(ContainerImage.POSTGRES.getDockerImageName());
+    static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(ContainerImage.POSTGRES.getDockerImageName());
 
-    @Container
-    static KafkaContainer kafkaContainer = new KafkaContainer(ContainerImage.KAFKA.getDockerImageName());
+    static final KafkaContainer kafkaContainer = new KafkaContainer(ContainerImage.KAFKA.getDockerImageName());
 
     static {
         postgresContainer.start();
@@ -42,6 +47,10 @@ public abstract class AbstractContainerConfig {
         flyway.migrate();
     }
 
+    @AfterEach
+    void resetIdentityCounter() {
+        jdbcTemplate.execute("TRUNCATE TABLE rgts.user_accounts RESTART IDENTITY CASCADE");
+        jdbcTemplate.execute("TRUNCATE TABLE rgts.user_profiles RESTART IDENTITY CASCADE");
+    }
+
 }
-
-
