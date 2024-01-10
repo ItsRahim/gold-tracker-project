@@ -49,8 +49,16 @@ public abstract class AbstractTestConfig {
 
     @AfterEach
     void resetIdentityCounter() {
-        jdbcTemplate.execute("TRUNCATE TABLE rgts.user_accounts RESTART IDENTITY CASCADE");
-        jdbcTemplate.execute("TRUNCATE TABLE rgts.user_profiles RESTART IDENTITY CASCADE");
+        String[] tables = {"rgts.user_accounts", "rgts.user_profiles", "rgts.audit_log", "rgts.archived_users"};
+
+        for (String table : tables) {
+            truncateTableWithIdentityRestart(table);
+        }
+    }
+
+    private void truncateTableWithIdentityRestart(String tableName) {
+        String sql = "TRUNCATE TABLE " + tableName + " RESTART IDENTITY CASCADE";
+        jdbcTemplate.execute(sql);
     }
 
 }
