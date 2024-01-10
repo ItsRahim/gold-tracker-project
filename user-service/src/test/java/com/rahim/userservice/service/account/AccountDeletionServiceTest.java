@@ -82,7 +82,6 @@ public class AccountDeletionServiceTest {
     @BeforeEach
     void setup() {
         final int numOfData = 10;
-        accountRepository.deleteAll();
         List<Account> accountList = TestDataGenerator.getInstance().generateAccountData(numOfData);
 
         for (int i = 0; i < numOfData; i++) {
