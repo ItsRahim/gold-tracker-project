@@ -65,11 +65,10 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     private boolean isEmailUpdateValid(Map<String, String> updatedData) {
         String newEmail = updatedData.get("email");
-        String newPasswordHash = updatedData.get("passwordHash");
 
         return updatedData.containsKey("email") &&
                 !accountRepositoryHandler.hasAccount(newEmail) &&
-                isNotEmpty(newPasswordHash);
+                isNotEmpty(newEmail);
     }
 
     private boolean isPasswordUpdateValid(Map<String, String> updatedData) {
