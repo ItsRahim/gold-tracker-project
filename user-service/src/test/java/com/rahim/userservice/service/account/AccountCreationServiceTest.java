@@ -6,7 +6,6 @@ import com.rahim.userservice.model.Account;
 import com.rahim.userservice.model.Profile;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.AccountRepository;
-import com.rahim.userservice.repository.ProfileRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ public class AccountCreationServiceTest extends AbstractTestConfig {
 
     @Autowired
     AccountRepository accountRepository;
-
-    @Autowired
-    ProfileRepository profileRepository;
 
     @Test
     @DisplayName("Save New Account - Successful")
