@@ -51,17 +51,36 @@ public class AccountUpdateService implements IAccountUpdateService {
     }
 
     private void updateEmail(Account account, Map<String, String> updatedData) {
-        if (updatedData.containsKey("email") && !accountRepositoryHandler.hasAccount(updatedData.get("email"))) {
+        if (isEmailUpdateValid(updatedData)) {
             account.setEmail(updatedData.get("email"));
         } else {
-            LOG.warn("Cannot update email for account with ID {}. Email {} already exists", account.getId(), updatedData.get("email"));
+            LOG.warn("Cannot update email for account with ID {}. Email {} already exists or passwordHash is empty", account.getId(), updatedData.get("email"));
         }
     }
 
     private void updatePassword(Account account, Map<String, String> updatedData) {
-        if (updatedData.containsKey("passwordHash")) {
+        if (isPasswordUpdateValid(updatedData)) {
             account.setPasswordHash(updatedData.get("passwordHash"));
         }
+    }
+
+    private boolean isEmailUpdateValid(Map<String, String> updatedData) {
+        String newEmail = updatedData.get("email");
+        String newPasswordHash = updatedData.get("passwordHash");
+
+        return updatedData.containsKey("email") &&
+                !accountRepositoryHandler.hasAccount(newEmail) &&
+                isNotEmpty(newPasswordHash);
+    }
+
+    private boolean isPasswordUpdateValid(Map<String, String> updatedData) {
+        String newPasswordHash = updatedData.get("passwordHash");
+
+        return updatedData.containsKey("passwordHash") && isNotEmpty(newPasswordHash);
+    }
+
+    private boolean isNotEmpty(String value) {
+        return value != null && !value.isEmpty();
     }
 
 }
