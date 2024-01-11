@@ -64,18 +64,6 @@ public class AccountDeletionServiceTest extends AbstractTestConfig {
         when(profileQueryService.getProfileDetails(anyInt())).thenReturn(generateMockProfileDetails());
     }
 
-    private Map<String, Object> generateMockProfileDetails() {
-        Map<String, Object> mockProfileDetails = new HashMap<>();
-        mockProfileDetails.put("username", "mockUsername");
-        mockProfileDetails.put("first_name", "mockFirstName");
-        mockProfileDetails.put("last_name", "mockLastName");
-        mockProfileDetails.put("email", "mockEmail@example.com");
-        mockProfileDetails.put("delete_date", OffsetDateTime.now());
-        mockProfileDetails.put("updated_at", OffsetDateTime.now());
-
-        return mockProfileDetails;
-    }
-
     @Test
     @DisplayName("Request Account Deletion - Successful")
     void requestAccountDelete_Successful() {

@@ -13,6 +13,10 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @SpringBootTest
 @Testcontainers
@@ -59,6 +63,18 @@ public abstract class AbstractTestConfig {
     private void truncateTableWithIdentityRestart(String tableName) {
         String sql = "TRUNCATE TABLE " + tableName + " RESTART IDENTITY CASCADE";
         jdbcTemplate.execute(sql);
+    }
+
+    public Map<String, Object> generateMockProfileDetails() {
+        Map<String, Object> mockProfileDetails = new HashMap<>();
+        mockProfileDetails.put("username", "mockUsername");
+        mockProfileDetails.put("first_name", "mockFirstName");
+        mockProfileDetails.put("last_name", "mockLastName");
+        mockProfileDetails.put("email", "mockEmail@example.com");
+        mockProfileDetails.put("delete_date", OffsetDateTime.now());
+        mockProfileDetails.put("updated_at", OffsetDateTime.now());
+
+        return mockProfileDetails;
     }
 
 }

@@ -23,6 +23,7 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     @Override
     public void updateAccount(int accountId, Map<String, String> updatedData) {
+
         Optional<Account> accountOptional = accountRepositoryHandler.findById(accountId);
 
         if (accountOptional.isPresent()) {
@@ -30,16 +31,15 @@ public class AccountUpdateService implements IAccountUpdateService {
             String oldEmail = account.getEmail();
 
             try {
-                if (updatedData.containsKey("email")) {
-                    account.setEmail(updatedData.get("email"));
-                }
-                if (updatedData.containsKey("passwordHash")) {
-                    account.setPasswordHash(updatedData.get("passwordHash"));
-                }
+                updateEmail(account, updatedData);
+                updatePassword(account, updatedData);
 
                 accountRepositoryHandler.saveAccount(account);
                 emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), accountId, true, true, oldEmail);
                 LOG.info("Account with ID {} updated successfully", accountId);
+            } catch (UserNotFoundException e) {
+                LOG.warn("Account with ID {} not found.", accountId);
+                throw e;
             } catch (Exception e) {
                 LOG.error("Error updating account with ID {}: {}", accountId, e.getMessage());
                 throw new RuntimeException("Failed to update account.", e);
@@ -49,4 +49,19 @@ public class AccountUpdateService implements IAccountUpdateService {
             throw new UserNotFoundException("Account with ID " + accountId + " not found");
         }
     }
+
+    private void updateEmail(Account account, Map<String, String> updatedData) {
+        if (updatedData.containsKey("email") && !accountRepositoryHandler.hasAccount(updatedData.get("email"))) {
+            account.setEmail(updatedData.get("email"));
+        } else {
+            LOG.warn("Cannot update email for account with ID {}. Email {} already exists", account.getId(), updatedData.get("email"));
+        }
+    }
+
+    private void updatePassword(Account account, Map<String, String> updatedData) {
+        if (updatedData.containsKey("passwordHash")) {
+            account.setPasswordHash(updatedData.get("passwordHash"));
+        }
+    }
+
 }
