@@ -37,9 +37,6 @@ public class AccountUpdateService implements IAccountUpdateService {
                 accountRepositoryHandler.saveAccount(account);
                 emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), accountId, true, true, oldEmail);
                 LOG.info("Account with ID {} updated successfully", accountId);
-            } catch (UserNotFoundException e) {
-                LOG.warn("Account with ID {} not found.", accountId);
-                throw e;
             } catch (Exception e) {
                 LOG.error("Error updating account with ID {}: {}", accountId, e.getMessage());
                 throw new RuntimeException("Failed to update account.", e);
@@ -54,13 +51,15 @@ public class AccountUpdateService implements IAccountUpdateService {
         if (isEmailUpdateValid(updatedData)) {
             account.setEmail(updatedData.get("email"));
         } else {
-            LOG.warn("Cannot update email for account with ID {}. Email {} already exists or passwordHash is empty", account.getId(), updatedData.get("email"));
+            LOG.warn("Cannot update email for account with ID {}. Email {} already exists", account.getId(), updatedData.get("email"));
         }
     }
 
     private void updatePassword(Account account, Map<String, String> updatedData) {
         if (isPasswordUpdateValid(updatedData)) {
             account.setPasswordHash(updatedData.get("passwordHash"));
+        } else {
+            LOG.warn("Cannot update password for account with ID {}", account.getId());
         }
     }
 
