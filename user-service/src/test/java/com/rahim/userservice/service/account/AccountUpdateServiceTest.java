@@ -121,8 +121,30 @@ public class AccountUpdateServiceTest extends AbstractTestConfig {
 
     @Test
     @DisplayName("Update Password Only - Successful")
-    void updatePasswordOnly_Successful() {
-        // Implement the test case based on the provided scenario
+    void updatePasswordOnly_Successful() throws Exception {
+        int accountId = 5;
+        Optional<Account> accountOptional = accountRepository.findById(accountId);
+        assertTrue(accountOptional.isPresent());
+
+        Account oldAccount = accountOptional.get();
+        String email = oldAccount.getEmail();
+        String oldPassword = oldAccount.getPasswordHash();
+
+        Map<String, String> updatedData = new HashMap<>();
+        updatedData.put("passwordHash", "NewPassword123!");
+
+        accountUpdateService.updateAccount(accountId, updatedData);
+
+        Optional<Account> updatedAccountOptional = accountRepository.findById(accountId);
+        assertTrue(updatedAccountOptional.isPresent());
+
+        Account updatedAccount = updatedAccountOptional.get();
+        assertEquals(updatedData.get("passwordHash"), updatedAccount.getPasswordHash());
+
+        verify(emailTokenGenerator, times(0))
+                .generateEmailTokens(eq(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName()), eq(accountId), eq(true), eq(true), eq(email));
+
+        assertNotEquals(oldPassword, updatedAccount.getPasswordHash());
     }
 
     @Test
