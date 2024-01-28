@@ -9,7 +9,7 @@
 9) Create Quartz job to get gold price - DONE
 10) Enable vault for secrets - DONE
 
-notification-service - WIP
+notification-service - DONE
 transaction-service - TODO
 report-service - TODO
 email-service - DONE
@@ -21,6 +21,7 @@ Issues/Enhancements:
 - If user email is updated, updated email is sent to new email not old - DONE
 - Emails sent should use an HTML template - Thymeleaf
 - When catching exceptions, throw specific exceptions not general ones
+- Kafka producer to be able to send any object
 
 Linked hashmap maintains the order in which keys are inserted
 
