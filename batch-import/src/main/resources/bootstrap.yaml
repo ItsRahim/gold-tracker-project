@@ -1,4 +1,3 @@
 spring:
   config:
-    import:
-    - optional://configserver:http://localhost:8888/vault-config
+    import: configserver:http://localhost:8888/vault-config
