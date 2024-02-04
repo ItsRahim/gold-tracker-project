@@ -25,6 +25,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
@@ -67,6 +69,14 @@ public class BatchConfig extends AbstractBatchConfig {
     }
 
     @Bean
+    public TaskExecutor taskExecutor() {
+        SimpleAsyncTaskExecutor asyncTaskExecutor = new SimpleAsyncTaskExecutor();
+        asyncTaskExecutor.setConcurrencyLimit(100);
+
+        return asyncTaskExecutor;
+    }
+
+    @Bean
     public GoldDataProcessor goldDataProcessor() {
         return new GoldDataProcessor();
     }
@@ -74,12 +84,14 @@ public class BatchConfig extends AbstractBatchConfig {
     @Bean
     public Step importStep(@Qualifier("goldDataReader") FlatFileItemReader<GoldData> goldDataReader,
                            GoldDataProcessor goldDataProcessor,
-                           @Qualifier("goldPriceWriter") JdbcBatchItemWriter<GoldPriceHistory> goldPriceWriter) {
+                           @Qualifier("goldPriceWriter") JdbcBatchItemWriter<GoldPriceHistory> goldPriceWriter,
+                           @Qualifier("taskExecutor") TaskExecutor taskExecutor) {
         return new StepBuilder("csvImport", jobRepository)
                 .<GoldData, GoldPriceHistory>chunk(10, transactionManager)
                 .reader(goldDataReader)
                 .processor(goldDataProcessor)
                 .writer(goldPriceWriter)
+                .taskExecutor(taskExecutor)
                 .build();
     }
 
