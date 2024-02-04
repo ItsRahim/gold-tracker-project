@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.rahim</groupId>
-	<artifactId>batch-import</artifactId>
+	<artifactId>batch-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>batch-import</name>
 	<description>batch-import</description>

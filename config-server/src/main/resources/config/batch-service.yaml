@@ -1,6 +1,10 @@
 server:
   port: 8086
 
+spring:
+  datasource:
+    default-schema: batch_schema
+
 eureka:
   client:
     service-url:
@@ -10,10 +14,3 @@ management:
   tracing:
     sampling:
       probability: 1.0
-
-spring:
-  batch:
-    jdbc:
-      initialize-schema: always
-    job:
-      enabled: false

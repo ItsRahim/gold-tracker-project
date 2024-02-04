@@ -25,7 +25,7 @@ public class JobCompletionNotificationListener implements JobExecutionListener {
 
             jdbcTemplate
                     .query("SELECT price_ounce, price_gram, effective_date FROM rgts.gold_price_history", new DataClassRowMapper<>(GoldPriceHistory.class))
-                    .forEach(goldPriceHistory -> LOG.info("Found <{{}}> in the database.", goldPriceHistory));
+                    .forEach(goldPriceHistory -> LOG.trace("Found <{{}}> in the database.", goldPriceHistory));
         }
     }
 }

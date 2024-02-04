@@ -13,4 +13,4 @@ spring:
     enabled: true
     clean-disabled: false
     locations: classpath:db/base
-    schemas: rgts
+    schemas: rgts, batch_schema

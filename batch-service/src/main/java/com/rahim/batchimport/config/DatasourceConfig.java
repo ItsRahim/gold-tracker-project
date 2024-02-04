@@ -19,6 +19,9 @@ public class DatasourceConfig {
     @Value("${spring.datasource.password}")
     private String dbPassword;
 
+    @Value("${spring.datasource.default-schema}")
+    private String defaultSchema;
+
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -26,6 +29,7 @@ public class DatasourceConfig {
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(dbUsername);
         dataSource.setPassword(dbPassword);
+        dataSource.setSchema(defaultSchema);
 
         return dataSource;
     }

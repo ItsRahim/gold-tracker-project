@@ -21,11 +21,8 @@ public class GoldPriceCalculator {
             BigDecimal ouncesBigDecimal = pricePerOunce.setScale(SCALE, RoundingMode.HALF_UP);
             BigDecimal gramsPerOunce = new BigDecimal(GRAMS_PER_TROY_OUNCE);
 
-            BigDecimal gramsEquivalent  = ouncesBigDecimal.divide(gramsPerOunce, SCALE, RoundingMode.HALF_UP);
+            return ouncesBigDecimal.divide(gramsPerOunce, SCALE, RoundingMode.HALF_UP);
 
-            LOG.info("Conversion successful: £{} per ounce is £{} per gram", ouncesBigDecimal, gramsEquivalent);
-
-            return gramsEquivalent;
         } catch (ArithmeticException ex) {
             LOG.error("Error converting price per ounce to per gram: {}", ex.getMessage());
             throw new RuntimeException("Error converting price per ounce to per gram", ex);
