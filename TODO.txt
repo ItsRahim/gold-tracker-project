@@ -22,6 +22,7 @@ Issues/Enhancements:
 - Emails sent should use an HTML template - Thymeleaf
 - When catching exceptions, throw specific exceptions not general ones
 - Kafka producer to be able to send any object
+- Check all pom.xml and remove unused dependency and separate test and runtimes
 
 Linked hashmap maintains the order in which keys are inserted
 
