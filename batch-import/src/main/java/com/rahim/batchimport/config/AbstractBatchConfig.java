@@ -7,5 +7,5 @@ import org.springframework.transaction.PlatformTransactionManager;
 @RequiredArgsConstructor
 public abstract class AbstractBatchConfig {
     protected final JobRepository jobRepository;
-    protected  PlatformTransactionManager transactionManager;
+    protected final PlatformTransactionManager transactionManager;
 }

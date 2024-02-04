@@ -1,5 +1,6 @@
 package com.rahim.batchimport.config;
 
+import com.rahim.batchimport.listener.JobCompletionNotificationListener;
 import com.rahim.batchimport.model.GoldData;
 import com.rahim.batchimport.model.GoldPriceHistory;
 import com.rahim.batchimport.processor.GoldDataProcessor;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @EnableBatchProcessing
@@ -39,8 +41,8 @@ public class BatchConfig extends AbstractBatchConfig {
     private String priceHistoryQuery;
 
     @Autowired
-    public BatchConfig(JobRepository jobRepository, ResourceLoader resourceLoader, DatasourceConfig datasourceConfig) {
-        super(jobRepository);
+    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager, ResourceLoader resourceLoader, DatasourceConfig datasourceConfig) {
+        super(jobRepository, transactionManager);
         this.resourceLoader = resourceLoader;
         this.datasourceConfig = datasourceConfig;
     }
@@ -82,9 +84,10 @@ public class BatchConfig extends AbstractBatchConfig {
     }
 
     @Bean
-    public Job impportPriceJob() {
+    public Job impportPriceJob(@Qualifier("importStep") Step importStep, JobCompletionNotificationListener listener) {
         return new JobBuilder("importPrice", jobRepository)
-                .start(importStep())
+                .listener(listener)
+                .start(importStep)
                 .build();
     }
 
