@@ -25,8 +25,6 @@ import org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -34,7 +32,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 @EnableBatchProcessing
 public class BatchConfig extends AbstractBatchConfig {
 
-    private final ResourceLoader resourceLoader;
     private final DatasourceConfig datasourceConfig;
 
     @Value("classpath:xaugbp-history.csv")
@@ -44,9 +41,8 @@ public class BatchConfig extends AbstractBatchConfig {
     private String priceHistoryQuery;
 
     @Autowired
-    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager, ResourceLoader resourceLoader, DatasourceConfig datasourceConfig) {
+    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager, DatasourceConfig datasourceConfig) {
         super(jobRepository, transactionManager);
-        this.resourceLoader = resourceLoader;
         this.datasourceConfig = datasourceConfig;
     }
 
