@@ -1,13 +1,11 @@
 package com.rahim.batchimport.listener;
 
-import com.rahim.batchimport.model.GoldPriceHistory;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
-import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -20,12 +18,12 @@ public class JobCompletionNotificationListener implements JobExecutionListener {
 
     @Override
     public void afterJob(JobExecution jobExecution) {
-        if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
+        if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
             LOG.info("Batch Job Complete!");
 
-            jdbcTemplate
-                    .query("SELECT price_ounce, price_gram, effective_date FROM rgts.gold_price_history", new DataClassRowMapper<>(GoldPriceHistory.class))
-                    .forEach(goldPriceHistory -> LOG.trace("Found <{{}}> in the database.", goldPriceHistory));
+            Long rowCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM rgts.gold_price_history", Long.class);
+
+            LOG.info("Total rows in the database: {}", rowCount);
         }
     }
 }

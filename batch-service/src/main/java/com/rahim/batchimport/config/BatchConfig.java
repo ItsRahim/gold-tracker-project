@@ -1,8 +1,12 @@
 package com.rahim.batchimport.config;
 
+import com.rahim.batchimport.listener.CustomItemReaderListener;
+import com.rahim.batchimport.listener.CustomItemWriterListener;
 import com.rahim.batchimport.listener.JobCompletionNotificationListener;
+import com.rahim.batchimport.listener.StepSkipListener;
 import com.rahim.batchimport.model.GoldData;
 import com.rahim.batchimport.model.GoldPriceHistory;
+import com.rahim.batchimport.policies.PriceSkipPolicy;
 import com.rahim.batchimport.processor.GoldDataProcessor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -11,7 +15,6 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
-import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -32,18 +35,37 @@ import org.springframework.transaction.PlatformTransactionManager;
 @EnableBatchProcessing
 public class BatchConfig extends AbstractBatchConfig {
 
-    private final DatasourceConfig datasourceConfig;
-
     @Value("classpath:xaugbp-history.csv")
     private Resource goldDataFileResource;
 
-    @Value("INSERT INTO rgts.gold_price_history (price_ounce, price_gram, effective_date) VALUES (:priceOunce, :priceGram, :effectiveDate)")
-    private String priceHistoryQuery;
-
     @Autowired
-    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager, DatasourceConfig datasourceConfig) {
+    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         super(jobRepository, transactionManager);
-        this.datasourceConfig = datasourceConfig;
+    }
+
+    @Bean
+    public GoldDataProcessor goldDataProcessor() {
+        return new GoldDataProcessor();
+    }
+
+    @Bean
+    public PriceSkipPolicy priceSkipPolicy() {
+        return new PriceSkipPolicy();
+    }
+
+    @Bean
+    public StepSkipListener stepSkipListener() {
+        return new StepSkipListener();
+    }
+
+    @Bean
+    public CustomItemWriterListener itemWriterListener() {
+        return new CustomItemWriterListener();
+    }
+
+    @Bean
+    public CustomItemReaderListener itemReaderListener() {
+        return new CustomItemReaderListener();
     }
 
     @Bean
@@ -57,37 +79,31 @@ public class BatchConfig extends AbstractBatchConfig {
     }
 
     @Bean
-    public JdbcBatchItemWriter<GoldPriceHistory> goldPriceWriter() {
-        return new JdbcBatchItemWriterBuilder<GoldPriceHistory>()
-                .sql(priceHistoryQuery)
-                .dataSource(datasourceConfig.dataSource())
-                .beanMapped()
-                .build();
-    }
-
-    @Bean
     public TaskExecutor taskExecutor() {
         return new SimpleAsyncTaskExecutorBuilder()
-                .concurrencyLimit(100)
+                .concurrencyLimit(chunkSize)
                 .build();
-    }
-
-    @Bean
-    public GoldDataProcessor goldDataProcessor() {
-        return new GoldDataProcessor();
     }
 
     @Bean
     public Step importStep(@Qualifier("goldDataReader") FlatFileItemReader<GoldData> goldDataReader,
                            GoldDataProcessor goldDataProcessor,
                            @Qualifier("goldPriceWriter") JdbcBatchItemWriter<GoldPriceHistory> goldPriceWriter,
-                           @Qualifier("taskExecutor") TaskExecutor taskExecutor) {
+                           @Qualifier("taskExecutor") TaskExecutor taskExecutor,
+                           CustomItemReaderListener customItemReaderListener,
+                           CustomItemWriterListener customItemWriterListener,
+                           StepSkipListener stepSkipListener) {
         return new StepBuilder("csvImport", jobRepository)
                 .<GoldData, GoldPriceHistory>chunk(10, transactionManager)
                 .reader(goldDataReader)
                 .processor(goldDataProcessor)
                 .writer(goldPriceWriter)
                 .taskExecutor(taskExecutor)
+                .faultTolerant()
+                .skipPolicy(priceSkipPolicy())
+                .listener(stepSkipListener)
+                .listener(customItemReaderListener)
+                .listener(customItemWriterListener)
                 .build();
     }
 
@@ -114,4 +130,5 @@ public class BatchConfig extends AbstractBatchConfig {
 
         return lineMapper;
     }
+
 }
