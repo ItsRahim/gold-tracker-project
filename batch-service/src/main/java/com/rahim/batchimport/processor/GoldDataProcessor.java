@@ -30,7 +30,6 @@ public class GoldDataProcessor implements ItemProcessor<GoldData, GoldPriceHisto
             BigDecimal pricePerGram = GoldPriceCalculator.getInstance().calculatePricePerGram(priceOunce);
 
             if (isEffectiveDateExists(effectiveDate)) {
-                LOG.debug("Skipping item with effective date {} as it already exists in the database", effectiveDate);
                 throw new DuplicateEffectiveDateException("Duplicate effective date found: " + effectiveDate);
             }
 
@@ -42,10 +41,10 @@ public class GoldDataProcessor implements ItemProcessor<GoldData, GoldPriceHisto
     }
 
     private boolean isEffectiveDateExists(LocalDate effectiveDate) {
-        String sql = "SELECT COUNT(*) FROM rgts.gold_price_history WHERE effective_date = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, effectiveDate);
+        String sql = "SELECT EXISTS(SELECT 1 FROM rgts.gold_price_history WHERE effective_date = ?)";
+        Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class, effectiveDate);
 
-        return count != null && count > 0;
+        return Boolean.TRUE.equals(result);
     }
 
 }

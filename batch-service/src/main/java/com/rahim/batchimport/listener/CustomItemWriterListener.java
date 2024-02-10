@@ -16,18 +16,12 @@ public class CustomItemWriterListener implements ItemWriteListener<GoldPriceHist
 
     @Override
     public void beforeWrite(Chunk<? extends GoldPriceHistory> items) {
-        List<? extends GoldPriceHistory> itemList = items.getItems();
-        for (GoldPriceHistory item : itemList) {
-            LOG.debug("Processing item before write: " + item.toString());
-        }
+        //Do Nothing
     }
 
     @Override
     public void afterWrite(Chunk<? extends GoldPriceHistory> items) {
-        List<? extends GoldPriceHistory> itemList = items.getItems();
-        for (GoldPriceHistory item : itemList) {
-            LOG.debug("Processing item after write: " + item.toString());
-        }
+        //Do Nothing
     }
 
     @Override
