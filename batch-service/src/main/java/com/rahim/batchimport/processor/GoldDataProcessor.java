@@ -13,10 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class GoldDataProcessor implements ItemProcessor<GoldData, GoldPriceHistory> {
 
@@ -25,22 +21,16 @@ public class GoldDataProcessor implements ItemProcessor<GoldData, GoldPriceHisto
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private final Set<LocalDate> existingDates = ConcurrentHashMap.newKeySet();
-
-    private boolean isInitialised = false;
-
     @Override
     public GoldPriceHistory process(GoldData goldData) {
-        initializeExistingDates();
-
         try {
             BigDecimal priceOunce = new BigDecimal(goldData.getPrice());
             LocalDate effectiveDate = LocalDate.parse(goldData.getDate());
 
             BigDecimal pricePerGram = GoldPriceCalculator.getInstance().calculatePricePerGram(priceOunce);
 
-            if (existingDates.contains(effectiveDate)) {
-                LOG.info("Skipping item with effective date {} as it already exists in the database", effectiveDate);
+            if (isEffectiveDateExists(effectiveDate)) {
+                LOG.debug("Skipping item with effective date {} as it already exists in the database", effectiveDate);
                 throw new DuplicateEffectiveDateException("Duplicate effective date found: " + effectiveDate);
             }
 
@@ -51,15 +41,11 @@ public class GoldDataProcessor implements ItemProcessor<GoldData, GoldPriceHisto
         }
     }
 
-    private void initializeExistingDates() {
-        if (!isInitialised) {
-            List<LocalDate> datesFromDatabase = jdbcTemplate.queryForList("SELECT DISTINCT effective_date FROM rgts.gold_price_history", LocalDate.class);
+    private boolean isEffectiveDateExists(LocalDate effectiveDate) {
+        String sql = "SELECT COUNT(*) FROM rgts.gold_price_history WHERE effective_date = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, effectiveDate);
 
-            if (!datesFromDatabase.isEmpty()) {
-                existingDates.addAll(datesFromDatabase);
-                isInitialised = true;
-            }
-
-        }
+        return count != null && count > 0;
     }
+
 }

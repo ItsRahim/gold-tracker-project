@@ -23,6 +23,7 @@ Issues/Enhancements:
 - When catching exceptions, throw specific exceptions not general ones
 - Kafka producer to be able to send any object
 - Check all pom.xml and remove unused dependency and separate test and runtimes
+- Batch Process adds duplicate dates for gold price history
 
 Linked hashmap maintains the order in which keys are inserted
 
