@@ -47,18 +47,18 @@ public class BatchConfig extends BaseBatchConfig {
         this.processedFilesTasklet = processedFilesTasklet;
     }
 
-//    @Bean
-//    public FlatFileItemReader<GoldData> goldDataReader() {
-//        return new FlatFileItemReaderBuilder<GoldData>()
-//                .name("goldDataReader")
-//                .resource(goldDataFileResource)
-//                .linesToSkip(1)
-//                .lineMapper(lineMapper())
-//                .build();
-//    }
+    @Bean
+    public FlatFileItemReader<GoldData> goldDataReader() {
+        return new FlatFileItemReaderBuilder<GoldData>()
+                .name("goldDataReader")
+                .resource(goldDataFileResource)
+                .linesToSkip(1)
+                .lineMapper(lineMapper())
+                .build();
+    }
 
     @Bean
-    public Step importStep(@Qualifier("customGoldDataReader") ItemReader<GoldData> customGoldDataReader,
+    public Step importStep(@Qualifier("goldDataReader") ItemReader<GoldData> goldDataReader,
                            GoldDataProcessor goldDataProcessor,
                            @Qualifier("goldPriceWriter") JdbcBatchItemWriter<GoldPriceHistory> goldPriceWriter,
                            @Qualifier("taskExecutor") TaskExecutor taskExecutor,
@@ -67,7 +67,7 @@ public class BatchConfig extends BaseBatchConfig {
                            StepSkipListener stepSkipListener) {
         return new StepBuilder("csvImport", jobRepository)
                 .<GoldData, GoldPriceHistory>chunk(chunkSize, transactionManager)
-                .reader(customGoldDataReader)
+                .reader(goldDataReader)
                 .processor(goldDataProcessor)
                 .writer(goldPriceWriter)
                 .taskExecutor(taskExecutor)
@@ -97,20 +97,20 @@ public class BatchConfig extends BaseBatchConfig {
                 .build();
     }
 
-//    private LineMapper<GoldData> lineMapper() {
-//        DefaultLineMapper<GoldData> lineMapper = new DefaultLineMapper<>();
-//        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-//        lineTokenizer.setDelimiter(",");
-//        lineTokenizer.setStrict(false);
-//        lineTokenizer.setNames("date", "price");
-//
-//        BeanWrapperFieldSetMapper<GoldData> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-//        fieldSetMapper.setTargetType(GoldData.class);
-//
-//        lineMapper.setLineTokenizer(lineTokenizer);
-//        lineMapper.setFieldSetMapper(fieldSetMapper);
-//
-//        return lineMapper;
-//    }
+    private LineMapper<GoldData> lineMapper() {
+        DefaultLineMapper<GoldData> lineMapper = new DefaultLineMapper<>();
+        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+        lineTokenizer.setDelimiter(",");
+        lineTokenizer.setStrict(false);
+        lineTokenizer.setNames("date", "price");
+
+        BeanWrapperFieldSetMapper<GoldData> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(GoldData.class);
+
+        lineMapper.setLineTokenizer(lineTokenizer);
+        lineMapper.setFieldSetMapper(fieldSetMapper);
+
+        return lineMapper;
+    }
 
 }
