@@ -28,9 +28,14 @@ public class GoldDataProcessor implements ItemProcessor<GoldData, GoldPriceHisto
             LocalDate effectiveDate = LocalDate.parse(goldData.getDate());
             BigDecimal pricePerGram = GoldPriceCalculator.getInstance().calculatePricePerGram(priceOunce);
 
-            if (isEffectiveDateAlreadyExists(effectiveDate) || LocalDate.now().isEqual(effectiveDate)) {
+            if (isEffectiveDateAlreadyExists(effectiveDate)) {
                 LOG.debug("Skipping item with effective date {} as it already exists in the database", effectiveDate);
                 throw new DuplicateEffectiveDateException("Duplicate effective date found: " + effectiveDate);
+            }
+
+            if (LocalDate.now().isEqual(effectiveDate)) {
+                LOG.warn("Unable to add as it is the current date");
+                throw new DuplicateEffectiveDateException("Unable to add {} as it is the current date" + effectiveDate);
             }
 
             return new GoldPriceHistory(priceOunce, pricePerGram, effectiveDate);
