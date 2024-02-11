@@ -19,8 +19,6 @@ import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
-import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
-import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -78,13 +76,10 @@ public class BatchConfig extends BaseBatchConfig {
     }
 
     @Bean
-    public Job importPriceJob(@Qualifier("cleanupStep") Step cleanupStep,
-                              @Qualifier("importStep") Step importStep,
-                              JobCompletionListener listener) {
+    public Job importPriceJob(@Qualifier("importStep") Step importStep, JobCompletionListener listener) {
         return new JobBuilder("importPrice", jobRepository)
                 .listener(listener)
-                .start(cleanupStep)
-                .next(importStep)
+                .start(importStep)
                 .build();
     }
 
@@ -102,17 +97,6 @@ public class BatchConfig extends BaseBatchConfig {
         lineMapper.setFieldSetMapper(fieldSetMapper);
 
         return lineMapper;
-    }
-
-    private DelimitedLineAggregator<GoldData> createLineAggregator() {
-        DelimitedLineAggregator<GoldData> lineAggregator = new DelimitedLineAggregator<>();
-        lineAggregator.setDelimiter(",");
-
-        BeanWrapperFieldExtractor<GoldData> fieldExtractor = new BeanWrapperFieldExtractor<>();
-        fieldExtractor.setNames(new String[]{"date", "price"});
-        lineAggregator.setFieldExtractor(fieldExtractor);
-
-        return lineAggregator;
     }
 
 }
