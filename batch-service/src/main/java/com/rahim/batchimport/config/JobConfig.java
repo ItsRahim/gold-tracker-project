@@ -2,7 +2,7 @@ package com.rahim.batchimport.config;
 
 import com.rahim.batchimport.listener.CustomItemReaderListener;
 import com.rahim.batchimport.listener.CustomItemWriterListener;
-import com.rahim.batchimport.listener.JobCompletionNotificationListener;
+import com.rahim.batchimport.listener.JobCompletionListener;
 import com.rahim.batchimport.listener.StepSkipListener;
 import com.rahim.batchimport.model.GoldData;
 import com.rahim.batchimport.model.GoldPriceHistory;
@@ -106,7 +106,7 @@ public class BatchConfig extends BaseBatchConfig {
     @Bean
     public Job importPriceJob(@Qualifier("cleanupStep") Step cleanupStep,
                               @Qualifier("importStep") Step importStep,
-                              JobCompletionNotificationListener listener) {
+                              JobCompletionListener listener) {
         return new JobBuilder("importPrice", jobRepository)
                 .listener(listener)
                 .start(cleanupStep)
