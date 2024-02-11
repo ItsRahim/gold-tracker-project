@@ -7,12 +7,14 @@ import com.rahim.batchimport.listener.StepSkipListener;
 import com.rahim.batchimport.model.GoldData;
 import com.rahim.batchimport.model.GoldPriceHistory;
 import com.rahim.batchimport.processor.GoldDataProcessor;
+import com.rahim.batchimport.tasklet.ProcessedFilesTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
@@ -35,26 +37,28 @@ import org.springframework.transaction.PlatformTransactionManager;
 @EnableAutoConfiguration
 public class BatchConfig extends BaseBatchConfig {
 
-    @Value("classpath:xaugbp-history.csv")
-    private Resource goldDataFileResource;
+
+
+    private final ProcessedFilesTasklet processedFilesTasklet;
 
     @Autowired
-    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager, ProcessedFilesTasklet processedFilesTasklet) {
         super(jobRepository, transactionManager);
+        this.processedFilesTasklet = processedFilesTasklet;
     }
 
-    @Bean
-    public FlatFileItemReader<GoldData> goldDataReader() {
-        return new FlatFileItemReaderBuilder<GoldData>()
-                .name("goldDataReader")
-                .resource(goldDataFileResource)
-                .linesToSkip(1)
-                .lineMapper(lineMapper())
-                .build();
-    }
+//    @Bean
+//    public FlatFileItemReader<GoldData> goldDataReader() {
+//        return new FlatFileItemReaderBuilder<GoldData>()
+//                .name("goldDataReader")
+//                .resource(goldDataFileResource)
+//                .linesToSkip(1)
+//                .lineMapper(lineMapper())
+//                .build();
+//    }
 
     @Bean
-    public Step importStep(@Qualifier("goldDataReader") FlatFileItemReader<GoldData> goldDataReader,
+    public Step importStep(@Qualifier("customGoldDataReader") ItemReader<GoldData> customGoldDataReader,
                            GoldDataProcessor goldDataProcessor,
                            @Qualifier("goldPriceWriter") JdbcBatchItemWriter<GoldPriceHistory> goldPriceWriter,
                            @Qualifier("taskExecutor") TaskExecutor taskExecutor,
@@ -63,7 +67,7 @@ public class BatchConfig extends BaseBatchConfig {
                            StepSkipListener stepSkipListener) {
         return new StepBuilder("csvImport", jobRepository)
                 .<GoldData, GoldPriceHistory>chunk(chunkSize, transactionManager)
-                .reader(goldDataReader)
+                .reader(customGoldDataReader)
                 .processor(goldDataProcessor)
                 .writer(goldPriceWriter)
                 .taskExecutor(taskExecutor)
@@ -76,27 +80,37 @@ public class BatchConfig extends BaseBatchConfig {
     }
 
     @Bean
-    public Job importPriceJob(@Qualifier("importStep") Step importStep, JobCompletionListener listener) {
-        return new JobBuilder("importPrice", jobRepository)
-                .listener(listener)
-                .start(importStep)
+    public Step processedFilesStep() {
+        return new StepBuilder("processedFileStep", jobRepository)
+                .tasklet(processedFilesTasklet, transactionManager)
                 .build();
     }
 
-    private LineMapper<GoldData> lineMapper() {
-        DefaultLineMapper<GoldData> lineMapper = new DefaultLineMapper<>();
-        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setDelimiter(",");
-        lineTokenizer.setStrict(false);
-        lineTokenizer.setNames("date", "price");
-
-        BeanWrapperFieldSetMapper<GoldData> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(GoldData.class);
-
-        lineMapper.setLineTokenizer(lineTokenizer);
-        lineMapper.setFieldSetMapper(fieldSetMapper);
-
-        return lineMapper;
+    @Bean
+    public Job importPriceJob(@Qualifier("importStep") Step importStep,
+                              @Qualifier("processedFilesStep") Step processedFilesStep,
+                              JobCompletionListener listener) {
+        return new JobBuilder("importPrice", jobRepository)
+                .listener(listener)
+                .start(importStep)
+                //.next(processedFilesStep)
+                .build();
     }
+
+//    private LineMapper<GoldData> lineMapper() {
+//        DefaultLineMapper<GoldData> lineMapper = new DefaultLineMapper<>();
+//        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+//        lineTokenizer.setDelimiter(",");
+//        lineTokenizer.setStrict(false);
+//        lineTokenizer.setNames("date", "price");
+//
+//        BeanWrapperFieldSetMapper<GoldData> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+//        fieldSetMapper.setTargetType(GoldData.class);
+//
+//        lineMapper.setLineTokenizer(lineTokenizer);
+//        lineMapper.setFieldSetMapper(fieldSetMapper);
+//
+//        return lineMapper;
+//    }
 
 }
