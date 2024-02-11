@@ -11,19 +11,35 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class JobCompletionNotificationListener implements JobExecutionListener {
+public class JobCompletionListener implements JobExecutionListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JobCompletionNotificationListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JobCompletionListener.class);
     private final JdbcTemplate jdbcTemplate;
+    Long dataBefore;
+
+    @Override
+    public void beforeJob(JobExecution jobExecution) {
+        if (jobExecution.getStatus() == BatchStatus.STARTING) {
+            LOG.info("Batch Job Starting!");
+
+            dataBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM rgts.gold_price_history", Long.class);
+
+            LOG.info("Total rows in the database before job: {}", dataBefore);
+        }
+    }
 
     @Override
     public void afterJob(JobExecution jobExecution) {
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
             LOG.info("Batch Job Complete!");
 
-            Long rowCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM rgts.gold_price_history", Long.class);
+            Long dataAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM rgts.gold_price_history", Long.class);
+            dataAfter = (dataAfter != null) ? dataAfter : 0L;
 
-            LOG.info("Total rows in the database: {}", rowCount);
+            Long addedRows = dataAfter - dataBefore;
+
+            LOG.info("Added rows during job execution: {}", addedRows);
         }
     }
+
 }
