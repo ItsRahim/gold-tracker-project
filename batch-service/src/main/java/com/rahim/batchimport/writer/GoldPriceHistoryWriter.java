@@ -14,7 +14,7 @@ public class GoldPriceHistoryWriter {
 
     private final DatasourceConfig datasourceConfig;
 
-    public static final String PRICE_HISTORY_QUERY = "INSERT INTO rgts.gold_price_history (price_ounce, price_gram, effective_date) VALUES (:priceOunce, :priceGram, :effectiveDate)";
+    private static final String PRICE_HISTORY_QUERY = "INSERT INTO rgts.gold_price_history (price_ounce, price_gram, effective_date) VALUES (:priceOunce, :priceGram, :effectiveDate)";
 
     @Bean
     public JdbcBatchItemWriter<GoldPriceHistory> goldPriceWriter() {
