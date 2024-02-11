@@ -3,7 +3,7 @@ package com.rahim.batchimport.config;
 import com.rahim.batchimport.listener.CustomItemReaderListener;
 import com.rahim.batchimport.listener.CustomItemWriterListener;
 import com.rahim.batchimport.listener.StepSkipListener;
-import com.rahim.batchimport.policies.PriceSkipPolicy;
+import com.rahim.batchimport.policies.SkipPolicy;
 import com.rahim.batchimport.processor.GoldDataProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.repository.JobRepository;
@@ -28,8 +28,8 @@ public abstract class BaseBatchConfig {
     }
 
     @Bean
-    public PriceSkipPolicy priceSkipPolicy() {
-        return new PriceSkipPolicy();
+    public SkipPolicy skipPolicy() {
+        return new SkipPolicy();
     }
 
     @Bean

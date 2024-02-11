@@ -6,6 +6,7 @@ import com.rahim.batchimport.listener.JobCompletionListener;
 import com.rahim.batchimport.listener.StepSkipListener;
 import com.rahim.batchimport.model.GoldData;
 import com.rahim.batchimport.model.GoldPriceHistory;
+import com.rahim.batchimport.policies.SkipPolicy;
 import com.rahim.batchimport.processor.GoldDataProcessor;
 import com.rahim.batchimport.tasklet.ProcessedFilesTasklet;
 import org.springframework.batch.core.Job;
@@ -64,6 +65,7 @@ public class JobConfig extends BaseBatchConfig {
                            @Qualifier("goldPriceWriter") JdbcBatchItemWriter<GoldPriceHistory> goldPriceWriter,
                            @Qualifier("taskExecutor") TaskExecutor taskExecutor,
                            CustomItemReaderListener customItemReaderListener,
+                           SkipPolicy skipPolicy,
                            CustomItemWriterListener customItemWriterListener,
                            StepSkipListener stepSkipListener) {
         return new StepBuilder("csvImport", jobRepository)
@@ -73,7 +75,7 @@ public class JobConfig extends BaseBatchConfig {
                 .writer(goldPriceWriter)
                 .taskExecutor(taskExecutor)
                 .faultTolerant()
-                .skipPolicy(priceSkipPolicy())
+                .skipPolicy(skipPolicy)
                 .listener(stepSkipListener)
                 .listener(customItemReaderListener)
                 .listener(customItemWriterListener)
