@@ -35,14 +35,15 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @EnableBatchProcessing
 @EnableAutoConfiguration
-public class BatchConfig extends BaseBatchConfig {
+public class JobConfig extends BaseBatchConfig {
 
-
+    @Value("classpath:xaugbp-history.csv")
+    private Resource goldDataFileResource;
 
     private final ProcessedFilesTasklet processedFilesTasklet;
 
     @Autowired
-    public BatchConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager, ProcessedFilesTasklet processedFilesTasklet) {
+    public JobConfig(JobRepository jobRepository, PlatformTransactionManager transactionManager, ProcessedFilesTasklet processedFilesTasklet) {
         super(jobRepository, transactionManager);
         this.processedFilesTasklet = processedFilesTasklet;
     }
