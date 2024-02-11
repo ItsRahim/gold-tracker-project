@@ -6,7 +6,6 @@ import com.rahim.batchimport.listener.JobCompletionListener;
 import com.rahim.batchimport.listener.StepSkipListener;
 import com.rahim.batchimport.model.GoldData;
 import com.rahim.batchimport.model.GoldPriceHistory;
-import com.rahim.batchimport.processor.DataCleanerProcessor;
 import com.rahim.batchimport.processor.GoldDataProcessor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -16,10 +15,8 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
@@ -31,7 +28,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -56,28 +52,6 @@ public class BatchConfig extends BaseBatchConfig {
                 .resource(goldDataFileResource)
                 .linesToSkip(1)
                 .lineMapper(lineMapper())
-                .build();
-    }
-
-    @Bean
-    public FlatFileItemWriter<GoldData> goldDataWriter() {
-        return new FlatFileItemWriterBuilder<GoldData>()
-                .resource(new FileSystemResource("classpath:xaugbp-history.csv"))
-                .lineAggregator(createLineAggregator())
-                .build();
-    }
-
-    @Bean
-    public Step cleanupStep(@Qualifier("goldDataReader") FlatFileItemReader<GoldData> goldDataReader,
-                            DataCleanerProcessor dataCleanerProcessor,
-                            @Qualifier("goldDataWriter") FlatFileItemWriter<GoldData> goldDataWriter,
-                            @Qualifier("taskExecutor") TaskExecutor taskExecutor) {
-        return new StepBuilder("csvCleanup", jobRepository)
-                .<GoldData, GoldData>chunk(chunkSize, transactionManager)
-                .reader(goldDataReader)
-                .processor(dataCleanerProcessor)
-                .writer(goldDataWriter)
-                .taskExecutor(taskExecutor)
                 .build();
     }
 
