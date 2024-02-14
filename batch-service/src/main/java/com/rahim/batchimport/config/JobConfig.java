@@ -1,5 +1,6 @@
 package com.rahim.batchimport.config;
 
+import com.rahim.batchimport.constants.FileConstants;
 import com.rahim.batchimport.listener.CustomItemReaderListener;
 import com.rahim.batchimport.listener.CustomItemWriterListener;
 import com.rahim.batchimport.listener.JobCompletionListener;
@@ -9,6 +10,7 @@ import com.rahim.batchimport.model.GoldPriceHistory;
 import com.rahim.batchimport.policies.SkipPolicy;
 import com.rahim.batchimport.processor.GoldDataProcessor;
 import com.rahim.batchimport.tasklet.ProcessedFilesTasklet;
+import lombok.Getter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -33,12 +35,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
+@Getter
 @Configuration
 @EnableBatchProcessing
 @EnableAutoConfiguration
 public class JobConfig extends BaseBatchConfig {
 
-    @Value("classpath:xaugbp-history.csv")
+    @Value(FileConstants.GOLD_DATA_FILE_PATH)
     private Resource goldDataFileResource;
 
     private final ProcessedFilesTasklet processedFilesTasklet;
@@ -96,7 +99,7 @@ public class JobConfig extends BaseBatchConfig {
         return new JobBuilder("importPrice", jobRepository)
                 .listener(listener)
                 .start(importStep)
-                //.next(processedFilesStep)
+                .next(processedFilesStep)
                 .build();
     }
 

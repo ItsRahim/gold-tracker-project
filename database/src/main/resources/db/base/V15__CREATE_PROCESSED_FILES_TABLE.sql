@@ -2,7 +2,7 @@ CREATE TABLE rgts.processed_files (
     id SERIAL PRIMARY KEY,
     file_name VARCHAR(255) NOT NULL,
     processing_status VARCHAR(50) NOT NULL,
-    processed_at TIMESTAMPTZ DEFAULT NOW()
+    processed_at TIMESTAMPTZ DEFAULT date_trunc('second', NOW())
 );
 
 COMMENT ON TABLE rgts.processed_files is 'Table storing files processed by Spring Batch';
