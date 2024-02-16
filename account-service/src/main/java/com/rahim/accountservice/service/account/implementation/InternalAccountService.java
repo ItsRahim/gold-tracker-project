@@ -94,8 +94,9 @@ public class InternalAccountService implements IInternalAccountService {
             } else {
                 LOG.info("No users found for deletion.");
             }
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             LOG.error("An error occurred during the cleanup of user accounts pending deletion: {}", e.getMessage());
+            throw new RuntimeException("Failed to process pending delete users.", e);
         }
     }
 
