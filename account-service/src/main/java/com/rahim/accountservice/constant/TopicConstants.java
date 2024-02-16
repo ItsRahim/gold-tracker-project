@@ -14,4 +14,5 @@ public final class TopicConstants {
 
     @Value("${topics.send-id-result}")
     private String sendIdResult;
+
 }
