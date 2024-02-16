@@ -1,8 +1,8 @@
 spring:
   application:
-    name: user-service
+    name: account-service
   cloud:
     config:
       enabled: true
   config:
-    import: optional://configserver:http://localhost:8888
+    import: configserver:http://localhost:8888
