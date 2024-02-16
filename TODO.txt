@@ -23,7 +23,11 @@ Issues/Enhancements:
 - When catching exceptions, throw specific exceptions not general ones
 - Kafka producer to be able to send any object
 - Check all pom.xml and remove unused dependency and separate test and runtimes
-- Batch Process adds duplicate dates for gold price history - DONE
+- Batch Process adds duplicate dates for gold price history - BUG
+- batch service, maybe use JPA instead of JDBCTemplate?
+- If processed file exists in table, do not run batch import until the table is cleared - add new column for table affected default null
+- have url constants in own class - for each controller
+- add swagger docs for endpoints
 
 Linked hashmap maintains the order in which keys are inserted
 
