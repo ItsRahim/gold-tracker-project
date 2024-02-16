@@ -9,10 +9,15 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +47,7 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     public void saveAccount(Account account) {
-        if(!ObjectUtils.anyNull(account)) {
+        if(account != null) {
             try {
                 accountRepository.save(account);
             } catch (DataException e) {
@@ -62,7 +67,7 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
                 LOG.info("Deleting account with ID: {}", accountId);
                 accountRepository.deleteById(accountId);
                 LOG.info("Account with ID {} deleted successfully", accountId);
-            } catch (Exception e) {
+            } catch (EmptyResultDataAccessException e) {
                 LOG.warn("Attempted to delete non-existing account with ID: {}", accountId);
                 throw new EntityNotFoundException("Account with ID " + accountId + " not found");
             }
@@ -71,7 +76,7 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     public boolean hasAccount(String email) {
-        LOG.info("Checking if an account exists for email: {}", email);
+        LOG.debug("Checking if an account exists for email: {}", email);
         return accountRepository.existsAccountByEmail(email);
     }
 
@@ -92,6 +97,21 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     public List<Account> getAllAccounts() {
-        return accountRepository.findAll();
+        List<Account> accounts = Collections.emptyList();
+
+        try {
+            accounts = accountRepository.findAll();
+            if (CollectionUtils.isEmpty(accounts)) {
+                LOG.info("No accounts found in the database");
+            } else {
+                LOG.info("Fetched {} accounts from the database", accounts.size());
+            }
+
+        } catch (DataAccessException e) {
+            LOG.error("Error occurred while fetching accounts from the database", e);
+        }
+
+        return accounts;
     }
+
 }

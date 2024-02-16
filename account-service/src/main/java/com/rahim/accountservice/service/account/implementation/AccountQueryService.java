@@ -24,31 +24,29 @@ public class AccountQueryService implements IAccountQueryService {
 
     @Override
     public void existsById(String userId) {
-        int id = Integer.parseInt(userId);
-        String found = String.valueOf(accountRepositoryHandler.findById(id).isPresent());
-        kafkaService.sendMessage(topicConstants.getSendIdResult(), found);
+        boolean found = false;
+
+        if (userId != null && !userId.isEmpty()) {
+            try {
+                int id = Integer.parseInt(userId);
+                found = accountRepositoryHandler.findById(id).isPresent();
+            } catch (NumberFormatException e){
+                LOG.error("Error parsing [{}] to an integer. Cannot find user", userId);
+            }
+        } else {
+            LOG.warn("User ID is null or empty");
+        }
+
+        kafkaService.sendMessage(topicConstants.getSendIdResult(), String.valueOf(found));
     }
 
     @Override
     public List<Account> getAllAccounts() {
-        List<Account> accounts = accountRepositoryHandler.getAllAccounts();
-
-        if (!accounts.isEmpty()) {
-            LOG.info("Found {} accounts in the database", accounts.size());
-        } else {
-            LOG.info("No accounts found in the database");
-        }
-
-        return accounts;
+        return accountRepositoryHandler.getAllAccounts();
     }
 
     @Override
     public Optional<Account> findAccountById(int accountId) {
-        try {
-            return accountRepositoryHandler.findById(accountId);
-        } catch (Exception e) {
-            LOG.error("Error while finding a user with ID: {}", accountId, e);
-            throw new UserNotFoundException("Error finding a user by ID");
-        }
+        return accountRepositoryHandler.findById(accountId);
     }
 }
