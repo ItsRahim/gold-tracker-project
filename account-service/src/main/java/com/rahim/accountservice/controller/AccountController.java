@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.rahim.accountservice.constant.AccountControllerEndpoints.*;
+import static com.rahim.accountservice.constant.AccountURLConstants.*;
 
 @RestController
 @RequiredArgsConstructor

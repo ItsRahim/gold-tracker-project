@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.rahim.accountservice.constant.ProfileControllerEndpoints.*;
+import static com.rahim.accountservice.constant.ProfileURLConstants.*;
 
 
 @RestController
