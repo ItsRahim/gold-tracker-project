@@ -9,6 +9,7 @@ import com.rahim.accountservice.util.IEmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,16 +21,6 @@ public class AccountDeletionService implements IAccountDeletionService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountDeletionService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IEmailTokenGenerator emailTokenGenerator;
-
-    @Override
-    public void deleteAccount(int accountId) {
-        try {
-            accountRepositoryHandler.deleteAccount(accountId);
-            LOG.info("Account account with ID {} deleted successfully.", accountId);
-        } catch (Exception e) {
-            LOG.error("Error deleting user account with ID {}: {}", accountId, e.getMessage(), e);
-        }
-    }
 
     @Override
     public boolean requestAccountDelete(int accountId) {
@@ -48,17 +39,23 @@ public class AccountDeletionService implements IAccountDeletionService {
                 account.setNotificationSetting(false);
                 account.setDeleteDate(deletionDate);
 
-                accountRepositoryHandler.saveAccount(account);
-                emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETION.getTemplateName(), accountId, true, true);
-                LOG.info("Account with ID {} is pending deletion on {}", accountId, deletionDate);
+                try {
+                    accountRepositoryHandler.saveAccount(account);
+                    emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETION.getTemplateName(), accountId, true, true);
+                    LOG.info("Account with email {} and ID {} is pending deletion on {}", account.getEmail(), accountId, deletionDate);
 
-                return true;
+                    return true;
+                } catch (DataAccessException e) {
+                    LOG.error("Error updating account with email {} and ID {}: {}", account.getEmail(), accountId, e.getMessage());
+                    throw new RuntimeException("Failed to update account.", e);
+                }
             } else {
-                LOG.info("Account with ID {} is not eligible for deletion", accountId);
+                LOG.info("Account with email {} and ID {} is not eligible for deletion", account.getEmail(), accountId);
             }
         } else {
             LOG.warn("Account with ID {} not found.", accountId);
         }
+
         return false;
     }
 }

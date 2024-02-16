@@ -11,6 +11,7 @@ import com.rahim.accountservice.util.IEmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -37,12 +38,13 @@ public class InternalAccountService implements IInternalAccountService {
             emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
 
             profileDeletionService.deleteProfile(userId);
-            accountDeletionService.deleteAccount(userId);
+            accountRepositoryHandler.deleteAccount(userId);
 
             LOG.info("Account account with ID {} deleted successfully.", userId);
 
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
+            throw new RuntimeException("Failed to delete account", e);
         }
     }
 
@@ -67,8 +69,9 @@ public class InternalAccountService implements IInternalAccountService {
             } else {
                 LOG.info("No inactive users found for deletion");
             }
-        } catch (Exception e) {
-            LOG.error("An error has occurred during the deletion request process: {}", e.getMessage());
+        } catch (DataAccessException e) {
+            LOG.error("An error occurred during the cleanup of user accounts pending deletion: {}", e.getMessage());
+            throw new RuntimeException("Failed to process pending delete users.", e);
         }
     }
 
@@ -114,8 +117,9 @@ public class InternalAccountService implements IInternalAccountService {
             } else {
                 LOG.info("No users found for deletion requests");
             }
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             LOG.error("An error occurred during the user deletion request process: {}", e.getMessage());
+            throw new RuntimeException("Failed to process inactive users.", e);
         }
     }
 }
