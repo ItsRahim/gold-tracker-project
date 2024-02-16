@@ -85,10 +85,10 @@ public class InternalAccountService implements IInternalAccountService {
 
                 for (Account account : pendingDeleteAccounts) {
                     if (account.getDeleteDate() != null && account.getDeleteDate().isEqual(currentDate)) {
-                        LOG.info("Deleting account account with ID: {}", account.getId());
+                        LOG.debug("Deleting account account with ID: {}", account.getId());
                         deleteUserAccount(account.getId());
                     } else {
-                        LOG.info("Skipping account with ID: {} as delete date is not today.", account.getId());
+                        LOG.debug("Skipping account with ID: {} as delete date is not today.", account.getId());
                     }
                 }
             } else {
@@ -111,10 +111,10 @@ public class InternalAccountService implements IInternalAccountService {
 
                 for (Account account : usersToDelete) {
                     accountDeletionService.requestAccountDelete(account.getId());
-                    LOG.info("Sending delete request to account with ID: {}", account.getId());
+                    LOG.debug("Sending delete request to account with ID: {}", account.getId());
                 }
 
-                LOG.info("Account deletion requests sent successfully");
+                LOG.debug("Account deletion requests sent successfully");
             } else {
                 LOG.info("No users found for deletion requests");
             }
