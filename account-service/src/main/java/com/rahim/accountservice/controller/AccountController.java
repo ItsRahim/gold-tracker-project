@@ -1,9 +1,11 @@
 package com.rahim.accountservice.controller;
 
-import com.rahim.accountservice.constant.AccountControllerEndpoints;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.UserRequest;
-import com.rahim.accountservice.service.account.*;
+import com.rahim.accountservice.service.account.IAccountCreationService;
+import com.rahim.accountservice.service.account.IAccountDeletionService;
+import com.rahim.accountservice.service.account.IAccountQueryService;
+import com.rahim.accountservice.service.account.IAccountUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.rahim.accountservice.constant.AccountControllerEndpoints.*;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(AccountControllerEndpoints.REQUEST_MAPPING)
+@RequestMapping(BASE_URL)
 public class AccountController {
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
     private final IAccountCreationService accountCreationService;
@@ -37,7 +41,7 @@ public class AccountController {
         }
     }
 
-    @GetMapping(AccountControllerEndpoints.ACCOUNT_ID)
+    @GetMapping(ACCOUNT_ID)
     public ResponseEntity<?> findAccountById(@PathVariable int accountId) {
         try {
             Optional<Account> accountOptional = accountQueryService.findAccountById(accountId);
@@ -59,7 +63,7 @@ public class AccountController {
     }
 
 
-    @PutMapping(AccountControllerEndpoints.ACCOUNT_ID)
+    @PutMapping(ACCOUNT_ID)
     public ResponseEntity<String> updateAccount(@PathVariable int accountId, @RequestBody Map<String, String> updatedData) {
         try {
             accountUpdateService.updateAccount(accountId, updatedData);
@@ -76,7 +80,7 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(accountDTOS);
     }
 
-    @DeleteMapping(AccountControllerEndpoints.ACCOUNT_ID)
+    @DeleteMapping(ACCOUNT_ID)
     public ResponseEntity<String> deleteAccount(@PathVariable int accountId) {
         try {
             boolean deleted = accountDeletionService.requestAccountDelete(accountId);

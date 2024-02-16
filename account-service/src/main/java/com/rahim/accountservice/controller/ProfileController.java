@@ -1,6 +1,5 @@
 package com.rahim.accountservice.controller;
 
-import com.rahim.accountservice.constant.ProfileControllerEndpoints;
 import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.service.profile.IProfileQueryService;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
@@ -15,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.rahim.accountservice.constant.ProfileControllerEndpoints.*;
+
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(ProfileControllerEndpoints.REQUEST_MAPPING)
+@RequestMapping(BASE_URL)
 public class ProfileController {
     private static final Logger LOG = LoggerFactory.getLogger(ProfileController.class);
     private final IProfileQueryService profileQueryService;
@@ -30,7 +31,7 @@ public class ProfileController {
         return ResponseEntity.status(HttpStatus.FOUND).body(profiles);
     }
 
-    @PutMapping(ProfileControllerEndpoints.PROFILE_ID)
+    @PutMapping(PROFILE_ID)
     public ResponseEntity<String> updateUserProfile(@PathVariable int profileId, @RequestBody Map<String, String> updatedData) {
         try {
             profileUpdateService.updateProfile(profileId, updatedData);
@@ -40,7 +41,7 @@ public class ProfileController {
         }
     }
 
-    @GetMapping(ProfileControllerEndpoints.USERNAME)
+    @GetMapping(USERNAME)
     public ResponseEntity<?> findProfileByUsername(@PathVariable String username) {
         try {
             Optional<Profile> profileOptional = profileQueryService.getProfileByUsername(username);
