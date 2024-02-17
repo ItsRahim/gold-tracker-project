@@ -52,5 +52,11 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
     @Query(value = "SELECT * FROM rgts.user_accounts WHERE account_status = 'PENDING DELETE'", nativeQuery = true)
     List<Account> getPendingDeleteUsers();
 
+    /**
+     * This method is used to check if a user account exists by a given email.
+     *
+     * @param email the email of the user account to be checked
+     * @return a boolean indicating whether a user account with the given email exists
+     */
     boolean existsAccountByEmail(String email);
 }

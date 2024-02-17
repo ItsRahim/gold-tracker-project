@@ -21,7 +21,9 @@ import static com.rahim.accountservice.constant.ProfileURLConstants.*;
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL)
 public class ProfileController {
+
     private static final Logger LOG = LoggerFactory.getLogger(ProfileController.class);
+
     private final IProfileQueryService profileQueryService;
     private final IProfileUpdateService profileUpdateService;
 

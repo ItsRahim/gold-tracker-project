@@ -16,13 +16,25 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * This service class is responsible for updating accounts.
+ * It implements the IAccountUpdateService interface.
+ */
 @Service
 @RequiredArgsConstructor
 public class AccountUpdateService implements IAccountUpdateService {
+
     private static final Logger LOG = LoggerFactory.getLogger(AccountUpdateService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IEmailTokenGenerator emailTokenGenerator;
 
+    /**
+     * Updates the account with the given ID using the provided updated data.
+     *
+     * @param accountId The ID of the account to be updated.
+     * @param updatedData The map containing the updated data.
+     * @throws RuntimeException If an error occurs while updating the account.
+     */
     @Override
     public void updateAccount(int accountId, Map<String, String> updatedData) {
         Account account = getAccountById(accountId);
@@ -31,7 +43,7 @@ public class AccountUpdateService implements IAccountUpdateService {
         try {
             updateEmail(account, updatedData);
             updatePassword(account, updatedData);
-            saveAccount(account);
+            accountRepositoryHandler.saveAccount(account);
             generateEmailTokens(accountId, oldEmail);
             LOG.info("Account with email {} and ID {} updated successfully", account.getEmail(), accountId);
 
@@ -41,6 +53,13 @@ public class AccountUpdateService implements IAccountUpdateService {
         }
     }
 
+    /**
+     * Retrieves an account by its ID.
+     *
+     * @param accountId The ID of the account to be retrieved.
+     * @return The account with the given ID.
+     * @throws UserNotFoundException If the account with the given ID is not found.
+     */
     private Account getAccountById(int accountId) {
         Optional<Account> accountOptional = accountRepositoryHandler.findById(accountId);
 
@@ -50,15 +69,13 @@ public class AccountUpdateService implements IAccountUpdateService {
         });
     }
 
-    private void saveAccount(Account account) {
-        try {
-            accountRepositoryHandler.saveAccount(account);
-        } catch (DataException e) {
-            LOG.error("Error saving account with email {} and ID {} to the database", account.getEmail(), account.getId(), e);
-            throw e;
-        }
-    }
-
+    /**
+     * Generates email tokens for the given account ID and old email.
+     *
+     * @param accountId The ID of the account.
+     * @param oldEmail The old email of the account.
+     * @throws EmailTokenException If an error occurs while generating the email tokens.
+     */
     private void generateEmailTokens(int accountId, String oldEmail) {
         try {
             emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), accountId, true, true, oldEmail);
@@ -68,6 +85,12 @@ public class AccountUpdateService implements IAccountUpdateService {
         }
     }
 
+    /**
+     * Updates the email of the given account with the new email from the updated data.
+     *
+     * @param account The account to be updated.
+     * @param updatedData The map containing the updated data.
+     */
     private void updateEmail(Account account, Map<String, String> updatedData) {
         if (isEmailUpdateValid(updatedData)) {
             account.setEmail(updatedData.get("email"));
@@ -76,6 +99,12 @@ public class AccountUpdateService implements IAccountUpdateService {
         }
     }
 
+    /**
+     * Updates the password of the given account with the new password hash from the updated data.
+     *
+     * @param account The account to be updated.
+     * @param updatedData The map containing the updated data.
+     */
     private void updatePassword(Account account, Map<String, String> updatedData) {
         if (isPasswordUpdateValid(updatedData)) {
             account.setPasswordHash(updatedData.get("passwordHash"));
@@ -84,6 +113,12 @@ public class AccountUpdateService implements IAccountUpdateService {
         }
     }
 
+    /**
+     * Checks if the email update is valid.
+     *
+     * @param updatedData The map containing the updated data.
+     * @return true if the email update is valid, false otherwise.
+     */
     private boolean isEmailUpdateValid(Map<String, String> updatedData) {
         String newEmail = updatedData.get("email");
 
@@ -92,12 +127,24 @@ public class AccountUpdateService implements IAccountUpdateService {
                 isNotEmpty(newEmail);
     }
 
+    /**
+     * Checks if the password update is valid.
+     *
+     * @param updatedData The map containing the updated data.
+     * @return true if the password update is valid, false otherwise.
+     */
     private boolean isPasswordUpdateValid(Map<String, String> updatedData) {
         String newPasswordHash = updatedData.get("passwordHash");
 
         return updatedData.containsKey("passwordHash") && isNotEmpty(newPasswordHash);
     }
 
+    /**
+     * Checks if the given string is not empty.
+     *
+     * @param value The string to be checked.
+     * @return true if the string is not empty, false otherwise.
+     */
     private boolean isNotEmpty(String value) {
         return value != null && !value.isEmpty();
     }

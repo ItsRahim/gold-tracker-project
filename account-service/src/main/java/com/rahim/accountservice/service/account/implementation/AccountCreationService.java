@@ -17,15 +17,30 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * This service class is responsible for creating new accounts.
+ * It implements the IAccountCreationService interface.
+ */
 @Service
 @RequiredArgsConstructor
 public class AccountCreationService implements IAccountCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountCreationService.class);
+
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IProfileCreationService profileCreation;
     private final IProfileQueryService profileQuery;
 
+    /**
+     * This method is used to create a new account and its associated profile.
+     * It first validates the input account and profile, then checks if an account with the same email or username already exists.
+     * If an account with the same email or username exists, it throws a DuplicateAccountException.
+     * If no such account exists, it saves the account and creates the profile.
+     * If there's an unexpected error during the account or profile creation, it throws a RuntimeException.
+     *
+     * @param userRequest the UserRequest object containing the account and profile to be created
+     * @throws DuplicateAccountException if an account with the same email or username already exists
+     */
     @Override
     @Transactional
     public void createAccount(UserRequest userRequest) throws DuplicateAccountException {
@@ -53,6 +68,15 @@ public class AccountCreationService implements IAccountCreationService {
         }
     }
 
+    /**
+     * This method is used to validate the input account and profile.
+     * It checks if any of the account or profile objects are null, and if any of the fields in these objects are null or blank.
+     * If any null or blank values are found, it throws an IllegalArgumentException.
+     *
+     * @param account the Account object to be validated
+     * @param profile the Profile object to be validated
+     * @throws IllegalArgumentException if null values are found in the Account or Profile objects, or if null or blank values are found in the fields of these objects
+     */
     private void validateInput(Account account, Profile profile) {
         if (ObjectUtils.anyNull(account, profile)) {
             LOG.warn("Null values found. Not creating account.");

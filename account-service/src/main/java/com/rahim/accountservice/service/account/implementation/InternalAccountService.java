@@ -17,15 +17,26 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Service class for handling internal account operations.
+ * This class implements the IInternalAccountService interface.
+ */
 @Service
 @RequiredArgsConstructor
 public class InternalAccountService implements IInternalAccountService {
+
     private static final Logger LOG = LoggerFactory.getLogger(InternalAccountService.class);
     private final IAccountDeletionService accountDeletionService;
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IEmailTokenGenerator emailTokenGenerator;
     private final IProfileDeletionService profileDeletionService;
 
+    /**
+     * Runs the cleanup job for the service. This method is triggered by a Kafka message from the schedule service.
+     * The cleanup job involves finding all inactive users, processing them, and then processing users pending deletion.
+     *
+     * @throws RuntimeException If an error occurs while running the cleanup job.
+     */
     @Override
     public void runCleanupJob() {
         findAllInactiveUsers();
@@ -33,6 +44,12 @@ public class InternalAccountService implements IInternalAccountService {
         processPendingDeleteUsers();
     }
 
+    /**
+     * Deletes the user account with the given ID.
+     *
+     * @param userId The ID of the user account to be deleted.
+     * @throws RuntimeException If an error occurs while deleting the user account.
+     */
     private void deleteUserAccount(int userId) {
         try {
             emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
@@ -48,6 +65,12 @@ public class InternalAccountService implements IInternalAccountService {
         }
     }
 
+    /**
+     * Finds all inactive users in the system and updates their account status to INACTIVE.
+     * This method also generates email tokens for each inactive user.
+     *
+     * @throws RuntimeException If an error occurs while finding inactive users or updating their status.
+     */
     private void findAllInactiveUsers() {
         try {
             LocalDate cutoffDate = LocalDate.now().minusDays(30);
@@ -75,6 +98,12 @@ public class InternalAccountService implements IInternalAccountService {
         }
     }
 
+    /**
+     * Processes all user accounts that are pending deletion. If the delete date of an account is the current date,
+     * the account is deleted. Otherwise, the account is skipped.
+     *
+     * @throws RuntimeException If an error occurs while processing the user accounts pending deletion.
+     */
     private void processPendingDeleteUsers() {
         try {
             List<Account> pendingDeleteAccounts = accountRepositoryHandler.getPendingDeleteUsers();
@@ -100,6 +129,12 @@ public class InternalAccountService implements IInternalAccountService {
         }
     }
 
+    /**
+     * Processes all inactive users in the system. If a user has been inactive for more than 44 days,
+     * a request is sent to delete their account.
+     *
+     * @throws RuntimeException If an error occurs while processing the inactive users.
+     */
     private void processInactiveUsers() {
         try {
             LocalDate cutoffDate = LocalDate.now().minusDays(44);
@@ -123,4 +158,5 @@ public class InternalAccountService implements IInternalAccountService {
             throw new RuntimeException("Failed to process inactive users.", e);
         }
     }
+
 }

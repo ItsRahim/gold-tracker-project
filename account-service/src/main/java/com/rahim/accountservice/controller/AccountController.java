@@ -23,7 +23,9 @@ import static com.rahim.accountservice.constant.AccountURLConstants.*;
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL)
 public class AccountController {
+
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
+
     private final IAccountCreationService accountCreationService;
     private final IAccountDeletionService accountDeletionService;
     private final IAccountUpdateService accountUpdateService;
