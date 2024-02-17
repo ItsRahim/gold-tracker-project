@@ -28,11 +28,7 @@ public class AccountQueryService implements IAccountQueryService {
     private final TopicConstants topicConstants;
 
     /**
-     * This method checks if an account with the given user ID exists.
-     * If the user ID is not null or empty, it tries to parse it to an integer and find the account with this ID.
-     * If the account is found, it sends a message with the result to the Kafka topic.
-     *
-     * @param userId the ID of the user to be checked
+     * @see IAccountQueryService
      */
     @Override
     public void existsById(String userId) {
@@ -53,9 +49,7 @@ public class AccountQueryService implements IAccountQueryService {
     }
 
     /**
-     * This method retrieves all accounts.
-     *
-     * @return a list of all accounts
+     * @see IAccountQueryService
      */
     @Override
     public List<Account> getAllAccounts() {
@@ -63,10 +57,7 @@ public class AccountQueryService implements IAccountQueryService {
     }
 
     /**
-     * This method finds an account by its ID.
-     *
-     * @param accountId the ID of the account to be found
-     * @return an Optional containing the found account, or an empty Optional if no account was found
+     * @see IAccountQueryService
      */
     @Override
     public Optional<Account> findAccountById(int accountId) {

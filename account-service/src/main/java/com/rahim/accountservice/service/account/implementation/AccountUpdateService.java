@@ -29,11 +29,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     private final IEmailTokenGenerator emailTokenGenerator;
 
     /**
-     * Updates the account with the given ID using the provided updated data.
-     *
-     * @param accountId The ID of the account to be updated.
-     * @param updatedData The map containing the updated data.
-     * @throws RuntimeException If an error occurs while updating the account.
+     * @see IAccountUpdateService
      */
     @Override
     public void updateAccount(int accountId, Map<String, String> updatedData) {
