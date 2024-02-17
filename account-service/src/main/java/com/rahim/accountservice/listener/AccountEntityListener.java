@@ -6,9 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * A listener class that listens and logs all CRUD operations occurring with the account table/entity
+ */
 @Component
-public class UserEntityListener {
-    private static final Logger LOG = LoggerFactory.getLogger(UserEntityListener.class);
+public class AccountEntityListener {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AccountEntityListener.class);
 
     @PrePersist
     public void prePersist(Account account) {

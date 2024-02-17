@@ -6,8 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * A listener class that listens and logs all CRUD operations occurring with the profile table/entity
+ */
 @Component
 public class UserProfileEntityListener {
+
     private static final Logger LOG = LoggerFactory.getLogger(UserProfileEntityListener.class);
 
     @PrePersist

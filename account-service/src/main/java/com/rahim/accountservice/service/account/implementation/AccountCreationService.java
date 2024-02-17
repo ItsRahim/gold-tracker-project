@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AccountCreationService implements IAccountCreationService {
+
     private static final Logger LOG = LoggerFactory.getLogger(AccountCreationService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IProfileCreationService profileCreation;

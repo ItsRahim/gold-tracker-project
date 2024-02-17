@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 @RequiredArgsConstructor
 public class KafkaService implements IKafkaService {
+
     private static final Logger LOG = LoggerFactory.getLogger(KafkaService.class);
 
     private final KafkaTemplate<String, String> kafkaTemplate;
