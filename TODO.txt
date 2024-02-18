@@ -17,16 +17,16 @@ authentication-service - TODO
 holdings-service - TODO
 
 Issues/Enhancements:
-- User not able to update profile details, only user account details
+- User not able to update profile details, only user account details - DONE
 - If user email is updated, updated email is sent to new email not old - DONE
 - Emails sent should use an HTML template - Thymeleaf
-- When catching exceptions, throw specific exceptions not general ones
+- When catching exceptions, throw specific exceptions not general ones - WIP
 - Kafka producer to be able to send any object
 - Check all pom.xml and remove unused dependency and separate test and runtimes
 - Batch Process adds duplicate dates for gold price history - BUG
 - batch service, maybe use JPA instead of JDBCTemplate?
 - If processed file exists in table, do not run batch import until the table is cleared - add new column for table affected default null
-- have url constants in own class - for each controller
+- have url constants in own class - for each controller - WIP
 - add swagger docs for endpoints
 - When notification service checks if user id exists to add a notification. No check to see if account is active/has push notifications enabled
 

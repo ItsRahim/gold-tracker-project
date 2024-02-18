@@ -14,6 +14,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class EmailTokenGenerator implements IEmailTokenGenerator {
+
     private static final Logger LOG = LoggerFactory.getLogger(EmailTokenGenerator.class);
     private final IEmailTokenService emailTokenService;
     private final IProfileQueryService profileQueryService;

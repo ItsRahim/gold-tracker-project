@@ -12,6 +12,7 @@ import java.util.Map;
 
 @Component
 public class MessageFormatter implements IMessageFormatter {
+
     private static final Logger LOG = LoggerFactory.getLogger(MessageFormatter.class);
     @Override
     public void updateMapKey(Map<String, Object> map, String oldKey, String newKey) {
