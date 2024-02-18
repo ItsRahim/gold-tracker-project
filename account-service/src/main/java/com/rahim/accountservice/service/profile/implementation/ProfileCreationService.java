@@ -9,9 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for creating profiles.
+ */
 @Service
 @RequiredArgsConstructor
 public class ProfileCreationService implements IProfileCreationService {
+
     private static final Logger LOG = LoggerFactory.getLogger(ProfileCreationService.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
 

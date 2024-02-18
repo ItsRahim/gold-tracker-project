@@ -8,9 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service for deleting profiles.
+ */
 @Service
 @RequiredArgsConstructor
 public class ProfileDeletionService implements IProfileDeletionService {
+
     private static final Logger LOG = LoggerFactory.getLogger(ProfileQueryService.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
 

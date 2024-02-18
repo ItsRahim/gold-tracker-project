@@ -15,6 +15,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProfileQueryService implements IProfileQueryService {
+
     private static final Logger LOG = LoggerFactory.getLogger(ProfileQueryService.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
 
