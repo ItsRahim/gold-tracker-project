@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * @author Rahim Ahmed
- * @created  26/11/2023
+ * @created 26/11/2023
  */
 @Configuration
 public class KafkaConsumerConfig {

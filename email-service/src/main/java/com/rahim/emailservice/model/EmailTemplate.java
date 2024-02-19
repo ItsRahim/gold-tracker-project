@@ -6,6 +6,10 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * @author Rahim Ahmed
+ * @created 26/11/2023
+ */
 @Getter
 @Setter
 @Entity

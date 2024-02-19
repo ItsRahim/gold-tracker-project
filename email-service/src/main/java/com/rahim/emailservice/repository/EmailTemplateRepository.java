@@ -18,6 +18,9 @@ import java.util.List;
  *
  * @param EmailTemplate - The entity type the repository manages.
  * @param Integer - The type of the entity's identifier.
+ *
+ * @author Rahim Ahmed
+ * @created 26/11/2023
  */
 @Repository
 public interface EmailTemplateRepository extends JpaRepository<EmailTemplate, Integer> {

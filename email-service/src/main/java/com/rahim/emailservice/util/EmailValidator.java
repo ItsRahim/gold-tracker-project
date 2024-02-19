@@ -36,7 +36,7 @@ public class EmailValidator {
         long uniqueTokens = tokens.stream().distinct().count();
 
         if (ObjectUtils.anyNull(emailBody, placeholders, tokens) || placeholders.size() != uniqueTokens) {
-            LOG.warn("Invalid Email Format: emailBody, placeholders, tokens cannot be null, and/or tokens do not match the number of placeholders");
+            LOG.error("Invalid Email Format: emailBody, placeholders, tokens cannot be null, and/or tokens do not match the number of placeholders");
             return false;
         }
 
