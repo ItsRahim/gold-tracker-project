@@ -1,5 +1,6 @@
 package com.rahim.emailservice.service.implementation;
 
+import com.rahim.emailservice.exception.EmailTemplateNotFoundException;
 import com.rahim.emailservice.model.EmailTemplate;
 import com.rahim.emailservice.repository.EmailTemplateRepository;
 import com.rahim.emailservice.service.IEmailTemplatePopulator;
@@ -11,9 +12,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This class is a service that populates email templates.
+ * It implements the IEmailTemplatePopulator interface.
+ * It uses the EmailTemplateRepository to fetch email templates and placeholders,
+ * and the EmailUtil to populate the templates with the provided tokens.
+ *
+ * @author Rahim Ahmed
+ * @created  18/12/2023
+ */
 @Service
 @RequiredArgsConstructor
 public class EmailTemplatePopulator implements IEmailTemplatePopulator {
+
     private static final Logger LOG = LoggerFactory.getLogger(EmailTemplatePopulator.class);
     private final EmailTemplateRepository emailTemplateRepository;
     private final EmailUtil emailUtil;
@@ -22,7 +33,7 @@ public class EmailTemplatePopulator implements IEmailTemplatePopulator {
     public EmailTemplate populateTemplate(int templateId, List<String> tokens) {
         try {
             EmailTemplate emailTemplate = emailTemplateRepository.findById(templateId)
-                    .orElseThrow(() -> new RuntimeException("Email template with ID " + templateId + " not found"));
+                    .orElseThrow(() -> new EmailTemplateNotFoundException("Email template with ID " + templateId + " not found"));
 
             List<String> placeholders = emailTemplateRepository.findPlaceholdersByTemplateId(templateId);
 

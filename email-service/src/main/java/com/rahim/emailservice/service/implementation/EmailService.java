@@ -7,6 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Rahim Ahmed
+ * @created 26/11/2023
+ */
 @Service
 @RequiredArgsConstructor
 public class EmailService implements IEmailService {

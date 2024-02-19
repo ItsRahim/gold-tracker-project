@@ -1,5 +1,6 @@
 package com.rahim.emailservice.service.implementation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rahim.emailservice.model.EmailTemplate;
@@ -16,9 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is a service that processes Kafka data.
+ * It implements the IKafkaDataProcessor interface.
+ * It uses the IEmailTemplatePopulator, IEmailService, and IEmailSender to process the data and send emails.
+ *
+ * @author Rahim Ahmed
+ * @since 18/12/2024
+ */
 @Service
 @RequiredArgsConstructor
 public class KafkaDataProcessor implements IKafkaDataProcessor {
+
     private static final Logger LOG = LoggerFactory.getLogger(KafkaDataProcessor.class);
     private final IEmailTemplatePopulator emailTemplatePopulator;
     private final IEmailService emailService;
@@ -46,8 +56,9 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
             EmailTemplate emailTemplate = emailTemplatePopulator.populateTemplate(templateId, emailTokens);
             emailSender.sendEmail(email, emailTemplate);
 
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
             LOG.error("Error processing Kafka data: {}", e.getMessage(), e);
+            throw new RuntimeException("Error processing Kafka data", e);
         }
     }
 }

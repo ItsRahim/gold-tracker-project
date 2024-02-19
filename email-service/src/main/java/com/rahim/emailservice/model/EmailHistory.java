@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "email_history", schema = "rgts")
 public class EmailHistory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

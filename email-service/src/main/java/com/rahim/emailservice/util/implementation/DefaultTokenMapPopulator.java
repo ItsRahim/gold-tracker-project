@@ -8,13 +8,22 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Component
+/**
+ * This class is a utility that populates a map with placeholders and tokens.
+ * It implements the ITokenMapPopulator interface.
+ * It uses a ConcurrentHashMap to store the placeholder-token pairs, ensuring thread safety.
+ *
+ * @author Rahim Ahmed
+ * @created 12/12/2023
+ */
 @Getter
+@Component
 @RequiredArgsConstructor
 public class DefaultTokenMapPopulator implements ITokenMapPopulator {
 
-    private static final Map<String, String> placeholderTokenMap = new HashMap<>();
+    private static final Map<String, String> placeholderTokenMap = new ConcurrentHashMap<>();
 
     @Override
     public void populateTokenMap(List<String> placeholders, List<String> tokens) {
@@ -23,6 +32,7 @@ public class DefaultTokenMapPopulator implements ITokenMapPopulator {
         }
     }
 
+    @Override
     public Map<String, String> getPlaceholderTokenMap() {
         return new HashMap<>(placeholderTokenMap);
     }

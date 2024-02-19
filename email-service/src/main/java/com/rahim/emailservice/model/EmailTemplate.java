@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "email_template", schema = "rgts")
 public class EmailTemplate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "template_id", nullable = false)
