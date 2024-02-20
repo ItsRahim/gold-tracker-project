@@ -33,8 +33,8 @@ public class Account {
     @JsonProperty("email")
     private String email;
 
-    @JsonIgnore
     @Column(name = "password_hash", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String passwordHash;
 
     @Column(name = "account_status")
