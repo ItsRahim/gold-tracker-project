@@ -21,6 +21,10 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Rahim Ahmed
+ * @created 18/12/2023
+ */
 @Service
 @RequiredArgsConstructor
 public class EmailTokenService implements IEmailTokenService {

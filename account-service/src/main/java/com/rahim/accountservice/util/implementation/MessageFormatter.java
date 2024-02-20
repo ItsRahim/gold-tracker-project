@@ -10,10 +10,15 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
+/**
+ * @author Rahim Ahmed
+ * @created 18/12/2023
+ */
 @Component
 public class MessageFormatter implements IMessageFormatter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageFormatter.class);
+
     @Override
     public void updateMapKey(Map<String, Object> map, String oldKey, String newKey) {
         if(map.containsKey(oldKey)) {

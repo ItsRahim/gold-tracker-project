@@ -20,6 +20,9 @@ import java.util.List;
 /**
  * Service class for handling internal account operations.
  * This class implements the IInternalAccountService interface.
+ *
+ * @author Rahim Ahmed
+ * @created 15/11/2023
  */
 @Service
 @RequiredArgsConstructor

@@ -2,6 +2,10 @@ package com.rahim.accountservice.util;
 
 import java.util.Map;
 
+/**
+ * @author Rahim Ahmed
+ * @created 18/12/2023
+ */
 public interface IEmailTokenService {
 
     /**

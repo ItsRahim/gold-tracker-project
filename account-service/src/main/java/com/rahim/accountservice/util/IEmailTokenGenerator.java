@@ -1,5 +1,9 @@
 package com.rahim.accountservice.util;
 
+/**
+ * @author Rahim Ahmed
+ * @created 18/12/2023
+ */
 public interface IEmailTokenGenerator {
 
     /**

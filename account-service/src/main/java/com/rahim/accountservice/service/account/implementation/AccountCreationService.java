@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * This service class is responsible for creating new accounts.
  * It implements the IAccountCreationService interface.
+ *
+ * @author Rahim Ahmed
+ * @created 30/12/2023
  */
 @Service
 @RequiredArgsConstructor

@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Rahim Ahmed
+ * @created 18/12/2023
+ */
 @Component
 @RequiredArgsConstructor
 public class EmailTokenGenerator implements IEmailTokenGenerator {

@@ -18,6 +18,9 @@ import java.util.Optional;
 /**
  * This service class is responsible for deleting accounts.
  * It implements the IAccountDeletionService interface.
+ *
+ * @author Rahim Ahmed
+ * @created 30/12/2023
  */
 @Service
 @RequiredArgsConstructor

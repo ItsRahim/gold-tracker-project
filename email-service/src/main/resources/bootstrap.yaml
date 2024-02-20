@@ -3,3 +3,4 @@ spring:
     import:
     - configserver:http://localhost:8888/vault-config
     - configserver:http://localhost:8888/email-service
+    - configserver:http://localhost:8888/kafka-topics
