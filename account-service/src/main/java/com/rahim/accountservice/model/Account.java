@@ -1,6 +1,5 @@
 package com.rahim.accountservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rahim.accountservice.listener.AccountEntityListener;

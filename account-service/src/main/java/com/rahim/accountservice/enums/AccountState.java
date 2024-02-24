@@ -5,9 +5,6 @@ import lombok.Getter;
 
 /**
  * This is an enumeration used to represent the various states of a user's account.
- * It provides a type-safe way to define and use constants that represent account states.
- * The @Getter annotation from the Lombok library generates getters for all fields.
- * <p>
  * The states are:
  * - ACTIVE: The account is in a state where it can be used normally.
  * - INACTIVE: The account is not currently in use, but can be reactivated.

@@ -4,9 +4,6 @@ import lombok.Getter;
 
 /**
  * This enumeration contains names of email templates.
- * It provides a type-safe way to define and use constants that represent different email templates.
- * The @Getter annotation from the Lombok library generates getters for all fields.
- * <p>
  * These templates are used by methods that trigger an email notification to a user about a specific event.
  * Each constant in this enum represents a unique email template.
  */
