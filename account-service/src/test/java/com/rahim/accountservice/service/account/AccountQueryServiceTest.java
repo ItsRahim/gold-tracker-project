@@ -81,8 +81,11 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
     public void checkNotificationCriteria_UserFoundNotificationDisabled() {
         String accountId = "1";
         Account account = accountRepository.findById(1).orElse(null);
-        account.setNotificationSetting(false);
-        accountRepository.save(account);
+
+        if (account != null) {
+            account.setNotificationSetting(false);
+            accountRepository.save(account);
+        }
 
         accountQueryService.checkNotificationCriteria(accountId);
 
