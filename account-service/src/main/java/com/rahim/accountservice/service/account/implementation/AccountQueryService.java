@@ -34,13 +34,13 @@ public class AccountQueryService implements IAccountQueryService {
      * @see IAccountQueryService
      */
     @Override
-    public void existsById(String userId) {
+    public void checkNotificationCriteria(String userId) {
         boolean found = false;
 
         if (userId != null && !userId.isEmpty()) {
             try {
                 int id = Integer.parseInt(userId);
-                found = accountRepositoryHandler.findById(id).isPresent() && notificationEnabled(id);
+                found = accountRepositoryHandler.findById(id).isPresent() && notificationIsEnabled(id);
             } catch (NumberFormatException e){
                 LOG.error("Error parsing [{}] to an integer. Cannot find user", userId);
             }
@@ -51,9 +51,9 @@ public class AccountQueryService implements IAccountQueryService {
         kafkaService.sendMessage(topicConstants.getSendIdResult(), String.valueOf(found));
     }
 
-    private boolean notificationEnabled(int userId) {
+    private boolean notificationIsEnabled(int userId) {
         Account account = accountRepositoryHandler.findById(userId).orElse(null);
-        return (account != null) ? account.getNotificationSetting() : false;
+        return (account != null) && account.getNotificationSetting();
     }
 
     /**

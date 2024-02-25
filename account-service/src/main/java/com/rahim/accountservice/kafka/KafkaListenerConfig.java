@@ -45,6 +45,6 @@ public class KafkaListenerConfig {
     @KafkaListener(topics = "${topics.check-user-id}", groupId = "group2")
     public void checkForUserId(String userId) {
         LOG.debug("Message received from Notification Service: {}", userId);
-        accountQueryService.existsById(userId);
+        accountQueryService.checkNotificationCriteria(userId);
     }
 }

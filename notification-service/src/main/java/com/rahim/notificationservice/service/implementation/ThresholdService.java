@@ -3,7 +3,7 @@ package com.rahim.notificationservice.service.implementation;
 import com.rahim.notificationservice.model.ThresholdAlert;
 import com.rahim.notificationservice.service.IThresholdAlertRepositoryHandler;
 import com.rahim.notificationservice.service.IThresholdService;
-import com.rahim.notificationservice.service.IUserExistenceChecker;
+import com.rahim.notificationservice.service.IUserDataChecker;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,17 +17,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ThresholdService implements IThresholdService {
     private static final Logger LOG = LoggerFactory.getLogger(ThresholdService.class);
-    private final IUserExistenceChecker userExistenceChecker;
+    private final IUserDataChecker userDataChecker;
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
 
     @Override
     public void createNotification(ThresholdAlert thresholdAlert) {
         String userId = thresholdAlert.getId().toString();
-        if (userExistenceChecker.checkUserExistence(userId, thresholdAlert)) {
+        if (userDataChecker.isNotificationValid(userId)) {
             LOG.info("Attempting to add new threshold alert for user with ID: {}", thresholdAlert.getId());
             thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
         } else {
-            LOG.error("Failed to create new threshold alert for user with ID: {}", thresholdAlert.getId());
+            LOG.error("Failed to create new threshold alert for user with ID: {}. Account invalid/notifications not enabled on account", thresholdAlert.getId());
         }
     }
     @Override

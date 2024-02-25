@@ -3,8 +3,7 @@ package com.rahim.notificationservice.service.implementation;
 import com.rahim.notificationservice.constants.TopicConstants;
 import com.rahim.notificationservice.kafka.IKafkaService;
 import com.rahim.notificationservice.kafka.KafkaListenerConfig;
-import com.rahim.notificationservice.model.ThresholdAlert;
-import com.rahim.notificationservice.service.IUserExistenceChecker;
+import com.rahim.notificationservice.service.IUserDataChecker;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +13,15 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
-public class UserExistenceChecker implements IUserExistenceChecker {
+public class UserDataChecker implements IUserDataChecker {
+
     private final IKafkaService kafkaService;
     private final TopicConstants topicConstants;
     private final KafkaListenerConfig kafkaListenerConfig;
-    private static final Logger LOG = LoggerFactory.getLogger(UserExistenceChecker.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserDataChecker.class);
 
     @Override
-    public boolean checkUserExistence(String userId, ThresholdAlert thresholdAlert) {
+    public boolean isNotificationValid(String userId) {
         CompletableFuture<Boolean> idExistsFuture = checkId(userId);
         try {
             return idExistsFuture.get();

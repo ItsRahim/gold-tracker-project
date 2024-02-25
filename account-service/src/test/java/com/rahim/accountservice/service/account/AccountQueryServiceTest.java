@@ -67,7 +67,7 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
     @DisplayName("Exists By Id - User Found")
     public void existsById_UserFound() {
         String accountId = "1";
-        accountQueryService.existsById(accountId);
+        accountQueryService.checkNotificationCriteria(accountId);
 
         verify(kafkaService).sendMessage(topicCaptor.capture(), messageCaptor.capture());
 
@@ -79,7 +79,7 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
     @DisplayName("Exists By Id - User Not Found")
     public void existsById_UserNotFound() {
         String accountId = "10000";
-        accountQueryService.existsById(accountId);
+        accountQueryService.checkNotificationCriteria(accountId);
 
         verify(kafkaService).sendMessage(topicCaptor.capture(), messageCaptor.capture());
 
