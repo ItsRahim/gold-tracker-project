@@ -2,7 +2,6 @@ package com.rahim.accountservice.service.account;
 
 import com.rahim.accountservice.AbstractTestConfig;
 import com.rahim.accountservice.TestDataGenerator;
-import com.rahim.accountservice.enums.TemplateNameEnum;
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.repository.AccountRepository;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_UPDATE_TEMPLATE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -86,7 +86,7 @@ public class AccountUpdateServiceTest extends AbstractTestConfig {
         assertEquals(updatedData.get("passwordHash"), updatedAccount.getPasswordHash());
 
         verify(emailTokenGenerator, times(0))
-                .generateEmailTokens(eq(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName()), eq(accountId), eq(true), eq(true), eq(oldEmail));
+                .generateEmailTokens(eq(ACCOUNT_UPDATE_TEMPLATE), eq(accountId), eq(true), eq(true), eq(oldEmail));
 
         assertFalse(accountRepository.existsAccountByEmail(oldEmail));
         assertNotEquals(updatedAccount.getPasswordHash(), oldPassword);
@@ -114,7 +114,7 @@ public class AccountUpdateServiceTest extends AbstractTestConfig {
         assertEquals(updatedData.get("email"), updatedAccount.getEmail());
 
         verify(emailTokenGenerator, times(0))
-                .generateEmailTokens(eq(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName()), eq(accountId), eq(true), eq(true), eq(oldEmail));
+                .generateEmailTokens(eq(ACCOUNT_UPDATE_TEMPLATE), eq(accountId), eq(true), eq(true), eq(oldEmail));
 
         assertFalse(accountRepository.existsAccountByEmail(oldEmail));
         assertTrue(accountRepository.existsAccountByEmail(updatedAccount.getEmail()));
@@ -143,7 +143,7 @@ public class AccountUpdateServiceTest extends AbstractTestConfig {
         assertEquals(updatedData.get("passwordHash"), updatedAccount.getPasswordHash());
 
         verify(emailTokenGenerator, times(0))
-                .generateEmailTokens(eq(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName()), eq(accountId), eq(true), eq(true), eq(email));
+                .generateEmailTokens(eq(ACCOUNT_UPDATE_TEMPLATE), eq(accountId), eq(true), eq(true), eq(email));
 
         assertNotEquals(oldPassword, updatedAccount.getPasswordHash());
     }

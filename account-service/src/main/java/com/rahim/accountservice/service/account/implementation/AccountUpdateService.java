@@ -1,6 +1,5 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.rahim.accountservice.enums.TemplateNameEnum;
 import com.rahim.accountservice.exception.EmailTokenException;
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Optional;
+
+import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_UPDATE_TEMPLATE;
 
 /**
  * This service class is responsible for updating accounts.
@@ -77,7 +78,7 @@ public class AccountUpdateService implements IAccountUpdateService {
      */
     private void generateEmailTokens(int accountId, String oldEmail) {
         try {
-            emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName(), accountId, true, true, oldEmail);
+            emailTokenGenerator.generateEmailTokens(ACCOUNT_UPDATE_TEMPLATE, accountId, true, true, oldEmail);
         } catch (EmailTokenException e) {
             LOG.error("Error generating email tokens for account with ID {}", accountId, e);
             throw e;

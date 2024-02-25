@@ -1,16 +1,11 @@
 package com.rahim.accountservice.util.implementation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.rahim.accountservice.constant.TopicConstants;
-import com.rahim.accountservice.util.IEmailTokenService;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rahim.accountservice.enums.TemplateNameEnum;
+import com.rahim.accountservice.constant.TopicConstants;
 import com.rahim.accountservice.kafka.IKafkaService;
+import com.rahim.accountservice.util.IEmailTokenService;
 import com.rahim.accountservice.util.IMessageFormatter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -19,7 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_DELETION_TEMPLATE;
+import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_UPDATE_TEMPLATE;
 
 /**
  * @author Rahim Ahmed
@@ -111,10 +111,10 @@ public class EmailTokenService implements IEmailTokenService {
      * @param mutableEmailData The map containing the email data to be updated.
      */
     private void handleTemplateName(String templateName, Map<String, Object> mutableEmailData) {
-        if (TemplateNameEnum.ACCOUNT_DELETION.getTemplateName().equals(templateName)) {
+        if (ACCOUNT_DELETION_TEMPLATE.equals(templateName)) {
             mutableEmailData.remove("updatedAt");
             messageFormatter.formatInstant(mutableEmailData, "deleteDate");
-        } else if (TemplateNameEnum.ACCOUNT_UPDATE.getTemplateName().equals(templateName)) {
+        } else if (ACCOUNT_UPDATE_TEMPLATE.equals(templateName)) {
             mutableEmailData.remove("deleteDate");
             messageFormatter.formatInstant(mutableEmailData, "updatedAt");
         }

@@ -1,7 +1,6 @@
 package com.rahim.accountservice.service.account.implementation;
 
 import com.rahim.accountservice.enums.AccountState;
-import com.rahim.accountservice.enums.TemplateNameEnum;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.account.IInternalAccountService;
@@ -16,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_DELETED_TEMPLATE;
+import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_INACTIVITY_TEMPLATE;
 
 /**
  * Service class for handling internal account operations.
@@ -52,7 +54,7 @@ public class InternalAccountService implements IInternalAccountService {
      */
     private void deleteUserAccount(int userId) {
         try {
-            emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_DELETED.getTemplateName(), userId, true, false);
+            emailTokenGenerator.generateEmailTokens(ACCOUNT_DELETED_TEMPLATE, userId, true, false);
 
             profileDeletionService.deleteProfile(userId);
             accountRepositoryHandler.deleteAccount(userId);
@@ -85,7 +87,7 @@ public class InternalAccountService implements IInternalAccountService {
                     account.setCredentialsExpired(true);
                     accountRepositoryHandler.saveAccount(account);
 
-                    emailTokenGenerator.generateEmailTokens(TemplateNameEnum.ACCOUNT_INACTIVITY.getTemplateName(), account.getId(), false, false);
+                    emailTokenGenerator.generateEmailTokens(ACCOUNT_INACTIVITY_TEMPLATE, account.getId(), false, false);
                 }
 
                 LOG.info("Inactive users found. Account status successfully updated");

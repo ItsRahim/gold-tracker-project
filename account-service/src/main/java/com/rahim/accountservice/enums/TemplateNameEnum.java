@@ -7,6 +7,7 @@ import lombok.Getter;
  * These templates are used by methods that trigger an email notification to a user about a specific event.
  * Each constant in this enum represents a unique email template.
  */
+@Deprecated
 @Getter
 public enum TemplateNameEnum {
     ACCOUNT_DELETED("Account Deleted"),
