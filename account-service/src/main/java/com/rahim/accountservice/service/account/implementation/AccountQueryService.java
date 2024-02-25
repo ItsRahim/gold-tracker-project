@@ -40,7 +40,7 @@ public class AccountQueryService implements IAccountQueryService {
         if (userId != null && !userId.isEmpty()) {
             try {
                 int id = Integer.parseInt(userId);
-                found = accountRepositoryHandler.findById(id).isPresent();
+                found = accountRepositoryHandler.findById(id).isPresent() && notificationEnabled(id);
             } catch (NumberFormatException e){
                 LOG.error("Error parsing [{}] to an integer. Cannot find user", userId);
             }
@@ -49,6 +49,11 @@ public class AccountQueryService implements IAccountQueryService {
         }
 
         kafkaService.sendMessage(topicConstants.getSendIdResult(), String.valueOf(found));
+    }
+
+    private boolean notificationEnabled(int userId) {
+        Account account = accountRepositoryHandler.findById(userId).orElse(null);
+        return (account != null) ? account.getNotificationSetting() : false;
     }
 
     /**
