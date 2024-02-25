@@ -15,8 +15,8 @@ import java.util.concurrent.ExecutionException;
 @Service
 @RequiredArgsConstructor
 public class KafkaService implements IKafkaService {
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaService.class);
 
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaService.class);
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
@@ -39,6 +39,8 @@ public class KafkaService implements IKafkaService {
         } catch (InterruptedException | ExecutionException e) {
             LOG.error("Error occurred in sending message: {}", e.getMessage(), e);
             throw new RuntimeException(e);
+        } finally {
+            kafkaTemplate.destroy();
         }
     }
 }
