@@ -19,6 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -64,8 +65,8 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
     }
 
     @Test
-    @DisplayName("Exists By Id - User Found")
-    public void existsById_UserFound() {
+    @DisplayName("Check Notification Criteria - User Found Notification Enabled")
+    public void checkNotificationCriteria_UserFoundNotificationsEnabled() {
         String accountId = "1";
         accountQueryService.checkNotificationCriteria(accountId);
 
@@ -76,7 +77,23 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
     }
 
     @Test
-    @DisplayName("Exists By Id - User Not Found")
+    @DisplayName("Check Notification Criteria - User Found Notification Disabled")
+    public void checkNotificationCriteria_UserFoundNotificationDisabled() {
+        String accountId = "1";
+        Account account = accountRepository.findById(1).orElse(null);
+        account.setNotificationSetting(false);
+        accountRepository.save(account);
+
+        accountQueryService.checkNotificationCriteria(accountId);
+
+        verify(kafkaService).sendMessage(topicCaptor.capture(), messageCaptor.capture());
+
+        assertEquals(sendIdResult, topicCaptor.getValue());
+        assertEquals("false", messageCaptor.getValue());
+    }
+
+    @Test
+    @DisplayName("Check Notification Criteria - User Not Found")
     public void existsById_UserNotFound() {
         String accountId = "10000";
         accountQueryService.checkNotificationCriteria(accountId);
