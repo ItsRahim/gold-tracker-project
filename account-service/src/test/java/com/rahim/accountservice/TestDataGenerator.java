@@ -12,8 +12,17 @@ import static org.instancio.Select.field;
 
 public class TestDataGenerator {
 
+    private static TestDataGenerator testDataGenerator = null;
+
+    private TestDataGenerator() {
+    }
+
     public static TestDataGenerator getInstance() {
-        return new TestDataGenerator();
+        if (testDataGenerator == null) {
+            testDataGenerator = new TestDataGenerator();
+        }
+
+        return testDataGenerator;
     }
 
     public List<Account> generateAccountData(int numOfData) {
