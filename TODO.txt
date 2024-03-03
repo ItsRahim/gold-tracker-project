@@ -28,7 +28,8 @@ Issues/Enhancements:
 - If processed file exists in table, do not run batch import until the table is cleared - add new column for table affected default null
 - have url constants in own class - for each controller - WIP
 - add swagger docs for endpoints
-- When notification service checks if user id exists to add a notification. No check to see if account is active/has push notifications enabled
+- When notification service checks if user id exists to add a notification. No check to see if account is active/has push notifications enabled - DONE
+- Different profiles, testing, dev and prod
 
 Linked hashmap maintains the order in which keys are inserted
 
