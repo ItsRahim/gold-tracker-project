@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +71,11 @@ public class AccountQueryService implements IAccountQueryService {
     @Override
     public Optional<Account> findAccountById(int accountId) {
         return accountRepositoryHandler.findById(accountId);
+    }
+
+    @Override
+    public OffsetDateTime getUpdatedAtByUserId(Integer userId) {
+        return accountRepositoryHandler.getUpdatedAtByUserId(userId);
     }
 
 }

@@ -36,7 +36,7 @@ public class ProfileQueryService implements IProfileQueryService {
             Map<String, Object> userProfileDetails = profileRepositoryHandler.getProfileDetails(accountId);
 
             if (userProfileDetails != null) {
-                LOG.info("Account profile details retrieved successfully for user ID {}: {}", accountId, userProfileDetails);
+                LOG.debug("Account profile details retrieved successfully for user ID {}", accountId);
                 return userProfileDetails;
             } else {
                 LOG.info("No user profile details found for user ID {}", accountId);

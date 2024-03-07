@@ -4,6 +4,7 @@ import com.rahim.accountservice.model.Account;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,5 +81,13 @@ public interface IAccountRepositoryHandler {
      * @throws DataAccessException If an error occurs while fetching accounts.
      */
     List<Account> getAllAccounts();
+
+    /**
+     * Retrieves the timestamp when the account with the specified user ID was last updated.
+     *
+     * @param userId The unique identifier of the user account.
+     * @return The `OffsetDateTime` representing the last update timestamp.
+     */
+    OffsetDateTime getUpdatedAtByUserId(Integer userId);
 
 }

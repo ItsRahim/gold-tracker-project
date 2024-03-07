@@ -45,7 +45,6 @@ public class AccountUpdateService implements IAccountUpdateService {
             updatePassword(account, updatedData);
             accountRepositoryHandler.saveAccount(account);
             generateEmailTokens(accountId, oldEmail);
-            LOG.info("Account with email {} and ID {} updated successfully", account.getEmail(), accountId);
 
         } catch (DataException | EmailTokenException e) {
             LOG.error("Error updating account with email {} and ID {}: {}", account.getEmail(), accountId, e.getMessage());
@@ -94,8 +93,10 @@ public class AccountUpdateService implements IAccountUpdateService {
     private void updateEmail(Account account, Map<String, String> updatedData) {
         if (isEmailUpdateValid(updatedData)) {
             account.setEmail(updatedData.get("email"));
+
+            LOG.debug("Email updated successfully");
         } else {
-            LOG.warn("Cannot update email for account with ID {}. Email {} already exists", account.getId(), updatedData.get("email"));
+            LOG.debug("Email address update skipped for account with ID: {}", account.getId());
         }
     }
 
@@ -108,8 +109,10 @@ public class AccountUpdateService implements IAccountUpdateService {
     private void updatePassword(Account account, Map<String, String> updatedData) {
         if (isPasswordUpdateValid(updatedData)) {
             account.setPasswordHash(updatedData.get("passwordHash"));
+
+            LOG.debug("Password updated successfully");
         } else {
-            LOG.warn("Cannot update password for account with ID {}", account.getId());
+            LOG.debug("Password update skipped for account with ID: {}", account.getId());
         }
     }
 

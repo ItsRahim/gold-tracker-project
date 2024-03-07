@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -69,10 +70,19 @@ public class AccountController {
 
 
     @PutMapping(ACCOUNT_ID)
-    public ResponseEntity<String> updateAccount(@PathVariable int accountId, @RequestBody Map<String, String> updatedData) {
+    public ResponseEntity<String> updateAccount(@PathVariable int accountId,
+                                                @RequestBody Map<String, String> updatedData) {
         try {
+            OffsetDateTime beforeUpdate = accountQueryService.getUpdatedAtByUserId(accountId);
             accountUpdateService.updateAccount(accountId, updatedData);
-            return ResponseEntity.status(HttpStatus.OK).body("Account updated successfully");
+            OffsetDateTime afterUpdate = accountQueryService.getUpdatedAtByUserId(accountId);
+
+            if (beforeUpdate.equals(afterUpdate)) {
+                return ResponseEntity.status(HttpStatus.OK).body("No updates were applied to the account.");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body("Account updated successfully.");
+            }
+
         } catch (Exception e) {
             LOG.error("Error updating account: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating account");

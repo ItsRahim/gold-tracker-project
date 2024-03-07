@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +36,9 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
         try {
             Optional<Account> accountOptional = accountRepository.findById(accountId);
             if(accountOptional.isPresent()) {
-                LOG.info("Found user account with ID: {}", accountId);
+                LOG.debug("Found user account with ID: {}", accountId);
             } else {
-                LOG.info("Account not found for ID: {}", accountId);
+                LOG.debug("Account not found for ID: {}", accountId);
             }
 
             return accountOptional;
@@ -113,6 +114,11 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
         }
 
         return accounts;
+    }
+
+    @Override
+    public OffsetDateTime getUpdatedAtByUserId(Integer userId) {
+        return accountRepository.findUpdatedAtByUserId(userId);
     }
 
 }

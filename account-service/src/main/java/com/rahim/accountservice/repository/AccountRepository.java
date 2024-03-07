@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -62,4 +63,13 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
      * @return a boolean indicating whether a user account with the given email exists
      */
     boolean existsAccountByEmail(String email);
+
+    /**
+     * Retrieves the timestamp when the account with the specified user ID was last updated.
+     *
+     * @param userId The unique identifier of the user account.
+     * @return The `OffsetDateTime` representing the last update timestamp.
+     */
+    @Query("SELECT a.updatedAt FROM Account a WHERE a.id = :userId")
+    OffsetDateTime findUpdatedAtByUserId(@Param("userId") Integer userId);
 }

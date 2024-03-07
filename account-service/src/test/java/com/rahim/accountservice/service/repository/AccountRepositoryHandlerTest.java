@@ -42,4 +42,5 @@ public class AccountRepositoryHandlerTest extends AbstractTestConfig {
     public void someTest() {
 
     }
+
 }
