@@ -5,7 +5,6 @@ import com.rahim.accountservice.repository.AccountRepository;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 @RequiredArgsConstructor
 public class AccountRepositoryHandlerService implements IAccountRepositoryHandler {
+
     private static final Logger LOG = LoggerFactory.getLogger(AccountRepositoryHandlerService.class);
     private final AccountRepository accountRepository;
 
@@ -76,7 +74,6 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     public boolean hasAccount(String email) {
-        LOG.debug("Checking if an account exists for email: {}", email);
         return accountRepository.existsAccountByEmail(email);
     }
 
