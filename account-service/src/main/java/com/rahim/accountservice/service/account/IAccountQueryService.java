@@ -9,8 +9,6 @@ public interface IAccountQueryService {
 
     /**
      * This method checks if an account with the given user ID exists and if notifications is enabled
-     * If the user ID is not null or empty, it tries to parse it to an integer and find the account with this ID.
-     * If the account is found, it sends a message with the result to the Kafka topic.
      *
      * @param userId the ID of the user to be checked
      */

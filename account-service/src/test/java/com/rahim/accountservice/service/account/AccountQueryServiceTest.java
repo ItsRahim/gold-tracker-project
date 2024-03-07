@@ -19,15 +19,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
 @ActiveProfiles("test")
-@TestPropertySource("classpath:application-test.yaml")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@SpringBootTest(properties = {"spring.cloud.config.enabled=false", "spring.cloud.vault.enabled=false", "spring.cloud.discovery.enabled=false"})
 public class AccountQueryServiceTest extends AbstractTestConfig {
 
     @Autowired
@@ -67,7 +64,15 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
     @Test
     @DisplayName("Check Notification Criteria - User Found Notification Enabled")
     public void checkNotificationCriteria_UserFoundNotificationsEnabled() {
-        String accountId = "1";
+        String accountId = "2";
+        Account account = accountRepository.findById(Integer.valueOf(accountId)).orElse(null);
+
+        //Updating notification status - default is false
+        if (account != null) {
+            account.setNotificationSetting(true);
+            accountRepository.save(account);
+        }
+
         accountQueryService.checkNotificationCriteria(accountId);
 
         verify(kafkaService).sendMessage(topicCaptor.capture(), messageCaptor.capture());
