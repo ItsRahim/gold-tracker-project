@@ -3,6 +3,10 @@ package com.rahim.accountservice.service.account;
 import com.rahim.accountservice.exception.DuplicateAccountException;
 import com.rahim.accountservice.model.UserRequest;
 
+/**
+ * @author Rahim Ahmed
+ * @created 13/01/2024
+ */
 public interface IAccountCreationService {
 
     /**

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * A listener class that listens and logs all CRUD operations occurring with the profile table/entity
+ *
+ * @author Rahim Ahmed
+ * @created 05/11/2023
  */
 @Component
 public class UserProfileEntityListener {

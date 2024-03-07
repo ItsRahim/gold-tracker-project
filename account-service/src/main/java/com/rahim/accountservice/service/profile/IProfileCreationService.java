@@ -3,6 +3,10 @@ package com.rahim.accountservice.service.profile;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.Profile;
 
+/**
+ * @author Rahim Ahmed
+ * @created 13/01/2024
+ */
 public interface IProfileCreationService {
 
     /**

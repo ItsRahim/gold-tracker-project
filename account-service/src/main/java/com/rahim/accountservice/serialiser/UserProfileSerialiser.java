@@ -7,6 +7,10 @@ import com.rahim.accountservice.model.Profile;
 
 import java.io.IOException;
 
+/**
+ * @author Rahim Ahmed
+ * @created 05/11/2023
+ */
 @Deprecated
 public class UserProfileSerialiser extends JsonSerializer<Profile> {
 

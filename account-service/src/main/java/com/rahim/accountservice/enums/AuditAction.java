@@ -1,10 +1,13 @@
 package com.rahim.accountservice.enums;
 
-
 import lombok.Getter;
 
-@Deprecated
+/**
+ * @author Rahim Ahmed
+ * @created 25/02/2024
+ */
 @Getter
+@Deprecated
 public enum AuditAction {
     INSERT("INSERT"),
     UPDATE("UPDATE"),

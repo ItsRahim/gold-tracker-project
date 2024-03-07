@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaListener;
 
 /**
- * This is a configuration class that listens to Kafka topics.
- * It consumes the data provided from the topics and redirects it to the appropriate method for processing.
+ * @author Rahim Ahmed
+ * @created 18/11/2023
  */
 @Configuration
 @RequiredArgsConstructor

@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author Rahim Ahmed
+ * @created 30/12/2023
+ */
 @Service
 @RequiredArgsConstructor
 public class ProfileRepositoryHandlerService implements IProfileRepositoryHandler {

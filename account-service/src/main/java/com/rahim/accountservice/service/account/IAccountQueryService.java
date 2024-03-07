@@ -5,6 +5,10 @@ import com.rahim.accountservice.model.Account;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Rahim Ahmed
+ * @created 31/12/2023
+ */
 public interface IAccountQueryService {
 
     /**

@@ -19,13 +19,16 @@ import java.util.Optional;
 
 import static com.rahim.accountservice.constant.AccountURLConstants.*;
 
+/**
+ * @author Rahim Ahmed
+ * @created 29/10/2023
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL)
 public class AccountController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
-
     private final IAccountCreationService accountCreationService;
     private final IAccountDeletionService accountDeletionService;
     private final IAccountUpdateService accountUpdateService;

@@ -9,6 +9,11 @@ import lombok.Setter;
 
 import java.time.OffsetDateTime;
 
+/**
+ *
+ * @author Rahim Ahmed
+ * @created 05/11/2023
+ */
 @Deprecated
 @Getter
 @Setter

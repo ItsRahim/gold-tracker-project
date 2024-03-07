@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * This is a utility class that contains Kafka topic constants which are resolved at runtime from Spring Cloud.
+ *
+ * @author Rahim Ahmed
+ * @created 12/12/2023
  */
 @Getter
 @Component

@@ -19,6 +19,9 @@ import java.util.Optional;
  *
  * @param Profile - The entity type the repository manages.
  * @param Integer - The type of the entity's identifier.
+ *
+ * @author Rahim Ahmed
+ * @created 29/10/2023
  */
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Integer> {

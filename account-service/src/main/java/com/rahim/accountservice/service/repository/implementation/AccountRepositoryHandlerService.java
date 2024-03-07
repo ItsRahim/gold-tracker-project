@@ -19,6 +19,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Rahim Ahmed
+ * @created 29/12/2023
+ */
 @Service
 @RequiredArgsConstructor
 public class AccountRepositoryHandlerService implements IAccountRepositoryHandler {

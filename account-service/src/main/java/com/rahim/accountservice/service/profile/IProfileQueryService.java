@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author Rahim Ahmed
+ * @created 31/12/2023
+ */
 public interface IProfileQueryService {
 
     /**

@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service for deleting profiles.
+ *
+ * @author Rahim Ahmed
+ * @created 31/12/2023
  */
 @Service
 @RequiredArgsConstructor

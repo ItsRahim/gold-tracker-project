@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * This interface class is responsible for CRUD operations on the Profile table
+ * This utilised by classes and methods within account-service <strong>only</strong>
+ *
+ * @author Rahim Ahmed
+ * @created 30/12/2023
+ */
 public interface IProfileRepositoryHandler {
     void saveProfile(Profile profile);
     void deleteProfile(int profileId);

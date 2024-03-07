@@ -11,6 +11,12 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Service for updating Profiles table
+ *
+ * @author Rahim Ahmed
+ * @created 31/12/2023
+ */
 @Service
 @RequiredArgsConstructor
 public class ProfileUpdateService implements IProfileUpdateService {

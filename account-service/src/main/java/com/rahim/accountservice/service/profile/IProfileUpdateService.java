@@ -2,6 +2,10 @@ package com.rahim.accountservice.service.profile;
 
 import java.util.Map;
 
+/**
+ * @author Rahim Ahmed
+ * @created 31/12/2023
+ */
 public interface IProfileUpdateService {
 
     /**

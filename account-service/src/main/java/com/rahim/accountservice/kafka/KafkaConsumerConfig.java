@@ -12,6 +12,10 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Rahim Ahmed
+ * @created 15/11/2023
+ */
 @Configuration
 public class KafkaConsumerConfig {
 

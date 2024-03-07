@@ -16,14 +16,16 @@ import java.util.Optional;
 
 import static com.rahim.accountservice.constant.ProfileURLConstants.*;
 
-
+/**
+ * @author Rahim Ahmed
+ * @created 05/11/2023
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL)
 public class ProfileController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProfileController.class);
-
     private final IProfileQueryService profileQueryService;
     private final IProfileUpdateService profileUpdateService;
 

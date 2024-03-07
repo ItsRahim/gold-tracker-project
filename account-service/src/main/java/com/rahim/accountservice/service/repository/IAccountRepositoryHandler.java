@@ -9,7 +9,7 @@ import java.util.Optional;
 
 /**
  * This interface class is responsible for CRUD operations on the Account table
- * This interface is only accessed and utilised by classes and method within account-service
+ * This utilised by classes and methods within account-service <strong>only</strong>
  *
  * @author Rahim Ahmed
  * @created 29/12/2023

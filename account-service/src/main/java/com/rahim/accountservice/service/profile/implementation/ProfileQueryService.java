@@ -12,6 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Service for querying Profiles table
+ *
+ * @author Rahim Ahmed
+ * @created 31/12/2023
+ */
 @Service
 @RequiredArgsConstructor
 public class ProfileQueryService implements IProfileQueryService {
