@@ -63,7 +63,7 @@ public class AccountUpdateService implements IAccountUpdateService {
         Optional<Account> accountOptional = accountRepositoryHandler.findById(accountId);
 
         return accountOptional.orElseThrow(() -> {
-            LOG.warn("Account with ID {} not found.", accountId);
+            LOG.warn("Account with ID {} not found while updating.", accountId);
             return new UserNotFoundException("Account with ID " + accountId + " not found");
         });
     }
