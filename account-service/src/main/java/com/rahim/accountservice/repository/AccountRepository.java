@@ -70,6 +70,6 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
      * @param userId The unique identifier of the user account.
      * @return The `OffsetDateTime` representing the last update timestamp.
      */
-    @Query("SELECT a.updatedAt FROM Account a WHERE a.id = :userId")
+    @Query(value = "SELECT updated_at FROM rgts.user_accounts WHERE account_id = :userId", nativeQuery = true)
     OffsetDateTime findUpdatedAtByUserId(@Param("userId") Integer userId);
 }
