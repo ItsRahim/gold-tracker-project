@@ -20,19 +20,10 @@ UK_INVESTING_DICT = {
     "name": "UK Investing",
     "request_name": "uk-investing",
     "url": "https://uk.investing.com/currencies/xau-gbp",
-    "element": ["span", {"class": "text-2xl", "data-test": "instrument-price-last"}]
+    "element": ["div", {'data-test': 'instrument-price-last'}]
 }
 
-# TODO: Change implementation - DO NOT USE
-UNUSED_TRADING_VIEW_DICT = {
-    "name": "Trading View",
-    "request_name": "trading_view",
-    "url": "https://www.tradingview.com/symbols/XAUGBP/",
-    "element": ["span", {"class": "last-JWoJqCpY js-symbol-last"}]
-}
-
-# TODO: Fix the element to retrieve price - DO NOT USE
-UNUSED_BLOOMBERG_DICT = {
+BLOOMBERG_DICT = {
     "name": "Bloomberg",
     "request_name": "bloomberg",
     "url": "https://www.bloomberg.com/quote/XAUGBP:CUR",
@@ -56,23 +47,14 @@ FORBES_DICT = {
 # TODO: Fake account agent required
 GOLD_UK_DICT = {
     "name": "Gold UK",
-    "request_name": "gold_uk",
+    "request_name": "gold-uk",
     "url": "https://www.cnbc.com/quotes/XAUGBP=",
     "element": ["span", {'class': 'QuoteStrip-lastPrice'}]
 }
 
-# TODO: Fake account agent required
-BULLION_BY_POST_DICT = {
-    "name": "BullionByPost",
-    "request_name": "bullion_by_post",
-    "url": "https://www.bullionbypost.co.uk/gold-price/",
-    "element": ["span", {'name': 'current_price_field', 'data-currency': 'default'}]
-}
-
 
 def get_source(requested_source: str) -> dict or None:
-    sources = [UK_INVESTING_DICT, UNUSED_TRADING_VIEW_DICT, UNUSED_BLOOMBERG_DICT, CNBC_DICT, FORBES_DICT,
-               GOLD_UK_DICT, BULLION_BY_POST_DICT]
+    sources = [UK_INVESTING_DICT, BLOOMBERG_DICT, CNBC_DICT, FORBES_DICT, GOLD_UK_DICT]
     try:
         for source in sources:
             if source.get("request_name") == requested_source.lower():
