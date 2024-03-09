@@ -28,6 +28,13 @@ public class EncryptionApi {
     @PostMapping()
     public ResponseEntity<String> encryptPlaintext(@RequestBody String plaintext) {
         LOG.trace("Received plaintext for encryption: {}", plaintext);
+        String[] requestData = plaintext.split("\n");
+
+        if (requestData.length > 1) {
+            LOG.warn("Multiple lines received. Encryption will not be performed.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only single-line plaintext is allowed.");
+        }
+
         String encryptedValue = encryptorService.encrypt(plaintext);
 
         if (encryptedValue == null) {
