@@ -20,9 +20,9 @@ import static com.rahim.configserver.constants.EncryptionURLConstants.BASE_URL;
 @RestController
 @RequestMapping(BASE_URL)
 @RequiredArgsConstructor
-public class EncryptionController {
+public class EncryptionApi {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EncryptionController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EncryptionApi.class);
     private final IEncryptorService encryptorService;
 
     @PostMapping()
