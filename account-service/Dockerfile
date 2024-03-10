@@ -1,5 +1,5 @@
 FROM openjdk:17
 LABEL authors="rahim"
 VOLUME /tmp
-COPY /target/service-registry-0.0.1-SNAPSHOT.jar /service-registry.jar
-ENTRYPOINT ["java", "-jar", "/service-registry.jar"]
+COPY /target/account-service-0.0.1-SNAPSHOT.jar /account-service.jar
+ENTRYPOINT ["java", "-jar", "/account-service.jar"]
