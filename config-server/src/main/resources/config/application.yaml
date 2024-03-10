@@ -8,3 +8,9 @@ spring:
     password: ${db-password}
   kafka:
     bootstrap-servers: localhost:9092
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: env, health

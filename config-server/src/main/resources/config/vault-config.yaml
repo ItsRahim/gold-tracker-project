@@ -4,13 +4,13 @@ spring:
       enabled: true
       kv:
         enabled: true
-        backend: secret
-        default-context: config-server
+        application-name: config-server
+        backend: kv
       host: localhost
       port: 8200
       scheme: http
       authentication: TOKEN
-      token: hvs.zLyPID1klP2OFLBsk5hwhFUg
+      token: hvs.KzuC6RcupYAMDJOVawa64Dsk
 #      ssl:
 #        key-store: file://{location}
 #        key-store-password: password
