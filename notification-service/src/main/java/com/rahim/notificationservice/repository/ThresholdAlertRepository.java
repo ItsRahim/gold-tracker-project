@@ -14,8 +14,9 @@ import java.util.Map;
 public interface ThresholdAlertRepository extends JpaRepository<ThresholdAlert, Integer> {
     @Query(value = "SELECT up.first_name, up.last_name, u.email, ta.threshold_price, ta.is_active, ta.alert_id " +
             "FROM rgts.user_profiles up " +
-            "JOIN rgts.threshold_alerts ta ON up.user_id = ta.user_id " +
-            "JOIN rgts.users u ON up.user_id = u.user_id " +
-            "WHERE ta.threshold_price = :threshold_price", nativeQuery = true)
-    List<Map<String, Object>> getEmailTokens(@Param("threshold_price") BigDecimal threshold_price);
+            "JOIN rgts.threshold_alerts ta ON up.account_id = ta.account_id " +
+            "JOIN rgts.user_accounts u ON up.account_id = u.account_id " +
+            "WHERE ta.threshold_price = :thresholdPrice", nativeQuery = true)
+    List<Map<String, Object>> getEmailTokens(@Param("thresholdPrice") BigDecimal thresholdPrice);
+
 }
