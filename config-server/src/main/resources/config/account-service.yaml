@@ -1,3 +1,10 @@
+spring:
+  application:
+    name: account-service
+  output:
+    ansi:
+      enabled: always
+
 server:
   port: 8081
 
@@ -10,11 +17,6 @@ management:
   tracing:
     sampling:
       probability: 1.0
-
-spring:
-  output:
-    ansi:
-      enabled: always
 
 logging:
   level:

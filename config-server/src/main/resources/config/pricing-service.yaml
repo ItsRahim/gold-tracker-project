@@ -1,3 +1,10 @@
+spring:
+  application:
+    name: pricing-service
+  output:
+    ansi:
+      enabled: always
+
 server:
   port: 8084
 
@@ -8,3 +15,19 @@ eureka:
 
 gold-price-api:
   url: http://localhost:8000/api/v1/gold/uk-investing
+
+logging:
+  level:
+    root: WARN
+    com:
+      rahim:
+        accountservice: INFO
+    org:
+      springframework: ERROR
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/pricing-service.log
+  color:
+    enabled: true

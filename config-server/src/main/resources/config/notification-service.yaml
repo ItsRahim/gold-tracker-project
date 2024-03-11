@@ -1,3 +1,10 @@
+spring:
+  application:
+    name: notification-service
+  output:
+    ansi:
+      enabled: always
+
 server:
   port: 8085
 
@@ -10,3 +17,19 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+logging:
+  level:
+    root: WARN
+    com:
+      rahim:
+        accountservice: INFO
+    org:
+      springframework: ERROR
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/notification-service.log
+  color:
+    enabled: true

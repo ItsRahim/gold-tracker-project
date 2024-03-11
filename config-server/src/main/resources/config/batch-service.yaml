@@ -1,9 +1,14 @@
-server:
-  port: 8086
-
 spring:
+  application:
+    name: account-service
+  output:
+    ansi:
+      enabled: always
   datasource:
     default-schema: batch_schema
+
+server:
+  port: 8086
 
 eureka:
   client:
@@ -17,3 +22,19 @@ management:
 
 processing:
   chunk-size: 500
+
+logging:
+  level:
+    root: WARN
+    com:
+      rahim:
+        accountservice: INFO
+    org:
+      springframework: ERROR
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/batch-service.log
+  color:
+    enabled: true
