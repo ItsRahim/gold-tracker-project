@@ -1,5 +1,0 @@
-apiVersion: v1
-appVersion: "1.16.0"
-name: rgts-springcloud
-description: A Helm chart for deploying Spring Cloud Config Server
-version: 0.1.0
