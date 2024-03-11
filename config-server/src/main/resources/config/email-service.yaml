@@ -34,7 +34,7 @@ logging:
     root: WARN
     com:
       rahim:
-        accountservice: INFO
+        emailservice: INFO
     org:
       springframework: ERROR
   pattern:

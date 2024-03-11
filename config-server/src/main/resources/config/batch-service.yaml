@@ -28,7 +28,7 @@ logging:
     root: WARN
     com:
       rahim:
-        accountservice: INFO
+        batchservice: INFO
     org:
       springframework: ERROR
   pattern:

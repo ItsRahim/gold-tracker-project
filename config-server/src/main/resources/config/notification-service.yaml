@@ -23,7 +23,7 @@ logging:
     root: WARN
     com:
       rahim:
-        accountservice: INFO
+        notificationservice: INFO
     org:
       springframework: ERROR
   pattern:

@@ -21,7 +21,7 @@ logging:
     root: WARN
     com:
       rahim:
-        accountservice: INFO
+        pricingservice: INFO
     org:
       springframework: ERROR
   pattern:
