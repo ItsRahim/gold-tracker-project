@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * @author Rahim Ahmed
+ * @created 03/12/2023
+ */
 @Service
 @RequiredArgsConstructor
 public class KafkaService implements IKafkaService {

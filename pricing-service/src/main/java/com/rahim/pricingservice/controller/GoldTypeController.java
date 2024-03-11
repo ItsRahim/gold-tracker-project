@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author Rahim Ahmed
+ * @created 03/12/2023
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/gold/pricing-service/gold-type")

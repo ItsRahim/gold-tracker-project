@@ -2,8 +2,13 @@ package com.rahim.pricingservice.enums;
 
 import lombok.Getter;
 
+/**
+ * @author Rahim Ahmed
+ * @created 29/11/2023
+ */
 @Getter
 public enum GoldPurity {
+
     K24(24.0 / 24, "24K"),
     K23(23.0 / 24, "23K"),
     K22(22.0 / 24, "22K"),

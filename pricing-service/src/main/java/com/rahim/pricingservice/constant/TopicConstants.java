@@ -1,13 +1,16 @@
 package com.rahim.pricingservice.constant;
 
-
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Component
+/**
+ * @author Rahim Ahmed
+ * @created 20/12/2023
+ */
 @Getter
-public class TopicConstants {
+@Component
+public final class TopicConstants {
 
     @Value("${topics.add-gold-type}")
     private String addGoldTypeTopic;

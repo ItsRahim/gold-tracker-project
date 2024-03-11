@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * @author Rahim Ahmed
+ * @created 29/11/2023
+ */
 @Repository
 public interface GoldPriceRepository extends JpaRepository<GoldPrice, Integer> {
     List<GoldPrice> findByGoldTypeId(Integer goldTypeId);

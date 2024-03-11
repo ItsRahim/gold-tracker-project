@@ -8,6 +8,10 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+/**
+ * @author Rahim Ahmed
+ * @created 03/12/2023
+ */
 @Getter
 @Setter
 @AllArgsConstructor

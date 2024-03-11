@@ -6,11 +6,15 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+/**
+ * @author Rahim Ahmed
+ * @created 01/12/2023
+ */
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class GoldData {
     private String source;
     private BigDecimal price;

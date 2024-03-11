@@ -9,11 +9,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Rahim Ahmed
+ * @created 04/12/2023
+ */
 @Getter
 @Setter
 @Component
 @RequiredArgsConstructor
 public class ApiDataProcessor {
+
     private static final Logger LOG = LoggerFactory.getLogger(ApiDataProcessor.class);
     private final GoldPriceCalculator goldPriceCalculator;
     private GoldData apiData;

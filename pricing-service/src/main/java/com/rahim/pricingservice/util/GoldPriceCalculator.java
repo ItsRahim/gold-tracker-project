@@ -9,9 +9,14 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * @author Rahim Ahmed
+ * @created 02/12/2023
+ */
 @Getter
 @Setter
 public class GoldPriceCalculator {
+
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceCalculator.class);
     private double pricePerGram;
     private BigDecimal pricePerOunce;

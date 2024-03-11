@@ -10,10 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Rahim Ahmed
+ * @created 03/12/2023
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/gold/pricing-service/gold-price")
 public class GoldPriceController {
+
     private final IGoldPriceService goldPriceService;
 
     @GetMapping("/{goldId}")

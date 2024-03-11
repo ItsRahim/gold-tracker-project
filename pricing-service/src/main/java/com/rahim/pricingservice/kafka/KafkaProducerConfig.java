@@ -12,7 +12,10 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * @author Rahim Ahmed
+ * @created 03/12/2023
+ */
 @Configuration
 public class KafkaProducerConfig {
 

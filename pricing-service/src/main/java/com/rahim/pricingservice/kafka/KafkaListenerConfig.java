@@ -10,9 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaListener;
 
+/**
+ * @author Rahim Ahmed
+ * @created 01/12/2023
+ */
 @Configuration
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
+
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final IGoldPriceFeignClient goldPriceFeignClient;
     private final IGoldPriceService goldPriceService;

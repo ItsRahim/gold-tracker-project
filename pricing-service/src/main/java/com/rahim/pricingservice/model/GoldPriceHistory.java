@@ -10,6 +10,10 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * @author Rahim Ahmed
+ * @created 01/12/2023
+ */
 @Getter
 @Setter
 @Entity

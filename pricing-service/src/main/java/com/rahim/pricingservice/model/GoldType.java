@@ -7,6 +7,10 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+/**
+ * @author Rahim Ahmed
+ * @created 29/11/2023
+ */
 @Getter
 @Setter
 @Entity
