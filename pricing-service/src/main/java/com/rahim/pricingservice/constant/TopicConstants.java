@@ -12,9 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class TopicConstants {
 
-    @Value("${topics.add-gold-type}")
-    private String addGoldTypeTopic;
-
     @Value("${topics.delete-gold-type}")
     private String deleteGoldTypeTopic;
 

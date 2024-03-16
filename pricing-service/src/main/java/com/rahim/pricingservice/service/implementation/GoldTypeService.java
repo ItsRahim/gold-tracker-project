@@ -5,6 +5,7 @@ import com.rahim.pricingservice.kafka.IKafkaService;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
 import com.rahim.pricingservice.service.IGoldTypeService;
+import com.rahim.pricingservice.service.price.IGoldPriceCreationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -24,6 +25,7 @@ public class GoldTypeService implements IGoldTypeService {
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeService.class);
     private final GoldTypeRepository goldTypeRepository;
     private final IKafkaService kafkaService;
+    private final IGoldPriceCreationService goldPriceCreationService;
     private final TopicConstants topicConstants;
 
 
@@ -54,13 +56,10 @@ public class GoldTypeService implements IGoldTypeService {
                 LOG.warn("Gold type with name {} already exists. Not creating duplicate.", goldType.getName());
             } else {
                 boolean anyNull = ObjectUtils.anyNull(goldType);
-                if(anyNull) {
+                if(!anyNull) {
                     GoldType savedGoldType = goldTypeRepository.save(goldType);
-                    String savedGoldTypeId = String.valueOf(savedGoldType.getId());
-
                     LOG.info("Successfully added new gold type: {}", savedGoldType.getName());
-
-                    kafkaService.sendMessage(topicConstants.getAddGoldTypeTopic(), savedGoldTypeId);
+                    goldPriceCreationService.processNewGoldType(savedGoldType);
                 } else {
                     LOG.warn("Given gold types has one or more null values. Not adding to database");
                 }
