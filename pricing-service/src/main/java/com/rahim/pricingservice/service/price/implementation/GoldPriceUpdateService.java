@@ -102,19 +102,19 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private void updateGoldPrice(GoldPrice goldPrice) {
         GoldType goldType = goldPrice.getGoldType();
         if (goldType.getName().equals(GOLD_TICKER)) {
-            LOG.info("Skipping update for gold type with name XAUGBP. Gold Type ID: {}", goldType.getId());
             return;
         }
 
         BigDecimal newPrice = calculateNewGoldPrice(goldType);
         goldPrice.setCurrentPrice(newPrice);
         goldPrice.setUpdatedAt(OffsetDateTime.now());
-        goldPriceRepository.save(goldPrice);
+        goldPriceRepository.saveGoldPrice(goldPrice);
     }
 
     private BigDecimal calculateNewGoldPrice(GoldType goldType) {
         BigDecimal netWeight = goldType.getNetWeight();
         String carat = goldType.getCarat();
+
         return goldPriceCalculator.calculateGoldPrice(carat, netWeight);
     }
 }

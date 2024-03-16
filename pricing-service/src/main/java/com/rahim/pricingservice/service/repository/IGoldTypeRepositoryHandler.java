@@ -31,4 +31,11 @@ public interface IGoldTypeRepositoryHandler {
      * @return An Optional containing the GoldType entity if found, or an empty Optional if not found or an error occurs.
      */
     Optional<GoldType> findById(Integer goldId);
+
+    /**
+     * Retrieves all GoldTypes from the database.
+     *
+     * @return A list of GoldType objects.
+     */
+    List<GoldType> getAllGoldTypes();
 }

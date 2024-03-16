@@ -30,7 +30,6 @@ public class ApiDataProcessor {
             goldPriceCalculator.calculatePricePerGram(processedData.getPrice());
             goldPriceUpdateService.updateGoldTickerPrice(processedData);
 
-            LOG.info("API data processed successfully: {}", processedData);
         } catch (JsonProcessingException e) {
             LOG.error("Error processing API data: {}", e.getMessage(), e);
             throw new RuntimeException("Error processing API data", e);

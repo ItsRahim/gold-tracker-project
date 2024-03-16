@@ -1,6 +1,7 @@
 package com.rahim.pricingservice.controller;
 
 import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import com.rahim.pricingservice.service.type.IGoldTypeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,19 +25,22 @@ import static com.rahim.pricingservice.constant.GoldTypeURLConstant.TYPE_BASE_UR
 @RequiredArgsConstructor
 @RequestMapping(TYPE_BASE_URL)
 public class GoldTypeController {
-    private final IGoldTypeService goldTypeService;
+
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeController.class);
+
+    private final IGoldTypeService goldTypeService;
+    private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
 
     @GetMapping
     public ResponseEntity<List<GoldType>> getAllGoldTypes() {
-        List<GoldType> goldTypes = goldTypeService.getAllGoldTypes();
+        List<GoldType> goldTypes = goldTypeRepositoryHandler.getAllGoldTypes();
         return ResponseEntity.status(HttpStatus.OK).body(goldTypes);
     }
 
     @GetMapping(GOLD_TYPE_ID)
     public ResponseEntity<GoldType> getGoldTypeById(@PathVariable int goldTypeId) {
         try {
-            Optional<GoldType> goldTypeOptional = goldTypeService.findById(goldTypeId);
+            Optional<GoldType> goldTypeOptional = goldTypeRepositoryHandler.findById(goldTypeId);
 
             return goldTypeOptional.map(goldType -> ResponseEntity.status(HttpStatus.OK).body(goldType))
                     .orElseGet(() -> ResponseEntity.notFound().build());

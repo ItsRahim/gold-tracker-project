@@ -65,4 +65,17 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
         }
     }
 
+    @Override
+    public List<GoldType> getAllGoldTypes() {
+        List<GoldType> goldTypes = goldTypeRepository.findAll();
+
+        if (!goldTypes.isEmpty()) {
+            LOG.info("Found {} gold types in the database", goldTypes.size());
+        } else {
+            LOG.info("No gold types found in the database");
+        }
+
+        return goldTypes;
+    }
+
 }
