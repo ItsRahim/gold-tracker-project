@@ -96,4 +96,19 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
         }
     }
 
+    @Override
+    public boolean existsByName(String name) {
+        return goldTypeRepository.existsByName(name);
+    }
+
+    @Override
+    public boolean existsById(int goldId) {
+        return goldTypeRepository.existsById(goldId);
+    }
+
+    @Override
+    public void deleteById(int goldId) {
+        goldTypeRepository.deleteById(goldId);
+    }
+
 }

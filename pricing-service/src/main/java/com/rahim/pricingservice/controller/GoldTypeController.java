@@ -2,7 +2,8 @@ package com.rahim.pricingservice.controller;
 
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
-import com.rahim.pricingservice.service.type.IGoldTypeService;
+import com.rahim.pricingservice.service.type.IGoldTypeCreationService;
+import com.rahim.pricingservice.service.type.IGoldTypeDeletionService;
 import com.rahim.pricingservice.service.type.IGoldTypeUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -29,9 +30,10 @@ public class GoldTypeController {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeController.class);
 
-    private final IGoldTypeService goldTypeService;
-    private final IGoldTypeUpdateService goldTypeUpdateService;
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
+    private final IGoldTypeCreationService goldTypeCreationService;
+    private final IGoldTypeUpdateService goldTypeUpdateService;
+    private final IGoldTypeDeletionService goldTypeDeletionService;
 
     @GetMapping
     public ResponseEntity<List<GoldType>> getAllGoldTypes() {
@@ -55,7 +57,7 @@ public class GoldTypeController {
     @PostMapping()
     public ResponseEntity<Void> addGoldType(@RequestBody GoldType goldType) {
         try {
-            goldTypeService.addGoldType(goldType);
+            goldTypeCreationService.addGoldType(goldType);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             LOG.error("Error adding gold type: {}", e.getMessage(), e);
@@ -77,7 +79,7 @@ public class GoldTypeController {
     @DeleteMapping(GOLD_TYPE_ID)
     public ResponseEntity<Void> deleteGoldType(@PathVariable int goldTypeId) {
         try {
-            goldTypeService.deleteGoldType(goldTypeId);
+            goldTypeDeletionService.deleteGoldType(goldTypeId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
             LOG.error("Error deleting gold type: {}", e.getMessage(), e);

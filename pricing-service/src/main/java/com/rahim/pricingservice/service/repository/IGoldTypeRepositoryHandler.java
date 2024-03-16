@@ -49,4 +49,10 @@ public interface IGoldTypeRepositoryHandler {
      * @throws DataIntegrityViolationException if an error occurs while saving the gold type to the database.
      */
     void saveGoldType(GoldType goldType);
+
+    boolean existsByName(String name);
+
+    boolean existsById(int goldId);
+
+    void deleteById(int goldId);
 }
