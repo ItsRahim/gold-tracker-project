@@ -19,7 +19,6 @@ import java.time.LocalDate;
 public class GoldPriceHistoryService implements IGoldPriceHistoryService {
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceHistoryService.class);
     private final GoldPriceHistoryRepository goldPriceHistoryRepository;
-    private final GoldPriceCalculator goldPriceCalculator;
     private final ApiDataProcessor apiDataProcessor;
     private BigDecimal pricePerOunce;
 
@@ -29,7 +28,7 @@ public class GoldPriceHistoryService implements IGoldPriceHistoryService {
             GoldData apiData = apiDataProcessor.getProcessedData();
             pricePerOunce = apiData.getPrice();
             LocalDate effectiveDate = LocalDate.now();
-            BigDecimal pricePerGram = BigDecimal.valueOf(goldPriceCalculator.getPricePerGram());
+            BigDecimal pricePerGram = BigDecimal.valueOf(GoldPriceCalculator.getPricePerGram());
 
             GoldPriceHistory priceHistory = new GoldPriceHistory(pricePerOunce, pricePerGram, effectiveDate);
             goldPriceHistoryRepository.save(priceHistory);

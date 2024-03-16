@@ -90,7 +90,7 @@ public class GoldPriceService implements IGoldPriceService {
                     GoldType goldType = priceToUpdate.getGoldType();
 
                     if (goldType.getName().equals(GOLD_TICKER)) {
-                        LOG.info("Skipping update for GoldType with name XAUGBP. GoldType ID: {}", goldType.getId());
+                        LOG.info("Skipping update for gold type with name XAUGBP. Gold Type ID: {}", goldType.getId());
                         numOfUpdates -= 1;
                         continue;
                     }
