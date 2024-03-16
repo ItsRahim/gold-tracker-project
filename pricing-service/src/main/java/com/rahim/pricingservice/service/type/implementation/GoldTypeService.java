@@ -2,9 +2,9 @@ package com.rahim.pricingservice.service.type.implementation;
 
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
-import com.rahim.pricingservice.service.type.IGoldTypeService;
 import com.rahim.pricingservice.service.price.IGoldPriceCreationService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
+import com.rahim.pricingservice.service.type.IGoldTypeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -12,9 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -71,40 +69,6 @@ public class GoldTypeService implements IGoldTypeService {
 
     private boolean goldTypeExists(String name) {
         return goldTypeRepository.existsByName(name);
-    }
-
-    @Override
-    public void updateGoldType(int goldId, Map<String, String> updatedData) {
-        try {
-            GoldType existingGoldType = goldTypeRepository.findById(goldId)
-                    .orElseThrow(() -> new IllegalArgumentException("GoldType with ID " + goldId + " not found"));
-
-            updatedData.forEach((key, value) -> {
-                switch (key) {
-                    case "name":
-                        existingGoldType.setName(value);
-                        break;
-                    case "netWeight":
-                        existingGoldType.setNetWeight(new BigDecimal(value));
-                        break;
-                    case "carat":
-                        existingGoldType.setCarat(value);
-                        break;
-                    case "description":
-                        existingGoldType.setDescription(value);
-                        break;
-                    default:
-                        LOG.warn("Ignoring unknown field: {}", key);
-                }
-            });
-
-            goldTypeRepository.save(existingGoldType);
-
-            LOG.info("Successfully updated gold type with ID {}: {}", goldId, existingGoldType);
-        } catch (Exception e) {
-            LOG.error("Error updating gold type: {}", e.getMessage());
-            throw new RuntimeException("Failed to update gold type.", e);
-        }
     }
 
     @Override

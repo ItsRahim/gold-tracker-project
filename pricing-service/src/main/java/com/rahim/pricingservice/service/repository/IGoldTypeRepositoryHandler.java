@@ -38,4 +38,15 @@ public interface IGoldTypeRepositoryHandler {
      * @return A list of GoldType objects.
      */
     List<GoldType> getAllGoldTypes();
+
+    /**
+     * Saves a GoldType entity to the database.
+     * This method saves the provided GoldPrice entity to the database using the goldTypeRepository.
+     * It performs validation to ensure that the provided goldType is not null and contains valid properties.
+     *
+     * @param goldPrice The GoldType entity to be saved.
+     * @throws IllegalArgumentException if the provided goldPrice is null or contains null properties.
+     * @throws DataIntegrityViolationException if an error occurs while saving the gold type to the database.
+     */
+    void saveGoldType(GoldType goldType);
 }

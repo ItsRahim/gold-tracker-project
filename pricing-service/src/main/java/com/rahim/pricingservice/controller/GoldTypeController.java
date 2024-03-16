@@ -3,6 +3,7 @@ package com.rahim.pricingservice.controller;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import com.rahim.pricingservice.service.type.IGoldTypeService;
+import com.rahim.pricingservice.service.type.IGoldTypeUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public class GoldTypeController {
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeController.class);
 
     private final IGoldTypeService goldTypeService;
+    private final IGoldTypeUpdateService goldTypeUpdateService;
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
 
     @GetMapping
@@ -64,7 +66,7 @@ public class GoldTypeController {
     @PutMapping(GOLD_TYPE_ID)
     public ResponseEntity<Void> updateGoldType(@PathVariable int goldTypeId, @RequestBody Map<String, String> updatedData) {
         try {
-            goldTypeService.updateGoldType(goldTypeId, updatedData);
+            goldTypeUpdateService.updateGoldType(goldTypeId, updatedData);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
             LOG.error("Error updating gold type: {}", e.getMessage(), e);

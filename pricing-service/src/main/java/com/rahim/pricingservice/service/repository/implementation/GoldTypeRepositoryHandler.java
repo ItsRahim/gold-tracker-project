@@ -5,9 +5,12 @@ import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
+import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -76,6 +79,21 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
         }
 
         return goldTypes;
+    }
+
+    @Override
+    public void saveGoldType(GoldType goldType) {
+        if (!ObjectUtils.allNotNull(goldType, goldType.getName(), goldType.getNetWeight(), goldType.getCarat(), goldType.getDescription())) {
+            LOG.error("GoldType object is null or contains null properties. Unable to save.");
+            throw new IllegalArgumentException("GoldType object is null or contains null properties. Unable to save.");
+        }
+
+        try {
+            goldTypeRepository.save(goldType);
+        } catch (DataException e) {
+            LOG.error("Error saving gold type to the database", e);
+            throw new DataIntegrityViolationException("Error saving gold type to the database", e);
+        }
     }
 
 }
