@@ -19,6 +19,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 public class KafkaListenerConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
+
     private final IGoldPriceFeignClient goldPriceFeignClient;
     private final IGoldPriceService goldPriceService;
     private final IGoldPriceHistoryService goldPriceHistoryService;
@@ -33,7 +34,6 @@ public class KafkaListenerConfig {
     @KafkaListener(topics = "${topics.custom-api-data}", groupId = "group2")
     public void processPriceChange(String priceData) {
         apiDataProcessor.processApiData(priceData);
-        goldPriceService.updateGoldTickerPrice();
     }
 
     @KafkaListener(topics = "${topics.delete-gold-type}", groupId = "group2")

@@ -2,6 +2,7 @@ package com.rahim.pricingservice.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rahim.pricingservice.model.GoldData;
+import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -20,12 +21,14 @@ public class ApiDataProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApiDataProcessor.class);
     private final GoldPriceCalculator goldPriceCalculator;
+    private final IGoldPriceUpdateService goldPriceUpdateService;
     private GoldData processedData;
 
     public void processApiData(String kafkaData) {
         try {
             processedData = new GoldData(kafkaData);
             goldPriceCalculator.calculatePricePerGram(processedData.getPrice());
+            goldPriceUpdateService.updateGoldTickerPrice(processedData);
 
             LOG.info("API data processed successfully: {}", processedData);
         } catch (JsonProcessingException e) {

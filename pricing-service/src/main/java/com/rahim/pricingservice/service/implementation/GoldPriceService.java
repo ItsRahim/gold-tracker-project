@@ -140,7 +140,7 @@ public class GoldPriceService implements IGoldPriceService {
             return goldPrices.stream()
                     .map(goldPrice -> {
                         GoldType goldType = goldTypeService.findById(goldPrice.getGoldType().getId())
-                                .orElseThrow(() -> new NoSuchElementException("GoldType not found"));
+                                .orElseThrow(() -> new NoSuchElementException("Gold Type not found"));
 
                         return new GoldPriceDTO(
                                 goldPrice.getId(),
