@@ -26,7 +26,7 @@ public class GoldPriceHistoryService implements IGoldPriceHistoryService {
     @Override
     public void updateHistoryTable() {
         try {
-            GoldData apiData = apiDataProcessor.getApiData();
+            GoldData apiData = apiDataProcessor.getProcessedData();
             pricePerOunce = apiData.getPrice();
             LocalDate effectiveDate = LocalDate.now();
             BigDecimal pricePerGram = BigDecimal.valueOf(goldPriceCalculator.getPricePerGram());

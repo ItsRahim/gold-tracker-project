@@ -43,7 +43,7 @@ public class GoldPriceService implements IGoldPriceService {
     @Override
     public void updateGoldTickerPrice() {
         try {
-            GoldData apiData = apiDataProcessor.getApiData();
+            GoldData apiData = apiDataProcessor.getProcessedData();
             boolean isApiDataNull = ObjectUtils.anyNull(apiData);
 
             if (isApiDataNull) {

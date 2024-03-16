@@ -32,7 +32,7 @@ public class KafkaListenerConfig {
 
     @KafkaListener(topics = "${topics.custom-api-data}", groupId = "group2")
     public void processPriceChange(String priceData) {
-        apiDataProcessor.setKafkaData(priceData);
+        apiDataProcessor.processApiData(priceData);
         goldPriceService.updateGoldTickerPrice();
     }
 
