@@ -61,7 +61,7 @@ public class GoldPriceCalculator {
      * Calculates the gold price based on the given carat purity and net weight.
      *
      * @param caratPurity The carat purity (e.g., "24K", "18K").
-     * @param netWeight   The net weight of gold in grams (can be null if not provided).
+     * @param netWeight The net weight of gold in grams (can be null if not provided).
      * @return The calculated gold price as a {@link BigDecimal}.
      * @throws IllegalArgumentException If input values are invalid (negative price per gram, empty carat purity, or negative net weight).
      */
