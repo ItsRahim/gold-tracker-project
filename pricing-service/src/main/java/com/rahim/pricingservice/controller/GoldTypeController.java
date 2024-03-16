@@ -13,13 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.rahim.pricingservice.constant.GoldTypeURLConstant.GOLD_TYPE_ID;
+import static com.rahim.pricingservice.constant.GoldTypeURLConstant.TYPE_BASE_URL;
+
 /**
  * @author Rahim Ahmed
  * @created 03/12/2023
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/gold/pricing-service/gold-type")
+@RequestMapping(TYPE_BASE_URL)
 public class GoldTypeController {
     private final IGoldTypeService goldTypeService;
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeController.class);
@@ -30,10 +33,10 @@ public class GoldTypeController {
         return ResponseEntity.status(HttpStatus.OK).body(goldTypes);
     }
 
-    @GetMapping("/{goldId}")
-    public ResponseEntity<GoldType> getGoldTypeById(@PathVariable int goldId) {
+    @GetMapping(GOLD_TYPE_ID)
+    public ResponseEntity<GoldType> getGoldTypeById(@PathVariable int goldTypeId) {
         try {
-            Optional<GoldType> goldTypeOptional = goldTypeService.findById(goldId);
+            Optional<GoldType> goldTypeOptional = goldTypeService.findById(goldTypeId);
 
             return goldTypeOptional.map(goldType -> ResponseEntity.status(HttpStatus.OK).body(goldType))
                     .orElseGet(() -> ResponseEntity.notFound().build());
@@ -43,7 +46,7 @@ public class GoldTypeController {
         }
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Void> addGoldType(@RequestBody GoldType goldType) {
         try {
             goldTypeService.addGoldType(goldType);
@@ -54,10 +57,10 @@ public class GoldTypeController {
         }
     }
 
-    @PutMapping("/{goldId}")
-    public ResponseEntity<Void> updateGoldType(@PathVariable int goldId, @RequestBody Map<String, String> updatedData) {
+    @PutMapping(GOLD_TYPE_ID)
+    public ResponseEntity<Void> updateGoldType(@PathVariable int goldTypeId, @RequestBody Map<String, String> updatedData) {
         try {
-            goldTypeService.updateGoldType(goldId, updatedData);
+            goldTypeService.updateGoldType(goldTypeId, updatedData);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
             LOG.error("Error updating gold type: {}", e.getMessage(), e);
@@ -65,10 +68,10 @@ public class GoldTypeController {
         }
     }
 
-    @DeleteMapping("/{goldId}")
-    public ResponseEntity<Void> deleteGoldType(@PathVariable int goldId) {
+    @DeleteMapping(GOLD_TYPE_ID)
+    public ResponseEntity<Void> deleteGoldType(@PathVariable int goldTypeId) {
         try {
-            goldTypeService.deleteGoldType(goldId);
+            goldTypeService.deleteGoldType(goldTypeId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
             LOG.error("Error deleting gold type: {}", e.getMessage(), e);
