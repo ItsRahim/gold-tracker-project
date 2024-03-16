@@ -1,7 +1,6 @@
 package com.rahim.pricingservice.kafka;
 
 import com.rahim.pricingservice.service.IGoldPriceHistoryService;
-import com.rahim.pricingservice.service.IGoldPriceService;
 import com.rahim.pricingservice.service.feign.IGoldPriceFeignClient;
 import com.rahim.pricingservice.util.ApiDataProcessor;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ public class KafkaListenerConfig {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
 
     private final IGoldPriceFeignClient goldPriceFeignClient;
-    private final IGoldPriceService goldPriceService;
     private final IGoldPriceHistoryService goldPriceHistoryService;
     private final ApiDataProcessor apiDataProcessor;
 
@@ -34,12 +32,6 @@ public class KafkaListenerConfig {
     @KafkaListener(topics = "${topics.custom-api-data}", groupId = "group2")
     public void processPriceChange(String priceData) {
         apiDataProcessor.processApiData(priceData);
-    }
-
-    @KafkaListener(topics = "${topics.delete-gold-type}", groupId = "group2")
-    public void removeGoldPrice(String goldTypeId) {
-        LOG.info("Message received to remove gold type with ID: {}", goldTypeId);
-        goldPriceService.deleteGoldPrice(goldTypeId);
     }
 
     @KafkaListener(topics = "${topics.update-price-history}", groupId = "group2")

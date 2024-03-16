@@ -1,11 +1,10 @@
 package com.rahim.pricingservice.service.implementation;
 
-import com.rahim.pricingservice.constant.TopicConstants;
-import com.rahim.pricingservice.kafka.IKafkaService;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
 import com.rahim.pricingservice.service.IGoldTypeService;
 import com.rahim.pricingservice.service.price.IGoldPriceCreationService;
+import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -23,10 +22,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GoldTypeService implements IGoldTypeService {
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeService.class);
+
     private final GoldTypeRepository goldTypeRepository;
-    private final IKafkaService kafkaService;
+    private final IGoldPriceRepositoryHandler goldPriceRepositoryHandler;
     private final IGoldPriceCreationService goldPriceCreationService;
-    private final TopicConstants topicConstants;
 
 
     @Override
@@ -114,7 +113,7 @@ public class GoldTypeService implements IGoldTypeService {
             if (!existsById(goldId)) {
                 LOG.warn("Gold type with ID: {} does not exist. Unable to delete.", goldId);
             }
-            kafkaService.sendMessage(topicConstants.getDeleteGoldTypeTopic(), String.valueOf(goldId));
+            goldPriceRepositoryHandler.deleteGoldPrice(goldId);
             goldTypeRepository.deleteById(goldId);
             LOG.info("Gold type with ID {} deleted successfully.", goldId);
         } catch (Exception e) {
@@ -157,4 +156,5 @@ public class GoldTypeService implements IGoldTypeService {
     private boolean existsById(int goldId) {
         return goldTypeRepository.existsById(goldId);
     }
+
 }
