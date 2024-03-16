@@ -15,28 +15,24 @@ import java.math.RoundingMode;
 public class GoldPriceCalculator {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceCalculator.class);
-    private static final double GRAMS_PER_OUNCE = 31.1035;
+    private static final BigDecimal GRAMS_PER_OUNCE = BigDecimal.valueOf(31.1035);
     private static final int SCALE = 2;
 
     @Getter
-    private static double pricePerGram;
+    private static BigDecimal pricePerGram;
 
     /**
      * Calculates the price per gram based on the given price per ounce.
      *
-     * @param pricePerOunce The price per ounce (in any currency).
+     * @param pricePerOunce The price per ounce (in GBP).
      * @throws RuntimeException If an error occurs during the conversion.
      */
     public void calculatePricePerGram(BigDecimal pricePerOunce) {
         try {
             BigDecimal ouncesBigDecimal = pricePerOunce.setScale(SCALE, RoundingMode.HALF_UP);
-            BigDecimal gramsPerOunce = new BigDecimal(GRAMS_PER_OUNCE);
-
-            BigDecimal result = ouncesBigDecimal.divide(gramsPerOunce, SCALE, RoundingMode.HALF_UP);
-            pricePerGram = result.doubleValue();
+            pricePerGram = ouncesBigDecimal.divide(GRAMS_PER_OUNCE, SCALE, RoundingMode.HALF_UP);
 
             LOG.info("Conversion successful: £{} per ounce is £{} per gram", ouncesBigDecimal, pricePerGram);
-
         } catch (ArithmeticException ex) {
             LOG.error("Error converting price per ounce to per gram: {}", ex.getMessage());
             throw new RuntimeException("Error converting price per ounce to per gram", ex);
@@ -52,9 +48,9 @@ public class GoldPriceCalculator {
      */
     private BigDecimal calculateGoldPriceByCarat(String carat) {
         try {
-            double purity = GoldPurity.getPurityByCarat(carat);
+            BigDecimal caratPurity = BigDecimal.valueOf(GoldPurity.getPurityByCarat(carat));
 
-            return BigDecimal.valueOf(purity * pricePerGram).setScale(SCALE, RoundingMode.HALF_UP);
+            return caratPurity.multiply(pricePerGram).setScale(SCALE, RoundingMode.HALF_UP);
         } catch (IllegalArgumentException e) {
             LOG.error("Error calculating gold price for carat {}: {}", carat, e.getMessage());
             throw new RuntimeException("Error calculating gold price", e);
@@ -94,8 +90,15 @@ public class GoldPriceCalculator {
         }
     }
 
+    /**
+     * Validates the input values for carat purity and net weight.
+     *
+     * @param caratPurity The carat purity (e.g., "24K", "18K").
+     * @param netWeight   The net weight (in grams).
+     * @throws IllegalArgumentException If any input value is invalid.
+     */
     private void validateInput(String caratPurity, BigDecimal netWeight) {
-        if (caratPurity.isEmpty() || (netWeight != null && netWeight.compareTo(BigDecimal.ZERO) < 0) || pricePerGram < 0) {
+        if (caratPurity.isEmpty() || (netWeight != null && netWeight.compareTo(BigDecimal.ZERO) < 0) || pricePerGram.compareTo(BigDecimal.ZERO) < 0) {
             LOG.error("Invalid input values. Carat purity: {}, Net weight: {}, Price per gram: {}", caratPurity, netWeight, pricePerGram);
             throw new IllegalArgumentException("Invalid input values. Carat purity, net weight (if provided), and price per gram must be non-negative.");
         }

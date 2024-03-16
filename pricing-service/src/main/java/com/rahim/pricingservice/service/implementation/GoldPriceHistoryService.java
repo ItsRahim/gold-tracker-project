@@ -28,7 +28,7 @@ public class GoldPriceHistoryService implements IGoldPriceHistoryService {
             GoldData apiData = apiDataProcessor.getProcessedData();
             pricePerOunce = apiData.getPrice();
             LocalDate effectiveDate = LocalDate.now();
-            BigDecimal pricePerGram = BigDecimal.valueOf(GoldPriceCalculator.getPricePerGram());
+            BigDecimal pricePerGram = GoldPriceCalculator.getPricePerGram();
 
             GoldPriceHistory priceHistory = new GoldPriceHistory(pricePerOunce, pricePerGram, effectiveDate);
             goldPriceHistoryRepository.save(priceHistory);
