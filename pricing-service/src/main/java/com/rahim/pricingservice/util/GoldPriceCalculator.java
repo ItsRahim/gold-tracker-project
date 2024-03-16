@@ -4,6 +4,7 @@ import com.rahim.pricingservice.enums.GoldPurity;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,6 +13,7 @@ import java.math.RoundingMode;
  * @author Rahim Ahmed
  * @created 02/12/2023
  */
+@Configuration
 public class GoldPriceCalculator {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceCalculator.class);
