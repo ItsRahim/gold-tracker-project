@@ -4,7 +4,7 @@ import com.rahim.pricingservice.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "gold-price-api-client", configuration = FeignConfig.class, url = "${gold-price-api.url}")
+@FeignClient(name = "gold-price-api-client", url = "${gold-price-api.url}")
 public interface IGoldPriceFeignClient {
 
     @GetMapping()

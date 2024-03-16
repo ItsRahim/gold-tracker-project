@@ -32,7 +32,7 @@ public class GoldPriceCalculator {
             BigDecimal ouncesBigDecimal = pricePerOunce.setScale(SCALE, RoundingMode.HALF_UP);
             pricePerGram = ouncesBigDecimal.divide(GRAMS_PER_OUNCE, SCALE, RoundingMode.HALF_UP);
 
-            LOG.info("Conversion successful: £{} per ounce is £{} per gram", ouncesBigDecimal, pricePerGram);
+            LOG.debug("Conversion successful: £{} per ounce is £{} per gram", ouncesBigDecimal, pricePerGram);
         } catch (ArithmeticException ex) {
             LOG.error("Error converting price per ounce to per gram: {}", ex.getMessage());
             throw new RuntimeException("Error converting price per ounce to per gram", ex);
@@ -80,7 +80,7 @@ public class GoldPriceCalculator {
 
             totalGoldPrice = totalGoldPrice.setScale(SCALE, RoundingMode.HALF_UP);
 
-            LOG.info("Calculated Gold Price: Carat Purity: {}, Net Weight: {} grams, Price per gram: £{}, Total Price: £{}",
+            LOG.debug("Calculated Gold Price: Carat Purity: {}, Net Weight: {} grams, Price per gram: £{}, Total Price: £{}",
                     caratPurity, netWeight, pricePerGram, totalGoldPrice);
 
             return totalGoldPrice;
