@@ -1,7 +1,7 @@
 package com.rahim.pricingservice.controller;
 
 import com.rahim.pricingservice.model.GoldType;
-import com.rahim.pricingservice.service.IGoldTypeService;
+import com.rahim.pricingservice.service.type.IGoldTypeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

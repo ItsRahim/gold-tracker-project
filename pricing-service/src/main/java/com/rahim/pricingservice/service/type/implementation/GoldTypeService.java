@@ -1,8 +1,8 @@
-package com.rahim.pricingservice.service.implementation;
+package com.rahim.pricingservice.service.type.implementation;
 
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
-import com.rahim.pricingservice.service.IGoldTypeService;
+import com.rahim.pricingservice.service.type.IGoldTypeService;
 import com.rahim.pricingservice.service.price.IGoldPriceCreationService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import jakarta.transaction.Transactional;

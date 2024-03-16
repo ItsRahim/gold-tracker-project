@@ -1,4 +1,4 @@
-package com.rahim.pricingservice.service;
+package com.rahim.pricingservice.service.type;
 
 import com.rahim.pricingservice.model.GoldType;
 
