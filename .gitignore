@@ -278,3 +278,5 @@ pyrightconfig.json
 /vault/*
 
 TODO.txt
+
+/extra-code/*
