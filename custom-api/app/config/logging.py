@@ -4,8 +4,6 @@ import logging
 LOG_DIR = os.path.join(os.getcwd(), '/app/logs')
 LOG_FILE = os.path.join(LOG_DIR, 'gold-scraping-api.log')
 
-print(LOG_DIR)
-
 def configure_logging():
     if not os.path.exists(LOG_DIR):
         os.makedirs(LOG_DIR)
