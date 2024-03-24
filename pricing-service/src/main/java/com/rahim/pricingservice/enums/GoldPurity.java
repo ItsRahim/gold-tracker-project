@@ -1,5 +1,6 @@
 package com.rahim.pricingservice.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Getter;
  * @created 29/11/2023
  */
 @Getter
+@AllArgsConstructor
 public enum GoldPurity {
 
     K24(24.0 / 24, "24K"),
@@ -37,17 +39,13 @@ public enum GoldPurity {
     private final double purity;
     private final String carat;
 
-    GoldPurity(double purity, String carat) {
-        this.purity = purity;
-        this.carat = carat;
-    }
-
     public static double getPurityByCarat(String carat) {
         for (GoldPurity goldPurity : GoldPurity.values()) {
             if (goldPurity.getCarat().equalsIgnoreCase(carat)) {
                 return goldPurity.getPurity();
             }
         }
+
         throw new IllegalArgumentException("Invalid gold purity label: " + carat);
     }
 }

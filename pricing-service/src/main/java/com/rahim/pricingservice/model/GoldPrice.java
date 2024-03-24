@@ -1,5 +1,6 @@
 package com.rahim.pricingservice.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rahim.pricingservice.listener.GoldPriceEntityListener;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,12 +26,15 @@ public class GoldPrice {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gold_type_id")
+    @JsonProperty("name")
     private GoldType goldType;
 
     @Column(name = "current_price", nullable = false, precision = 5, scale = 2)
+    @JsonProperty("currentPrice")
     private BigDecimal currentPrice;
 
     @Column(name = "updated_at")
+    @JsonProperty("updatedAt")
     private OffsetDateTime updatedAt;
 
 }

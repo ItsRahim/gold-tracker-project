@@ -1,5 +1,6 @@
 package com.rahim.pricingservice.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rahim.pricingservice.listener.GoldTypeEntityListener;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,15 +24,19 @@ public class GoldType {
     private Integer id;
 
     @Column(name = "name", nullable = false, length = 50)
+    @JsonProperty("name")
     private String name;
 
     @Column(name = "net_weight", nullable = false, precision = 5, scale = 2)
+    @JsonProperty("netWeight")
     private BigDecimal netWeight;
 
     @Column(name = "carat", nullable = false, length = 3)
+    @JsonProperty("carat")
     private String carat;
 
     @Column(name = "description", nullable = false, length = Integer.MAX_VALUE)
+    @JsonProperty("description")
     private String description;
 
 }

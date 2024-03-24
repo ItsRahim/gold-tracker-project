@@ -1,6 +1,4 @@
 topics:
-  add-gold-type: pricing-service-new-type
-  delete-gold-type: pricing-service-delete-type
   send-notification-price: notification-service-price-update
   update-price-history: pricing-service-history-table
   update-gold-price-job: pricing-service-update-prices
