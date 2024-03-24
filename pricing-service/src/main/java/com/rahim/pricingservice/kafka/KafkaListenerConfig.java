@@ -1,7 +1,7 @@
 package com.rahim.pricingservice.kafka;
 
 import com.rahim.pricingservice.service.history.IGoldPriceHistoryService;
-import com.rahim.pricingservice.service.feign.IGoldPriceFeignClient;
+import com.rahim.pricingservice.feign.IGoldPriceFeignClient;
 import com.rahim.pricingservice.util.ApiDataProcessor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
