@@ -262,9 +262,6 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-.env
-
-
 ### certificates ###
 *.pem
 *.key

@@ -12,9 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class TopicConstants {
 
-    @Value("${topics.delete-gold-type}")
-    private String deleteGoldTypeTopic;
-
     @Value("${topics.send-notification-price}")
     private String sendNotificationPriceTopic;
 

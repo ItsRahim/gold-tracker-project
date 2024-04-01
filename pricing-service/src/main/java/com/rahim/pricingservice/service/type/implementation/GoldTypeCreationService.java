@@ -28,7 +28,7 @@ public class GoldTypeCreationService implements IGoldTypeCreationService {
         try {
             boolean goldTypeExists = goldTypeRepositoryHandler.existsByName(goldType.getName());
 
-            if(!goldTypeExists) {
+            if(goldTypeExists) {
                 LOG.warn("Gold type with name {} already exists. Not creating duplicate.", goldType.getName());
             } else {
                 if(!ObjectUtils.anyNull(goldType)) {
