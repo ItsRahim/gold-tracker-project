@@ -6,6 +6,6 @@ package com.rahim.gatewayservice.paths;
  */
 public final class PrefixPaths {
 
-    public static final String USER_SERVICE = "/api/v1/gold/user-service";
-    public static final String PRICING_SERVICE = "/api/v1/gold/pricing-service";
+    public static final String USER_SERVICE_PREFIX = "/api/v1/gold/user-service";
+    public static final String PRICING_SERVICE_PREFIX = "/api/v1/gold/pricing-service";
 }

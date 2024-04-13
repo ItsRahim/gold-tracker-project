@@ -23,22 +23,22 @@ public class RouteConfig {
         return builder.routes()
                 .route("account-route", r -> r
                         .path("/account/**")
-                        .filters(f -> f.prefixPath(USER_SERVICE)
+                        .filters(f -> f.prefixPath(USER_SERVICE_PREFIX)
                                 .addResponseHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE))
                         .uri(USER_SERVICE_URI))
                 .route("profile-route", r -> r
                         .path("/profile/**")
-                        .filters(f -> f.prefixPath(USER_SERVICE)
+                        .filters(f -> f.prefixPath(USER_SERVICE_PREFIX)
                                 .addResponseHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE))
                         .uri(USER_SERVICE_URI))
                 .route("price-route", r -> r
                         .path("/gold-price/**")
-                        .filters(f -> f.prefixPath(PRICING_SERVICE)
+                        .filters(f -> f.prefixPath(PRICING_SERVICE_PREFIX)
                                 .addResponseHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE))
                         .uri(PRICING_SERVICE_URI))
                 .route("type-route", r -> r
                         .path("/gold-type/**")
-                        .filters(f -> f.prefixPath(PRICING_SERVICE)
+                        .filters(f -> f.prefixPath(PRICING_SERVICE_PREFIX)
                                 .addResponseHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE))
                         .uri(PRICING_SERVICE_URI))
                 .build();
