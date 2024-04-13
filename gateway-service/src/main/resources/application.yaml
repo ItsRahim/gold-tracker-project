@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    config:
+      enabled: true
+    gateway:
+      mvc:
+        routes:
+          - id: price-route
+            uri: ${PRICE_ROUTE_URI:http://localhost:8084}
+            predicates:
+              - Path=/price/**
+            filters:
+              - RewritePath=/price/(?<remaining>.*), /api/v1/gold/pricing-service/${remaining}
+              - AddResponseHeader=X-Powered-By, Rahim Gateway Service
+  config:
+    import: configserver:http://localhost:8888
