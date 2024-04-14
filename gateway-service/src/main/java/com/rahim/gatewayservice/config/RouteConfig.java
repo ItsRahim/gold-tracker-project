@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 import static com.rahim.gatewayservice.paths.ApiPaths.*;
 import static com.rahim.gatewayservice.paths.ClientPaths.*;
+import static com.rahim.gatewayservice.paths.ServiceEndpoint.*;
 import static com.rahim.gatewayservice.paths.ServicePath.*;
 
 /**
@@ -30,6 +31,10 @@ public class RouteConfig {
                 .route(this::accountRoute)
                 .route(this::defaultProfileRoute)
                 .route(this::profileRoute)
+                .route(this::defaultPriceRoute)
+                .route(this::priceRoute)
+                .route(this::defaultTypeRoute)
+                .route(this::typeRoute)
                 .build();
     }
 
@@ -66,5 +71,41 @@ public class RouteConfig {
                 .addResponseHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
     }
 
+    /*---------------------------------------------
+     *  PRICING MICROSERVICE ROUTES
+     * ---------------------------------------------
+     */
+    private Buildable<Route> defaultPriceRoute(PredicateSpec r) {
+        return r.path(DEFAULT_PRICE_ROUTE)
+                .filters(this::applyPriceFilters)
+                .uri(PRICING_SERVICE_URI);
+    }
+
+    private Buildable<Route> priceRoute(PredicateSpec r) {
+        return r.path(PRICE_ROUTE)
+                .filters(this::applyPriceFilters)
+                .uri(PRICING_SERVICE_URI);
+    }
+
+    private Buildable<Route> defaultTypeRoute(PredicateSpec r) {
+        return r.path(DEFAULT_TYPE_ROUTE)
+                .filters(this::applyPriceFilters)
+                .uri(PRICING_SERVICE_URI);
+    }
+
+    private Buildable<Route> typeRoute(PredicateSpec r) {
+        return r.path(TYPE_ROUTE)
+                .filters(this::applyPriceFilters)
+                .uri(PRICING_SERVICE_URI);
+    }
+
+    private GatewayFilterSpec applyPriceFilters(GatewayFilterSpec f) {
+        return f.prefixPath(PRICING_SERVICE_PREFIX)
+                .addResponseHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE)
+                .rewritePath(DEFAULT_PRICE_ROUTE, INTERNAL_DEFAULT_PRICE_ROUTE)
+                .rewritePath(PRICE_ROUTE + "(?<segment>.*)", INTERNAL_PRICE_ROUTE)
+                .rewritePath(DEFAULT_TYPE_ROUTE, INTERNAL_DEFAULT_TYPE_ROUTE)
+                .rewritePath(TYPE_ROUTE + "(?<segment>.*)", INTERNAL_TYPE_ROUTE);
+    }
 }
 
