@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static com.rahim.gatewayservice.paths.ApiPaths.*;
+import static com.rahim.gatewayservice.paths.ClientPaths.*;
 import static com.rahim.gatewayservice.paths.ServicePath.*;
 
 /**
@@ -33,34 +34,34 @@ public class RouteConfig {
     }
 
     /*---------------------------------------------
-    *  ACCOUNT SERVICE ROUTES
+    *  ACCOUNT MICROSERVICE ROUTES
     * ---------------------------------------------
     */
     private Buildable<Route> defaultAccountRoute(PredicateSpec r) {
-        return r.path("/account")
-                .filters(this::applyFilters)
+        return r.path(DEFAULT_ACCOUNT_ROUTE)
+                .filters(this::applyAccountFilters)
                 .uri(USER_SERVICE_URI);
     }
 
     private Buildable<Route> accountRoute(PredicateSpec r) {
-        return r.path("/account/**")
-                .filters(this::applyFilters)
+        return r.path(ACCOUNT_ROUTE)
+                .filters(this::applyAccountFilters)
                 .uri(USER_SERVICE_URI);
     }
 
     private Buildable<Route> defaultProfileRoute(PredicateSpec r) {
-        return r.path("/profile")
-                .filters(this::applyFilters)
+        return r.path(DEFAULT_PROFILE_ROUTE)
+                .filters(this::applyAccountFilters)
                 .uri(USER_SERVICE_URI);
     }
 
     private Buildable<Route> profileRoute(PredicateSpec r) {
-        return r.path("/profile/**")
-                .filters(this::applyFilters)
+        return r.path(PROFILE_ROUTE)
+                .filters(this::applyAccountFilters)
                 .uri(USER_SERVICE_URI);
     }
 
-    private GatewayFilterSpec applyFilters(GatewayFilterSpec f) {
+    private GatewayFilterSpec applyAccountFilters(GatewayFilterSpec f) {
         return f.prefixPath(USER_SERVICE_PREFIX)
                 .addResponseHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
     }
