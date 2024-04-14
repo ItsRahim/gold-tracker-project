@@ -12,6 +12,7 @@ pyyaml = "*"
 beautifulsoup4 = "*"
 uvicorn = "*"
 starlette = "*"
+hvac = "*"
 
 [dev-packages]
 
