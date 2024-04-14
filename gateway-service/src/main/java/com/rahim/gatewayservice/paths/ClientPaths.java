@@ -6,7 +6,7 @@ package com.rahim.gatewayservice.paths;
  */
 public final class ClientPaths {
 
-    /*---------------------------------------------
+    /* ---------------------------------------------
      *  ACCOUNT MICROSERVICE CLIENT ROUTES
      * ---------------------------------------------
      */
@@ -15,7 +15,7 @@ public final class ClientPaths {
     public static final String DEFAULT_PROFILE_ROUTE = "/profile";
     public static final String PROFILE_ROUTE = "/profile/**";
 
-    /*---------------------------------------------
+    /* ---------------------------------------------
      *  PRICING MICROSERVICE CLIENT ROUTES
      * ---------------------------------------------
      */

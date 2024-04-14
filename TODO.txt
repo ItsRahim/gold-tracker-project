@@ -32,7 +32,7 @@ Issues/Enhancements:
 - Different profiles, testing, dev and prod
 - Maven plugin to create and push docker image
 - Update docker to expose specific ports
-
+- Remove hardcoded data references in custom-api, move to database
 Linked hashmap maintains the order in which keys are inserted
 
 Performance Testing:
