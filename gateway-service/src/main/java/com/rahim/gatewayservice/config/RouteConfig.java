@@ -73,7 +73,7 @@ public class RouteConfig {
 
     /*---------------------------------------------
      *  PRICING MICROSERVICE ROUTES
-     * ---------------------------------------------
+     * --------------------------------------------
      */
     private Buildable<Route> defaultPriceRoute(PredicateSpec r) {
         return r.path(DEFAULT_PRICE_ROUTE)
