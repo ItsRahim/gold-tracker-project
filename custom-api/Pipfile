@@ -12,6 +12,8 @@ pyyaml = "*"
 beautifulsoup4 = "*"
 uvicorn = "*"
 starlette = "*"
+python-dotenv = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
