@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AccountUpdateServiceTest extends AbstractTestConfig {
+class AccountUpdateServiceTest extends AbstractTestConfig {
 
     @Autowired
     IAccountUpdateService accountUpdateService;
@@ -82,7 +82,7 @@ public class AccountUpdateServiceTest extends AbstractTestConfig {
         assertEquals(updatedData.get("passwordHash"), updatedAccount.getPasswordHash());
 
         verify(emailTokenGenerator, times(0))
-                .generateEmailTokens(eq(ACCOUNT_UPDATE_TEMPLATE), eq(accountId), eq(true), eq(true), eq(oldEmail));
+                .generateEmailTokens(ACCOUNT_UPDATE_TEMPLATE, accountId, true, true, oldEmail);
 
         assertFalse(accountRepository.existsAccountByEmail(oldEmail));
         assertNotEquals(updatedAccount.getPasswordHash(), oldPassword);

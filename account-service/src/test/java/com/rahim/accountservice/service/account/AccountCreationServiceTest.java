@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AccountCreationServiceTest extends AbstractTestConfig {
+class AccountCreationServiceTest extends AbstractTestConfig {
 
     @Autowired
     IAccountCreationService accountCreationService;

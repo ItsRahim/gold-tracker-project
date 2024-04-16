@@ -46,7 +46,7 @@ public class ProfileController {
     }
 
     @GetMapping(USERNAME)
-    public ResponseEntity<?> findProfileByUsername(@PathVariable String username) {
+    public ResponseEntity<Object> findProfileByUsername(@PathVariable String username) {
         try {
             Optional<Profile> profileOptional = profileQueryService.getProfileByUsername(username);
 

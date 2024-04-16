@@ -3,6 +3,7 @@ package com.rahim.accountservice.service.profile.implementation;
 import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.service.profile.IProfileQueryService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ public class ProfileQueryService implements IProfileQueryService {
                 return userProfileDetails;
             } else {
                 LOG.info("No user profile details found for user ID {}", accountId);
-                return null;
+                return Collections.emptyMap();
             }
         } catch (Exception e) {
             LOG.error("Error retrieving user profile details for user ID {}: {}", accountId, e.getMessage(), e);

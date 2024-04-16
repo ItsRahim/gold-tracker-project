@@ -40,6 +40,7 @@ public class AccountController {
         try {
             accountCreationService.createAccount(userRequest);
             LOG.info("Successfully Created Account: {}", userRequest.getProfile().getUsername());
+
             return ResponseEntity.status(HttpStatus.CREATED).body("Account and Profile created successfully");
         } catch (Exception e) {
             LOG.error("Error creating Account and Profile: {}", e.getMessage());
@@ -48,18 +49,18 @@ public class AccountController {
     }
 
     @GetMapping(ACCOUNT_ID)
-    public ResponseEntity<?> findAccountById(@PathVariable int accountId) {
+    public ResponseEntity<Object> findAccountById(@PathVariable int accountId) {
         try {
             Optional<Account> accountOptional = accountQueryService.findAccountById(accountId);
 
             if (accountOptional.isPresent()) {
                 Account account = accountOptional.get();
-
                 LOG.info("Account found with ID: {}", accountId);
 
                 return ResponseEntity.status(HttpStatus.OK).body(account);
             } else {
                 LOG.info("Account not found with ID: {}", accountId);
+
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
             }
         } catch (Exception e) {

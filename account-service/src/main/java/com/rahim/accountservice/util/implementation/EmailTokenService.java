@@ -18,8 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_DELETION_TEMPLATE;
-import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_UPDATE_TEMPLATE;
+import static com.rahim.accountservice.constant.EmailTemplates.*;
+import static com.rahim.accountservice.model.request.AccountRequestParam.*;
+import static com.rahim.accountservice.model.request.ProfileRequestParam.*;
 
 /**
  * @author Rahim Ahmed
@@ -81,11 +82,11 @@ public class EmailTokenService implements IEmailTokenService {
         updateKeys(mutableEmailData);
 
         if (!includeUsername) {
-            mutableEmailData.remove("username");
+            mutableEmailData.remove(PROFILE_USERNAME);
         }
 
         if (!includeDate) {
-            List<String> keysToRemove = Arrays.asList("deleteDate", "updatedAt");
+            List<String> keysToRemove = Arrays.asList(ACCOUNT_DELETE_DATE, ACCOUNT_UPDATED_AT);
             mutableEmailData.keySet().removeAll(keysToRemove);
         }
 
@@ -98,10 +99,10 @@ public class EmailTokenService implements IEmailTokenService {
      * @param mutableEmailData The map containing the email data with keys to be updated.
      */
     private void updateKeys(Map<String, Object> mutableEmailData) {
-        messageFormatter.updateMapKey(mutableEmailData, "first_name", "firstName");
-        messageFormatter.updateMapKey(mutableEmailData, "last_name", "lastName");
-        messageFormatter.updateMapKey(mutableEmailData, "delete_date", "deleteDate");
-        messageFormatter.updateMapKey(mutableEmailData, "updated_at", "updatedAt");
+        messageFormatter.updateMapKey(mutableEmailData, "first_name", PROFILE_FIRST_NAME);
+        messageFormatter.updateMapKey(mutableEmailData, "last_name", PROFILE_LAST_NAME);
+        messageFormatter.updateMapKey(mutableEmailData, "delete_date", ACCOUNT_DELETE_DATE);
+        messageFormatter.updateMapKey(mutableEmailData, "updated_at", ACCOUNT_UPDATED_AT);
     }
 
     /**
@@ -112,11 +113,11 @@ public class EmailTokenService implements IEmailTokenService {
      */
     private void handleTemplateName(String templateName, Map<String, Object> mutableEmailData) {
         if (ACCOUNT_DELETION_TEMPLATE.equals(templateName)) {
-            mutableEmailData.remove("updatedAt");
-            messageFormatter.formatInstant(mutableEmailData, "deleteDate");
+            mutableEmailData.remove(ACCOUNT_UPDATED_AT);
+            messageFormatter.formatInstant(mutableEmailData, ACCOUNT_DELETE_DATE);
         } else if (ACCOUNT_UPDATE_TEMPLATE.equals(templateName)) {
-            mutableEmailData.remove("deleteDate");
-            messageFormatter.formatInstant(mutableEmailData, "updatedAt");
+            mutableEmailData.remove(ACCOUNT_DELETE_DATE);
+            messageFormatter.formatInstant(mutableEmailData, ACCOUNT_UPDATED_AT);
         }
 
         mutableEmailData.put("templateName", templateName);

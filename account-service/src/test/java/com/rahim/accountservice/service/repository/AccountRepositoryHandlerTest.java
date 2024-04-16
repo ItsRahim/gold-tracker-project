@@ -19,7 +19,7 @@ import java.util.List;
  */
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AccountRepositoryHandlerTest extends AbstractTestConfig {
+class AccountRepositoryHandlerTest extends AbstractTestConfig {
 
     @Autowired
     IAccountRepositoryHandler accountRepositoryHandler;
@@ -39,7 +39,7 @@ public class AccountRepositoryHandlerTest extends AbstractTestConfig {
 
     @Test
     @DisplayName("Some Name")
-    public void someTest() {
+    void someTest() {
 
     }
 

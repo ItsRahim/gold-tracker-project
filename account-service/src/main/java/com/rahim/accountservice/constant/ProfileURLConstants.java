@@ -7,6 +7,9 @@ package com.rahim.accountservice.constant;
  * @created 16/02/2024
  */
 public final class ProfileURLConstants {
+
+    private ProfileURLConstants() {}
+
     public static final String BASE_URL = "/api/v1/gold/user-service/profile";
     public static final String PROFILE_ID= "/{profileId}";
     public static final String USERNAME = "/{username}";

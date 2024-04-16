@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AccountQueryServiceTest extends AbstractTestConfig {
+class AccountQueryServiceTest extends AbstractTestConfig {
 
     @Autowired
     IAccountQueryService accountQueryService;
@@ -64,7 +64,7 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
 
     @Test
     @DisplayName("Check Notification Criteria - User Found Notification Enabled")
-    public void checkNotificationCriteria_UserFoundNotificationsEnabled() {
+    void checkNotificationCriteria_UserFoundNotificationsEnabled() {
         String accountId = "2";
         Account account = accountRepository.findById(Integer.valueOf(accountId)).orElse(null);
 
@@ -84,7 +84,7 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
 
     @Test
     @DisplayName("Check Notification Criteria - User Found Notification Disabled")
-    public void checkNotificationCriteria_UserFoundNotificationDisabled() {
+    void checkNotificationCriteria_UserFoundNotificationDisabled() {
         String accountId = "1";
         Account account = accountRepository.findById(1).orElse(null);
 
@@ -103,7 +103,7 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
 
     @Test
     @DisplayName("Check Notification Criteria - User Not Found")
-    public void existsById_UserNotFound() {
+    void existsById_UserNotFound() {
         String accountId = "10000";
         accountQueryService.checkNotificationCriteria(accountId);
 
@@ -115,17 +115,17 @@ public class AccountQueryServiceTest extends AbstractTestConfig {
 
     @Test
     @DisplayName("Get All Accounts - Accounts Found")
-    public void getAllAccounts_AccountsFound() {
+    void getAllAccounts_AccountsFound() {
         List<Account> accountList = accountQueryService.getAllAccounts();
 
         assertFalse(accountList.isEmpty());
-        assertEquals(accountList.size(), 10);
+        assertEquals(10, accountList.size());
 
     }
 
     @Test
     @DisplayName("Get All Accounts - No Accounts Found")
-    public void getAllAccounts_NoAccountsFound() {
+    void getAllAccounts_NoAccountsFound() {
         String sql = "TRUNCATE TABLE rgts.user_accounts RESTART IDENTITY CASCADE";
         jdbcTemplate.execute(sql);
 

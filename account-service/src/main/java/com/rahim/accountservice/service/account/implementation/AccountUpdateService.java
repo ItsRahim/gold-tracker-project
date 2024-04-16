@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_UPDATE_TEMPLATE;
+import static com.rahim.accountservice.model.request.AccountRequestParam.*;
 
 /**
  * This service class is responsible for updating accounts.
@@ -92,7 +93,7 @@ public class AccountUpdateService implements IAccountUpdateService {
      */
     private void updateEmail(Account account, Map<String, String> updatedData) {
         if (isEmailUpdateValid(updatedData)) {
-            account.setEmail(updatedData.get("email"));
+            account.setEmail(updatedData.get(ACCOUNT_EMAIL));
 
             LOG.debug("Email updated successfully");
         } else {
@@ -108,7 +109,7 @@ public class AccountUpdateService implements IAccountUpdateService {
      */
     private void updatePassword(Account account, Map<String, String> updatedData) {
         if (isPasswordUpdateValid(updatedData)) {
-            account.setPasswordHash(updatedData.get("passwordHash"));
+            account.setPasswordHash(updatedData.get(ACCOUNT_PASSWORD_HASH));
 
             LOG.debug("Password updated successfully");
         } else {
@@ -123,9 +124,9 @@ public class AccountUpdateService implements IAccountUpdateService {
      * @return true if the email update is valid, false otherwise.
      */
     private boolean isEmailUpdateValid(Map<String, String> updatedData) {
-        String newEmail = updatedData.get("email");
+        String newEmail = updatedData.get(ACCOUNT_EMAIL);
 
-        return updatedData.containsKey("email") &&
+        return updatedData.containsKey(ACCOUNT_EMAIL) &&
                 !accountRepositoryHandler.hasAccount(newEmail) &&
                 isNotEmpty(newEmail);
     }
@@ -137,9 +138,9 @@ public class AccountUpdateService implements IAccountUpdateService {
      * @return true if the password update is valid, false otherwise.
      */
     private boolean isPasswordUpdateValid(Map<String, String> updatedData) {
-        String newPasswordHash = updatedData.get("passwordHash");
+        String newPasswordHash = updatedData.get(ACCOUNT_PASSWORD_HASH);
 
-        return updatedData.containsKey("passwordHash") && isNotEmpty(newPasswordHash);
+        return updatedData.containsKey(ACCOUNT_PASSWORD_HASH) && isNotEmpty(newPasswordHash);
     }
 
     /**

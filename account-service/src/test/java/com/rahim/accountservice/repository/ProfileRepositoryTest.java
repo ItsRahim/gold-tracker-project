@@ -16,7 +16,7 @@ import java.util.List;
 
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ProfileRepositoryTest extends AbstractTestConfig {
+class ProfileRepositoryTest extends AbstractTestConfig {
 
     @Autowired
     ProfileRepository profileRepository;

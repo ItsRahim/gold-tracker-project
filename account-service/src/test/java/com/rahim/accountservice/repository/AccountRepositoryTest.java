@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AccountRepositoryTest extends AbstractTestConfig {
+class AccountRepositoryTest extends AbstractTestConfig {
 
     @Autowired
     AccountRepository accountRepository;
@@ -37,7 +37,7 @@ public class AccountRepositoryTest extends AbstractTestConfig {
         accountRepository.save(account);
 
         assertTrue(accountRepository.existsAccountByEmail("jane.doe@gmail.com"));
-        assertEquals(accountRepository.findAll().size(), 11);
+        assertEquals(11, accountRepository.findAll().size());
     }
 
     @Test

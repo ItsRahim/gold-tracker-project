@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AccountDeletionServiceTest extends AbstractTestConfig {
+class AccountDeletionServiceTest extends AbstractTestConfig {
 
     @Autowired
     IAccountDeletionService accountDeletionService;

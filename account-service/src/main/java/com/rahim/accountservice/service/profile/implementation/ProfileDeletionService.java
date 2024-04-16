@@ -18,7 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProfileDeletionService implements IProfileDeletionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProfileQueryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileDeletionService.class);
+
     private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Override

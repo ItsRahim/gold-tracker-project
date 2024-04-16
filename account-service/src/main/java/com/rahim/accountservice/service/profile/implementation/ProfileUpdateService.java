@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.rahim.accountservice.model.request.ProfileRequestParam.*;
+
 /**
  * Service for updating Profiles table
  *
@@ -21,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProfileUpdateService implements IProfileUpdateService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProfileQueryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileUpdateService.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Override
@@ -52,17 +54,17 @@ public class ProfileUpdateService implements IProfileUpdateService {
      * @param updatedData The new data for the profile.
      */
     private void updateProfileData(Profile profile, Map<String, String> updatedData) {
-        if (updatedData.containsKey("firstName")) {
-            profile.setFirstName(updatedData.get("firstName"));
+        if (updatedData.containsKey(PROFILE_FIRST_NAME)) {
+            profile.setFirstName(updatedData.get(PROFILE_FIRST_NAME));
         }
-        if (updatedData.containsKey("lastName")) {
-            profile.setLastName(updatedData.get("lastName"));
+        if (updatedData.containsKey(PROFILE_LAST_NAME)) {
+            profile.setLastName(updatedData.get(PROFILE_LAST_NAME));
         }
-        if (updatedData.containsKey("contactNumber")) {
-            profile.setContactNumber(updatedData.get("contactNumber"));
+        if (updatedData.containsKey(PROFILE_CONTACT_NUMBER)) {
+            profile.setContactNumber(updatedData.get(PROFILE_CONTACT_NUMBER));
         }
-        if (updatedData.containsKey("address")) {
-            profile.setAddress(updatedData.get("address"));
+        if (updatedData.containsKey(PROFILE_ADDRESS)) {
+            profile.setAddress(updatedData.get(PROFILE_ADDRESS));
         }
     }
 }

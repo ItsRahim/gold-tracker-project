@@ -15,5 +15,5 @@ public interface IAccountUpdateService {
      * @param updatedData The map containing the updated data.
      * @throws RuntimeException If an error occurs while updating the account.
      */
-    void updateAccount(int userId, Map<String, String> updatedData) throws Exception;
+    void updateAccount(int userId, Map<String, String> updatedData);
 }
