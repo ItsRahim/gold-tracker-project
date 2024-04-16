@@ -19,8 +19,8 @@ import java.util.List;
 public interface GoldPriceRepository extends JpaRepository<GoldPrice, Integer> {
     List<GoldPrice> findByGoldTypeId(Integer goldTypeId);
 
-    @Query(value = "SELECT price_id FROM rgts.gold_prices WHERE gold_type_id = :gold_type_id", nativeQuery = true)
-    Integer getPriceIdByTypeId(@Param("gold_type_id") int gold_type_id);
+    @Query(value = "SELECT price_id FROM rgts.gold_prices WHERE gold_type_id = :goldTypeId", nativeQuery = true)
+    Integer getPriceIdByTypeId(@Param("gold_type_id") int goldTypeId);
 
     @Modifying
     @Transactional

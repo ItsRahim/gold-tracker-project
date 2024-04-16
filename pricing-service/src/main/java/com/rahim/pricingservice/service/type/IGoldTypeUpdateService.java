@@ -8,5 +8,5 @@ import java.util.Map;
  */
 public interface IGoldTypeUpdateService {
 
-    void updateGoldType(int goldId, Map<String, String> updatedData) throws Exception;
+    void updateGoldType(int goldId, Map<String, String> updatedData);
 }

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GoldPriceCreationService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GoldPriceRepositoryHandler.class);
 
     private final GoldPriceRepository goldPriceRepository;
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
@@ -92,7 +92,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
             List<GoldPrice> goldPrices = goldPriceRepository.findAll();
             return goldPrices.stream()
                     .map(this::mapToGoldPriceDTO)
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (DataAccessException e) {
             String errorMessage = "Error getting all gold prices: " + e.getMessage();
             LOG.error(errorMessage, e);

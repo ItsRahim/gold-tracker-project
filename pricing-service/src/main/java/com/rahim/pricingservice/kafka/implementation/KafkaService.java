@@ -26,9 +26,9 @@ public class KafkaService implements IKafkaService {
     @Override
     public void sendMessage(String topic, String data) {
         try {
-            ProducerRecord<String, String> record = new ProducerRecord<>(topic, data);
+            ProducerRecord<String, String> kafkaRecord = new ProducerRecord<>(topic, data);
 
-            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record);
+            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(kafkaRecord);
 
             future.whenComplete((result, ex) -> {
                 if (ex != null) {

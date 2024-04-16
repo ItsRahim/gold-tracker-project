@@ -29,7 +29,7 @@ public class GoldPriceCalculator {
      * @param pricePerOunce The price per ounce (in GBP).
      * @throws RuntimeException If an error occurs during the conversion.
      */
-    public void calculatePricePerGram(BigDecimal pricePerOunce) {
+    public static void calculatePricePerGram(BigDecimal pricePerOunce) {
         try {
             BigDecimal ouncesBigDecimal = pricePerOunce.setScale(SCALE, RoundingMode.HALF_UP);
             pricePerGram = ouncesBigDecimal.divide(GRAMS_PER_OUNCE, SCALE, RoundingMode.HALF_UP);

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public final class TopicConstants {
 
+    private TopicConstants() {}
+
     @Value("${topics.send-notification-price}")
     private String sendNotificationPriceTopic;
 

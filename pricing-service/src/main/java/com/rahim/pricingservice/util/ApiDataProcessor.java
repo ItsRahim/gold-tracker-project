@@ -21,14 +21,13 @@ public class ApiDataProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApiDataProcessor.class);
 
-    private final GoldPriceCalculator goldPriceCalculator;
     private final IGoldPriceUpdateService goldPriceUpdateService;
     private GoldData processedData;
 
     public void processApiData(String kafkaData) {
         try {
             processedData = new GoldData(kafkaData);
-            goldPriceCalculator.calculatePricePerGram(processedData.getPrice());
+            GoldPriceCalculator.calculatePricePerGram(processedData.getPrice());
             goldPriceUpdateService.updateGoldTickerPrice(processedData);
 
         } catch (JsonProcessingException e) {

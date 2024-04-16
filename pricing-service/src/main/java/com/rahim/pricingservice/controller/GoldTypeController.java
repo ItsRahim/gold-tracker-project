@@ -47,7 +47,7 @@ public class GoldTypeController {
             Optional<GoldType> goldTypeOptional = goldTypeRepositoryHandler.findById(goldTypeId);
 
             return goldTypeOptional.map(goldType -> ResponseEntity.status(HttpStatus.OK).body(goldType))
-                    .orElseGet(() -> ResponseEntity.notFound().build());
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
