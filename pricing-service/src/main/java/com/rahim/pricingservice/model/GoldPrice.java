@@ -1,7 +1,6 @@
 package com.rahim.pricingservice.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rahim.pricingservice.listener.GoldPriceEntityListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +16,6 @@ import java.time.OffsetDateTime;
 @Setter
 @Entity
 @Table(name = "gold_prices", schema = "rgts")
-@EntityListeners(GoldPriceEntityListener.class)
 public class GoldPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

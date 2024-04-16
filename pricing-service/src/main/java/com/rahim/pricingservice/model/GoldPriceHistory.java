@@ -1,6 +1,5 @@
 package com.rahim.pricingservice.model;
 
-import com.rahim.pricingservice.listener.GoldPriceHistoryEntityListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,6 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @Table(name = "gold_price_history", schema = "rgts")
-@EntityListeners(GoldPriceHistoryEntityListener.class)
 public class GoldPriceHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
