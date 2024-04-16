@@ -56,7 +56,7 @@ jobs:
           -Dsonar.projectKey=${{ matrix.project }} \
           -Dsonar.host.url=http://localhost:9000 \
           -Dsonar.login=admin \
-          -Dsonar.password=$SONAR_PASSWORD
+          -Dsonar.password=admin
 
     # Cleanup steps
     - name: Stop SonarQube Docker container
