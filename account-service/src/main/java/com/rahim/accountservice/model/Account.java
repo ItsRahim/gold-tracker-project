@@ -2,7 +2,6 @@ package com.rahim.accountservice.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rahim.accountservice.listener.AccountEntityListener;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -23,7 +22,6 @@ import java.time.OffsetDateTime;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(AccountEntityListener.class)
 @Table(name = "user_accounts", schema = "rgts")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Account {
