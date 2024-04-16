@@ -48,13 +48,15 @@ jobs:
         echo "SonarQube is up and running!"
 
     - name: SonarQube Scan
+      env:
+        SONAR_PASSWORD: ${{ secrets.SONAR_TOKEN }}
       run: |
         cd ${{ matrix.project }}
         mvn sonar:sonar \
           -Dsonar.projectKey=${{ matrix.project }} \
           -Dsonar.host.url=http://localhost:9000 \
           -Dsonar.login=admin \
-          -Dsonar.password=admin # Update with your SonarQube admin credentials
+          -Dsonar.password=$SONAR_PASSWORD
 
     # Cleanup steps
     - name: Stop SonarQube Docker container
