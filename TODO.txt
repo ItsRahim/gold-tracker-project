@@ -14,7 +14,7 @@ transaction-service - TODO
 report-service - TODO
 email-service - DONE
 authentication-service - TODO
-holdings-service - TODO
+holdings-service - TODO - spring batch
 
 Issues/Enhancements:
 - User not able to update profile details, only user account details - DONE
