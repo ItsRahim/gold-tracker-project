@@ -33,6 +33,7 @@ Issues/Enhancements:
 - Maven plugin to create and push docker image
 - Update docker to expose specific ports
 - Remove hardcoded data references in custom-api, move to database
+- Add active flag to data sources, depending which is active is the one open feign will use, if all inactive/more than one active, default to uk investing
 Linked hashmap maintains the order in which keys are inserted
 
 Performance Testing:
