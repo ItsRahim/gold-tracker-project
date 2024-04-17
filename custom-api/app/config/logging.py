@@ -1,7 +1,10 @@
 import os
 import logging
 
-LOG_DIR = os.path.join(os.getcwd(), '/app/logs')
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+logs_dir = os.path.join(root_dir, 'logs')
+
+LOG_DIR = logs_dir
 LOG_FILE = os.path.join(LOG_DIR, 'gold-scraping-api.log')
 
 
@@ -13,7 +16,7 @@ def configure_logging():
     logger.setLevel(logging.DEBUG)
 
     file_handler = logging.FileHandler(LOG_FILE)
-    file_handler.setLevel(logging.INFO)
+    file_handler.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
