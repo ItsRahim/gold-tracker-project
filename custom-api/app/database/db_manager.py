@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2 import sql
 from dotenv import load_dotenv
 import os
 
@@ -20,3 +21,28 @@ class DatabaseManager:
             host=host,
             port=port
         )
+
+    def execute_query(self, query, params=None):
+        cursor = self.connection.cursor()
+        if params is not None:
+            cursor.execute(query, params)
+        else:
+            cursor.execute(query)
+        result = cursor.fetchall()
+        cursor.close()
+
+        return result
+
+    def execute_prepared_query(self, query, params):
+        cursor = self.connection.cursor()
+        prepared_query = sql.SQL(query).format(
+            *[sql.Identifier(param) for param in params.keys()]
+        )
+        cursor.execute(prepared_query, list(params.values()))
+        result = cursor.fetchall()
+        cursor.close()
+
+        return result
+
+    def close_connection(self):
+        self.connection.close()

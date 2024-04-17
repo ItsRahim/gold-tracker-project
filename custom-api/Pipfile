@@ -14,6 +14,7 @@ uvicorn = "*"
 starlette = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
+psycopg2 = "*"
 
 [dev-packages]
 

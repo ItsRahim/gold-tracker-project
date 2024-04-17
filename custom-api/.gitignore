@@ -286,5 +286,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-app/resources/vault_config.yaml
