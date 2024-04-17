@@ -1,5 +1,5 @@
-import psycopg2
-from psycopg2 import sql
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
 
@@ -14,35 +14,15 @@ class DatabaseManager:
         host = os.getenv('DB_HOST')
         port = os.getenv('DB_PORT')
 
-        self.connection = psycopg2.connect(
-            dbname=dbname,
-            user=user,
-            password=password,
-            host=host,
-            port=port
-        )
+        connection_url = f'postgresql://{user}:{password}@{host}:{port}/{dbname}'
+
+        self.engine = create_engine(connection_url)
+        self.Session = sessionmaker(bind=self.engine)
 
     def execute_query(self, query, params=None):
-        cursor = self.connection.cursor()
-        if params is not None:
-            cursor.execute(query, params)
-        else:
-            cursor.execute(query)
-        result = cursor.fetchall()
-        cursor.close()
-
-        return result
-
-    def execute_prepared_query(self, query, params):
-        cursor = self.connection.cursor()
-        prepared_query = sql.SQL(query).format(
-            *[sql.Identifier(param) for param in params.keys()]
-        )
-        cursor.execute(prepared_query, list(params.values()))
-        result = cursor.fetchall()
-        cursor.close()
-
-        return result
+        with self.engine.connect() as conn:
+            result = conn.execute(text(query), params)
+            return result.fetchall()
 
     def close_connection(self):
-        self.connection.close()
+        self.engine.dispose()
