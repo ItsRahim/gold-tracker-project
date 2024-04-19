@@ -1,65 +1,40 @@
 from app.config.logging import log
-
-"""
-This is a Python file used to store website information.
-
-It provides a centralised location for all sources this api will use to gather information about gold prices.
-Information includes website name, url and html elements to scrape
-
-Author: Rahim Ahmed
-Version: 1.0
-"""
-
-"""
-Data Source: Investing.com
-
-This script scrapes data from the Investing.com website to retrieve
-current XAU/GBP price information.
-"""
-UK_INVESTING_DICT = {
-    "name": "UK Investing",
-    "request_name": "uk-investing",
-    "url": "https://uk.investing.com/currencies/xau-gbp",
-    "element": ["div", {'data-test': 'instrument-price-last'}]
-}
-
-BLOOMBERG_DICT = {
-    "name": "Bloomberg",
-    "request_name": "bloomberg",
-    "url": "https://www.bloomberg.com/quote/XAUGBP:CUR",
-    "element": ["div", {'data-component': 'sized-price', 'class': 'sized-price SizedPrice_extraLarge-05pKbJRbUH8-'}]
-}
-
-CNBC_DICT = {
-    "name": "CNBC",
-    "request_name": "cnbc",
-    "url": "https://www.cnbc.com/quotes/XAUGBP=",
-    "element": ["span", {'class': 'QuoteStrip-lastPrice'}]
-}
-
-FORBES_DICT = {
-    "name": "Forbes",
-    "request_name": "forbes",
-    "url": "https://www.forbes.com/advisor/money-transfer/currency-converter/xau-gbp/",
-    "element": ["span", {'class': 'amount'}]
-}
-
-# TODO: Fake account agent required
-GOLD_UK_DICT = {
-    "name": "Gold UK",
-    "request_name": "gold-uk",
-    "url": "https://www.cnbc.com/quotes/XAUGBP=",
-    "element": ["span", {'class': 'QuoteStrip-lastPrice'}]
-}
+from app.database.db_manager import DatabaseManager
 
 
 def get_source(requested_source: str) -> dict or None:
-    sources = [UK_INVESTING_DICT, BLOOMBERG_DICT, CNBC_DICT, FORBES_DICT, GOLD_UK_DICT]
+    """
+    Retrieve a source from the database based on the provided source endpoint.
+    Args:
+        requested_source (str): The source endpoint to search for.
+    Returns:
+        dict or None: A dictionary containing the source details if found, None otherwise.
+    """
+    query = (
+        "SELECT source_name, source_url, source_element_data "
+        "FROM rgts.price_sources "
+        "WHERE source_endpoint = :requested_source "
+        "AND source_is_active = :active"
+    )
+
+    fallback_source_endpoint = 'uk-investing'
+    connection = DatabaseManager()
+
     try:
-        for source in sources:
-            if source.get("request_name") == requested_source.lower():
-                return source
-        return None
+        params = {'requested_source': requested_source, 'active': 'true'}
+        source = connection.execute_query(query, params)
+
+        if source and len(source) == 1:
+            log.debug(f"Found valid requested source: {requested_source}")
+            return source[0]
+        else:
+            log.warning(f"Requested source '{requested_source}' endpoint not found, inactive or not unique. "
+                        f"Using default source: '{fallback_source_endpoint}'")
+
+            params = {'requested_source': fallback_source_endpoint, 'active': 'true'}
+            fallback_source = connection.execute_query(query, params)
+            return fallback_source[0]
+
     except Exception as e:
-        log.error(f"An error occurred while searching for the dictionary: {e}")
+        log.error(f"Error occurred while retrieving source: {e}")
         return None

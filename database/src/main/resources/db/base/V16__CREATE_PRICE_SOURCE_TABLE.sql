@@ -3,7 +3,7 @@ CREATE TABLE rgts.price_sources (
     source_name VARCHAR(50),
     source_endpoint VARCHAR(50),
     source_url VARCHAR(255),
-    source_element_data JSONB,
+    source_element_data VARCHAR(500),
     source_is_active BOOLEAN NOT NULL
 );
 
