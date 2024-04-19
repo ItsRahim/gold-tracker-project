@@ -15,7 +15,7 @@ kafka_handler = KafkaHandler()
 
 
 @price_router.get("/{requested_source}")
-async def root(requested_source: str) -> Gold | dict[str, object]:
+async def root(requested_source: str) -> dict[str, object] | dict[str, str]:
     log.info(f"Received request for gold price from source: {requested_source}")
 
     source = get_source(requested_source)
@@ -33,7 +33,7 @@ async def root(requested_source: str) -> Gold | dict[str, object]:
         kafka_handler.send_price(gold)
         log.debug(f"Gold object data sent to Kafka producer")
 
-        return gold
+        return {"Data": gold}
     else:
         log.warning(f"No data found with the requested source: {requested_source}")
         return {"error": f"No information found for requested source: {requested_source}"}
