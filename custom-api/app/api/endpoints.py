@@ -31,7 +31,7 @@ async def root(requested_source: str) -> dict[str, object] | dict[str, str]:
 
         gold = Gold(source_name, gold_price, request_time)
         kafka_handler.send_price(gold)
-        log.debug(f"Gold object data sent to Kafka producer")
+        log.debug("Gold object data sent to Kafka producer")
 
         return {"Data": gold}
     else:
