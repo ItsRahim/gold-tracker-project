@@ -2,7 +2,7 @@ import ast
 
 from fastapi import APIRouter
 from app.config.logging import log
-from app.api.scraper import get_gold_price
+from app.service.scraper import get_gold_price
 from app.data.gold_sources import get_source
 from datetime import datetime
 

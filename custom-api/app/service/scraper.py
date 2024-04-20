@@ -1,5 +1,5 @@
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 from app.config.logging import log
 from fake_useragent import UserAgent
 
