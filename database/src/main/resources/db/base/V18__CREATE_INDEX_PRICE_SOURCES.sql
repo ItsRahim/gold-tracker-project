@@ -1,0 +1,1 @@
+CREATE INDEX idx_price_sources_columns ON rgts.price_sources (source_name, source_url, source_element_data);

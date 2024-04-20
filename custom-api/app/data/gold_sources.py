@@ -1,3 +1,5 @@
+from sqlalchemy.exc import SQLAlchemyError
+
 from app.config.logging import log
 from app.database.db_manager import DatabaseManager
 
@@ -17,6 +19,12 @@ def get_source(requested_source: str) -> dict or None:
         "AND source_is_active = :active"
     )
 
+    fallback_query = (
+        "SELECT source_name, source_url, source_element_data "
+        "FROM rgts.price_sources "
+        "WHERE source_endpoint = :fallback_source "
+    )
+
     fallback_source_endpoint = 'uk-investing'
     connection = DatabaseManager()
 
@@ -31,10 +39,14 @@ def get_source(requested_source: str) -> dict or None:
             log.warning(f"Requested source '{requested_source}' endpoint not found, inactive or not unique. "
                         f"Using default source: '{fallback_source_endpoint}'")
 
-            params = {'requested_source': fallback_source_endpoint, 'active': 'true'}
-            fallback_source = connection.execute_query(query, params)
-            return fallback_source[0]
+            params = {'fallback_source': fallback_source_endpoint}
+            fallback_source = connection.execute_query(fallback_query, params)
+            if fallback_source:
+                return fallback_source[0]
+            else:
+                log.warning(f"Fallback source '{fallback_source_endpoint}' not found.")
+                return None
 
-    except Exception as e:
+    except SQLAlchemyError as e:
         log.error(f"Error occurred while retrieving source: {e}")
         return None
