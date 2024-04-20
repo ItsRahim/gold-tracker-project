@@ -37,8 +37,3 @@ async def root(requested_source: str) -> dict[str, object] | dict[str, str]:
     else:
         log.warning(f"No data found with the requested source: {requested_source}")
         return {"error": f"No information found for requested source: {requested_source}"}
-
-
-@price_router.put("/{source_id}")
-async def root(source_id: int) -> dict[str, object] | dict[str, str]:
-    log.info(f"Received request for gold price from source: {source_id}")

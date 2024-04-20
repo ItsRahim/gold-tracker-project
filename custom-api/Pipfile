@@ -14,7 +14,7 @@ uvicorn = "*"
 starlette = "*"
 python-dotenv = "*"
 sqlalchemy = "*"
-pymongo = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
