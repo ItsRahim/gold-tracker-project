@@ -286,3 +286,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+encryption_key.txt

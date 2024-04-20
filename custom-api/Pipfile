@@ -15,6 +15,8 @@ starlette = "*"
 python-dotenv = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
+cryptography = "*"
+hvac = "*"
 
 [dev-packages]
 
