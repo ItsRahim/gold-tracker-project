@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.service.encryptor import EncryptionHandler
+from app.util.encryptor import EncryptionHandler
 
 encryptor_router = APIRouter()
 

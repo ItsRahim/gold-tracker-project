@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.config.load_config import load_config
 from app.config.logging import log
-from app.service.encryptor import EncryptionHandler
+from app.util.encryptor import EncryptionHandler
 
 config = load_config('database')
 encryption_handler = EncryptionHandler()

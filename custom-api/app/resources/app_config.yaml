@@ -12,8 +12,8 @@ database:
   name: gold
   host: localhost
   port: 5432
-  username: gAAAAABmI_1MizmAFy1DQ0O_18k4hSwt0AKeZA8MN34pJylkXSzOk4VvWz1ss7L-VQMStCx6SzKxV0Ywzb_zyzu8j36maLEocg==
-  password: gAAAAABmI_1MFMaeOXwhKEHGUdTZK8A6co232KK9qie18e_T5CpF_cssiGlXN3Pl1UMjBeeFixn3al1NTNFzPAF9ry1vZnsV6g==
+  username: gAAAAABmJBjc3WeldeQB062Ovq7zcVilrnoS6nQWECFJg7Ww3nEVOiKsXSkcSQvRNlKDdHys82PQr6EPn-nfTQ2Xs3N-pzFxIQ==
+  password: gAAAAABmJBjciMSo6ZH0vVX37iBNHjmc5V3_vJWEBKXbgxHB_RJgDg30aFfVfr_5uNIIFlo7mtJ7gVoP7Hp-VFV7JQ24FxLxsw==
 
 vault:
   url: http://localhost:8200
