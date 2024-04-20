@@ -16,5 +16,6 @@ database:
   password: gAAAAABmI_1MFMaeOXwhKEHGUdTZK8A6co232KK9qie18e_T5CpF_cssiGlXN3Pl1UMjBeeFixn3al1NTNFzPAF9ry1vZnsV6g==
 
 vault:
-  url: http:localhost:8200
-  token: someToken
+  url: http://localhost:8200
+  token: hvs.zLyPID1klP2OFLBsk5hwhFUg
+  backend-path: kv/data/my-app
