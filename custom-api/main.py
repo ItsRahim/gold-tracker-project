@@ -5,7 +5,6 @@ from fastapi.responses import JSONResponse
 from starlette.requests import Request
 from starlette.routing import Route
 
-from app.api.encryptor import encryptor_router
 from app.api.endpoints import price_router
 from app.config.load_config import load_config
 
@@ -14,7 +13,6 @@ config = load_config('app')
 app = FastAPI()
 
 app.include_router(price_router, prefix="/api/v1/gold")
-app.include_router(encryptor_router, prefix="/api/v1")
 
 
 @app.exception_handler(HTTPException)
