@@ -4,7 +4,7 @@ spring:
     show-sql: false
   datasource:
     url: ${db-url}
-    username: ${db-username}
+    username: ENC(CbB4+oU4KgU8ehQ8WF1a5X8KQ4/54U5CCUNkMeSvxhQbVGR/Fd/V2lqRfxh3Ipwt)
     password: ${db-password}
   kafka:
     bootstrap-servers: localhost:9092

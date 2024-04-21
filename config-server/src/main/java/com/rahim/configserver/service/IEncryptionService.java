@@ -1,5 +1,7 @@
 package com.rahim.configserver.service;
 
+import java.util.Map;
+
 /**
  * @author Rahim Ahmed
  * @created 21/04/2024
@@ -20,5 +22,5 @@ public interface IEncryptionService {
      * @param plainData the data to encrypt
      * @return the encrypted data
      */
-    String encrypt(String plainText);
+    Map<String, String> encrypt(Map<String, String> plainTextMap);
 }

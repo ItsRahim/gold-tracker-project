@@ -1,12 +1,15 @@
 package com.rahim.configserver.service.implementation;
 
-import com.rahim.configserver.config.EncryptionConfig;
 import com.rahim.configserver.service.IEncryptionService;
 import lombok.RequiredArgsConstructor;
 import org.jasypt.util.text.AES256TextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Rahim Ahmed
@@ -32,13 +35,26 @@ public class EncryptionService implements IEncryptionService {
     }
 
     @Override
-    public String encrypt(String plainText) {
+    public Map<String, String> encrypt(Map<String, String> plainTextMap) {
+        Map<String, String> encryptedDataMap = new HashMap<>();
         try {
             LOG.debug("Encrypting Plain Text...");
-            return encryptor.encrypt(plainText);
+
+            for (Map.Entry<String, String> entry : plainTextMap.entrySet()) {
+                String plainText = entry.getValue();
+                if (plainText != null && !plainText.isEmpty()) {
+                    String encryptedData = encryptor.encrypt(plainText);
+                    encryptedDataMap.put(entry.getKey(), encryptedData);
+                } else {
+                    LOG.warn("Skipping encryption for empty or null value with key: {}", entry.getKey());
+                }
+            }
+
+            LOG.debug("Encryption completed successfully");
+            return encryptedDataMap;
         } catch (Exception e) {
             LOG.error("Error encrypting data: {}", e.getMessage());
-            return null;
+            return Collections.emptyMap();
         }
     }
 }
