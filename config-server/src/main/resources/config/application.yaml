@@ -8,7 +8,10 @@ spring:
     password: ${db-password}
   kafka:
     bootstrap-servers: localhost:9092
-
+jasypt:
+  encryptor:
+    password: password1
+  #password: ${jasypt.encryptor.password}
 management:
   endpoints:
     web:
