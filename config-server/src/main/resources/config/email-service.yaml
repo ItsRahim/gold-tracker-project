@@ -1,3 +1,5 @@
+server:
+  port: 8083
 spring:
   application:
     name: email-service
@@ -7,18 +9,14 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${email-address}
-    password: ${email-password}
+    username: ENC(oyWkyXN9/0TvP+Q34QlJOhjpqRzG6u+No+Eguyh5mlahJS12s0ApEeWjaaRUj+cbuUTGnVbon0i3hBeAbXWE6g==)
+    password: ENC(eLQ7/j7ZCkRazmtM1ULeoS2A3Sms9/KI1uKHAipXmf3Z4f1qmfAZ+pRus3/WylCNF9ca92hp+zFSR2TGzFB6ww==)
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-
-server:
-  port: 8083
-
 eureka:
   client:
     service-url:

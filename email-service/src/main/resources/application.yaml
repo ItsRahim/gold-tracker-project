@@ -4,4 +4,5 @@ spring:
   cloud:
     config:
       enabled: true
-      uri: configserver:http://localhost:8888
+  config:
+    import: configserver:http://localhost:8888
