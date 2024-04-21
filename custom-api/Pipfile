@@ -14,8 +14,8 @@ uvicorn = "*"
 starlette = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
-cryptography = "*"
 hvac = "*"
+pycryptodome = "*"
 
 [dev-packages]
 

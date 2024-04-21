@@ -9,17 +9,12 @@ from app.config.logging import log
 from app.util.encryptor import EncryptionHandler
 
 config = load_config('database')
+
 encryption_handler = EncryptionHandler()
 
 
-def get_credentials():
-    encrypted_username = config['username']
-    username = encryption_handler.decrypt_value(encrypted_username)
-
-    encrypted_password = config['password']
-    password = encryption_handler.decrypt_value(encrypted_password)
-
-    return [username, password]
+def get_credentials(encryprted_value:  str) -> str:
+    return encryption_handler.decrypt_value(encryprted_value)
 
 
 class DatabaseManager:
@@ -28,7 +23,12 @@ class DatabaseManager:
         dbname = config['name']
         host = config['host']
         port = config['port']
-        user, password = get_credentials()
+        user = None
+        password = None
+
+        if 'username' in config and 'password' in config:
+            user = get_credentials(config['username'])
+            password = get_credentials(config['password'])
 
         connection_url = f'postgresql://{user}:{password}@{host}:{port}/{dbname}'
 
@@ -59,3 +59,4 @@ class DatabaseManager:
 
     def close_connection(self):
         self.engine.dispose()
+

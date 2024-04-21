@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "gold-price-api-client", url = "${gold-price-api.url}")
 public interface IGoldPriceFeignClient {
 
-    @GetMapping()
+    @GetMapping("/${gold-price-api.endpoint}")
     String getGoldPrice();
 
 }
