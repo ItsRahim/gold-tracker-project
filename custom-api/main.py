@@ -6,7 +6,7 @@ from starlette.requests import Request
 from starlette.routing import Route
 
 from app.api.encryptor import encryptor_router
-from app.api.endpoints import price_router
+from app.api.price_endpoint import price_router
 from app.config.load_config import load_config
 
 config = load_config('app')

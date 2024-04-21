@@ -1,6 +1,8 @@
 import ast
 
 from fastapi import APIRouter
+from fastapi.encoders import jsonable_encoder
+
 from app.config.logging import log
 from app.service.scraper import get_gold_price
 from app.data.gold_sources import get_source
@@ -15,7 +17,7 @@ kafka_handler = KafkaHandler()
 
 
 @price_router.get("/{requested_source}")
-async def root(requested_source: str) -> dict[str, object] | dict[str, str]:
+async def root(requested_source: str) -> Gold | dict[str, str]:
     log.info(f"Received request for gold price from source: {requested_source}")
 
     source = get_source(requested_source)
@@ -33,7 +35,7 @@ async def root(requested_source: str) -> dict[str, object] | dict[str, str]:
         kafka_handler.send_price(gold)
         log.debug("Gold object data sent to Kafka producer")
 
-        return {"Data": gold}
+        return jsonable_encoder(gold)
     else:
         log.warning(f"No data found with the requested source: {requested_source}")
         return {"error": f"No information found for requested source: {requested_source}"}

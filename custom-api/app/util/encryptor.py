@@ -2,7 +2,6 @@ import base64
 
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
-from Crypto.Util.Padding import pad, unpad
 
 from app.config.logging import log
 from app.util.vault import Hvac
@@ -15,12 +14,10 @@ def load_key_from_vault():
     if value is None:
         log.error("Key not found in vault")
     else:
-        # Converting retrieved key to byte
         return value.encode('utf-8')
 
 
 def pad_data(text):
-    # PKCS7 padding
     pad_size = AES.block_size - len(text) % AES.block_size
     return text + (chr(pad_size) * pad_size).encode()
 
