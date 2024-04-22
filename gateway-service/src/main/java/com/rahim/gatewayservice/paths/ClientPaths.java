@@ -6,6 +6,15 @@ package com.rahim.gatewayservice.paths;
  */
 public final class ClientPaths {
 
+    private ClientPaths() {}
+
+    /* ---------------------------------------------
+     *  CONFIG SERVER CLIENT ROUTES
+     * ---------------------------------------------
+     */
+    public static final String JAVA_ENCRYPTION = "/encrypt";
+    public static final String PYTHON_ENCRYPTION = "/python/encrypt";
+
     /* ---------------------------------------------
      *  ACCOUNT MICROSERVICE CLIENT ROUTES
      * ---------------------------------------------
