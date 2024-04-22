@@ -2,9 +2,7 @@ package com.rahim.accountservice.service.account;
 
 import com.rahim.accountservice.model.Account;
 
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -26,19 +24,4 @@ public interface IAccountQueryService {
      */
     List<Account> getAllAccounts();
 
-    /**
-     * This method finds an account by its ID.
-     *
-     * @param accountId the ID of the account to be found
-     * @return an Optional containing the found account, or an empty Optional if no account was found
-     */
-    Optional<Account> findAccountById(int accountId);
-
-    /**
-     * Retrieves the timestamp when the account with the specified user ID was last updated.
-     *
-     * @param userId The unique identifier of the user account.
-     * @return The `OffsetDateTime` representing the last update timestamp.
-     */
-    OffsetDateTime getUpdatedAtByUserId(Integer userId);
 }

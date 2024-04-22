@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -71,5 +72,5 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
      * @return The `OffsetDateTime` representing the last update timestamp.
      */
     @Query(value = "SELECT updated_at FROM rgts.user_accounts WHERE account_id = :userId", nativeQuery = true)
-    OffsetDateTime findUpdatedAtByUserId(@Param("userId") Integer userId);
+    Instant findUpdatedAtByUserId(@Param("userId") Integer userId);
 }

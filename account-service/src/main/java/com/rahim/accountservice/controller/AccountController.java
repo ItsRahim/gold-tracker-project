@@ -4,8 +4,8 @@ import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.UserRequest;
 import com.rahim.accountservice.service.account.IAccountCreationService;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
-import com.rahim.accountservice.service.account.IAccountQueryService;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
+import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class AccountController {
     private final IAccountCreationService accountCreationService;
     private final IAccountDeletionService accountDeletionService;
     private final IAccountUpdateService accountUpdateService;
-    private final IAccountQueryService accountQueryService;
+    private final IAccountRepositoryHandler accountRepositoryHandler;
 
     @PostMapping()
     public ResponseEntity<String> createAccount(@RequestBody UserRequest userRequest) {
@@ -51,7 +51,7 @@ public class AccountController {
     @GetMapping(ACCOUNT_ID)
     public ResponseEntity<Object> findAccountById(@PathVariable int accountId) {
         try {
-            Optional<Account> accountOptional = accountQueryService.findAccountById(accountId);
+            Optional<Account> accountOptional = accountRepositoryHandler.findById(accountId);
 
             if (accountOptional.isPresent()) {
                 Account account = accountOptional.get();
@@ -74,9 +74,9 @@ public class AccountController {
     public ResponseEntity<String> updateAccount(@PathVariable int accountId,
                                                 @RequestBody Map<String, String> updatedData) {
         try {
-            OffsetDateTime beforeUpdate = accountQueryService.getUpdatedAtByUserId(accountId);
+            OffsetDateTime beforeUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
             accountUpdateService.updateAccount(accountId, updatedData);
-            OffsetDateTime afterUpdate = accountQueryService.getUpdatedAtByUserId(accountId);
+            OffsetDateTime afterUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
 
             if (beforeUpdate.equals(afterUpdate)) {
                 return ResponseEntity.status(HttpStatus.OK).body("No updates were applied to the account.");
@@ -92,7 +92,7 @@ public class AccountController {
 
     @GetMapping()
     public ResponseEntity<List<Account>> getAllAccounts() {
-        List<Account> accountDTOS = accountQueryService.getAllAccounts();
+        List<Account> accountDTOS = accountRepositoryHandler.getAllAccounts();
         return ResponseEntity.status(HttpStatus.OK).body(accountDTOS);
     }
 

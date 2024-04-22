@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -118,7 +119,7 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     public OffsetDateTime getUpdatedAtByUserId(Integer userId) {
-        return accountRepository.findUpdatedAtByUserId(userId);
+        return accountRepository.findUpdatedAtByUserId(userId).atOffset(ZoneOffset.UTC);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.rahim.accountservice.service.account.implementation;
 
 import com.rahim.accountservice.constant.TopicConstants;
-import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.kafka.IKafkaService;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.service.account.IAccountQueryService;
@@ -11,9 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This service class is responsible for querying account information.
@@ -63,19 +60,6 @@ public class AccountQueryService implements IAccountQueryService {
     @Override
     public List<Account> getAllAccounts() {
         return accountRepositoryHandler.getAllAccounts();
-    }
-
-    /**
-     * @see IAccountQueryService
-     */
-    @Override
-    public Optional<Account> findAccountById(int accountId) {
-        return accountRepositoryHandler.findById(accountId);
-    }
-
-    @Override
-    public OffsetDateTime getUpdatedAtByUserId(Integer userId) {
-        return accountRepositoryHandler.getUpdatedAtByUserId(userId);
     }
 
 }
