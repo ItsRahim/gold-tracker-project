@@ -12,6 +12,6 @@ public class ResponseEntityFormatter {
     private ResponseEntityFormatter() {}
 
     public static ResponseEntity<Object> jsonFormatter(HttpStatus status, String message) {
-        return ResponseEntity.status(status).body("{\"message\": \"" + message + "\"}");
+        return ResponseEntity.status(status).body("{\"Response\": \"" + message + "\"}");
     }
 }

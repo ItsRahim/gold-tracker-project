@@ -42,7 +42,6 @@ public class EncryptorController {
         if (encryptionBody != null) {
             try {
                 Map<String, String> encryptedData = pythonEncryption.encryptPlainText(encryptionBody);
-
                 return ResponseEntity.status(HttpStatus.OK).body(encryptedData);
             } catch (Exception e) {
                 return ResponseEntityFormatter.jsonFormatter(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to encrypt data");
