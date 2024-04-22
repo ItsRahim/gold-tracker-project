@@ -57,7 +57,7 @@ public class AccountCreationService implements IAccountCreationService {
             accountRepositoryHandler.saveAccount(account);
             profileCreation.createProfile(account, profile);
 
-            LOG.info("Successfully created Account and Account Profile for: {}", profile.getUsername());
+            LOG.debug("Successfully created Account and Account Profile for: {}", profile.getUsername());
         } catch (DataAccessException e) {
             LOG.error("Unexpected error creating Account and Account Profile: {}", e.getMessage());
             throw new RuntimeException("Unexpected error creating Account and Account Profile.", e);

@@ -28,7 +28,6 @@ public class ProfileDeletionService implements IProfileDeletionService {
         try {
             int profileId = profileRepositoryHandler.getProfileIdByUserId(userId);
             profileRepositoryHandler.deleteProfile(profileId);
-            LOG.info("Account profile with ID {} deleted successfully.", profileId);
         } catch (Exception e) {
             LOG.error("Error deleting user profile for user ID {}: {}", userId, e.getMessage(), e);
         }

@@ -99,12 +99,12 @@ public class AccountController {
     @DeleteMapping(ACCOUNT_ID)
     public ResponseEntity<String> deleteAccount(@PathVariable int accountId) {
         try {
-            boolean deleted = accountDeletionService.requestAccountDelete(accountId);
+            boolean deletedRequested = accountDeletionService.requestAccountDelete(accountId);
 
-            if (deleted) {
+            if (deletedRequested) {
                 return ResponseEntity.status(HttpStatus.OK).body("Successfully Requested to Delete Account with ID: " + accountId);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found for ID: " + accountId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found for ID: {} " + accountId);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user: " + e.getMessage());

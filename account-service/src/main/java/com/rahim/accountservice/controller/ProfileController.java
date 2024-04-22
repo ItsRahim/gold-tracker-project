@@ -32,7 +32,7 @@ public class ProfileController {
     @GetMapping()
     public ResponseEntity<List<Profile>> getAllProfiles() {
         List<Profile> profiles = profileRepositoryHandler.getAllProfiles();
-        return ResponseEntity.status(HttpStatus.FOUND).body(profiles);
+        return ResponseEntity.status(HttpStatus.OK).body(profiles);
     }
 
     @PutMapping(PROFILE_ID)

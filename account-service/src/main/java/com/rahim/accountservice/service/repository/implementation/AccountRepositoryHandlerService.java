@@ -68,9 +68,9 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
     public void deleteAccount(int accountId) {
         findById(accountId).ifPresent(userAccount -> {
             try {
-                LOG.info("Deleting account with ID: {}", accountId);
+                LOG.debug("Deleting account with ID: {}", accountId);
                 accountRepository.deleteById(accountId);
-                LOG.info("Account with ID {} deleted successfully", accountId);
+                LOG.debug("Account with ID {} deleted successfully", accountId);
             } catch (EmptyResultDataAccessException e) {
                 LOG.warn("Attempted to delete non-existing account with ID: {}", accountId);
                 throw new EntityNotFoundException("Account with ID " + accountId + " not found");
@@ -105,9 +105,9 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
         try {
             accounts = accountRepository.findAll();
             if (CollectionUtils.isEmpty(accounts)) {
-                LOG.info("No accounts found in the database");
+                LOG.debug("No accounts found in the database");
             } else {
-                LOG.info("Fetched {} accounts from the database", accounts.size());
+                LOG.debug("Fetched {} accounts from the database", accounts.size());
             }
 
         } catch (DataAccessException e) {

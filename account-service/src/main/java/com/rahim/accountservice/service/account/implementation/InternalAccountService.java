@@ -59,7 +59,11 @@ public class InternalAccountService implements IInternalAccountService {
             profileDeletionService.deleteProfile(userId);
             accountRepositoryHandler.deleteAccount(userId);
 
-            LOG.info("Account account with ID {} deleted successfully.", userId);
+            if (accountRepositoryHandler.findById(userId).isEmpty()) {
+                LOG.debug("Account with ID {} deleted successfully.", userId);
+            } else {
+                LOG.warn("Failed to deleted account with ID {}", userId);
+            }
 
         } catch (DataAccessException e) {
             LOG.error("Error deleting user account with ID {}: {}", userId, e.getMessage());
@@ -90,9 +94,9 @@ public class InternalAccountService implements IInternalAccountService {
                     emailTokenGenerator.generateEmailTokens(ACCOUNT_INACTIVITY_TEMPLATE, account.getId(), false, false);
                 }
 
-                LOG.info("Inactive users found. Account status successfully updated");
+                LOG.debug("Inactive users found. Account status successfully updated");
             } else {
-                LOG.info("No inactive users found for deletion");
+                LOG.debug("No inactive users found for deletion");
             }
         } catch (DataAccessException e) {
             LOG.error("An error occurred during the cleanup of user accounts pending deletion: {}", e.getMessage());
@@ -144,7 +148,7 @@ public class InternalAccountService implements IInternalAccountService {
             List<Account> usersToDelete = accountRepositoryHandler.getUsersToDelete(cutoffDate);
 
             if (!usersToDelete.isEmpty()) {
-                LOG.info("Found {} users to be deleted.", usersToDelete.size());
+                LOG.debug("Found {} users to be deleted.", usersToDelete.size());
 
                 for (Account account : usersToDelete) {
                     accountDeletionService.requestAccountDelete(account.getId());
