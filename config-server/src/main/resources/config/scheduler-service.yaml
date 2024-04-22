@@ -1,35 +1,35 @@
-spring:
-  application:
-    name: scheduler-service
-  output:
-    ansi:
-      enabled: always
-
-server:
-  port: 8082
-
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+logging:
+  color:
+    enabled: true
+  file:
+    name: logs/scheduler-service.log
+  level:
+    com:
+      rahim:
+        schedulerservice: INFO
+    org:
+      springframework: ERROR
+    root: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
 
 management:
   tracing:
     sampling:
       probability: 1.0
 
-logging:
-  level:
-    root: WARN
-    com:
-      rahim:
-        schedulerservice: INFO
-    org:
-      springframework: ERROR
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
-  file:
-    name: logs/scheduler-service.log
-  color:
-    enabled: true
+server:
+  port: 8082
+
+spring:
+  application:
+    name: scheduler-service
+  output:
+    ansi:
+      enabled: always

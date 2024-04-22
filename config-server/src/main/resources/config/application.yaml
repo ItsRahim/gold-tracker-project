@@ -1,22 +1,28 @@
-spring:
-  jpa:
-    database: postgresql
-    show-sql: false
-  datasource:
-    url: jdbc:postgresql://localhost:5432/gold
-    username: ENC(5WDGY4VYzm7NwK4N5Mc8vuqqxdRstu2NjkzeTAhtihwSKtj/N7Z1xAvWnaWyvsUi)
-    password: ENC(lj2nxq/4um3nLeLDMXarW6NkIx/MY4KixWEJj5hOAD+pIHHltdgIY9BLdqtA+Uem)
-  kafka:
-    bootstrap-servers: localhost:9092
 jasypt:
   encryptor:
     password: ${jasypt.encryptor.password}
-python-api:
-  url: http://localhost:8000/api/v1
-  source: uk-investing
-  encrypt: encrypt
+
 management:
   endpoints:
     web:
       exposure:
         include: env, health
+
+python-api:
+  encrypt: encrypt
+  source: uk-investing
+  url: http://localhost:8000/api/v1
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gold
+    username: ENC(5WDGY4VYzm7NwK4N5Mc8vuqqxdRstu2NjkzeTAhtihwSKtj/N7Z1xAvWnaWyvsUi)
+    password: ENC(lj2nxq/4um3nLeLDMXarW6NkIx/MY4KixWEJj5hOAD+pIHHltdgIY9BLdqtA+Uem)
+  jasypt:
+    encryptor:
+      password: ${jasypt.encryptor.password}
+  jpa:
+    database: postgresql
+    show-sql: false
+  kafka:
+    bootstrap-servers: localhost:9092

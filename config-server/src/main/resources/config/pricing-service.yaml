@@ -1,30 +1,30 @@
-spring:
-  application:
-    name: pricing-service
-  output:
-    ansi:
-      enabled: always
-
-server:
-  port: 8084
-
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
 logging:
+  color:
+    enabled: true
+  file:
+    name: logs/pricing-service.log
   level:
-    root: WARN
     com:
       rahim:
         pricingservice: INFO
     org:
       springframework: ERROR
+    root: WARN
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
-  file:
-    name: logs/pricing-service.log
-  color:
-    enabled: true
+
+server:
+  port: 8084
+
+spring:
+  application:
+    name: pricing-service
+  output:
+    ansi:
+      enabled: always

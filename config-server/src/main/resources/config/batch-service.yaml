@@ -1,19 +1,23 @@
-spring:
-  application:
-    name: account-service
-  output:
-    ansi:
-      enabled: always
-  datasource:
-    default-schema: batch_schema
-
-server:
-  port: 8086
-
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+logging:
+  color:
+    enabled: true
+  file:
+    name: logs/batch-service.log
+  level:
+    com:
+      rahim:
+        batchservice: INFO
+    org:
+      springframework: ERROR
+    root: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
 
 management:
   tracing:
@@ -23,18 +27,14 @@ management:
 processing:
   chunk-size: 500
 
-logging:
-  level:
-    root: WARN
-    com:
-      rahim:
-        batchservice: INFO
-    org:
-      springframework: ERROR
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
-  file:
-    name: logs/batch-service.log
-  color:
-    enabled: true
+server:
+  port: 8086
+
+spring:
+  application:
+    name: account-service
+  datasource:
+    default-schema: batch_schema
+  output:
+    ansi:
+      enabled: always
