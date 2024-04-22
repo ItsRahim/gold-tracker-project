@@ -4,16 +4,16 @@ package com.rahim.gatewayservice.paths;
  * @author Rahim Ahmed
  * @created 13/04/2024
  */
-public final class ClientPaths {
+public final class ClientPath {
 
-    private ClientPaths() {}
+    private ClientPath() {}
 
     /* ---------------------------------------------
      *  CONFIG SERVER CLIENT ROUTES
      * ---------------------------------------------
      */
     public static final String JAVA_ENCRYPTION = "/encrypt";
-    public static final String PYTHON_ENCRYPTION = "/python/encrypt";
+    public static final String PYTHON_ENCRYPTION = JAVA_ENCRYPTION + "/python";
 
     /* ---------------------------------------------
      *  ACCOUNT MICROSERVICE CLIENT ROUTES

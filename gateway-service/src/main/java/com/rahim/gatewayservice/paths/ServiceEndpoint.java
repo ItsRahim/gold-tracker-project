@@ -8,7 +8,7 @@ public final class ServiceEndpoint {
 
     private ServiceEndpoint() {}
 
-    public static final String CONFIG_SERVER_URI = "http://localhost:8888";
-    public static final String USER_SERVICE_URI = "http://localhost:8081";
-    public static final String PRICING_SERVICE_URI = "http://localhost:8084";
+    public static final String CONFIG_SERVER_PREFIX = "/api/v1/gold/config-server";
+    public static final String USER_SERVICE_PREFIX = "/api/v1/gold/user-service";
+    public static final String PRICING_SERVICE_PREFIX = "/api/v1/gold/pricing-service";
 }

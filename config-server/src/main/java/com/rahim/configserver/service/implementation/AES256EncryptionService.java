@@ -17,9 +17,9 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
-public class EncryptionService implements IEncryptionService {
+public class AES256EncryptionService implements IEncryptionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EncryptionService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AES256EncryptionService.class);
 
     private final AES256TextEncryptor encryptor;
 

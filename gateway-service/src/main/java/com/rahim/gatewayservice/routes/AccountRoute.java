@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Configuration;
 
 import static com.rahim.gatewayservice.constant.GatewayResponse.RESPONSE_HEADER_NAME;
 import static com.rahim.gatewayservice.constant.GatewayResponse.RESPONSE_HEADER_VALUE;
-import static com.rahim.gatewayservice.paths.ApiPaths.USER_SERVICE_PREFIX;
-import static com.rahim.gatewayservice.paths.ClientPaths.*;
-import static com.rahim.gatewayservice.paths.ClientPaths.PROFILE_ROUTE;
-import static com.rahim.gatewayservice.paths.ServiceEndpoint.USER_SERVICE_URI;
+import static com.rahim.gatewayservice.paths.ServiceEndpoint.USER_SERVICE_PREFIX;
+import static com.rahim.gatewayservice.paths.ClientPath.*;
+import static com.rahim.gatewayservice.paths.ClientPath.PROFILE_ROUTE;
+import static com.rahim.gatewayservice.paths.ServiceHost.USER_SERVICE_URI;
 
 /**
  * @author Rahim Ahmed

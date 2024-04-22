@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Configuration;
 
 import static com.rahim.gatewayservice.constant.GatewayResponse.RESPONSE_HEADER_NAME;
 import static com.rahim.gatewayservice.constant.GatewayResponse.RESPONSE_HEADER_VALUE;
-import static com.rahim.gatewayservice.paths.ApiPaths.CONFIG_SERVER_PREFIX;
-import static com.rahim.gatewayservice.paths.ClientPaths.JAVA_ENCRYPTION;
-import static com.rahim.gatewayservice.paths.ClientPaths.PYTHON_ENCRYPTION;
-import static com.rahim.gatewayservice.paths.ServiceEndpoint.CONFIG_SERVER_URI;
+import static com.rahim.gatewayservice.paths.ServiceEndpoint.CONFIG_SERVER_PREFIX;
+import static com.rahim.gatewayservice.paths.ClientPath.JAVA_ENCRYPTION;
+import static com.rahim.gatewayservice.paths.ClientPath.PYTHON_ENCRYPTION;
+import static com.rahim.gatewayservice.paths.ServiceHost.CONFIG_SERVER_URI;
 
 /**
  * @author Rahim Ahmed

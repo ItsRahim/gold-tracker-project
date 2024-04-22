@@ -11,6 +11,10 @@ spring:
 jasypt:
   encryptor:
     password: ${jasypt.encryptor.password}
+python-api:
+  url: http://localhost:8000/api/v1
+  source: uk-investing
+  encrypt: encrypt
 management:
   endpoints:
     web:

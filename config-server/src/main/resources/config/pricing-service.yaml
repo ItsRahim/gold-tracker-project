@@ -13,10 +13,6 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
-gold-price-api:
-  url: http://localhost:8000/api/v1
-  endpoint: uk-investing
-
 logging:
   level:
     root: WARN
