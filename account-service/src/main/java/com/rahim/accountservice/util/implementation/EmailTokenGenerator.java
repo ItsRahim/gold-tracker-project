@@ -1,6 +1,6 @@
 package com.rahim.accountservice.util.implementation;
 
-import com.rahim.accountservice.service.profile.IProfileQueryService;
+import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.util.IEmailTokenGenerator;
 import com.rahim.accountservice.util.IEmailTokenService;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +21,12 @@ public class EmailTokenGenerator implements IEmailTokenGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmailTokenGenerator.class);
     private final IEmailTokenService emailTokenService;
-    private final IProfileQueryService profileQueryService;
+    private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Override
     public void generateEmailTokens(String templateName, int accountId, boolean includeUsername, boolean includeDate, String... oldEmail) {
         try {
-            Map<String, Object> emailData = profileQueryService.getProfileDetails(accountId);
+            Map<String, Object> emailData = profileRepositoryHandler.getProfileDetails(accountId);
             Map<String, Object> mutableData = new HashMap<>(emailData);
 
             if(templateName.equals("Account Update") && (oldEmail.length > 0)) {

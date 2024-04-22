@@ -6,8 +6,8 @@ import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.model.UserRequest;
 import com.rahim.accountservice.service.account.IAccountCreationService;
 import com.rahim.accountservice.service.profile.IProfileCreationService;
-import com.rahim.accountservice.service.profile.IProfileQueryService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
+import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +32,7 @@ public class AccountCreationService implements IAccountCreationService {
 
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IProfileCreationService profileCreation;
-    private final IProfileQueryService profileQuery;
+    private final IProfileRepositoryHandler profileRepositoryHandler;
 
     /**
      * @see IAccountCreationService
@@ -48,7 +48,7 @@ public class AccountCreationService implements IAccountCreationService {
         String email = account.getEmail();
         String username = profile.getUsername();
 
-        if (accountRepositoryHandler.hasAccount(email) || profileQuery.existsByUsername(username)) {
+        if (accountRepositoryHandler.hasAccount(email) || profileRepositoryHandler.existsByUsername(username)) {
             LOG.warn("Account with email {} and/or username {} already exists. Not creating duplicate.", email, username);
             throw new DuplicateAccountException("Account with email " + email + " and username " + username + " already exists.");
         }

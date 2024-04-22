@@ -5,7 +5,7 @@ import com.rahim.accountservice.TestDataGenerator;
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.repository.AccountRepository;
-import com.rahim.accountservice.service.profile.IProfileQueryService;
+import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.util.IEmailTokenGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +40,7 @@ class AccountUpdateServiceTest extends AbstractTestConfig {
     IEmailTokenGenerator emailTokenGenerator;
 
     @Mock
-    IProfileQueryService profileQueryService;
+    IProfileRepositoryHandler profileRepositoryHandler;
 
     @BeforeEach
     void setup() {
@@ -54,7 +54,7 @@ class AccountUpdateServiceTest extends AbstractTestConfig {
         MockitoAnnotations.openMocks(this);
 
         doNothing().when(emailTokenGenerator).generateEmailTokens(anyString(), anyInt(), anyBoolean(), anyBoolean());
-        when(profileQueryService.getProfileDetails(anyInt())).thenReturn(generateMockProfileDetails());
+        when(profileRepositoryHandler.getProfileDetails(anyInt())).thenReturn(generateMockProfileDetails());
     }
 
     @Test

@@ -1,8 +1,8 @@
 package com.rahim.accountservice.controller;
 
 import com.rahim.accountservice.model.Profile;
-import com.rahim.accountservice.service.profile.IProfileQueryService;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
+import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +26,12 @@ import static com.rahim.accountservice.constant.ProfileURLConstants.*;
 public class ProfileController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProfileController.class);
-    private final IProfileQueryService profileQueryService;
+    private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IProfileUpdateService profileUpdateService;
 
     @GetMapping()
     public ResponseEntity<List<Profile>> getAllProfiles() {
-        List<Profile> profiles = profileQueryService.getAllProfiles();
+        List<Profile> profiles = profileRepositoryHandler.getAllProfiles();
         return ResponseEntity.status(HttpStatus.FOUND).body(profiles);
     }
 
@@ -48,7 +48,7 @@ public class ProfileController {
     @GetMapping(USERNAME)
     public ResponseEntity<Object> findProfileByUsername(@PathVariable String username) {
         try {
-            Optional<Profile> profileOptional = profileQueryService.getProfileByUsername(username);
+            Optional<Profile> profileOptional = profileRepositoryHandler.getProfileByUsername(username);
 
             if (profileOptional.isPresent()) {
                 return ResponseEntity.status(HttpStatus.OK).body(profileOptional.get());
