@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @created 21/04/2024
  */
 @Component
-public class EncryptionConfig {
+public class AES256Config {
 
     @Value("${jasypt.encryptor.password}")
     private String encryptorPassword;
