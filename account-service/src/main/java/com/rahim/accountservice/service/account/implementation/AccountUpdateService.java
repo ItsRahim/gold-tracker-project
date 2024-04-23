@@ -1,27 +1,22 @@
 package com.rahim.accountservice.service.account.implementation;
 
+import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.exception.EmailTokenException;
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.request.AccountJsonRequest;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.IEmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.Optional;
 
-import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_UPDATE_TEMPLATE;
-import static com.rahim.accountservice.model.request.AccountRequestParam.*;
 
 /**
- * This service class is responsible for updating accounts.
- * It implements the IAccountUpdateService interface.
- *
  * @author Rahim Ahmed
  * @created 30/12/2023
  */
@@ -46,10 +41,9 @@ public class AccountUpdateService implements IAccountUpdateService {
             updatePassword(account, updatedData);
             accountRepositoryHandler.saveAccount(account);
             generateEmailTokens(accountId, oldEmail);
-
-        } catch (DataException | EmailTokenException e) {
-            LOG.error("Error updating account with email {} and ID {}: {}", account.getEmail(), accountId, e.getMessage());
-            throw new RuntimeException("Failed to update account.", e);
+        } catch (RuntimeException e) {
+            LOG.error("Error updating account with ID {}: {}", accountId, e.getMessage());
+            throw e;
         }
     }
 
@@ -61,9 +55,7 @@ public class AccountUpdateService implements IAccountUpdateService {
      * @throws UserNotFoundException If the account with the given ID is not found.
      */
     private Account getAccountById(int accountId) {
-        Optional<Account> accountOptional = accountRepositoryHandler.findById(accountId);
-
-        return accountOptional.orElseThrow(() -> {
+        return accountRepositoryHandler.findById(accountId).orElseThrow(() -> {
             LOG.warn("Account with ID {} not found while updating.", accountId);
             return new UserNotFoundException("Account with ID " + accountId + " not found");
         });
@@ -78,77 +70,33 @@ public class AccountUpdateService implements IAccountUpdateService {
      */
     private void generateEmailTokens(int accountId, String oldEmail) {
         try {
-            emailTokenGenerator.generateEmailTokens(ACCOUNT_UPDATE_TEMPLATE, accountId, true, true, oldEmail);
+            emailTokenGenerator.generateEmailTokens(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE, accountId, true, true, oldEmail);
         } catch (EmailTokenException e) {
             LOG.error("Error generating email tokens for account with ID {}", accountId, e);
-            throw e;
+            throw new RuntimeException("Failed to generate email tokens for account.", e);
         }
     }
 
-    /**
-     * Updates the email of the given account with the new email from the updated data.
-     *
-     * @param account The account to be updated.
-     * @param updatedData The map containing the updated data.
-     */
     private void updateEmail(Account account, Map<String, String> updatedData) {
-        if (isEmailUpdateValid(updatedData)) {
-            account.setEmail(updatedData.get(ACCOUNT_EMAIL));
-
+        String newEmail = updatedData.get(AccountJsonRequest.ACCOUNT_EMAIL);
+        if (isNotEmpty(newEmail) && !accountRepositoryHandler.existsByEmail(newEmail)) {
+            account.setEmail(newEmail);
             LOG.debug("Email updated successfully");
         } else {
             LOG.debug("Email address update skipped for account with ID: {}", account.getId());
         }
     }
 
-    /**
-     * Updates the password of the given account with the new password hash from the updated data.
-     *
-     * @param account The account to be updated.
-     * @param updatedData The map containing the updated data.
-     */
     private void updatePassword(Account account, Map<String, String> updatedData) {
-        if (isPasswordUpdateValid(updatedData)) {
-            account.setPasswordHash(updatedData.get(ACCOUNT_PASSWORD_HASH));
-
+        String newPasswordHash = updatedData.get(AccountJsonRequest.ACCOUNT_PASSWORD_HASH);
+        if (isNotEmpty(newPasswordHash)) {
+            account.setPasswordHash(newPasswordHash);
             LOG.debug("Password updated successfully");
         } else {
             LOG.debug("Password update skipped for account with ID: {}", account.getId());
         }
     }
 
-    /**
-     * Checks if the email update is valid.
-     *
-     * @param updatedData The map containing the updated data.
-     * @return true if the email update is valid, false otherwise.
-     */
-    private boolean isEmailUpdateValid(Map<String, String> updatedData) {
-        String newEmail = updatedData.get(ACCOUNT_EMAIL);
-
-        return updatedData.containsKey(ACCOUNT_EMAIL) &&
-                !accountRepositoryHandler.hasAccount(newEmail) &&
-                isNotEmpty(newEmail);
-    }
-
-    /**
-     * Checks if the password update is valid.
-     *
-     * @param updatedData The map containing the updated data.
-     * @return true if the password update is valid, false otherwise.
-     */
-    private boolean isPasswordUpdateValid(Map<String, String> updatedData) {
-        String newPasswordHash = updatedData.get(ACCOUNT_PASSWORD_HASH);
-
-        return updatedData.containsKey(ACCOUNT_PASSWORD_HASH) && isNotEmpty(newPasswordHash);
-    }
-
-    /**
-     * Checks if the given string is not empty.
-     *
-     * @param value The string to be checked.
-     * @return true if the string is not empty, false otherwise.
-     */
     private boolean isNotEmpty(String value) {
         return value != null && !value.isEmpty();
     }

@@ -31,7 +31,7 @@ public class EmailSender implements IEmailSender {
 
     @Override
     public void sendEmail(String recipientEmail, EmailTemplate emailContent) {
-        LOG.info("Preparing to send email to {}", recipientEmail);
+        LOG.debug("Attempting to send email...");
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);
@@ -40,7 +40,5 @@ public class EmailSender implements IEmailSender {
         message.setText(emailContent.getBody());
 
         javaMailSender.send(message);
-
-        LOG.info("Email sent to {}", recipientEmail);
     }
 }

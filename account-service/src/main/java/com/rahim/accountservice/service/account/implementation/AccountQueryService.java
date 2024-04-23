@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This service class is responsible for querying account information.
@@ -33,25 +34,26 @@ public class AccountQueryService implements IAccountQueryService {
      */
     @Override
     public void checkNotificationCriteria(String userId) {
-        boolean found = false;
-
-        if (userId != null && !userId.isEmpty()) {
-            try {
-                int id = Integer.parseInt(userId);
-                found = accountRepositoryHandler.findById(id).isPresent() && notificationIsEnabled(id);
-            } catch (NumberFormatException e){
-                LOG.error("Error parsing [{}] to an integer. Cannot find user", userId);
-            }
-        } else {
+        if (userId == null || userId.isEmpty()) {
             LOG.warn("User ID is null or empty");
+            return;
         }
 
-        kafkaService.sendMessage(topicConstants.getSendIdResult(), String.valueOf(found));
+        try {
+            int id = Integer.parseInt(userId);
+            Optional<Account> optionalAccount = accountRepositoryHandler.findById(id);
+            if (optionalAccount.isPresent() && notificationIsEnabled(optionalAccount.get())) {
+                kafkaService.sendMessage(topicConstants.getSendIdResult(), "true");
+            } else {
+                kafkaService.sendMessage(topicConstants.getSendIdResult(), "false");
+            }
+        } catch (NumberFormatException e) {
+            LOG.error("Error parsing [{}] to an integer. Cannot find user", userId);
+        }
     }
 
-    private boolean notificationIsEnabled(int userId) {
-        Account account = accountRepositoryHandler.findById(userId).orElse(null);
-        return (account != null) && account.getNotificationSetting();
+    private boolean notificationIsEnabled(Account account) {
+        return account.getNotificationSetting();
     }
 
     /**

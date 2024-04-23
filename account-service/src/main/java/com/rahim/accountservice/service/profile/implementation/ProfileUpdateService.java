@@ -1,6 +1,8 @@
 package com.rahim.accountservice.service.profile.implementation;
 
+import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.request.ProfileJsonRequest;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.rahim.accountservice.model.request.ProfileRequestParam.*;
 
 /**
- * Service for updating Profiles table
- *
  * @author Rahim Ahmed
  * @created 31/12/2023
  */
@@ -35,36 +34,43 @@ public class ProfileUpdateService implements IProfileUpdateService {
 
             try {
                 updateProfileData(profile, updatedData);
-                profileRepositoryHandler.saveProfile(profile);
+                profileRepositoryHandler.updateProfile(profile);
                 LOG.info("Profile with ID {} updated successfully", profileId);
             } catch (Exception e) {
                 LOG.error("Error updating profile with ID {}: {}", profileId, e.getMessage());
-                throw new RuntimeException("Failed to update user.", e);
+                throw new RuntimeException("Failed to update profile.", e);
             }
         } else {
             LOG.warn("Profile with ID {} not found.", profileId);
-            throw new RuntimeException("Account not found.");
+            throw new UserNotFoundException("Profile not found.");
         }
     }
 
     /**
      * Updates the data of a profile.
      *
-     * @param profile The profile to update.
+     * @param profile     The profile to update.
      * @param updatedData The new data for the profile.
      */
     private void updateProfileData(Profile profile, Map<String, String> updatedData) {
-        if (updatedData.containsKey(PROFILE_FIRST_NAME)) {
-            profile.setFirstName(updatedData.get(PROFILE_FIRST_NAME));
-        }
-        if (updatedData.containsKey(PROFILE_LAST_NAME)) {
-            profile.setLastName(updatedData.get(PROFILE_LAST_NAME));
-        }
-        if (updatedData.containsKey(PROFILE_CONTACT_NUMBER)) {
-            profile.setContactNumber(updatedData.get(PROFILE_CONTACT_NUMBER));
-        }
-        if (updatedData.containsKey(PROFILE_ADDRESS)) {
-            profile.setAddress(updatedData.get(PROFILE_ADDRESS));
-        }
+        updatedData.forEach((key, value) -> {
+            switch (key) {
+                case ProfileJsonRequest.PROFILE_FIRST_NAME:
+                    profile.setFirstName(value);
+                    break;
+                case ProfileJsonRequest.PROFILE_LAST_NAME:
+                    profile.setLastName(value);
+                    break;
+                case ProfileJsonRequest.PROFILE_CONTACT_NUMBER:
+                    profile.setContactNumber(value);
+                    break;
+                case ProfileJsonRequest.PROFILE_ADDRESS:
+                    profile.setAddress(value);
+                    break;
+                default:
+                    LOG.warn("Ignoring unknown key '{}' in updated data for profile with ID {}", key, profile.getId());
+            }
+        });
     }
+
 }

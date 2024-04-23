@@ -1,12 +1,12 @@
-package com.rahim.accountservice.model.request;
+package com.rahim.accountservice.request;
 
 /**
  * @author Rahim Ahmed
  * @created 16/04/2024
  */
-public class AccountRequestParam {
+public class AccountJsonRequest {
 
-    private AccountRequestParam() {}
+    private AccountJsonRequest() {}
 
     public static final String ACCOUNT_EMAIL = "email";
     public static final String ACCOUNT_PASSWORD_HASH = "passwordHash";

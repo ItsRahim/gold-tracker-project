@@ -6,9 +6,9 @@ package com.rahim.accountservice.constant;
  * @author Rahim Ahmed
  * @created 16/02/2024
  */
-public final class AccountURLConstants {
+public final class AccountControllerEndpoint {
 
-    private AccountURLConstants(){}
+    private AccountControllerEndpoint(){}
 
     public static final String BASE_URL = "/api/v1/gold/user-service/account";
     public static final String ACCOUNT_ID = "/{accountId}";

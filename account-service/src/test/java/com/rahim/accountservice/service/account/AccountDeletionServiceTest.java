@@ -2,7 +2,7 @@ package com.rahim.accountservice.service.account;
 
 import com.rahim.accountservice.AbstractTestConfig;
 import com.rahim.accountservice.TestDataGenerator;
-import com.rahim.accountservice.enums.AccountState;
+import com.rahim.accountservice.constant.AccountState;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.repository.AccountRepository;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
@@ -68,7 +68,7 @@ class AccountDeletionServiceTest extends AbstractTestConfig {
 
         Account account = accountOptional.get();
 
-        assertEquals(AccountState.PENDING_DELETE.getStatus(), account.getAccountStatus());
+        assertEquals(AccountState.PENDING_DELETE, account.getAccountStatus());
         assertTrue(account.getAccountLocked());
         assertNotNull(account.getDeleteDate());
         Mockito.verify(emailTokenGenerator, Mockito.times(0))
@@ -97,7 +97,7 @@ class AccountDeletionServiceTest extends AbstractTestConfig {
         verifyNoInteractions(emailTokenGenerator);
 
         Account account = accountRepository.findById(accountId).orElseThrow();
-        assertEquals(AccountState.PENDING_DELETE.getStatus(), account.getAccountStatus());
+        assertEquals(AccountState.PENDING_DELETE, account.getAccountStatus());
         assertTrue(account.getAccountLocked());
         assertFalse(account.getNotificationSetting());
         assertNotNull(account.getDeleteDate());

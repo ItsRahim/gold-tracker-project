@@ -11,6 +11,8 @@ package com.rahim.emailservice.constant;
  */
 public final class EmailConfigConstants {
 
+    private EmailConfigConstants() {}
+
     /** The host of the mail server. */
     public static final String MAIL_HOST = "${spring.mail.host}";
 

@@ -68,7 +68,7 @@ public class EmailUtil {
             throw new EmailTemplateException("Email template is null");
         }
 
-        LOG.info("Populating email template with ID: {} - {}", emailTemplate.getId(), emailTemplate.getTemplateName());
+        LOG.debug("Populating email template with ID: {} - {}", emailTemplate.getId(), emailTemplate.getTemplateName());
 
         boolean isValidEmail = emailValidator.isValid(emailTemplate.getBody(), placeholders, tokens);
 
@@ -77,7 +77,7 @@ public class EmailUtil {
             throw new EmailTemplateException("Invalid information provided to populate email");
         }
 
-        LOG.info("Information provided is sufficient to populate email");
+        LOG.debug("Information provided is sufficient to populate email");
 
         tokenMapPopulator.populateTokenMap(placeholders, tokens);
 

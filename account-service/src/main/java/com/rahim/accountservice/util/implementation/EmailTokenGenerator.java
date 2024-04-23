@@ -1,5 +1,6 @@
 package com.rahim.accountservice.util.implementation;
 
+import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.util.IEmailTokenGenerator;
 import com.rahim.accountservice.util.IEmailTokenService;
@@ -29,7 +30,7 @@ public class EmailTokenGenerator implements IEmailTokenGenerator {
             Map<String, Object> emailData = profileRepositoryHandler.getProfileDetails(accountId);
             Map<String, Object> mutableData = new HashMap<>(emailData);
 
-            if(templateName.equals("Account Update") && (oldEmail.length > 0)) {
+            if(templateName.equals(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE) && (oldEmail.length > 0)) {
                 mutableData.put("email", oldEmail[0]);
             }
 

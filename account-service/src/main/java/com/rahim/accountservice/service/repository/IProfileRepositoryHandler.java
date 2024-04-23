@@ -14,7 +14,8 @@ import java.util.Optional;
  * @created 30/12/2023
  */
 public interface IProfileRepositoryHandler {
-    void saveProfile(Profile profile);
+    void createNewProfile(Profile profile);
+    void updateProfile(Profile profile);
     void deleteProfile(int profileId);
     Optional<Profile> findById(int profileId);
     boolean existsByUsername(String username);
