@@ -6,6 +6,7 @@ import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.model.UserRequest;
 import com.rahim.accountservice.repository.AccountRepository;
+import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ class AccountCreationServiceTest extends AbstractTestConfig {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    IProfileRepositoryHandler profileRepositoryHandler;
 
     @Test
     @DisplayName("Save New Account - Successful")
@@ -68,7 +72,18 @@ class AccountCreationServiceTest extends AbstractTestConfig {
         Profile profile2 = new Profile(account2, "duplicateUsername", "Bob", "Johnson", "07123456789", "35 Bond Street");
         UserRequest userRequest2 = new UserRequest(account2, profile2);
 
+        int numOfAccountsBefore = accountRepository.findAll().size();
+
+        try {
+            accountCreationService.createAccount(userRequest2);
+        } catch (DuplicateAccountException ignored) {
+            //Ignored
+        }
+
+        int numOfAccountsAfter = accountRepository.findAll().size();
+
         assertThrows(DuplicateAccountException.class, () -> accountCreationService.createAccount(userRequest2));
+        assertEquals(numOfAccountsBefore, numOfAccountsAfter);
     }
 
     @Test

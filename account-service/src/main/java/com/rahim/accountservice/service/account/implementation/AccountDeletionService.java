@@ -53,15 +53,14 @@ public class AccountDeletionService implements IAccountDeletionService {
                 try {
                     accountRepositoryHandler.saveAccount(account);
                     emailTokenGenerator.generateEmailTokens(EmailTemplate.ACCOUNT_DELETION_TEMPLATE, accountId, true, true);
-                    LOG.info("Account with email {} and ID {} is pending deletion on {}", account.getEmail(), accountId, deletionDate);
 
                     return true;
                 } catch (DataAccessException e) {
-                    LOG.error("Error updating account with email {} and ID {}: {}", account.getEmail(), accountId, e.getMessage());
+                    LOG.error("Error updating account with ID {} - {}", accountId, e.getMessage());
                     throw new RuntimeException("Failed to update account.", e);
                 }
             } else {
-                LOG.info("Account with email {} and ID {} is not eligible for deletion", account.getEmail(), accountId);
+                LOG.debug("Account with ID {} is not eligible for deletion", accountId);
             }
         } else {
             LOG.warn("Account with ID {} not found.", accountId);

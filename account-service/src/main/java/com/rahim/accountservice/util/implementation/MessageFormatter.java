@@ -23,31 +23,39 @@ public class MessageFormatter implements IMessageFormatter {
     public void updateMapKey(Map<String, Object> map, String oldKey, String newKey) {
         if(map.containsKey(oldKey)) {
             Object value = map.remove(oldKey);
-
             map.put(newKey, value);
         }
     }
 
     @Override
     public void formatInstant(Map<String, Object> map, String key) {
-        if (map.containsKey(key)) {
-            Object value = map.get(key);
-            if (value != null) {
-                if (value instanceof Instant instant) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC);
-                    String formattedDate = formatter.format(instant);
-                    map.put(key, formattedDate);
-                } else if (value instanceof Date sqlDate) {
-                    LocalDate localDate = sqlDate.toLocalDate();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    String formattedDate = formatter.format(localDate);
-                    map.put(key, formattedDate);
-                } else {
-                    LOG.error("Unsupported type for key {}: {}", key, value.getClass().getName());
-                }
+        Object value = map.get(key);
+        if (value != null) {
+            if (value instanceof Instant instant) {
+                String formattedDate = formatInstantDate(instant);
+                map.put(key, formattedDate);
+            } else if (value instanceof Date sqlDate) {
+                String formattedDate = formatDate(sqlDate.toLocalDate());
+                map.put(key, formattedDate);
             } else {
-                LOG.error("Value for key {} is null", key);
+                LOG.error("Unsupported type for key {}: {}", key, value.getClass().getName());
             }
+        } else {
+            LOG.error("Value for key {} is null", key);
         }
     }
+
+    private String formatInstantDate(Instant instant) {
+        DateTimeFormatter formatter = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .withZone(ZoneOffset.UTC);
+
+        return formatter.format(instant);
+    }
+
+    private String formatDate(LocalDate localDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(localDate);
+    }
+
 }

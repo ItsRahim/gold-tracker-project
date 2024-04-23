@@ -27,27 +27,45 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     private final ProfileRepository profileRepository;
 
     @Override
-    public void saveProfile(Profile profile) {
-        if(!ObjectUtils.anyNull(profile)) {
-            try {
-                profileRepository.save(profile);
-            } catch (DataException e) {
-                LOG.error("Error saving profile to the database", e);
-                throw new DataIntegrityViolationException("Error saving profile to database", e);
-            }
-        } else {
-            LOG.error("Profile information provided is null or contains null properties. Unable to save");
-            throw new IllegalArgumentException("Profile information provided is null or contains null properties. Unable to save");
+    public void createNewProfile(Profile profile) {
+        if (profile == null) {
+            LOG.error("Invalid profile. Unable to save.");
+            throw new IllegalArgumentException("Invalid profile. Unable to save.");
+        }
+
+        try {
+            profileRepository.save(profile);
+            LOG.debug("New profile created: {}", profile.getId());
+        } catch (DataIntegrityViolationException e) {
+            LOG.error("Error saving profile to the database: {}", e.getMessage());
+            throw new RuntimeException("Error saving profile to database", e);
         }
     }
+
+    @Override
+    public void updateProfile(Profile profile) {
+        if (profile == null || profile.getId() == null) {
+            LOG.error("Invalid profile or profile ID is null. Unable to save.");
+            throw new IllegalArgumentException("Invalid profile or profile ID is null. Unable to save.");
+        }
+
+        try {
+            profileRepository.save(profile);
+            LOG.debug("Profile updated: {}", profile.getId());
+        } catch (DataIntegrityViolationException e) {
+            LOG.error("Error updating profile to the database: {}", e.getMessage());
+            throw new RuntimeException("Error saving profile to database", e);
+        }
+    }
+
 
     @Override
     public void deleteProfile(int profileId) {
         findById(profileId).ifPresent(profile -> {
             try {
-                LOG.info("Deleting account with ID: {}", profileId);
+                LOG.trace("Deleting profile with ID: {}", profileId);
                 profileRepository.deleteById(profileId);
-                LOG.info("Account with ID {} deleted successfully", profileId);
+                LOG.trace("Profile with ID {} deleted successfully", profileId);
             } catch (Exception e) {
                 LOG.warn("Attempted to delete non-existing profile with ID: {}", profileId);
                 throw new EntityNotFoundException("Profile with ID " + profileId + " not found");
@@ -59,29 +77,25 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     public Optional<Profile> findById(int profileId) {
         try {
             Optional<Profile> profileOptional = profileRepository.findById(profileId);
-            if(profileOptional.isPresent()) {
-                LOG.info("Found user account with ID: {}", profileId);
-            } else {
-                LOG.info("Account not found for ID: {}", profileId);
-            }
-
+            profileOptional.ifPresentOrElse(
+                    profile -> LOG.trace("Found profile with ID: {}", profileId),
+                    () -> LOG.trace("Profile not found for ID: {}", profileId)
+            );
             return profileOptional;
         } catch (Exception e) {
-            LOG.error("An error occurred while retrieving account with ID: {}", profileId, e);
+            LOG.error("An error occurred while retrieving profile with ID: {}", profileId, e);
             return Optional.empty();
         }
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        return profileRepository.existsByUsername(username);
+        return profileRepository.existsByUsernameIgnoreCase(username);
     }
 
     @Override
     public Map<String, Object> getProfileDetails(int accountId) {
-        Optional<Map<String, Object>> profileDetailsOptional = profileRepository.getProfileDetails(accountId);
-
-        return profileDetailsOptional.orElse(null);
+        return profileRepository.getProfileDetails(accountId).orElse(null);
     }
 
     @Override

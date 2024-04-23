@@ -1,9 +1,10 @@
 package com.rahim.accountservice.service.repository;
 
 import com.rahim.accountservice.model.Account;
-import com.rahim.accountservice.model.query.AccountPendingDelete;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Tuple;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -24,7 +25,6 @@ public interface IAccountRepositoryHandler {
      *
      * @param accountId The ID of the account to retrieve.
      * @return An {@link Optional} containing the account if found, or an empty {@link Optional} if not found.
-     * @throws Exception If an error occurs during retrieval.
      */
     Optional<Account> findById(int accountId);
 
@@ -46,12 +46,12 @@ public interface IAccountRepositoryHandler {
     void deleteAccount(int accountId);
 
     /**
-     * Deletes an account by its unique ID.
+     * Checks if an account exists by its email.
      *
      * @param email The email of the account to check if it exists.
-     * @return boolean {@code true} if an account with the given email exists
+     * @return boolean indicating if the account exists
      */
-    boolean hasAccount(String email);
+    boolean existsByEmail(String email);
 
     /**
      * Retrieves a list of inactive user accounts based on the specified cutoff date.

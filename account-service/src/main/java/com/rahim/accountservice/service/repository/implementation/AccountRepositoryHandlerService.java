@@ -80,7 +80,7 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
     }
 
     @Override
-    public boolean hasAccount(String email) {
+    public boolean existsByEmail(String email) {
         return accountRepository.existsAccountByEmail(email);
     }
 

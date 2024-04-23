@@ -48,9 +48,9 @@ public class AccountCreationService implements IAccountCreationService {
         String email = account.getEmail();
         String username = profile.getUsername();
 
-        if (accountRepositoryHandler.hasAccount(email) || profileRepositoryHandler.existsByUsername(username)) {
-            LOG.warn("Account with email {} and/or username {} already exists. Not creating duplicate.", email, username);
-            throw new DuplicateAccountException("Account with email " + email + " and username " + username + " already exists.");
+        if (accountRepositoryHandler.existsByEmail(email) || profileRepositoryHandler.existsByUsername(username)) {
+            LOG.warn("Account with email and/or username already exists. Not creating duplicate.");
+            throw new DuplicateAccountException("Account with email an/or username exists");
         }
 
         try {

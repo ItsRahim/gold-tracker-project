@@ -1,5 +1,7 @@
 package com.rahim.accountservice.repository;
 
+import com.rahim.accountservice.dao.AccountDataAccess;
+import com.rahim.accountservice.dao.ProfileDataAccess;
 import com.rahim.accountservice.model.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,7 +24,8 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
      * @param username the username of the user profile to be found
      * @return an Optional containing the Profile object if found, else an empty Optional
      */
-    @Query(value = "SELECT * FROM rgts.user_profiles WHERE LOWER(username) = LOWER(:username)", nativeQuery = true)
+    @Query(value = "SELECT * FROM " + ProfileDataAccess.TABLE_NAME +
+            " WHERE LOWER(" + ProfileDataAccess.COL_PROFILE_USERNAME + ") = LOWER(:username)", nativeQuery = true)
     Optional<Profile> findByUsername(@Param("username") String username);
 
     /**
@@ -31,7 +34,9 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
      * @param id the account id of the user profile to be found
      * @return an int containing the profile id if found, else 0
      */
-    @Query(value = "SELECT profile_id FROM rgts.user_profiles WHERE account_id = :id", nativeQuery = true)
+    @Query(value = "SELECT " + ProfileDataAccess.COL_PROFILE_ID + " FROM " +
+            ProfileDataAccess.TABLE_NAME + " WHERE " +
+            AccountDataAccess.COL_ACCOUNT_ID + " = :id", nativeQuery = true)
     int getProfileIdByUserId(@Param("id") int id);
 
     /**
@@ -40,18 +45,24 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
      * @param username the username of the user profile to be checked
      * @return a boolean indicating whether a user profile with the given username exists
      */
-    boolean existsByUsername(String username);
+    boolean existsByUsernameIgnoreCase(String username);
 
     /**
-     * This method is used to fetch detailed profile information for a given account id.
-     * The information includes username, first name, last name, email, deletion date, and last updated date.
-     * The fetched data is cleaned up by the account-service and sent to the email-service to populate an email template.
+     * This method is used to fetch details to populate an email template
      *
      * @param accountId the account id of the user profile to be found
      * @return an Optional containing a Map with the profile details if found, else an empty Optional
      */
-    @Query(value = "SELECT up.username, up.first_name, up.last_name, ua.email, ua.delete_date, ua.updated_at " +
-            "FROM rgts.user_profiles up JOIN rgts.user_accounts ua ON up.account_id = ua.account_id " +
-            "WHERE up.account_id = :accountId", nativeQuery = true)
+    @Query(value = "SELECT " +
+            "up." + ProfileDataAccess.COL_PROFILE_USERNAME + ", " +
+            "up." + ProfileDataAccess.COL_PROFILE_FIRST_NAME + ", " +
+            "up." + ProfileDataAccess.COL_PROFILE_LAST_NAME + ", " +
+            "ua." + AccountDataAccess.COL_ACCOUNT_EMAIL + ", " +
+            "ua." + AccountDataAccess.COL_ACCOUNT_DELETE_DATE + ", " +
+            "ua." + AccountDataAccess.COL_ACCOUNT_UPDATED_AT + " " +
+            "FROM " + ProfileDataAccess.TABLE_NAME + " up " +
+            "JOIN " + AccountDataAccess.TABLE_NAME + " ua " +
+            "ON up." + ProfileDataAccess.COL_ACCOUNT_ID + " = ua." + AccountDataAccess.COL_ACCOUNT_ID + " " +
+            "WHERE up." + ProfileDataAccess.COL_ACCOUNT_ID + " = :accountId", nativeQuery = true)
     Optional<Map<String, Object>> getProfileDetails(@Param("accountId") int accountId);
 }
