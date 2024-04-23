@@ -1,7 +1,9 @@
 package com.rahim.accountservice.service.repository;
 
 import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.model.query.AccountPendingDelete;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Tuple;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -65,14 +67,14 @@ public interface IAccountRepositoryHandler {
      * @param cutoffDate The date used as the threshold for identifying inactive accounts.
      * @return A list of {@link Account} objects representing users eligible for deletion.
      */
-    List<Account> getUsersToDelete(LocalDate cutoffDate);
+    List<Integer> getUsersToDelete(LocalDate cutoffDate);
 
     /**
      * Retrieves a list of user accounts that are pending deletion.
      *
      * @return A list of {@link Account} objects representing users pending deletion.
      */
-    List<Account> getPendingDeleteUsers();
+    List<Tuple> getPendingDeleteUsers();
 
     /**
      * Retrieves a list of all user accounts from the database.

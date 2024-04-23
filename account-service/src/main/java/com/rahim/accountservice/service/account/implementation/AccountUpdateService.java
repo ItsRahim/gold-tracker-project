@@ -1,8 +1,10 @@
 package com.rahim.accountservice.service.account.implementation;
 
+import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.exception.EmailTokenException;
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.request.AccountJsonRequest;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.IEmailTokenGenerator;
@@ -15,8 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_UPDATE_TEMPLATE;
-import static com.rahim.accountservice.model.request.AccountRequestParam.*;
 
 /**
  * This service class is responsible for updating accounts.
@@ -78,7 +78,7 @@ public class AccountUpdateService implements IAccountUpdateService {
      */
     private void generateEmailTokens(int accountId, String oldEmail) {
         try {
-            emailTokenGenerator.generateEmailTokens(ACCOUNT_UPDATE_TEMPLATE, accountId, true, true, oldEmail);
+            emailTokenGenerator.generateEmailTokens(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE, accountId, true, true, oldEmail);
         } catch (EmailTokenException e) {
             LOG.error("Error generating email tokens for account with ID {}", accountId, e);
             throw e;
@@ -93,7 +93,7 @@ public class AccountUpdateService implements IAccountUpdateService {
      */
     private void updateEmail(Account account, Map<String, String> updatedData) {
         if (isEmailUpdateValid(updatedData)) {
-            account.setEmail(updatedData.get(ACCOUNT_EMAIL));
+            account.setEmail(updatedData.get(AccountJsonRequest.ACCOUNT_EMAIL));
 
             LOG.debug("Email updated successfully");
         } else {
@@ -109,7 +109,7 @@ public class AccountUpdateService implements IAccountUpdateService {
      */
     private void updatePassword(Account account, Map<String, String> updatedData) {
         if (isPasswordUpdateValid(updatedData)) {
-            account.setPasswordHash(updatedData.get(ACCOUNT_PASSWORD_HASH));
+            account.setPasswordHash(updatedData.get(AccountJsonRequest.ACCOUNT_PASSWORD_HASH));
 
             LOG.debug("Password updated successfully");
         } else {
@@ -124,9 +124,9 @@ public class AccountUpdateService implements IAccountUpdateService {
      * @return true if the email update is valid, false otherwise.
      */
     private boolean isEmailUpdateValid(Map<String, String> updatedData) {
-        String newEmail = updatedData.get(ACCOUNT_EMAIL);
+        String newEmail = updatedData.get(AccountJsonRequest.ACCOUNT_EMAIL);
 
-        return updatedData.containsKey(ACCOUNT_EMAIL) &&
+        return updatedData.containsKey(AccountJsonRequest.ACCOUNT_EMAIL) &&
                 !accountRepositoryHandler.hasAccount(newEmail) &&
                 isNotEmpty(newEmail);
     }
@@ -138,9 +138,9 @@ public class AccountUpdateService implements IAccountUpdateService {
      * @return true if the password update is valid, false otherwise.
      */
     private boolean isPasswordUpdateValid(Map<String, String> updatedData) {
-        String newPasswordHash = updatedData.get(ACCOUNT_PASSWORD_HASH);
+        String newPasswordHash = updatedData.get(AccountJsonRequest.ACCOUNT_PASSWORD_HASH);
 
-        return updatedData.containsKey(ACCOUNT_PASSWORD_HASH) && isNotEmpty(newPasswordHash);
+        return updatedData.containsKey(AccountJsonRequest.ACCOUNT_PASSWORD_HASH) && isNotEmpty(newPasswordHash);
     }
 
     /**

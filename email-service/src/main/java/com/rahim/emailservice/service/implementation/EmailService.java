@@ -21,17 +21,9 @@ public class EmailService implements IEmailService {
     @Override
     public Integer findIdByName(String templateName) {
         try {
-            LOG.info("Attempting to find ID for template name: {}", templateName);
+            LOG.debug("Attempting to find ID for template name: {}", templateName);
 
-            Integer id = emailTemplateRepository.findIdByTemplateName(templateName);
-
-            if (id != null) {
-                LOG.info("ID found for template name {}: {}", templateName, id);
-            } else {
-                LOG.info("No ID found for template name: {}", templateName);
-            }
-
-            return id;
+            return emailTemplateRepository.findIdByTemplateName(templateName);
         } catch (Exception e) {
             LOG.error("Error finding ID for template name {}: {}", templateName, e.getMessage(), e);
             throw new RuntimeException("Error finding ID for template name", e);

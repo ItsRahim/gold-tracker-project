@@ -18,9 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.rahim.accountservice.constant.EmailTemplates.*;
-import static com.rahim.accountservice.model.request.AccountRequestParam.*;
-import static com.rahim.accountservice.model.request.ProfileRequestParam.*;
+import static com.rahim.accountservice.constant.EmailTemplate.*;
+import static com.rahim.accountservice.request.AccountJsonRequest.*;
+import static com.rahim.accountservice.request.ProfileJsonRequest.*;
 
 /**
  * @author Rahim Ahmed

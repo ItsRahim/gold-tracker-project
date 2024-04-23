@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.rahim.accountservice.model.request.ProfileRequestParam.*;
+import static com.rahim.accountservice.request.ProfileJsonRequest.*;
 
 /**
  * Service for updating Profiles table

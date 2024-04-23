@@ -1,6 +1,7 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.rahim.accountservice.enums.AccountState;
+import com.rahim.accountservice.constant.AccountState;
+import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Optional;
-
-import static com.rahim.accountservice.constant.EmailTemplates.ACCOUNT_DELETION_TEMPLATE;
 
 /**
  * This service class is responsible for deleting accounts.
@@ -43,17 +42,17 @@ public class AccountDeletionService implements IAccountDeletionService {
 
             String accountStatus = account.getAccountStatus();
 
-            if (accountStatus.equals(AccountState.ACTIVE.getStatus())) {
+            if (accountStatus.equals(AccountState.ACTIVE)) {
                 LocalDate deletionDate = LocalDate.now().plusDays(30);
 
-                account.setAccountStatus(AccountState.PENDING_DELETE.getStatus());
+                account.setAccountStatus(AccountState.PENDING_DELETE);
                 account.setAccountLocked(true);
                 account.setNotificationSetting(false);
                 account.setDeleteDate(deletionDate);
 
                 try {
                     accountRepositoryHandler.saveAccount(account);
-                    emailTokenGenerator.generateEmailTokens(ACCOUNT_DELETION_TEMPLATE, accountId, true, true);
+                    emailTokenGenerator.generateEmailTokens(EmailTemplate.ACCOUNT_DELETION_TEMPLATE, accountId, true, true);
                     LOG.info("Account with email {} and ID {} is pending deletion on {}", account.getEmail(), accountId, deletionDate);
 
                     return true;

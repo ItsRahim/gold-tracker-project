@@ -4,9 +4,9 @@ package com.rahim.accountservice.constant;
  * @author Rahim Ahmed
  * @created 25/02/2024
  */
-public final class EmailTemplates {
+public final class EmailTemplate {
 
-    private EmailTemplates() {}
+    private EmailTemplate() {}
 
     public static final String ACCOUNT_DELETED_TEMPLATE = "Account Deleted";
     public static final String ACCOUNT_DELETION_TEMPLATE = "Account Deletion";

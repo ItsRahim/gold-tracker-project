@@ -1,12 +1,12 @@
-package com.rahim.accountservice.model.request;
+package com.rahim.accountservice.request;
 
 /**
  * @author Rahim Ahmed
  * @created 16/04/2024
  */
-public class ProfileRequestParam {
+public class ProfileJsonRequest {
 
-    private ProfileRequestParam() {}
+    private ProfileJsonRequest() {}
 
     public static final String PROFILE_USERNAME = "username";
     public static final String PROFILE_FIRST_NAME = "firstName";

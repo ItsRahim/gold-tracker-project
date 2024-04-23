@@ -10,16 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * This is a repository interface for the Profile table.
- * It extends JpaRepository to provide methods for CRUD (Create, Read, Update, Delete) operations.
- * <p>
- * The repository provides methods to perform operations on Account entities,
- * such as save, find, delete, etc. These operations are performed in the context
- * of managing Account entities in relation to their persistence.
- *
- * @param Profile - The entity type the repository manages.
- * @param Integer - The type of the entity's identifier.
- *
  * @author Rahim Ahmed
  * @created 29/10/2023
  */
