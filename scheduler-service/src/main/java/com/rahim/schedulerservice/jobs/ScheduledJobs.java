@@ -42,6 +42,9 @@ public class ScheduledJobs {
         //initialiseCronJobSchedules();
     }
 
+    /**
+     * Method to set a map containing all active cron jobs from DB e.g. <CronJobName, CronJobInterval>
+     */
     private void initialiseCronJobSchedules() {
         List<Map<String, String>> schedulesFromDBList = cronJobRepository.getCronJobSchedule();
         for (Map<String, String> scheduleMap : schedulesFromDBList) {
@@ -97,6 +100,11 @@ public class ScheduledJobs {
         }
     }
 
+    /**
+     * Method to check if cron job is active. Done by checking if given cron job name exists in map
+     * @param jobName - name of cron job to be looked up
+     * @return boolean indicating if job is active
+     */
     private boolean isJobActive(String jobName) {
         return cronJobSchedules.containsKey(jobName);
     }
