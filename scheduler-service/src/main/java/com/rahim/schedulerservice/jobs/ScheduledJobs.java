@@ -9,6 +9,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -39,16 +40,22 @@ public class ScheduledJobs {
 
     @PostConstruct
     private void init() {
-        initialiseCronJobSchedules(cronJobSchedules);
+        initialiseCronJobSchedules();
     }
 
-    private void initialiseCronJobSchedules(Map<String, String> cronJobSchedules) {
+    private void initialiseCronJobSchedules() {
         List<Map<String, String>> schedulesFromDBList = cronJobRepository.getCronJobSchedule();
         for (Map<String, String> scheduleMap : schedulesFromDBList) {
             String cronJobName = scheduleMap.get(CronJobDataAccess.COL_CRON_JOB_NAME);
             String cronSchedule = scheduleMap.get(CronJobDataAccess.COL_CRON_JOB_SCHEDULE);
             cronJobSchedules.put(cronJobName, cronSchedule);
         }
+    }
+
+    @Scheduled(initialDelayString = "#{@dbRefresh}")
+    private void updateCronJobSchedules() {
+        LOG.debug("Checking database for cron job property updates...");
+        initialiseCronJobSchedules();
     }
 
     @Scheduled(cron = "#{@cronJobSchedules.get('User Cleanup Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
