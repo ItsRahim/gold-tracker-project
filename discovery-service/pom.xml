@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <groupId>com.rahim</groupId>
-    <artifactId>service-registry</artifactId>
+    <artifactId>discovery-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>service-registry</name>
     <description>service-registry</description>
