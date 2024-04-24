@@ -5,7 +5,7 @@ CREATE TABLE rgts.processed_files (
     processed_at TIMESTAMPTZ DEFAULT date_trunc('second', NOW())
 );
 
-COMMENT ON TABLE rgts.processed_files is 'Table storing files processed by Spring Batch';
+COMMENT ON TABLE rgts.processed_files IS 'Table storing files processed by Spring Batch';
 COMMENT ON COLUMN rgts.processed_files.id IS 'The unique ID for each file processes';
 COMMENT ON COLUMN rgts.processed_files.file_name IS 'The file name processes';
 COMMENT ON COLUMN rgts.processed_files.processing_status IS 'The status of the file process';
