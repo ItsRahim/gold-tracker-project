@@ -30,7 +30,7 @@ public class KafkaService implements IKafkaService {
                 if (ex != null) {
                     LOG.error("Error sending message to topic '{}': {}", topic, ex.getMessage(), ex);
                 } else {
-                    LOG.debug("Message sent to topic '{}' successfully. Partition: {}, Offset: {}",
+                    LOG.trace("Message sent to topic '{}' successfully. Partition: {}, Offset: {}",
                             topic, result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
                 }
             });

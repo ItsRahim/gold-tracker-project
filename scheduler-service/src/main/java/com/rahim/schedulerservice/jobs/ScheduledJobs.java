@@ -9,7 +9,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,7 +39,7 @@ public class ScheduledJobs {
 
     @PostConstruct
     private void init() {
-        initialiseCronJobSchedules();
+        //initialiseCronJobSchedules();
     }
 
     private void initialiseCronJobSchedules() {
@@ -52,13 +51,15 @@ public class ScheduledJobs {
         }
     }
 
-    @Scheduled(initialDelayString = "#{@dbRefreshInterval}")
+    //@Scheduled(initialDelayString = "#{@dbRefreshInterval}")
+    @Scheduled(cron = "0 * * * * *")
     private void updateCronJobSchedules() {
         LOG.debug("Checking database for cron job property updates...");
         initialiseCronJobSchedules();
     }
 
-    @Scheduled(cron = "#{@cronJobSchedules.get('User Cleanup Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
+    //@Scheduled(cron = "#{@cronJobSchedules.get('User Cleanup Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
+    @Scheduled(cron = "0 */720 * * * *", zone = TIME_ZONE)
     public void accountCleanupJob() {
         if (isJobActive(CronJobName.USER_CLEANUP_JOB)) {
             try {
@@ -70,7 +71,8 @@ public class ScheduledJobs {
         }
     }
 
-    @Scheduled(cron = "#{@cronJobSchedules.get('Update Gold Price Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
+    //@Scheduled(cron = "#{@cronJobSchedules.get('Update Gold Price Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
+    @Scheduled(cron = "0 * * * * *", zone = TIME_ZONE)
     public void updateGoldPriceJob() {
         if (isJobActive(CronJobName.UPDATE_GOLD_PRICE_JOB)) {
             try {
@@ -82,7 +84,8 @@ public class ScheduledJobs {
         }
     }
 
-    @Scheduled(cron = "#{@cronJobSchedules.get('Update Gold Price History Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
+    //@Scheduled(cron = "#{@cronJobSchedules.get('Update Gold Price History Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
+    @Scheduled(cron = "0 59 23 * * *", zone = TIME_ZONE)
     public void updateGoldPriceHistoryJob() {
         if (isJobActive(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB)) {
             try {
