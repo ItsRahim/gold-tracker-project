@@ -14,5 +14,6 @@ public class CronJobDataAccess {
     public static final String COL_CRON_JOB_PURPOSE = "cd_purpose";
     public static final String COL_CRON_JOB_SCHEDULE = "cj_schedule";
     public static final String COL_CRON_JOB_MICROSERVICE_AFFECTED = "cj_microservice_affected";
+    public static final String COL_CRON_JOB_IS_ACTIVE = "cj_is_active";
 
 }

@@ -1,5 +1,6 @@
 package com.rahim.schedulerservice.jobs;
 
+import com.rahim.schedulerservice.constant.CronJobName;
 import com.rahim.schedulerservice.dao.CronJobDataAccess;
 import com.rahim.schedulerservice.kafka.IKafkaService;
 import com.rahim.schedulerservice.constant.KafkaTopic;
@@ -52,32 +53,41 @@ public class ScheduledJobs {
 
     @Scheduled(cron = "#{@cronJobSchedules.get('User Cleanup Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
     public void accountCleanupJob() {
-        try {
-            kafkaService.sendMessage(kafkaTopic.getCleanupTopic(), CRON_JOB_MESSAGE);
-            LOG.debug("Account cleanup job initiated successfully");
-        } catch (Exception e) {
-            LOG.error("Error occurred during account cleanup job: {}", e.getMessage());
+        if (isJobActive(CronJobName.USER_CLEANUP_JOB)) {
+            try {
+                kafkaService.sendMessage(kafkaTopic.getCleanupTopic(), CRON_JOB_MESSAGE);
+                LOG.debug("Account cleanup job initiated successfully");
+            } catch (Exception e) {
+                LOG.error("Error occurred during account cleanup job: {}", e.getMessage());
+            }
         }
     }
 
     @Scheduled(cron = "#{@cronJobSchedules.get('Update Gold Price Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
     public void updateGoldPriceJob() {
-        try {
-            kafkaService.sendMessage(kafkaTopic.getUpdatePriceTopic(), CRON_JOB_MESSAGE);
-            LOG.debug("Gold price update job initiated successfully");
-        } catch (Exception e) {
-            LOG.error("Error occurred during gold price update job: {}", e.getMessage());
+        if (isJobActive(CronJobName.UPDATE_GOLD_PRICE_JOB)) {
+            try {
+                kafkaService.sendMessage(kafkaTopic.getUpdatePriceTopic(), CRON_JOB_MESSAGE);
+                LOG.debug("Gold price update job initiated successfully");
+            } catch (Exception e) {
+                LOG.error("Error occurred during gold price update job: {}", e.getMessage());
+            }
         }
     }
 
     @Scheduled(cron = "#{@cronJobSchedules.get('Update Gold Price History Job')}", zone = TIME_ZONE, initialDelayString = "#{@initialDelay}")
     public void updateGoldPriceHistoryJob() {
-        try {
-            kafkaService.sendMessage(kafkaTopic.getUpdatePriceHistoryTopic(), CRON_JOB_MESSAGE);
-            LOG.debug("Gold price history update job initiated successfully");
-        } catch (Exception e) {
-            LOG.error("Error occurred during gold price history update cron job: {}", e.getMessage());
+        if (isJobActive(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB)) {
+            try {
+                kafkaService.sendMessage(kafkaTopic.getUpdatePriceHistoryTopic(), CRON_JOB_MESSAGE);
+                LOG.debug("Gold price history update job initiated successfully");
+            } catch (Exception e) {
+                LOG.error("Error occurred during gold price history update cron job: {}", e.getMessage());
+            }
         }
     }
 
+    private boolean isJobActive(String jobName) {
+        return cronJobSchedules.containsKey(jobName);
+    }
 }

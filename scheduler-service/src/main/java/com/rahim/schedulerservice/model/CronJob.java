@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -29,10 +28,14 @@ public class CronJob {
     @Column(name = "cj_microservice_affected")
     private String microserviceAffected;
 
-    public CronJob(String name, String purpose, String schedule, String microserviceAffected) {
+    @Column(name = "cj_is_active")
+    private Boolean isActive;
+
+    public CronJob(String name, String purpose, String schedule, String microserviceAffected, Boolean isActive) {
         this.name = name;
         this.purpose = purpose;
         this.schedule = schedule;
         this.microserviceAffected = microserviceAffected;
+        this.isActive = isActive;
     }
 }
