@@ -1,3 +1,6 @@
+cron:
+  job:
+    initial-delay: 100
 eureka:
   client:
     service-url:
@@ -11,7 +14,7 @@ logging:
   level:
     com:
       rahim:
-        schedulerservice: INFO
+        schedulerservice: DEBUG
     org:
       springframework: ERROR
     root: WARN

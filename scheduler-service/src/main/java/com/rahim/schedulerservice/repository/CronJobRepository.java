@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +22,6 @@ public interface CronJobRepository extends JpaRepository<CronJob, Integer> {
             + CronJobDataAccess.COL_CRON_JOB_SCHEDULE
             + " FROM "
             + CronJobDataAccess.TABLE_NAME, nativeQuery = true)
-    Map<String, String> getCronJobSchedule();
+    List<Map<String, String>> getCronJobSchedule();
 
 }
