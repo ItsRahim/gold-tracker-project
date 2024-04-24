@@ -6,6 +6,8 @@ CREATE TABLE rgts.cron_jobs (
     cj_microservice_affected VARCHAR(255)
 );
 
+CREATE INDEX idx_cron_jobs_columns ON rgts.cron_jobs (cj_name, cj_schedule, cj_microservice_affected);
+
 COMMENT ON TABLE rgts.cron_jobs IS 'A table containing information about all cron jobs in the system';
 COMMENT ON COLUMN rgts.cron_jobs.cj_id IS 'The unique ID for each cron job';
 COMMENT ON COLUMN rgts.cron_jobs.cj_name IS 'The name for each cron job';
