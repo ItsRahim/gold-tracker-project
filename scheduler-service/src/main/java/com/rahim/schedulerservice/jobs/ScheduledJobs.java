@@ -52,7 +52,7 @@ public class ScheduledJobs {
         }
     }
 
-    @Scheduled(initialDelayString = "#{@dbRefresh}")
+    @Scheduled(initialDelayString = "#{@dbRefreshInterval}")
     private void updateCronJobSchedules() {
         LOG.debug("Checking database for cron job property updates...");
         initialiseCronJobSchedules();
