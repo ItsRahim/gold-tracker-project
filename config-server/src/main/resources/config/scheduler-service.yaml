@@ -1,7 +1,7 @@
 cron:
   job:
     initial-delay: 100
-    db-refresh: 60000
+    db-refresh-interval: 60000
 eureka:
   client:
     service-url:

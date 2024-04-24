@@ -19,8 +19,8 @@ public class CronJobConfig {
     @Value("${cron.job.initial-delay}")
     private Long initialDelay;
 
-    @Value("${cron.job.db-refresh}")
-    private Long dbRefresh;
+    @Value("${cron.job.db-refresh-interval}")
+    private Long dbRefreshInterval;
 
     @Bean
     public Map<String, List<CronJob>> cronJobSchedules() {
@@ -33,8 +33,8 @@ public class CronJobConfig {
     }
 
     @Bean
-    public Long dbRefresh() {
-        return dbRefresh;
+    public Long dbRefreshInterval() {
+        return dbRefreshInterval;
     }
 
 }
