@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.3</version>
+        <version>3.2.5</version>
         <relativePath/>
     </parent>
     <groupId>com.rahim</groupId>
@@ -21,7 +21,7 @@
         <sonar.projectVersion>${project.version}</sonar.projectVersion>
         <!-- Library Versions -->
         <java.version>17</java.version>
-        <spring-cloud.version>2023.0.0</spring-cloud.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
         <jackson.version>2.16.0-rc1</jackson.version>
         <test-container.version>1.19.3</test-container.version>
         <instancio.version>3.7.1</instancio.version>
