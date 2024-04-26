@@ -42,6 +42,10 @@ public class SchedulerManager implements SchedulingConfigurer {
         initialiseCronJobSchedules();
     }
 
+    /**
+     * Retrieves a list of cron job names schedules from the database
+     * Sets jobExecution status to 'false' indicating job is not running
+     */
     private void initialiseCronJobSchedules() {
         List<Map<String, String>> schedulesFromDBList = cronJobRepository.getCronJobSchedule();
         schedulesFromDBList.forEach(scheduleMap -> {
@@ -69,6 +73,10 @@ public class SchedulerManager implements SchedulingConfigurer {
         });
     }
 
+    /**
+     * Periodically, based off fixedDelayString, checks the cron_jobs table for any updates made to job configurations.
+     * Updates the internal schedule of cron jobs accordingly.
+     */
     @Scheduled(fixedDelayString = "#{@dbRefreshInterval}")
     private void updateCronJobSchedule() {
         LOG.debug("Checking database for cron job property updates...");
@@ -76,6 +84,12 @@ public class SchedulerManager implements SchedulingConfigurer {
         configureTasks(new ScheduledTaskRegistrar());
     }
 
+    /**
+     * Retrieves a Runnable task associated with the specified jobName.
+     *
+     * @param jobName the name of the job for which to retrieve the task
+     * @return a Runnable task corresponding to the provided jobName, or null if no task is found
+     */
     private Runnable getTaskByJobName(String jobName) {
         return switch (jobName) {
             case CronJobName.USER_CLEANUP_JOB -> this::accountCleanupJob;
@@ -84,6 +98,12 @@ public class SchedulerManager implements SchedulingConfigurer {
             default -> null;
         };
     }
+
+    /**
+     * --------------------------------------------------------
+     * JOB CONFIGURATIONS
+     * --------------------------------------------------------
+     */
 
     private void accountCleanupJob() {
         if (jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).compareAndSet(false, true)) {
