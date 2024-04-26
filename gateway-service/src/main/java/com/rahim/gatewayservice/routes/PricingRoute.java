@@ -35,6 +35,12 @@ public class PricingRoute {
                 .build();
     }
 
+    /**
+     * ---------------------------------------------
+     *  ACCOUNT MICROSERVICE ROUTES
+     * ---------------------------------------------
+     */
+
     private Buildable<Route> defaultPriceRoute(PredicateSpec r) {
         return r.path(DEFAULT_PRICE_ROUTE)
                 .filters(this::applyPriceFilters)
