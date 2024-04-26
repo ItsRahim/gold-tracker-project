@@ -1,7 +1,7 @@
 package com.rahim.schedulerservice.jobs;
 
 import com.rahim.schedulerservice.constant.CronJobName;
-import com.rahim.schedulerservice.constant.KafkaTopic;
+import com.rahim.schedulerservice.kafka.KafkaTopic;
 import com.rahim.schedulerservice.dao.CronJobDataAccess;
 import com.rahim.schedulerservice.kafka.IKafkaService;
 import com.rahim.schedulerservice.repository.CronJobRepository;

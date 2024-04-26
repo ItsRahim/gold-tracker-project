@@ -1,4 +1,4 @@
-package com.rahim.schedulerservice.constant;
+package com.rahim.schedulerservice.kafka;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
