@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -30,6 +32,9 @@ public class CronJob {
 
     @Column(name = "cj_is_active")
     private Boolean isActive;
+
+    @Column(name = "cj_last_update")
+    private OffsetDateTime lastUpdated;
 
     public CronJob(String name, String purpose, String schedule, String microserviceAffected, Boolean isActive) {
         this.name = name;

@@ -37,3 +37,6 @@ spring:
   output:
     ansi:
       enabled: always
+  task:
+    scheduling:
+      time-zone: UTC
