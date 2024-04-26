@@ -13,7 +13,7 @@ COMMENT ON COLUMN rgts.cron_jobs.cj_name IS 'The name for each cron job';
 COMMENT ON COLUMN rgts.cron_jobs.cj_purpose IS 'The description about the purpose of the cron job';
 COMMENT ON COLUMN rgts.cron_jobs.cj_schedule IS 'The cron expression or schedule time for each cron job';
 COMMENT ON COLUMN rgts.cron_jobs.cj_microservice_affected IS 'The name or reference of the microservice affected by each cron job';
-COMMENT ON COLUMN rgts.cron_jobs.cj_is_active IS 'A flag indicating if cron job is active';
+COMMENT ON COLUMN rgts.cron_jobs.cj_is_active IS 'A flag indicating if cron job is activee';
 
 -- User Cleanup Job: Run every 43200 seconds (12 hours)
 INSERT INTO rgts.cron_jobs (cj_name, cj_purpose, cj_schedule, cj_microservice_affected, cj_is_active)
