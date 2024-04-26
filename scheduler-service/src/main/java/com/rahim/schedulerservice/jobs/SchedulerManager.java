@@ -88,25 +88,31 @@ public class SchedulerManager implements SchedulingConfigurer {
 
     private void accountCleanupJob() {
         if (jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).compareAndSet(false, true)) {
-            LOG.info("Running account cleanup job");
+            LOG.info("Running " +  CronJobName.USER_CLEANUP_JOB);
             kafkaService.sendMessage(kafkaTopic.getCleanupTopic(), CRON_JOB_MESSAGE);
             jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).set(false);
+        } else {
+            LOG.warn(CronJobName.USER_CLEANUP_JOB + " is already running. Skipping job execution");
         }
     }
 
     private void updateGoldPriceJob() {
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_JOB).compareAndSet(false, true)) {
-            LOG.info("Running update gold price job");
+            LOG.info("Running " +  CronJobName.UPDATE_GOLD_PRICE_JOB);
             kafkaService.sendMessage(kafkaTopic.getUpdatePriceTopic(), CRON_JOB_MESSAGE);
             jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).set(false);
+        } else {
+            LOG.warn(CronJobName.UPDATE_GOLD_PRICE_JOB + " is already running. Skipping job execution");
         }
     }
 
     private void updateGoldPriceHistoryJob() {
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).compareAndSet(false, true)) {
-            LOG.info("Running update gold price history job");
+            LOG.info("Running " +  CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB);
             kafkaService.sendMessage(kafkaTopic.getUpdatePriceHistoryTopic(), CRON_JOB_MESSAGE);
             jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).set(false);
+        } else {
+            LOG.warn(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB + " is already running. Skipping job execution");
         }
     }
 
