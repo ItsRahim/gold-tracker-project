@@ -1,6 +1,5 @@
 package com.rahim.emailservice.service.implementation;
 
-import com.rahim.emailservice.constant.EmailConfigConstants;
 import com.rahim.emailservice.model.EmailTemplate;
 import com.rahim.emailservice.service.IEmailSender;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class EmailSender implements IEmailSender {
     private static final Logger LOG = LoggerFactory.getLogger(EmailSender.class);
     private final JavaMailSender javaMailSender;
 
-    @Value(EmailConfigConstants.MAIL_USERNAME)
+    @Value("${spring.mail.username}")
     private String fromEmail;
 
     @Override
