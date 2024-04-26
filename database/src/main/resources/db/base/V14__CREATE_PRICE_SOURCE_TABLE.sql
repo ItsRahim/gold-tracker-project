@@ -7,6 +7,8 @@ CREATE TABLE rgts.price_sources (
     source_is_active BOOLEAN NOT NULL
 );
 
+CREATE INDEX idx_price_sources_columns ON rgts.price_sources (source_endpoint, source_is_active);
+
 COMMENT ON TABLE rgts.price_sources IS 'Table to store information about price sources';
 COMMENT ON COLUMN rgts.price_sources.source_id IS 'Unique identifier for each source';
 COMMENT ON COLUMN rgts.price_sources.source_name IS 'Name of the price source';

@@ -1,1 +1,0 @@
-CREATE INDEX idx_price_sources_columns ON rgts.price_sources (source_endpoint, source_is_active);
