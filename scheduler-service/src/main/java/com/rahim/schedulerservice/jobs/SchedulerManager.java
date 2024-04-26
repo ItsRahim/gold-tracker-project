@@ -54,7 +54,6 @@ public class SchedulerManager implements SchedulingConfigurer {
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        LOG.debug("Updating cron jobs...");
         cronJobSchedules.forEach((jobName, cronExpression) -> {
             if (!cronExpression.isEmpty()) {
                 Runnable task = getTaskByJobName(jobName);
