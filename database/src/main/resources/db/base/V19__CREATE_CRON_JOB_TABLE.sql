@@ -40,5 +40,5 @@ INSERT INTO rgts.cron_jobs (cj_name, cj_purpose, cj_schedule, cj_microservice_af
 VALUES ('Update Gold Price Job', 'Update gold prices', '0 * * * * *', 'Pricing Service', TRUE, CURRENT_TIMESTAMP);
 
 -- Update Gold Price History Job: Run daily at 23:59
-INSERT INTO rgts.cron_jobs (cj_name, cj_purpose, cj_schedule, cj_microservice_affected, cj_is_active, cj_last_updatede)
+INSERT INTO rgts.cron_jobs (cj_name, cj_purpose, cj_schedule, cj_microservice_affected, cj_is_active, cj_last_updated)
 VALUES ('Update Gold Price History Job', 'Update gold price history', '0 59 23 * * *', 'Pricing Service', TRUE, CURRENT_TIMESTAMP);
