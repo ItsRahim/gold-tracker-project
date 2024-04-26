@@ -24,7 +24,7 @@ public interface CronJobRepository extends JpaRepository<CronJob, Integer> {
             + CronJobDataAccess.TABLE_NAME
             + " WHERE "
             + CronJobDataAccess.COL_CRON_JOB_IS_ACTIVE
-            + " = true", nativeQuery = true)
+            + " = 'true'", nativeQuery = true)
     List<Map<String, String>> getCronJobSchedule();
 
 }
