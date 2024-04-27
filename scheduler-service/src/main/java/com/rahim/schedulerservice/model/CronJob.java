@@ -36,14 +36,6 @@ public class CronJob {
     @Column(name = "cj_last_update")
     private OffsetDateTime lastUpdated;
 
-    public CronJob(String name, String purpose, String schedule, String microserviceAffected, Boolean isActive) {
-        this.name = name;
-        this.purpose = purpose;
-        this.schedule = schedule;
-        this.microserviceAffected = microserviceAffected;
-        this.isActive = isActive;
-    }
-
     public CronJob(String name, String schedule) {
         this.name = name;
         this.schedule = schedule;
