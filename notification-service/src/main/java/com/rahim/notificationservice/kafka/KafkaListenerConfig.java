@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 @Configuration
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
+
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final IKafkaDataProcessor kafkaDataProcessor;
     private final CompletableFuture<String> responseFuture = new CompletableFuture<>();

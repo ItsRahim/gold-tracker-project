@@ -17,21 +17,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositoryHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ThresholdAlertRepositoryHandler.class);
     private final ThresholdAlertRepository thresholdAlertRepository;
-    private static final Logger LOG = LoggerFactory.getLogger(ThresholdService.class);
 
     @Override
     public Optional<ThresholdAlert> findById(int alertId) {
         try {
-            Optional<ThresholdAlert> alertOptional = thresholdAlertRepository.findById(alertId);
-
-            if (alertOptional.isPresent()) {
-                LOG.info("Alert retrieved successfully. ID: {}", alertId);
-            } else {
-                LOG.info("Alert not found for ID: {}", alertId);
-            }
-
-            return alertOptional;
+            return thresholdAlertRepository.findById(alertId);
         } catch (Exception e) {
             LOG.error("An error occurred while retrieving alert with ID: {}", alertId, e);
             return Optional.empty();
@@ -69,9 +62,8 @@ public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositor
     public void deleteThresholdAlert(int alertId) {
         findById(alertId).ifPresent(thresholdAlert -> {
             try {
-                LOG.info("Deleting ThresholdAlert with ID: {}", alertId);
                 thresholdAlertRepository.deleteById(alertId);
-                LOG.info("ThresholdAlert with ID {} deleted successfully", alertId);
+                LOG.debug("ThresholdAlert with ID {} deleted successfully", alertId);
             } catch (Exception e) {
                 LOG.warn("Attempted to delete non-existing ThresholdAlert with ID: {}", alertId);
                 throw new EntityNotFoundException("ThresholdAlert with ID " + alertId + " not found");

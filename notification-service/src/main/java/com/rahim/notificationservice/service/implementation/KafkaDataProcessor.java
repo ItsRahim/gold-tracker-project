@@ -3,13 +3,14 @@ package com.rahim.notificationservice.service.implementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rahim.notificationservice.constants.TopicConstants;
-import com.rahim.notificationservice.enums.TemplateNameEnum;
+import com.rahim.notificationservice.constants.EmailTemplate;
+import com.rahim.notificationservice.kafka.KafkaTopic;
 import com.rahim.notificationservice.kafka.IKafkaService;
+import com.rahim.notificationservice.model.EmailData;
+import com.rahim.notificationservice.model.NotificationResult;
 import com.rahim.notificationservice.repository.ThresholdAlertRepository;
 import com.rahim.notificationservice.service.IKafkaDataProcessor;
 import com.rahim.notificationservice.service.IThresholdAlertRepositoryHandler;
-import com.rahim.notificationservice.util.IMessageFormatter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,49 +20,47 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class KafkaDataProcessor implements IKafkaDataProcessor {
-    private final Logger LOG = LoggerFactory.getLogger(KafkaDataProcessor.class);
-    private final IMessageFormatter messageFormatter;
+
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaDataProcessor.class);
+    private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
     private final ThresholdAlertRepository thresholdAlertRepository;
     private final IKafkaService kafkaService;
-    private final TopicConstants topicConstants;
-    private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
+    private final KafkaTopic kafkaTopic;
 
     @Override
     public void processKafkaData(String priceData) {
         try {
             BigDecimal currentPrice = new BigDecimal(priceData);
+            List<NotificationResult> notificationList = thresholdAlertRepository.getEmailTokens(currentPrice);
+            LOG.debug("Retrieved {} notification records from the database for current price: {}", notificationList.size(), currentPrice);
 
-            List<Map<String, Object>> notificationList = thresholdAlertRepository.getEmailTokens(currentPrice);
+            notificationList.forEach(notificationResult -> {
+                thresholdAlertRepositoryHandler.deactivateAlert(notificationResult.getAlertId());
+                LOG.info("Deactivated alert for user: {}", notificationResult.getEmail());
 
-            for (Map<String, Object> notificationMap : notificationList) {
-                boolean isActive = (boolean) notificationMap.get("is_active");
-                int alertId = (int) notificationMap.get("alert_id");
+                EmailData emailData = EmailData.builder()
+                        .firstName(notificationResult.getFirstName())
+                        .lastName(notificationResult.getLastName())
+                        .email(notificationResult.getEmail())
+                        .thresholdPrice(String.valueOf(notificationResult.getThresholdPrice()))
+                        .alertDateTime(getFormattedTime())
+                        .emailTemplate(EmailTemplate.PRICE_ALERT_TEMPLATE)
+                        .build();
 
-                if(!isActive) {
-                    continue;
+                String jsonEmailData = null;
+                try {
+                    jsonEmailData = convertToJson(emailData);
+                } catch (JsonProcessingException e) {
+                    LOG.error("Error converting EmailData to JSON", e);
                 }
-                LOG.info("Found user to alert");
 
-                Map<String, Object> mutableEmailData = new HashMap<>(notificationMap);
-
-                thresholdAlertRepositoryHandler.deactivateAlert(alertId);
-                updateKeys(mutableEmailData);
-
-                LOG.info("Modified data: {}", mutableEmailData);
-
-                String jsonEmailData = convertToJson(mutableEmailData);
-
-                kafkaService.sendMessage(topicConstants.getSendEmailTopic(), jsonEmailData);
-            }
-
-            LOG.info("Found {} users in total", notificationList.size());
+                kafkaService.sendMessage(kafkaTopic.getSendEmailTopic(), jsonEmailData);
+            });
         } catch (NumberFormatException e) {
             LOG.error("Error parsing price data. Invalid format: {}", priceData);
         } catch (DataAccessException e) {
@@ -71,23 +70,9 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
         }
     }
 
-    private void updateKeys(Map<String, Object> data) {
-        String alertDateTime = getFormattedTime();
-
-        messageFormatter.updateMapKey(data, "first_name", "firstName");
-        messageFormatter.updateMapKey(data, "last_name", "lastName");
-        messageFormatter.updateMapKey(data, "threshold_price", "thresholdPrice");
-
-        data.remove("alert_id");
-        data.remove("is_active");
-
-        data.put("alertDateTime", alertDateTime);
-        data.put("templateName", TemplateNameEnum.PRICE_ALERT.getTemplateName());
-    }
-
-    private String convertToJson(Map<String, Object> mutableEmailData) throws JsonProcessingException {
+    private String convertToJson(EmailData emailData) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        return objectMapper.writeValueAsString(mutableEmailData);
+        return objectMapper.writeValueAsString(emailData);
     }
 
     private String getFormattedTime() {

@@ -1,5 +1,7 @@
 package com.rahim.notificationservice.repository;
 
+import com.rahim.notificationservice.dao.NotificationDataAccess;
+import com.rahim.notificationservice.model.NotificationResult;
 import com.rahim.notificationservice.model.ThresholdAlert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,15 +10,25 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface ThresholdAlertRepository extends JpaRepository<ThresholdAlert, Integer> {
-    @Query(value = "SELECT up.first_name, up.last_name, u.email, ta.threshold_price, ta.is_active, ta.alert_id " +
-            "FROM rgts.user_profiles up " +
-            "JOIN rgts.threshold_alerts ta ON up.account_id = ta.account_id " +
-            "JOIN rgts.user_accounts u ON up.account_id = u.account_id " +
-            "WHERE ta.threshold_price = :thresholdPrice", nativeQuery = true)
-    List<Map<String, Object>> getEmailTokens(@Param("thresholdPrice") BigDecimal thresholdPrice);
+
+@Query(value =
+        "SELECT " +
+                NotificationDataAccess.COL_ALERT_ID + " AS alertID, " +
+                NotificationDataAccess.PROFILE_COL_FIRST_NAME + " AS firstName, " +
+                NotificationDataAccess.PROFILE_COL_LAST_NAME + " AS lastName, " +
+                NotificationDataAccess.ACCOUNT_COL_EMAIL + " AS email, " +
+                NotificationDataAccess.COL_THRESHOLD_PRICE + " AS thresholdPrice" +
+                " FROM " +
+                NotificationDataAccess.PROFILE_TABLE_NAME + " up" +
+                " JOIN " + NotificationDataAccess.TABLE_NAME + " ta ON up." + NotificationDataAccess.COL_ACCOUNT_ID + " = ta." + NotificationDataAccess.COL_ACCOUNT_ID +
+                " JOIN " + NotificationDataAccess.ACCOUNT_TABLE_NAME + " u ON up." + NotificationDataAccess.ACCOUNT_COL_ACCOUNT_ID + " = u." + NotificationDataAccess.ACCOUNT_COL_ACCOUNT_ID +
+                " WHERE " +
+                "ta." + NotificationDataAccess.COL_THRESHOLD_PRICE + " = :thresholdPrice" +
+                " AND ta." + NotificationDataAccess.COL_IS_ACTIVE + " = 'true'",
+        nativeQuery = true)
+List<NotificationResult> getEmailTokens(@Param("thresholdPrice") BigDecimal thresholdPrice);
 
 }

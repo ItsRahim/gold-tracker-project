@@ -1,6 +1,5 @@
 package com.rahim.notificationservice.model;
 
-import com.rahim.notificationservice.listener.ThresholdAlertEntityListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @RequiredArgsConstructor
-@EntityListeners(ThresholdAlertEntityListener.class)
 @Table(name = "threshold_alerts", schema = "rgts")
 public class ThresholdAlert {
     @Id
