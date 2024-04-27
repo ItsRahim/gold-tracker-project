@@ -14,11 +14,6 @@ import java.util.List;
 @Repository
 public interface ThresholdAlertRepository extends JpaRepository<ThresholdAlert, Integer> {
 
-//    @Query(value = "SELECT up.first_name, up.last_name, u.email, ta.threshold_price, ta.is_active, ta.alert_id " +
-//            "FROM rgts.user_profiles up " +
-//            "JOIN rgts.threshold_alerts ta ON up.account_id = ta.account_id " +
-//            "JOIN rgts.user_accounts u ON up.account_id = u.account_id " +
-//            "WHERE ta.threshold_price = :thresholdPrice", nativeQuery = true)
 @Query(value =
         "SELECT " +
                 NotificationDataAccess.COL_ALERT_ID + " AS alertID, " +
