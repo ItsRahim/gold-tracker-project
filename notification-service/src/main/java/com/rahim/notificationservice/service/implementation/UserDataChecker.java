@@ -15,30 +15,35 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class UserDataChecker implements IUserDataChecker {
 
+    private static final Logger LOG = LoggerFactory.getLogger(UserDataChecker.class);
+    private final KafkaListenerConfig kafkaListenerConfig;
     private final IKafkaService kafkaService;
     private final KafkaTopic kafkaTopic;
-    private final KafkaListenerConfig kafkaListenerConfig;
-    private static final Logger LOG = LoggerFactory.getLogger(UserDataChecker.class);
 
     @Override
-    public boolean isNotificationValid(String userId) {
-        CompletableFuture<Boolean> idExistsFuture = checkId(userId);
+    public Boolean isNotificationValid(String userId) {
+        CompletableFuture<Boolean> resultFuture = new CompletableFuture<>();
         try {
-            return idExistsFuture.get();
+            checkId(userId)
+                    .thenAccept(resultFuture::complete)
+                    .exceptionally(ex -> {
+                        LOG.error("Error checking user existence", ex);
+                        resultFuture.complete(false);
+                        return null;
+                    });
+
+            return resultFuture.get();
         } catch (Exception e) {
-            LOG.error("Error checking user existence", e);
+            LOG.error("Error initiating user existence check", e);
             return false;
         }
     }
 
     private CompletableFuture<Boolean> checkId(String userId) {
         CompletableFuture<Boolean> resultFuture = new CompletableFuture<>();
-
         kafkaService.sendMessage(kafkaTopic.getCheckIdExists(), userId);
 
-        CompletableFuture<String> responseFuture = kafkaListenerConfig.getResponseFuture();
-
-        responseFuture.whenComplete((response, throwable) -> {
+        kafkaListenerConfig.getResponseFuture().whenComplete((response, throwable) -> {
             if (throwable != null) {
                 resultFuture.completeExceptionally(throwable);
             } else {
@@ -50,4 +55,3 @@ public class UserDataChecker implements IUserDataChecker {
         return resultFuture;
     }
 }
-

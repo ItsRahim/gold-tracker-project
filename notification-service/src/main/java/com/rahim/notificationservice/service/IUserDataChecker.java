@@ -1,5 +1,5 @@
 package com.rahim.notificationservice.service;
 
 public interface IUserDataChecker {
-    boolean isNotificationValid(String userId);
+    Boolean isNotificationValid(String userId);
 }

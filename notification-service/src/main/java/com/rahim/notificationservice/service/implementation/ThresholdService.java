@@ -20,14 +20,14 @@ public class ThresholdService implements IThresholdService {
     private static final Logger LOG = LoggerFactory.getLogger(ThresholdService.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
     private final IUserDataChecker userDataChecker;
-
+    private static final String THRESHOLD_PRICE = "thresholdPrice";
 
     @Override
     public void createNotification(ThresholdAlert thresholdAlert) {
         String userId = thresholdAlert.getId().toString();
         if (userDataChecker.isNotificationValid(userId)) {
-            LOG.debug("Attempting to add new threshold alert for user with ID: {}", thresholdAlert.getId());
             thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
+            LOG.info("Successfully added threshold alert for user with ID: {}", userId);
         } else {
             LOG.warn("Failed to create new threshold alert for user with ID: {}. Account invalid/notifications not enabled on account", thresholdAlert.getId());
         }
@@ -36,21 +36,20 @@ public class ThresholdService implements IThresholdService {
     @Override
     public void updateNotification(Map<String, String> updatedData, int alertId) {
         Optional<ThresholdAlert> optionalAlert = thresholdAlertRepositoryHandler.findById(alertId);
-        if(optionalAlert.isPresent()) {
-            ThresholdAlert thresholdAlert = optionalAlert.get();
+        optionalAlert.ifPresent(thresholdAlert -> {
+            if (updatedData.containsKey(THRESHOLD_PRICE)) {
+                BigDecimal price = new BigDecimal(updatedData.get(THRESHOLD_PRICE));
+                thresholdAlert.setThresholdPrice(price);
+            }
             try {
-                if(updatedData.containsKey("thresholdPrice")) {
-                    BigDecimal price = new BigDecimal(updatedData.get("thresholdPrice"));
-                    thresholdAlert.setThresholdPrice(price);
-                }
-
                 thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
-
                 LOG.info("Successfully updated threshold alert with ID: {}", alertId);
             } catch (Exception e) {
-                LOG.error("An error has occurred attempting to updated threshold alert with ID: {}", alertId);
+                LOG.error("An error occurred while updating threshold alert with ID: {}", alertId, e);
             }
-        } else {
+        });
+
+        if (optionalAlert.isEmpty()) {
             LOG.warn("Alert with ID {} not found.", alertId);
         }
     }
@@ -58,16 +57,17 @@ public class ThresholdService implements IThresholdService {
     @Override
     public void deleteNotification(int alertId) {
         Optional<ThresholdAlert> optionalAlert = thresholdAlertRepositoryHandler.findById(alertId);
-        if(optionalAlert.isPresent()) {
+        optionalAlert.ifPresent(alert -> {
             try {
-                thresholdAlertRepositoryHandler.deleteThresholdAlert(alertId);
-
+                thresholdAlertRepositoryHandler.deleteThresholdAlert(alert.getId());
                 LOG.info("Successfully deleted threshold alert with ID: {}", alertId);
             } catch (Exception e) {
                 LOG.error("An error has occurred attempting to delete threshold alert with ID: {}", alertId);
             }
-        } else {
-            LOG.warn("Alert with ID {} not found.", alertId);
+        });
+
+        if (optionalAlert.isEmpty()) {
+            LOG.warn("Alert not deleted with ID {}. Not found.", alertId);
         }
     }
 }
