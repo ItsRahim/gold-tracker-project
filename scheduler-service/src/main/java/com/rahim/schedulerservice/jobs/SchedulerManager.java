@@ -4,6 +4,7 @@ import com.rahim.schedulerservice.constant.CronJobName;
 import com.rahim.schedulerservice.kafka.KafkaTopic;
 import com.rahim.schedulerservice.dao.CronJobDataAccess;
 import com.rahim.schedulerservice.kafka.IKafkaService;
+import com.rahim.schedulerservice.model.CronJob;
 import com.rahim.schedulerservice.repository.CronJobRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +48,10 @@ public class SchedulerManager implements SchedulingConfigurer {
      * Sets jobExecution status to 'false' indicating job is not running
      */
     private void initialiseCronJobSchedules() {
-        List<Map<String, String>> schedulesFromDBList = cronJobRepository.getCronJobSchedule();
-        schedulesFromDBList.forEach(scheduleMap -> {
-            String cronJobName = scheduleMap.get(CronJobDataAccess.COL_CRON_JOB_NAME);
-            String cronSchedule = scheduleMap.get(CronJobDataAccess.COL_CRON_JOB_SCHEDULE);
+        List<CronJob> cronJobs = cronJobRepository.getCronJobSchedule();
+        cronJobs.forEach(cronJob -> {
+            String cronJobName = cronJob.getName();
+            String cronSchedule = cronJob.getSchedule();
             cronJobSchedules.put(cronJobName, cronSchedule);
             jobExecutionStatus.put(cronJobName, new AtomicBoolean(false));
         });

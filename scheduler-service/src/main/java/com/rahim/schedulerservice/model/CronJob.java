@@ -43,4 +43,9 @@ public class CronJob {
         this.microserviceAffected = microserviceAffected;
         this.isActive = isActive;
     }
+
+    public CronJob(String name, String schedule) {
+        this.name = name;
+        this.schedule = schedule;
+    }
 }
