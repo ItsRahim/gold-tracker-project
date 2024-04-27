@@ -16,20 +16,23 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ThresholdService implements IThresholdService {
+
     private static final Logger LOG = LoggerFactory.getLogger(ThresholdService.class);
-    private final IUserDataChecker userDataChecker;
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
+    private final IUserDataChecker userDataChecker;
+
 
     @Override
     public void createNotification(ThresholdAlert thresholdAlert) {
         String userId = thresholdAlert.getId().toString();
         if (userDataChecker.isNotificationValid(userId)) {
-            LOG.info("Attempting to add new threshold alert for user with ID: {}", thresholdAlert.getId());
+            LOG.debug("Attempting to add new threshold alert for user with ID: {}", thresholdAlert.getId());
             thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
         } else {
-            LOG.error("Failed to create new threshold alert for user with ID: {}. Account invalid/notifications not enabled on account", thresholdAlert.getId());
+            LOG.warn("Failed to create new threshold alert for user with ID: {}. Account invalid/notifications not enabled on account", thresholdAlert.getId());
         }
     }
+
     @Override
     public void updateNotification(Map<String, String> updatedData, int alertId) {
         Optional<ThresholdAlert> optionalAlert = thresholdAlertRepositoryHandler.findById(alertId);
@@ -46,11 +49,9 @@ public class ThresholdService implements IThresholdService {
                 LOG.info("Successfully updated threshold alert with ID: {}", alertId);
             } catch (Exception e) {
                 LOG.error("An error has occurred attempting to updated threshold alert with ID: {}", alertId);
-                throw new RuntimeException(e);
             }
         } else {
             LOG.warn("Alert with ID {} not found.", alertId);
-            throw new RuntimeException("Alert not found.");
         }
     }
 
@@ -64,11 +65,9 @@ public class ThresholdService implements IThresholdService {
                 LOG.info("Successfully deleted threshold alert with ID: {}", alertId);
             } catch (Exception e) {
                 LOG.error("An error has occurred attempting to delete threshold alert with ID: {}", alertId);
-                throw new RuntimeException(e);
             }
         } else {
             LOG.warn("Alert with ID {} not found.", alertId);
-            throw new RuntimeException("Alert not found.");
         }
     }
 }

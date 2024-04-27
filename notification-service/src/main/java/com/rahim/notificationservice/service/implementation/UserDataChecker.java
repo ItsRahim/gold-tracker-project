@@ -1,6 +1,6 @@
 package com.rahim.notificationservice.service.implementation;
 
-import com.rahim.notificationservice.constants.TopicConstants;
+import com.rahim.notificationservice.kafka.KafkaTopic;
 import com.rahim.notificationservice.kafka.IKafkaService;
 import com.rahim.notificationservice.kafka.KafkaListenerConfig;
 import com.rahim.notificationservice.service.IUserDataChecker;
@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class UserDataChecker implements IUserDataChecker {
 
     private final IKafkaService kafkaService;
-    private final TopicConstants topicConstants;
+    private final KafkaTopic kafkaTopic;
     private final KafkaListenerConfig kafkaListenerConfig;
     private static final Logger LOG = LoggerFactory.getLogger(UserDataChecker.class);
 
@@ -34,7 +34,7 @@ public class UserDataChecker implements IUserDataChecker {
     private CompletableFuture<Boolean> checkId(String userId) {
         CompletableFuture<Boolean> resultFuture = new CompletableFuture<>();
 
-        kafkaService.sendMessage(topicConstants.getCheckIdExists(), userId);
+        kafkaService.sendMessage(kafkaTopic.getCheckIdExists(), userId);
 
         CompletableFuture<String> responseFuture = kafkaListenerConfig.getResponseFuture();
 

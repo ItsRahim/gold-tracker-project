@@ -17,8 +17,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositoryHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ThresholdAlertRepositoryHandler.class);
     private final ThresholdAlertRepository thresholdAlertRepository;
-    private static final Logger LOG = LoggerFactory.getLogger(ThresholdService.class);
 
     @Override
     public Optional<ThresholdAlert> findById(int alertId) {
