@@ -21,6 +21,7 @@ public class EmailTokenRowMapper implements RowMapper<EmailToken> {
     @Override
     public EmailToken mapRow(ResultSet rs, int rowNum) throws SQLException {
         EmailToken emailToken = new EmailToken();
+
         if (emailProperty.isIncludeUsername()) {
             emailToken.setUsername(rs.getString("username"));
         }
