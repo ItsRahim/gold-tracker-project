@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
 
 /**
@@ -38,9 +39,12 @@ public class EmailTokenRowMapper implements RowMapper<EmailToken> {
             String templateName = emailProperty.getTemplateName();
             if (templateName.equals(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)) {
                 LocalDate deleteDate = rs.getDate(AccountRequest.ACCOUNT_DELETE_DATE).toLocalDate();
-                emailToken.setDeleteDate(deleteDate);
+                String date = MessageFormatter.getInstance().formatDate(deleteDate);
+                emailToken.setDeleteDate(date);
             } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)) {
-                emailToken.setUpdatedAt(rs.getTimestamp(AccountRequest.ACCOUNT_UPDATED_AT));
+                Instant updateAt = rs.getTimestamp(AccountRequest.ACCOUNT_UPDATED_AT).toInstant();
+                String date = MessageFormatter.getInstance().formatInstantDate(updateAt);
+                emailToken.setUpdatedAt(date);
                 emailToken.setEmail(emailProperty.getOldEmail());
             }
         }

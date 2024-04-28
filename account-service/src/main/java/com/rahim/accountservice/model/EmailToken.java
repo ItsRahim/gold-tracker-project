@@ -22,7 +22,7 @@ public class EmailToken {
     private String firstName;
     private String lastName;
     private String email;
-    private LocalDate deleteDate;
-    private Timestamp updatedAt;
+    private String deleteDate;
+    private String updatedAt;
     private String emailTemplate;
 }
