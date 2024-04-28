@@ -41,10 +41,10 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
         try {
             Map<String, Object> kafkaData = objectMapper.readValue(emailData, new TypeReference<>() {});
 
-            String templateName = (String) kafkaData.get("templateName");
+            String templateName = (String) kafkaData.get("emailTemplate");
             String email = (String) kafkaData.get("email");
 
-            kafkaData.remove("templateName");
+            kafkaData.remove("emailTemplate");
             kafkaData.remove("email");
 
             List<String> emailTokens = new ArrayList<>();

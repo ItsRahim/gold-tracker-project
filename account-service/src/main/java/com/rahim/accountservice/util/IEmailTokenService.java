@@ -1,6 +1,6 @@
 package com.rahim.accountservice.util;
 
-import java.util.Map;
+import com.rahim.accountservice.model.EmailProperty;
 
 /**
  * @author Rahim Ahmed
@@ -17,5 +17,5 @@ public interface IEmailTokenService {
      * @param includeDate A flag indicating whether to include the date in the tokens.
      * @throws RuntimeException If an error occurs while generating the tokens or sending the message.
      */
-    void generateEmailTokens(Map<String, Object> emailData, String templateName, boolean includeUsername, boolean includeDate);
+    void generateEmailTokens(EmailProperty emailProperty);
 }

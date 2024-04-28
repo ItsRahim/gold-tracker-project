@@ -1,13 +1,15 @@
 package com.rahim.accountservice.service.account.implementation;
 
+import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.dao.AccountDataAccess;
 import com.rahim.accountservice.constant.AccountState;
 import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.account.IInternalAccountService;
 import com.rahim.accountservice.service.profile.IProfileDeletionService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
-import com.rahim.accountservice.util.IEmailTokenGenerator;
+import com.rahim.accountservice.util.IEmailTokenService;
 import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,9 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import static com.rahim.accountservice.constant.EmailTemplate.ACCOUNT_DELETED_TEMPLATE;
-import static com.rahim.accountservice.constant.EmailTemplate.ACCOUNT_INACTIVITY_TEMPLATE;
 
 /**
  * @author Rahim Ahmed
@@ -32,7 +31,7 @@ public class InternalAccountService implements IInternalAccountService {
     private static final Logger LOG = LoggerFactory.getLogger(InternalAccountService.class);
     private final IAccountDeletionService accountDeletionService;
     private final IAccountRepositoryHandler accountRepositoryHandler;
-    private final IEmailTokenGenerator emailTokenGenerator;
+    private final IEmailTokenService emailTokenService;
     private final IProfileDeletionService profileDeletionService;
 
     /**
@@ -53,7 +52,13 @@ public class InternalAccountService implements IInternalAccountService {
      */
     private void deleteUserAccount(int userId) {
         try {
-            emailTokenGenerator.generateEmailTokens(ACCOUNT_DELETED_TEMPLATE, userId, true, false);
+            EmailProperty emailProperty = EmailProperty.builder()
+                    .accountId(userId)
+                    .templateName(EmailTemplate.ACCOUNT_DELETED_TEMPLATE)
+                    .includeUsername(true)
+                    .includeDate(false)
+                    .build();
+            emailTokenService.generateEmailTokens(emailProperty);
             profileDeletionService.deleteProfile(userId);
             accountRepositoryHandler.deleteAccount(userId);
 
@@ -77,13 +82,19 @@ public class InternalAccountService implements IInternalAccountService {
             if (!inactiveAccounts.isEmpty()) {
                 LOG.info("Found {} inactive users.", inactiveAccounts.size());
 
-                for (Account account : inactiveAccounts) {
+                inactiveAccounts.forEach(account -> {
                     account.setAccountStatus(AccountState.INACTIVE);
                     account.setCredentialsExpired(true);
                     accountRepositoryHandler.saveAccount(account);
-                    emailTokenGenerator.generateEmailTokens(ACCOUNT_INACTIVITY_TEMPLATE, account.getId(), false, false);
-                }
 
+                    EmailProperty emailProperty = EmailProperty.builder()
+                            .accountId(account.getId())
+                            .templateName(EmailTemplate.ACCOUNT_INACTIVITY_TEMPLATE)
+                            .includeUsername(false)
+                            .includeDate(false)
+                            .build();
+                    emailTokenService.generateEmailTokens(emailProperty);
+                });
                 LOG.debug("Inactive users found. Account status successfully updated");
             } else {
                 LOG.debug("No inactive users found for deletion");

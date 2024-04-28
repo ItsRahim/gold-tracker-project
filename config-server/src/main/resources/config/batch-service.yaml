@@ -11,7 +11,7 @@ logging:
   level:
     com:
       rahim:
-        batchservice: INFO
+        batchservice: DEBUG
     org:
       springframework: ERROR
     root: WARN

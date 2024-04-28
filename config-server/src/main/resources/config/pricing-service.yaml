@@ -11,7 +11,7 @@ logging:
   level:
     com:
       rahim:
-        pricingservice: INFO
+        pricingservice: DEBUG
     org:
       springframework: ERROR
     root: WARN

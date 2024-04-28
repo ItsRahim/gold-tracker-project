@@ -1,99 +1,55 @@
 package com.rahim.accountservice.util.implementation;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.constant.TopicConstants;
 import com.rahim.accountservice.kafka.IKafkaService;
-import com.rahim.accountservice.request.AccountJsonRequest;
-import com.rahim.accountservice.request.ProfileJsonRequest;
+import com.rahim.accountservice.model.EmailProperty;
+import com.rahim.accountservice.model.EmailToken;
+import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.util.IEmailTokenService;
-import com.rahim.accountservice.util.IMessageFormatter;
+import io.micrometer.core.instrument.config.validate.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-/**
- * Author: Rahim Ahmed
- * Created: 18/12/2023
- */
 @Service
 @RequiredArgsConstructor
 public class EmailTokenService implements IEmailTokenService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmailTokenService.class);
-    private final IMessageFormatter messageFormatter;
+    private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IKafkaService kafkaService;
     private final TopicConstants topicConstants;
 
     @Override
-    public void generateEmailTokens(Map<String, Object> emailData, String templateName, boolean includeUsername, boolean includeDate) {
+    public void generateEmailTokens(EmailProperty emailProperty) {
         try {
-            Map<String, Object> mutableEmailData = prepareEmailData(emailData, includeUsername, includeDate, templateName);
-            validateEmailData(mutableEmailData);
-            String jsonEmailData = convertToJson(mutableEmailData);
-            LOG.debug("Generated tokens: {}", jsonEmailData);
+            EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty.getAccountId(), emailProperty);
+            String jsonEmailData = convertToJson(emailToken);
+            LOG.trace("Generated tokens: {}", jsonEmailData);
             kafkaService.sendMessage(topicConstants.getSendEmailTopic(), jsonEmailData);
+        } catch (JsonProcessingException e) {
+            handleException("Error converting tokens to JSON", e);
+        } catch (ValidationException e) {
+            handleException("Validation failed for email data", e);
         } catch (Exception e) {
-            LOG.error("Error generating email tokens: {}", e.getMessage(), e);
-            throw new RuntimeException("Unexpected error", e);
+            handleException("Error generating email tokens", e);
         }
     }
 
-    private Map<String, Object> prepareEmailData(Map<String, Object> emailData, boolean includeUsername, boolean includeDate, String templateName) {
-        Map<String, Object> mutableEmailData = new HashMap<>(emailData);
-        updateKeysAndRemoveFields(mutableEmailData, includeUsername, includeDate, templateName);
-        return mutableEmailData;
+    private String convertToJson(EmailToken emailToken) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        return objectMapper.writeValueAsString(emailToken);
     }
 
-    private void updateKeysAndRemoveFields(Map<String, Object> mutableEmailData, boolean includeUsername, boolean includeDate, String templateName) {
-        updateKeys(mutableEmailData);
-        if (!includeUsername) {
-            mutableEmailData.remove(ProfileJsonRequest.PROFILE_USERNAME);
-        }
-        if (!includeDate) {
-            List<String> keysToRemove = Arrays.asList(AccountJsonRequest.ACCOUNT_DELETE_DATE, AccountJsonRequest.ACCOUNT_UPDATED_AT);
-            mutableEmailData.keySet().removeAll(keysToRemove);
-        }
-        handleTemplateName(templateName, mutableEmailData);
+    private void handleException(String message, Exception e) {
+        LOG.error("{}: {}", message, e.getMessage(), e);
+        throw new RuntimeException(message, e);
     }
-
-    private void updateKeys(Map<String, Object> mutableEmailData) {
-        messageFormatter.updateMapKey(mutableEmailData, "first_name", ProfileJsonRequest.PROFILE_FIRST_NAME);
-        messageFormatter.updateMapKey(mutableEmailData, "last_name", ProfileJsonRequest.PROFILE_LAST_NAME);
-        messageFormatter.updateMapKey(mutableEmailData, "delete_date", AccountJsonRequest.ACCOUNT_DELETE_DATE);
-        messageFormatter.updateMapKey(mutableEmailData, "updated_at", AccountJsonRequest.ACCOUNT_UPDATED_AT);
-    }
-
-    private void handleTemplateName(String templateName, Map<String, Object> mutableEmailData) {
-        if (EmailTemplate.ACCOUNT_DELETION_TEMPLATE.equals(templateName)) {
-            mutableEmailData.remove(AccountJsonRequest.ACCOUNT_UPDATED_AT);
-            messageFormatter.formatInstant(mutableEmailData, AccountJsonRequest.ACCOUNT_DELETE_DATE);
-        } else if (EmailTemplate.ACCOUNT_UPDATE_TEMPLATE.equals(templateName)) {
-            mutableEmailData.remove(AccountJsonRequest.ACCOUNT_DELETE_DATE);
-            messageFormatter.formatInstant(mutableEmailData, AccountJsonRequest.ACCOUNT_UPDATED_AT);
-        }
-        mutableEmailData.put("templateName", templateName);
-    }
-
-    private void validateEmailData(Map<String, Object> mutableEmailData) {
-        if (ObjectUtils.anyNull(mutableEmailData)) {
-            LOG.error("Email token values are null. Unable to generate email tokens");
-            throw new RuntimeException("Email token values are null. Unable to generate email tokens");
-        }
-    }
-
-    private String convertToJson(Map<String, Object> mutableEmailData) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        return objectMapper.writeValueAsString(mutableEmailData);
-    }
-
 }

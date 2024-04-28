@@ -20,14 +20,6 @@ public class MessageFormatter implements IMessageFormatter {
     private static final Logger LOG = LoggerFactory.getLogger(MessageFormatter.class);
 
     @Override
-    public void updateMapKey(Map<String, Object> map, String oldKey, String newKey) {
-        if(map.containsKey(oldKey)) {
-            Object value = map.remove(oldKey);
-            map.put(newKey, value);
-        }
-    }
-
-    @Override
     public void formatInstant(Map<String, Object> map, String key) {
         Object value = map.get(key);
         if (value != null) {

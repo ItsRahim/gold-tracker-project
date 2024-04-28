@@ -3,9 +3,10 @@ package com.rahim.accountservice.service.account.implementation;
 import com.rahim.accountservice.constant.AccountState;
 import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
-import com.rahim.accountservice.util.IEmailTokenGenerator;
+import com.rahim.accountservice.util.IEmailTokenService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 /**
- * This service class is responsible for deleting accounts.
- * It implements the IAccountDeletionService interface.
- *
  * @author Rahim Ahmed
  * @created 30/12/2023
  */
@@ -28,20 +26,19 @@ public class AccountDeletionService implements IAccountDeletionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountDeletionService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
-    private final IEmailTokenGenerator emailTokenGenerator;
+    private final IEmailTokenService emailTokenService;
 
     /**
      * @see IAccountDeletionService
      */
     @Override
     public boolean requestAccountDelete(int accountId) {
-        Optional<Account> existingUserOptional = accountRepositoryHandler.findById(accountId);
+        Optional<Account> existingAccountOptional = accountRepositoryHandler.findById(accountId);
 
-        if (existingUserOptional.isPresent()) {
-            Account account = existingUserOptional.get();
+        if (existingAccountOptional.isPresent()) {
+            Account account = existingAccountOptional.get();
 
             String accountStatus = account.getAccountStatus();
-
             if (accountStatus.equals(AccountState.ACTIVE)) {
                 LocalDate deletionDate = LocalDate.now().plusDays(30);
 
@@ -52,8 +49,13 @@ public class AccountDeletionService implements IAccountDeletionService {
 
                 try {
                     accountRepositoryHandler.saveAccount(account);
-                    emailTokenGenerator.generateEmailTokens(EmailTemplate.ACCOUNT_DELETION_TEMPLATE, accountId, true, true);
-
+                    EmailProperty emailProperty = EmailProperty.builder()
+                            .accountId(accountId)
+                            .templateName(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)
+                            .includeUsername(true)
+                            .includeDate(true)
+                            .build();
+                    emailTokenService.generateEmailTokens(emailProperty);
                     return true;
                 } catch (DataAccessException e) {
                     LOG.error("Error updating account with ID {} - {}", accountId, e.getMessage());
