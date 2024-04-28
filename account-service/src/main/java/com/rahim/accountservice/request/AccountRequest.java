@@ -4,9 +4,9 @@ package com.rahim.accountservice.request;
  * @author Rahim Ahmed
  * @created 16/04/2024
  */
-public class AccountJsonRequest {
+public class AccountRequest {
 
-    private AccountJsonRequest() {}
+    private AccountRequest() {}
 
     public static final String ACCOUNT_EMAIL = "email";
     public static final String ACCOUNT_PASSWORD_HASH = "passwordHash";

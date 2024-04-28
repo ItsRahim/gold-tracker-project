@@ -6,6 +6,7 @@ import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.repository.AccountRepository;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
+import com.rahim.accountservice.util.EmailTokenGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ class AccountUpdateServiceTest extends AbstractTestConfig {
     AccountRepository accountRepository;
 
     @Mock
-    IEmailTokenGenerator emailTokenGenerator;
+    EmailTokenGenerator emailTokenGenerator;
 
     @Mock
     IProfileRepositoryHandler profileRepositoryHandler;

@@ -6,7 +6,7 @@ import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
-import com.rahim.accountservice.util.IEmailTokenService;
+import com.rahim.accountservice.util.EmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class AccountDeletionService implements IAccountDeletionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountDeletionService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
-    private final IEmailTokenService emailTokenService;
+    private final EmailTokenGenerator emailTokenGenerator;
 
     /**
      * @see IAccountDeletionService
@@ -55,7 +55,7 @@ public class AccountDeletionService implements IAccountDeletionService {
                             .includeUsername(true)
                             .includeDate(true)
                             .build();
-                    emailTokenService.generateEmailTokens(emailProperty);
+                    emailTokenGenerator.generateEmailTokens(emailProperty);
                     return true;
                 } catch (DataAccessException e) {
                     LOG.error("Error updating account with ID {} - {}", accountId, e.getMessage());

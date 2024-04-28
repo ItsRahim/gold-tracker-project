@@ -3,11 +3,14 @@ package com.rahim.accountservice.util;
 import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.model.EmailToken;
+import com.rahim.accountservice.request.AccountRequest;
+import com.rahim.accountservice.request.ProfileRequest;
 import lombok.Setter;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 /**
  * @author Rahim Ahmed
@@ -23,20 +26,21 @@ public class EmailTokenRowMapper implements RowMapper<EmailToken> {
         EmailToken emailToken = new EmailToken();
 
         if (emailProperty.isIncludeUsername()) {
-            emailToken.setUsername(rs.getString("username"));
+            emailToken.setUsername(rs.getString(ProfileRequest.PROFILE_USERNAME));
         }
 
-        emailToken.setFirstName(rs.getString("firstName"));
-        emailToken.setLastName(rs.getString("lastName"));
-        emailToken.setEmail(rs.getString("email"));
+        emailToken.setFirstName(rs.getString(ProfileRequest.PROFILE_FIRST_NAME));
+        emailToken.setLastName(rs.getString(ProfileRequest.PROFILE_LAST_NAME));
+        emailToken.setEmail(rs.getString(AccountRequest.ACCOUNT_EMAIL));
         emailToken.setEmailTemplate(emailProperty.getTemplateName());
 
         if (emailProperty.isIncludeDate()) {
             String templateName = emailProperty.getTemplateName();
             if (templateName.equals(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)) {
-                emailToken.setDeleteDate(rs.getDate("deleteDate").toLocalDate());
+                LocalDate deleteDate = rs.getDate(AccountRequest.ACCOUNT_DELETE_DATE).toLocalDate();
+                emailToken.setDeleteDate(deleteDate);
             } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)) {
-                emailToken.setUpdatedAt(rs.getTimestamp("updatedAt"));
+                emailToken.setUpdatedAt(rs.getTimestamp(AccountRequest.ACCOUNT_UPDATED_AT));
                 emailToken.setEmail(emailProperty.getOldEmail());
             }
         }

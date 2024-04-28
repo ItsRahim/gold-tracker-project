@@ -2,7 +2,7 @@ package com.rahim.accountservice.service.profile.implementation;
 
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Profile;
-import com.rahim.accountservice.request.ProfileJsonRequest;
+import com.rahim.accountservice.request.ProfileRequest;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import lombok.RequiredArgsConstructor;
@@ -55,16 +55,16 @@ public class ProfileUpdateService implements IProfileUpdateService {
     private void updateProfileData(Profile profile, Map<String, String> updatedData) {
         updatedData.forEach((key, value) -> {
             switch (key) {
-                case ProfileJsonRequest.PROFILE_FIRST_NAME:
+                case ProfileRequest.PROFILE_FIRST_NAME:
                     profile.setFirstName(value);
                     break;
-                case ProfileJsonRequest.PROFILE_LAST_NAME:
+                case ProfileRequest.PROFILE_LAST_NAME:
                     profile.setLastName(value);
                     break;
-                case ProfileJsonRequest.PROFILE_CONTACT_NUMBER:
+                case ProfileRequest.PROFILE_CONTACT_NUMBER:
                     profile.setContactNumber(value);
                     break;
-                case ProfileJsonRequest.PROFILE_ADDRESS:
+                case ProfileRequest.PROFILE_ADDRESS:
                     profile.setAddress(value);
                     break;
                 default:

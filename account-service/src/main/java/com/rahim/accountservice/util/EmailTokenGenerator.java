@@ -1,4 +1,4 @@
-package com.rahim.accountservice.util.implementation;
+package com.rahim.accountservice.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,7 +9,6 @@ import com.rahim.accountservice.kafka.IKafkaService;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.model.EmailToken;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
-import com.rahim.accountservice.util.IEmailTokenService;
 import io.micrometer.core.instrument.config.validate.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,14 +17,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class EmailTokenService implements IEmailTokenService {
+public class EmailTokenGenerator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmailTokenService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmailTokenGenerator.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IKafkaService kafkaService;
     private final TopicConstants topicConstants;
 
-    @Override
     public void generateEmailTokens(EmailProperty emailProperty) {
         try {
             EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);

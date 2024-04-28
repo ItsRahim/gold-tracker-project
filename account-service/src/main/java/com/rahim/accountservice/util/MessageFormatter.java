@@ -1,6 +1,5 @@
-package com.rahim.accountservice.util.implementation;
+package com.rahim.accountservice.util;
 
-import com.rahim.accountservice.util.IMessageFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,11 +14,10 @@ import java.util.Map;
  * @created 18/12/2023
  */
 @Component
-public class MessageFormatter implements IMessageFormatter {
+public class MessageFormatter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageFormatter.class);
 
-    @Override
     public void formatInstant(Map<String, Object> map, String key) {
         Object value = map.get(key);
         if (value != null) {

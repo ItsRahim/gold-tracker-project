@@ -9,7 +9,7 @@ import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.account.IInternalAccountService;
 import com.rahim.accountservice.service.profile.IProfileDeletionService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
-import com.rahim.accountservice.util.IEmailTokenService;
+import com.rahim.accountservice.util.EmailTokenGenerator;
 import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class InternalAccountService implements IInternalAccountService {
     private static final Logger LOG = LoggerFactory.getLogger(InternalAccountService.class);
     private final IAccountDeletionService accountDeletionService;
     private final IAccountRepositoryHandler accountRepositoryHandler;
-    private final IEmailTokenService emailTokenService;
+    private final EmailTokenGenerator emailTokenGenerator;
     private final IProfileDeletionService profileDeletionService;
 
     /**
@@ -58,7 +58,7 @@ public class InternalAccountService implements IInternalAccountService {
                     .includeUsername(true)
                     .includeDate(false)
                     .build();
-            emailTokenService.generateEmailTokens(emailProperty);
+            emailTokenGenerator.generateEmailTokens(emailProperty);
             profileDeletionService.deleteProfile(userId);
             accountRepositoryHandler.deleteAccount(userId);
 
@@ -93,7 +93,7 @@ public class InternalAccountService implements IInternalAccountService {
                             .includeUsername(false)
                             .includeDate(false)
                             .build();
-                    emailTokenService.generateEmailTokens(emailProperty);
+                    emailTokenGenerator.generateEmailTokens(emailProperty);
                 });
                 LOG.debug("Inactive users found. Account status successfully updated");
             } else {
