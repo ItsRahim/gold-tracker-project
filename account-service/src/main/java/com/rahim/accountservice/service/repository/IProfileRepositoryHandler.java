@@ -18,7 +18,7 @@ public interface IProfileRepositoryHandler {
     void deleteProfile(int profileId);
     Optional<Profile> findById(int profileId);
     boolean existsByUsername(String username);
-    EmailToken generateEmailTokens(int accountId, EmailProperty emailProperty);
+    EmailToken generateEmailTokens(EmailProperty emailProperty);
     Optional<Profile> getProfileByUsername(String username);
     int getProfileIdByUserId(int userId);
     List<Profile> getAllProfiles();

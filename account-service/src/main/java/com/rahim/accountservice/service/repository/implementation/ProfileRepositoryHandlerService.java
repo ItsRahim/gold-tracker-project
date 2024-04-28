@@ -104,7 +104,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     }
 
     @Override
-    public EmailToken generateEmailTokens(int accountId, EmailProperty emailProperty) {
+    public EmailToken generateEmailTokens(EmailProperty emailProperty) {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("SELECT ");
         sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_FIRST_NAME).append(" AS firstName, ");
@@ -129,7 +129,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
         sqlBuilder.append("FROM ").append(ProfileDataAccess.TABLE_NAME).append(" up ");
         sqlBuilder.append("JOIN ").append(AccountDataAccess.TABLE_NAME).append(" ua ");
         sqlBuilder.append("ON up.").append(ProfileDataAccess.COL_ACCOUNT_ID).append(" = ua.").append(AccountDataAccess.COL_ACCOUNT_ID).append(" ");
-        sqlBuilder.append("WHERE up.").append(ProfileDataAccess.COL_ACCOUNT_ID).append(" = ").append(accountId);
+        sqlBuilder.append("WHERE up.").append(ProfileDataAccess.COL_ACCOUNT_ID).append(" = ").append(emailProperty.getAccountId());
 
         String sql = sqlBuilder.toString();
 

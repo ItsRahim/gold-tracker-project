@@ -28,7 +28,7 @@ public class EmailTokenService implements IEmailTokenService {
     @Override
     public void generateEmailTokens(EmailProperty emailProperty) {
         try {
-            EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty.getAccountId(), emailProperty);
+            EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);
             String jsonEmailData = convertToJson(emailToken);
             LOG.trace("Generated tokens: {}", jsonEmailData);
             kafkaService.sendMessage(topicConstants.getSendEmailTopic(), jsonEmailData);
