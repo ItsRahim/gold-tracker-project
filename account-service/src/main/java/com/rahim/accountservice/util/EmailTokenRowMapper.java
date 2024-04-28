@@ -30,8 +30,6 @@ public class EmailTokenRowMapper implements RowMapper<EmailToken> {
         emailToken.setEmail(rs.getString("email"));
         emailToken.setEmailTemplate(emailProperty.getTemplateName());
 
-
-
         if (emailProperty.isIncludeDate()) {
             String templateName = emailProperty.getTemplateName();
             if (templateName.equals(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)) {
