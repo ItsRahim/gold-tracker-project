@@ -4,10 +4,11 @@ import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.exception.EmailTokenException;
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
-import com.rahim.accountservice.request.AccountJsonRequest;
+import com.rahim.accountservice.model.EmailProperty;
+import com.rahim.accountservice.request.AccountRequest;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
-import com.rahim.accountservice.util.IEmailTokenGenerator;
+import com.rahim.accountservice.util.EmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountUpdateService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
-    private final IEmailTokenGenerator emailTokenGenerator;
+    private final EmailTokenGenerator emailTokenGenerator;
 
     /**
      * @see IAccountUpdateService
@@ -70,7 +71,14 @@ public class AccountUpdateService implements IAccountUpdateService {
      */
     private void generateEmailTokens(int accountId, String oldEmail) {
         try {
-            emailTokenGenerator.generateEmailTokens(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE, accountId, true, true, oldEmail);
+            EmailProperty emailProperty = EmailProperty.builder()
+                    .accountId(accountId)
+                    .templateName(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)
+                    .includeUsername(true)
+                    .includeDate(true)
+                    .oldEmail(oldEmail)
+                    .build();
+            emailTokenGenerator.generateEmailTokens(emailProperty);
         } catch (EmailTokenException e) {
             LOG.error("Error generating email tokens for account with ID {}", accountId, e);
             throw new RuntimeException("Failed to generate email tokens for account.", e);
@@ -78,7 +86,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     }
 
     private void updateEmail(Account account, Map<String, String> updatedData) {
-        String newEmail = updatedData.get(AccountJsonRequest.ACCOUNT_EMAIL);
+        String newEmail = updatedData.get(AccountRequest.ACCOUNT_EMAIL);
         if (isNotEmpty(newEmail) && !accountRepositoryHandler.existsByEmail(newEmail)) {
             account.setEmail(newEmail);
             LOG.debug("Email updated successfully");
@@ -88,7 +96,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     }
 
     private void updatePassword(Account account, Map<String, String> updatedData) {
-        String newPasswordHash = updatedData.get(AccountJsonRequest.ACCOUNT_PASSWORD_HASH);
+        String newPasswordHash = updatedData.get(AccountRequest.ACCOUNT_PASSWORD_HASH);
         if (isNotEmpty(newPasswordHash)) {
             account.setPasswordHash(newPasswordHash);
             LOG.debug("Password updated successfully");

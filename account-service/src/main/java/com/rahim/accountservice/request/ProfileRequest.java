@@ -4,9 +4,9 @@ package com.rahim.accountservice.request;
  * @author Rahim Ahmed
  * @created 16/04/2024
  */
-public class ProfileJsonRequest {
+public class ProfileRequest {
 
-    private ProfileJsonRequest() {}
+    private ProfileRequest() {}
 
     public static final String PROFILE_USERNAME = "username";
     public static final String PROFILE_FIRST_NAME = "firstName";

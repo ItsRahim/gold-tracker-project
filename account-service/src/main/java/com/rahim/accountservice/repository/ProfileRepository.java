@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -47,22 +46,4 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
      */
     boolean existsByUsernameIgnoreCase(String username);
 
-    /**
-     * This method is used to fetch details to populate an email template
-     *
-     * @param accountId the account id of the user profile to be found
-     * @return an Optional containing a Map with the profile details if found, else an empty Optional
-     */
-    @Query(value = "SELECT " +
-            "up." + ProfileDataAccess.COL_PROFILE_USERNAME + ", " +
-            "up." + ProfileDataAccess.COL_PROFILE_FIRST_NAME + ", " +
-            "up." + ProfileDataAccess.COL_PROFILE_LAST_NAME + ", " +
-            "ua." + AccountDataAccess.COL_ACCOUNT_EMAIL + ", " +
-            "ua." + AccountDataAccess.COL_ACCOUNT_DELETE_DATE + ", " +
-            "ua." + AccountDataAccess.COL_ACCOUNT_UPDATED_AT + " " +
-            "FROM " + ProfileDataAccess.TABLE_NAME + " up " +
-            "JOIN " + AccountDataAccess.TABLE_NAME + " ua " +
-            "ON up." + ProfileDataAccess.COL_ACCOUNT_ID + " = ua." + AccountDataAccess.COL_ACCOUNT_ID + " " +
-            "WHERE up." + ProfileDataAccess.COL_ACCOUNT_ID + " = :accountId", nativeQuery = true)
-    Optional<Map<String, Object>> getProfileDetails(@Param("accountId") int accountId);
 }

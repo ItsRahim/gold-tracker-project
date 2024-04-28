@@ -22,7 +22,7 @@ VALUES (
         'We want to inform you that based on our records, your account, @username, is scheduled for deletion in 30 days, on @deletionDate. If you have any concerns or questions, please contact our support team as soon as possible.\n' ||
         'We value your presence with us, and we''d be happy to assist you with any issues you may have. To prevent the deletion of your account, make sure to log in within the next 30 days, before @deletionDate.\n' ||
         '\nThank you for being a part of our community.',
-        ARRAY['@firstName', '@lastName', '@username', '@deletionDate']
+        ARRAY['@username', '@firstName', '@lastName', '@deletionDate']
        );
 
 INSERT INTO rgts.email_template(template_name, subject, body, placeholders)
@@ -58,5 +58,5 @@ VALUES (
            'Last Update Time: @updatedAt\n\n' ||
            'If you have any questions or concerns, please contact our support team for further assistance.\n\n' ||
            'Best regards,\nYour Service Team',
-           ARRAY['@firstName', '@lastName', '@username', '@updatedAt']
+           ARRAY['@username', '@firstName', '@lastName', '@updatedAt']
        );

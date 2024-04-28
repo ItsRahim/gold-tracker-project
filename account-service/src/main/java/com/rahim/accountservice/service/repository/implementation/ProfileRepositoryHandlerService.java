@@ -1,19 +1,25 @@
 package com.rahim.accountservice.service.repository.implementation;
 
+import com.rahim.accountservice.constant.EmailTemplate;
+import com.rahim.accountservice.dao.AccountDataAccess;
+import com.rahim.accountservice.dao.ProfileDataAccess;
+import com.rahim.accountservice.model.EmailProperty;
+import com.rahim.accountservice.model.EmailToken;
 import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.repository.ProfileRepository;
+import com.rahim.accountservice.request.AccountRequest;
+import com.rahim.accountservice.request.ProfileRequest;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
+import com.rahim.accountservice.util.EmailTokenRowMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
-import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,8 +29,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProfileRepositoryHandlerService implements IProfileRepositoryHandler {
+
     private static final Logger LOG = LoggerFactory.getLogger(ProfileRepositoryHandlerService.class);
     private final ProfileRepository profileRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public void createNewProfile(Profile profile) {
@@ -94,8 +102,39 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     }
 
     @Override
-    public Map<String, Object> getProfileDetails(int accountId) {
-        return profileRepository.getProfileDetails(accountId).orElse(null);
+    public EmailToken generateEmailTokens(EmailProperty emailProperty) {
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT ");
+        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_FIRST_NAME).append(" AS ").append(ProfileRequest.PROFILE_FIRST_NAME).append(", ");
+        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_LAST_NAME).append(" AS ").append(ProfileRequest.PROFILE_LAST_NAME).append(", ");
+        sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_EMAIL).append(" AS ").append(AccountRequest.ACCOUNT_EMAIL).append(", ");
+
+        if (emailProperty.isIncludeUsername()) {
+            sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_USERNAME).append(" AS ").append(ProfileRequest.PROFILE_USERNAME).append(", ");
+        }
+
+        if (emailProperty.isIncludeDate()) {
+            String templateName = emailProperty.getTemplateName();
+            if (templateName.equals(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)) {
+                sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_DELETE_DATE).append(" AS ").append(AccountRequest.ACCOUNT_DELETE_DATE).append(", ");
+            } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)) {
+                sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_UPDATED_AT).append(" AS ").append(AccountRequest.ACCOUNT_UPDATED_AT).append(", ");
+            }
+        }
+
+        sqlBuilder.deleteCharAt(sqlBuilder.length() - 2);
+
+        sqlBuilder.append("FROM ").append(ProfileDataAccess.TABLE_NAME).append(" up ");
+        sqlBuilder.append("JOIN ").append(AccountDataAccess.TABLE_NAME).append(" ua ");
+        sqlBuilder.append("ON up.").append(ProfileDataAccess.COL_ACCOUNT_ID).append(" = ua.").append(AccountDataAccess.COL_ACCOUNT_ID).append(" ");
+        sqlBuilder.append("WHERE up.").append(ProfileDataAccess.COL_ACCOUNT_ID).append(" = ").append(emailProperty.getAccountId());
+
+        String sql = sqlBuilder.toString();
+
+        EmailTokenRowMapper emailTokenRowMapper = new EmailTokenRowMapper();
+        emailTokenRowMapper.setEmailProperty(emailProperty);
+
+        return jdbcTemplate.queryForObject(sql, emailTokenRowMapper);
     }
 
     @Override

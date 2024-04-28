@@ -9,8 +9,8 @@ CREATE TABLE rgts.user_accounts (
     credentials_expired BOOLEAN DEFAULT false,
     last_login TIMESTAMP(0) NULL,
     notification_setting BOOLEAN DEFAULT false,
-    created_at TIMESTAMPTZ(0) DEFAULT NOW(),
-    updated_at TIMESTAMPTZ(0) DEFAULT NOW(),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'UTC'),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'UTC'),
     login_attempts INT DEFAULT 0,
     delete_date DATE DEFAULT NULL
 );
