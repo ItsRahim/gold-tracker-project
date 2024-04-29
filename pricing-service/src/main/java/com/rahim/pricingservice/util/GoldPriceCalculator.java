@@ -70,7 +70,6 @@ public class GoldPriceCalculator {
     public BigDecimal calculateGoldPrice(String caratPurity, BigDecimal netWeight) {
         try {
             validateInput(caratPurity, netWeight);
-
             BigDecimal goldPriceByCarat = calculateGoldPriceByCarat(caratPurity);
             BigDecimal totalGoldPrice;
 
@@ -81,10 +80,6 @@ public class GoldPriceCalculator {
             }
 
             totalGoldPrice = totalGoldPrice.setScale(SCALE, RoundingMode.HALF_UP);
-
-            LOG.debug("Calculated Gold Price: Carat Purity: {}, Net Weight: {} grams, Price per gram: £{}, Total Price: £{}",
-                    caratPurity, netWeight, pricePerGram, totalGoldPrice);
-
             return totalGoldPrice;
         } catch (IllegalArgumentException e) {
             LOG.error("Error calculating gold price: {}", e.getMessage(), e);

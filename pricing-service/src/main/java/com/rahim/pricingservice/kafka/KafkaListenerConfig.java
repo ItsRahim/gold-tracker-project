@@ -18,7 +18,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 public class KafkaListenerConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
-
     private final IGoldPriceFeignClient goldPriceFeignClient;
     private final IGoldPriceHistoryService goldPriceHistoryService;
     private final ApiDataProcessor apiDataProcessor;

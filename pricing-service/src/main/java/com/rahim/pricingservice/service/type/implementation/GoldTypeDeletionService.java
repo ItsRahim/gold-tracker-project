@@ -24,12 +24,8 @@ public class GoldTypeDeletionService implements IGoldTypeDeletionService {
     @Override
     public void deleteGoldType(int goldId) {
         try {
-            if (!goldTypeRepositoryHandler.existsById(goldId)) {
-                LOG.warn("Gold type with ID: {} does not exist. Unable to delete.", goldId);
-            }
             goldPriceRepositoryHandler.deleteGoldPrice(goldId);
             goldTypeRepositoryHandler.deleteById(goldId);
-
             LOG.info("Gold type with ID {} deleted successfully.", goldId);
         } catch (Exception e) {
             LOG.error("An error has occurred whilst attempting to delete gold type with ID: {}", goldId);

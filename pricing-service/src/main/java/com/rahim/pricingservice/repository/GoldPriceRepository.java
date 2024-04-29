@@ -1,5 +1,7 @@
 package com.rahim.pricingservice.repository;
 
+import com.rahim.pricingservice.dao.GoldPriceDataAccess;
+import com.rahim.pricingservice.dao.GoldTypeDataAccess;
 import com.rahim.pricingservice.model.GoldPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,13 +19,19 @@ import java.util.List;
  */
 @Repository
 public interface GoldPriceRepository extends JpaRepository<GoldPrice, Integer> {
+
     List<GoldPrice> findByGoldTypeId(Integer goldTypeId);
 
-    @Query(value = "SELECT price_id FROM rgts.gold_prices WHERE gold_type_id = :goldTypeId", nativeQuery = true)
+    @Query(value = "SELECT " + GoldPriceDataAccess.COL_GOLD_PRICE_ID +
+            " FROM " + GoldPriceDataAccess.TABLE_NAME +
+            " WHERE " + GoldPriceDataAccess.COL_GOLD_TYPE_ID +
+            " = :goldTypeId", nativeQuery = true)
     Integer getPriceIdByTypeId(@Param("goldTypeId") int goldTypeId);
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO rgts.gold_prices(gold_type_id, current_price) VALUES (:goldTypeId, :currentPrice)", nativeQuery = true)
+    @Query(value = "INSERT INTO " + GoldPriceDataAccess.TABLE_NAME +
+            "( " + GoldTypeDataAccess.COL_GOLD_TYPE_ID + ", " + GoldPriceDataAccess.COL_CURRENT_PRICE + ")"
+            + " VALUES (:goldTypeId, :currentPrice)", nativeQuery = true)
     void insertGoldPrice(@Param("goldTypeId") int goldTypeId, @Param("currentPrice") BigDecimal currentPrice);
 }

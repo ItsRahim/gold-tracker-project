@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -20,15 +21,14 @@ import java.util.Map;
 public class GoldTypeUpdateService implements IGoldTypeUpdateService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeUpdateService.class);
-
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
 
     @Override
     public void updateGoldType(int goldId, Map<String, String> updatedData) {
-        try {
-            GoldType existingGoldType = goldTypeRepositoryHandler.findById(goldId)
-                    .orElseThrow(() -> new IllegalArgumentException("GoldType with ID " + goldId + " not found"));
+        Optional<GoldType> optionalGoldType = goldTypeRepositoryHandler.findById(goldId);
 
+        if (optionalGoldType.isPresent()) {
+            GoldType existingGoldType = optionalGoldType.get();
             updatedData.forEach((key, value) -> {
                 switch (key) {
                     case "name":
@@ -47,13 +47,10 @@ public class GoldTypeUpdateService implements IGoldTypeUpdateService {
                         LOG.warn("Ignoring unknown field: {}", key);
                 }
             });
-
-            goldTypeRepositoryHandler.saveGoldType(existingGoldType);
-
-            LOG.info("Successfully updated gold type with ID {}: {}", goldId, existingGoldType);
-        } catch (Exception e) {
-            LOG.error("Error updating gold type: {}", e.getMessage());
-            throw new RuntimeException("Failed to update gold type.", e);
+            goldTypeRepositoryHandler.updateGoldType(existingGoldType);
+            LOG.info("Successfully updated gold type with ID {}", goldId);
+        } else {
+            LOG.warn("GoldType with ID {} not found", goldId);
         }
     }
 }

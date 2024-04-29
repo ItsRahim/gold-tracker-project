@@ -19,7 +19,6 @@ import java.time.LocalDate;
 public class GoldPriceHistoryService implements IGoldPriceHistoryService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceHistoryService.class);
-
     private final GoldPriceHistoryRepository goldPriceHistoryRepository;
     private final ApiDataProcessor apiDataProcessor;
 

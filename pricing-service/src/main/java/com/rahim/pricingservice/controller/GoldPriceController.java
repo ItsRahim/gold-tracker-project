@@ -28,7 +28,6 @@ import static com.rahim.pricingservice.constant.GoldPriceURLConstant.PRICE_BASE_
 public class GoldPriceController {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceController.class);
-
     private final GoldPriceRepositoryHandler goldPriceRepositoryHandler;
 
     @GetMapping(GOLD_ID)
@@ -38,7 +37,7 @@ public class GoldPriceController {
 
             return goldPriceDTOOptional
                     .map(goldPriceDTO -> ResponseEntity.status(HttpStatus.OK).body(goldPriceDTO))
-                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GoldPriceDTO()));
         } catch (RuntimeException e) {
             LOG.error("Error retrieving gold price with ID {}: {}", goldPriceId, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -5,7 +5,6 @@ import com.rahim.pricingservice.kafka.IKafkaService;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
-import com.rahim.pricingservice.repository.GoldPriceRepository;
 import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
@@ -31,7 +30,6 @@ import java.util.Optional;
 public class GoldPriceUpdateService implements IGoldPriceUpdateService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceUpdateService.class);
-
     private final IGoldPriceRepositoryHandler goldPriceRepository;
     private final IGoldTypeRepositoryHandler goldTypeRepository;
     private final GoldPriceCalculator goldPriceCalculator;
@@ -44,36 +42,25 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     @Override
     public void updateGoldTickerPrice(GoldData processedData) {
         try {
-            validateProcessedData(processedData);
-
+            if (processedData == null) {
+                LOG.error("API data is null. Unable to update gold ticker price");
+                return;
+            }
             Optional<GoldPrice> goldPriceOptional = goldPriceRepository.findById(GOLD_TICKER_ID);
-
             goldPriceOptional.ifPresent(goldTicker -> {
                 BigDecimal newPrice = processedData.getPrice().setScale(2, RoundingMode.HALF_UP);
-                updateGoldPrice(goldTicker, newPrice);
+                updateTickerPrice(goldTicker, newPrice);
                 kafkaService.sendMessage(topicConstants.getSendNotificationPriceTopic(), newPrice.toString());
 
                 LOG.info("Gold ticker price updated successfully. New price: {}, Updated time: {}", newPrice, goldTicker.getUpdatedAt());
-
                 updateGoldPrices();
             });
-
-            if (goldPriceOptional.isEmpty()) {
-                LOG.warn("Gold ticker not found in the repository. Unable to update.");
-            }
         } catch (Exception e) {
             LOG.error("Error updating gold ticker price: {}", e.getMessage(), e);
         }
     }
 
-    private void validateProcessedData(GoldData processedData) {
-        if (processedData == null) {
-            LOG.error("API data is null. Unable to update gold ticker price");
-            throw new IllegalArgumentException("API data is null. Unable to update gold ticker price.");
-        }
-    }
-
-    private void updateGoldPrice(GoldPrice goldPrice, BigDecimal newPrice) {
+    private void updateTickerPrice(GoldPrice goldPrice, BigDecimal newPrice) {
         goldPrice.setCurrentPrice(newPrice);
         goldPrice.setUpdatedAt(OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         goldPriceRepository.saveGoldPrice(goldPrice);
@@ -82,21 +69,14 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private void updateGoldPrices() {
         try {
             List<Integer> goldTypeIds = goldTypeRepository.allGoldTypeIds();
-            int numOfUpdates = goldTypeIds.size();
-
             for (int goldTypeId : goldTypeIds) {
-                updateGoldPricesForType(goldTypeId);
+                List<GoldPrice> pricesToUpdate = goldPriceRepository.findByTypeId(goldTypeId);
+                pricesToUpdate.forEach(this::updateGoldPrice);
             }
 
-            LOG.info("Updated gold prices for {} Gold Types", numOfUpdates);
         } catch (Exception e) {
             LOG.error("Error updating gold prices: {}", e.getMessage(), e);
         }
-    }
-
-    private void updateGoldPricesForType(int goldTypeId) {
-        List<GoldPrice> pricesToUpdate = goldPriceRepository.findByTypeId(goldTypeId);
-        pricesToUpdate.forEach(this::updateGoldPrice);
     }
 
     private void updateGoldPrice(GoldPrice goldPrice) {
@@ -105,16 +85,13 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
             return;
         }
 
-        BigDecimal newPrice = calculateNewGoldPrice(goldType);
+        BigDecimal newPrice = calculateNewGoldPrice(goldType.getNetWeight(), goldType.getCarat());
         goldPrice.setCurrentPrice(newPrice);
         goldPrice.setUpdatedAt(OffsetDateTime.now());
         goldPriceRepository.saveGoldPrice(goldPrice);
     }
 
-    private BigDecimal calculateNewGoldPrice(GoldType goldType) {
-        BigDecimal netWeight = goldType.getNetWeight();
-        String carat = goldType.getCarat();
-
+    private BigDecimal calculateNewGoldPrice(BigDecimal netWeight, String carat) {
         return goldPriceCalculator.calculateGoldPrice(carat, netWeight);
     }
 }

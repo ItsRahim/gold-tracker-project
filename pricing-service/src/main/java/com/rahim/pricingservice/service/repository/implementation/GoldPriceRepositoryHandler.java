@@ -4,7 +4,6 @@ import com.rahim.pricingservice.dto.GoldPriceDTO;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldPriceRepository;
-import com.rahim.pricingservice.service.price.implementation.GoldPriceCreationService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Rahim Ahmed
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceRepositoryHandler.class);
-
     private final GoldPriceRepository goldPriceRepository;
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
 
@@ -52,15 +49,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     @Override
     public Optional<GoldPrice> findById(int goldId) {
         try {
-            Optional<GoldPrice> priceOptional = goldPriceRepository.findById(goldId);
-
-            if (priceOptional.isPresent()) {
-                LOG.debug("Found GoldPrice with ID: {}", goldId);
-            } else {
-                LOG.debug("GoldPrice not found for ID: {}", goldId);
-            }
-
-            return priceOptional;
+            return goldPriceRepository.findById(goldId);
         } catch (DataAccessException e) {
             String errorMessage = "An error occurred while retrieving GoldPrice with ID: " + goldId;
             LOG.error(errorMessage, e);
@@ -106,7 +95,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
             Integer priceId = goldPriceRepository.getPriceIdByTypeId(goldTypeId);
             if (priceId != null) {
                 goldPriceRepository.deleteById(priceId);
-                LOG.info("Gold type with ID {} and associated price deleted successfully.", goldTypeId);
+                LOG.debug("Gold type with ID {} and associated price deleted successfully.", goldTypeId);
             } else {
                 LOG.warn("Gold type with ID {} not found. Unable to delete associated price.", goldTypeId);
             }

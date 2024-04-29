@@ -29,7 +29,6 @@ import static com.rahim.pricingservice.constant.GoldTypeURLConstant.TYPE_BASE_UR
 public class GoldTypeController {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeController.class);
-
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
     private final IGoldTypeCreationService goldTypeCreationService;
     private final IGoldTypeUpdateService goldTypeUpdateService;
@@ -47,7 +46,7 @@ public class GoldTypeController {
             Optional<GoldType> goldTypeOptional = goldTypeRepositoryHandler.findById(goldTypeId);
 
             return goldTypeOptional.map(goldType -> ResponseEntity.status(HttpStatus.OK).body(goldType))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GoldType()));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -55,10 +54,16 @@ public class GoldTypeController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> addGoldType(@RequestBody GoldType goldType) {
+    public ResponseEntity<Object> addGoldType(@RequestBody GoldType goldType) {
         try {
-            goldTypeCreationService.addGoldType(goldType);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            String goldTypeName = goldType.getName();
+            if (goldTypeRepositoryHandler.existsByName(goldTypeName)){
+                LOG.warn("{}, already exists. Cannot create duplicate", goldTypeName);
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Cannot create duplicate gold type.");
+            } else {
+                goldTypeCreationService.addGoldType(goldType);
+                return ResponseEntity.status(HttpStatus.CREATED).body(goldType);
+            }
         } catch (Exception e) {
             LOG.error("Error adding gold type: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -66,10 +71,14 @@ public class GoldTypeController {
     }
 
     @PutMapping(GOLD_TYPE_ID)
-    public ResponseEntity<Void> updateGoldType(@PathVariable int goldTypeId, @RequestBody Map<String, String> updatedData) {
+    public ResponseEntity<String> updateGoldType(@PathVariable int goldTypeId, @RequestBody Map<String, String> updatedData) {
         try {
-            goldTypeUpdateService.updateGoldType(goldTypeId, updatedData);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            if (goldTypeRepositoryHandler.existsById(goldTypeId)) {
+                goldTypeUpdateService.updateGoldType(goldTypeId, updatedData);
+                return ResponseEntity.status(HttpStatus.OK).body("Gold Type with ID " + goldTypeId + " updated.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gold Type with ID " + goldTypeId + " not found.");
+            }
         } catch (Exception e) {
             LOG.error("Error updating gold type: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -77,10 +86,15 @@ public class GoldTypeController {
     }
 
     @DeleteMapping(GOLD_TYPE_ID)
-    public ResponseEntity<Void> deleteGoldType(@PathVariable int goldTypeId) {
+    public ResponseEntity<String> deleteGoldType(@PathVariable int goldTypeId) {
         try {
-            goldTypeDeletionService.deleteGoldType(goldTypeId);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            if (goldTypeRepositoryHandler.existsById(goldTypeId)) {
+                LOG.info("Gold Type with ID {} found. Attempting to delete...", goldTypeId);
+                goldTypeDeletionService.deleteGoldType(goldTypeId);
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gold Type with ID " + goldTypeId + " not found.");
+            }
         } catch (Exception e) {
             LOG.error("Error deleting gold type: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

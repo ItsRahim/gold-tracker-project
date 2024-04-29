@@ -8,11 +8,5 @@ import com.rahim.pricingservice.model.GoldType;
  */
 public interface IGoldPriceCreationService {
 
-    /**
-     * Processes a new gold type and inserts its price into the repository.
-     *
-     * @param goldType The new gold type.
-     * @throws RuntimeException If an error occurs during processing.
-     */
     void processNewGoldType(GoldType goldType);
 }
