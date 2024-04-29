@@ -52,15 +52,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     @Override
     public Optional<GoldPrice> findById(int goldId) {
         try {
-            Optional<GoldPrice> priceOptional = goldPriceRepository.findById(goldId);
-
-            if (priceOptional.isPresent()) {
-                LOG.debug("Found GoldPrice with ID: {}", goldId);
-            } else {
-                LOG.debug("GoldPrice not found for ID: {}", goldId);
-            }
-
-            return priceOptional;
+            return goldPriceRepository.findById(goldId);
         } catch (DataAccessException e) {
             String errorMessage = "An error occurred while retrieving GoldPrice with ID: " + goldId;
             LOG.error(errorMessage, e);

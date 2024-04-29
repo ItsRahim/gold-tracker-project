@@ -26,20 +26,12 @@ public class GoldTypeCreationService implements IGoldTypeCreationService {
     @Override
     public void addGoldType(GoldType goldType) {
         try {
-            boolean goldTypeExists = goldTypeRepositoryHandler.existsByName(goldType.getName());
-
-            if(goldTypeExists) {
-                LOG.warn("Gold type with name {} already exists. Not creating duplicate.", goldType.getName());
+            if (!ObjectUtils.anyNull(goldType)) {
+                goldTypeRepositoryHandler.saveGoldType(goldType);
+                LOG.info("Successfully added new gold type: {}", goldType.getName());
+                goldPriceCreationService.processNewGoldType(goldType);
             } else {
-                if(!ObjectUtils.anyNull(goldType)) {
-                    goldTypeRepositoryHandler.saveGoldType(goldType);
-
-                    LOG.info("Successfully added new gold type: {}", goldType.getName());
-
-                    goldPriceCreationService.processNewGoldType(goldType);
-                } else {
-                    LOG.warn("Given gold types has one or more null values. Not adding to database");
-                }
+                LOG.warn("Given gold types has one or more null values. Not adding to database");
             }
         } catch (Exception e) {
             LOG.error("Unexpected error adding new gold type: {}", e.getMessage());

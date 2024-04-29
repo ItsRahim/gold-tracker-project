@@ -52,15 +52,7 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
         try {
             Objects.requireNonNull(goldTypeId, "Gold Type ID must not be null");
 
-            Optional<GoldType> typeOptional = goldTypeRepository.findById(goldTypeId);
-
-            if (typeOptional.isPresent()) {
-                LOG.debug("Found Gold Type with ID: {}", goldTypeId);
-            } else {
-                LOG.debug("Gold Type not found for ID: {}", goldTypeId);
-            }
-
-            return typeOptional;
+            return goldTypeRepository.findById(goldTypeId);
         } catch (DataAccessException e) {
             String errorMessage = "An error occurred while retrieving Gold Type with ID: " + goldTypeId;
             LOG.error(errorMessage, e);
@@ -93,6 +85,21 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
         } catch (DataException e) {
             LOG.error("Error saving gold type to the database", e);
             throw new DataIntegrityViolationException("Error saving gold type to the database", e);
+        }
+    }
+
+    @Override
+    public void updateGoldType(GoldType goldType) {
+        if (goldType == null || goldType.getId() == null) {
+            LOG.error("Invalid gold type or gold type ID is null. Unable to save.");
+            throw new IllegalArgumentException("Invalid gold type or gold type ID is null. Unable to save.");
+        }
+
+        try {
+            goldTypeRepository.save(goldType);
+        } catch (DataIntegrityViolationException e) {
+            LOG.error("Error updating profile to the database: {}", e.getMessage());
+            throw new RuntimeException("Error saving profile to database", e);
         }
     }
 
