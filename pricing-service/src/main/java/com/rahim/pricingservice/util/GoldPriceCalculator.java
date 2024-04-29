@@ -70,7 +70,6 @@ public class GoldPriceCalculator {
     public BigDecimal calculateGoldPrice(String caratPurity, BigDecimal netWeight) {
         try {
             validateInput(caratPurity, netWeight);
-
             BigDecimal goldPriceByCarat = calculateGoldPriceByCarat(caratPurity);
             BigDecimal totalGoldPrice;
 
