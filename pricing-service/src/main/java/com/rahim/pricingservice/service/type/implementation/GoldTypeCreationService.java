@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class GoldTypeCreationService implements IGoldTypeCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeCreationService.class);
-
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
     private final IGoldPriceCreationService goldPriceCreationService;
 

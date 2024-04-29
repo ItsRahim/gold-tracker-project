@@ -5,7 +5,6 @@ import com.rahim.pricingservice.kafka.IKafkaService;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
-import com.rahim.pricingservice.repository.GoldPriceRepository;
 import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
@@ -31,7 +30,6 @@ import java.util.Optional;
 public class GoldPriceUpdateService implements IGoldPriceUpdateService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceUpdateService.class);
-
     private final IGoldPriceRepositoryHandler goldPriceRepository;
     private final IGoldTypeRepositoryHandler goldTypeRepository;
     private final GoldPriceCalculator goldPriceCalculator;

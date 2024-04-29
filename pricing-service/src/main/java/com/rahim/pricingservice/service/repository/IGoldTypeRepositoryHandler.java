@@ -10,6 +10,7 @@ import java.util.Optional;
  * @created 16/03/2024
  */
 public interface IGoldTypeRepositoryHandler {
+
     List<Integer> allGoldTypeIds();
 
     Optional<GoldType> findById(Integer goldId);

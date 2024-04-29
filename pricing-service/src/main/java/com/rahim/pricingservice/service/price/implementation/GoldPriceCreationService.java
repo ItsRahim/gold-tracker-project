@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 public class GoldPriceCreationService implements IGoldPriceCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceCreationService.class);
-
     private final GoldPriceRepository goldPriceRepository;
     private final GoldPriceCalculator goldPriceCalculator;
 

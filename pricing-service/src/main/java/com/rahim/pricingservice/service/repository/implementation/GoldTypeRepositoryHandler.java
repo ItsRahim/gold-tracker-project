@@ -1,6 +1,5 @@
 package com.rahim.pricingservice.service.repository.implementation;
 
-import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeRepositoryHandler.class);
-
     private final GoldTypeRepository goldTypeRepository;
 
     @Override

@@ -5,7 +5,6 @@ import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Component;
 public class ApiDataProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApiDataProcessor.class);
-
     private final IGoldPriceUpdateService goldPriceUpdateService;
     private GoldData processedData;
 

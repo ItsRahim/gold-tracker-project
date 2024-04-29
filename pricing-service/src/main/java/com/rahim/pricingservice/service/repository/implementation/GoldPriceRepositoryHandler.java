@@ -4,7 +4,6 @@ import com.rahim.pricingservice.dto.GoldPriceDTO;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldPriceRepository;
-import com.rahim.pricingservice.service.price.implementation.GoldPriceCreationService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Rahim Ahmed
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceRepositoryHandler.class);
-
     private final GoldPriceRepository goldPriceRepository;
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
 

@@ -29,7 +29,6 @@ import static com.rahim.pricingservice.constant.GoldTypeURLConstant.TYPE_BASE_UR
 public class GoldTypeController {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeController.class);
-
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
     private final IGoldTypeCreationService goldTypeCreationService;
     private final IGoldTypeUpdateService goldTypeUpdateService;
