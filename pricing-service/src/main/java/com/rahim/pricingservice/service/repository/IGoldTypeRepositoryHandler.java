@@ -16,7 +16,7 @@ public interface IGoldTypeRepositoryHandler {
 
     List<GoldType> getAllGoldTypes();
 
-    void saveGoldType(GoldType goldType);
+    void addNewGoldType(GoldType goldType);
 
     void updateGoldType(GoldType goldType);
 

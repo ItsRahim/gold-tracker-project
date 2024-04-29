@@ -27,7 +27,7 @@ public class GoldTypeCreationService implements IGoldTypeCreationService {
     public void addGoldType(GoldType goldType) {
         try {
             if (!ObjectUtils.anyNull(goldType)) {
-                goldTypeRepositoryHandler.saveGoldType(goldType);
+                goldTypeRepositoryHandler.addNewGoldType(goldType);
                 LOG.info("Successfully added new gold type: {}", goldType.getName());
                 goldPriceCreationService.processNewGoldType(goldType);
             } else {

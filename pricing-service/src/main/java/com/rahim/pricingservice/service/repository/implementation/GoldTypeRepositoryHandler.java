@@ -74,7 +74,7 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     }
 
     @Override
-    public void saveGoldType(GoldType goldType) {
+    public void addNewGoldType(GoldType goldType) {
         if (!ObjectUtils.allNotNull(goldType, goldType.getName(), goldType.getNetWeight(), goldType.getCarat(), goldType.getDescription())) {
             LOG.error("GoldType object is null or contains null properties. Unable to save.");
             throw new IllegalArgumentException("GoldType object is null or contains null properties. Unable to save.");
