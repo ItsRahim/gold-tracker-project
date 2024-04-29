@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Rahim Ahmed
@@ -31,14 +30,11 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     @Override
     public List<Integer> allGoldTypeIds() {
         try {
-            List<Integer> ids = goldTypeRepository.findAll()
+            return goldTypeRepository
+                    .findAll()
                     .stream()
                     .map(GoldType::getId)
-                    .collect(Collectors.toList());
-
-            LOG.debug("Retrieved all GoldType IDs: {}", ids);
-
-            return ids;
+                    .toList();
         } catch (Exception e) {
             LOG.error("Error getting all GoldType IDs", e);
             throw new RuntimeException("Error getting all GoldType IDs", e);
@@ -49,26 +45,16 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     public Optional<GoldType> findById(Integer goldTypeId) {
         try {
             Objects.requireNonNull(goldTypeId, "Gold Type ID must not be null");
-
             return goldTypeRepository.findById(goldTypeId);
         } catch (DataAccessException e) {
-            String errorMessage = "An error occurred while retrieving Gold Type with ID: " + goldTypeId;
-            LOG.error(errorMessage, e);
-            throw new RuntimeException(errorMessage, e);
+            LOG.error("An error occurred while retrieving Gold Type with ID: {}", goldTypeId, e);
         }
+        return Optional.empty();
     }
 
     @Override
     public List<GoldType> getAllGoldTypes() {
-        List<GoldType> goldTypes = goldTypeRepository.findAll();
-
-        if (!goldTypes.isEmpty()) {
-            LOG.info("Found {} gold types in the database", goldTypes.size());
-        } else {
-            LOG.info("No gold types found in the database");
-        }
-
-        return goldTypes;
+        return goldTypeRepository.findAll();
     }
 
     @Override

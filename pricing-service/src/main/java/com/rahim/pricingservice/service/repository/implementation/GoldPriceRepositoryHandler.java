@@ -95,7 +95,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
             Integer priceId = goldPriceRepository.getPriceIdByTypeId(goldTypeId);
             if (priceId != null) {
                 goldPriceRepository.deleteById(priceId);
-                LOG.info("Gold type with ID {} and associated price deleted successfully.", goldTypeId);
+                LOG.debug("Gold type with ID {} and associated price deleted successfully.", goldTypeId);
             } else {
                 LOG.warn("Gold type with ID {} not found. Unable to delete associated price.", goldTypeId);
             }
