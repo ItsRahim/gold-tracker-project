@@ -1,7 +1,8 @@
-package com.rahim.pricingservice.constant;
+package com.rahim.pricingservice.kafka;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,9 +11,10 @@ import org.springframework.stereotype.Component;
  */
 @Getter
 @Component
-public final class TopicConstants {
+@RefreshScope
+public final class KafkaTopic {
 
-    private TopicConstants() {}
+    private KafkaTopic() {}
 
     @Value("${topics.send-notification-price}")
     private String sendNotificationPriceTopic;

@@ -78,8 +78,9 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     @Override
     public List<GoldPriceDTO> getAllGoldPrices() {
         try {
-            List<GoldPrice> goldPrices = goldPriceRepository.findAll();
-            return goldPrices.stream()
+            return goldPriceRepository
+                    .findAll()
+                    .stream()
                     .map(this::mapToGoldPriceDTO)
                     .toList();
         } catch (DataAccessException e) {

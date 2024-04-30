@@ -1,20 +1,20 @@
-package com.rahim.accountservice.constant;
+package com.rahim.accountservice.kafka;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 /**
- * This is a utility class that contains Kafka topic constants which are resolved at runtime from Spring Cloud.
- *
  * @author Rahim Ahmed
  * @created 12/12/2023
  */
 @Getter
 @Component
-public final class TopicConstants {
+@RefreshScope
+public class KafkaTopic {
 
-    private TopicConstants() {}
+    private KafkaTopic() {}
 
     @Value("${topics.send-email-topic}")
     private String sendEmailTopic;

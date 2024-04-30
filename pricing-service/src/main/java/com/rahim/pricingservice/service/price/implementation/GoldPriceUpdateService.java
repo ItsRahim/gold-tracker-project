@@ -1,6 +1,6 @@
 package com.rahim.pricingservice.service.price.implementation;
 
-import com.rahim.pricingservice.constant.TopicConstants;
+import com.rahim.pricingservice.kafka.KafkaTopic;
 import com.rahim.pricingservice.kafka.IKafkaService;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
@@ -33,7 +33,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private final IGoldPriceRepositoryHandler goldPriceRepository;
     private final IGoldTypeRepositoryHandler goldTypeRepository;
     private final GoldPriceCalculator goldPriceCalculator;
-    private final TopicConstants topicConstants;
+    private final KafkaTopic kafkaTopic;
     private final IKafkaService kafkaService;
 
     private static final String GOLD_TICKER = "XAUGBP";
@@ -50,7 +50,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
             goldPriceOptional.ifPresent(goldTicker -> {
                 BigDecimal newPrice = processedData.getPrice().setScale(2, RoundingMode.HALF_UP);
                 updateTickerPrice(goldTicker, newPrice);
-                kafkaService.sendMessage(topicConstants.getSendNotificationPriceTopic(), newPrice.toString());
+                kafkaService.sendMessage(kafkaTopic.getSendNotificationPriceTopic(), newPrice.toString());
 
                 LOG.info("Gold ticker price updated successfully. New price: {}, Updated time: {}", newPrice, goldTicker.getUpdatedAt());
                 updateGoldPrices();

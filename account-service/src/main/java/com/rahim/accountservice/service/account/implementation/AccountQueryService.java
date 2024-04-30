@@ -1,6 +1,6 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.rahim.accountservice.constant.TopicConstants;
+import com.rahim.accountservice.kafka.KafkaTopic;
 import com.rahim.accountservice.kafka.IKafkaService;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.service.account.IAccountQueryService;
@@ -27,7 +27,7 @@ public class AccountQueryService implements IAccountQueryService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountQueryService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IKafkaService kafkaService;
-    private final TopicConstants topicConstants;
+    private final KafkaTopic kafkaTopic;
 
     /**
      * @see IAccountQueryService
@@ -43,9 +43,9 @@ public class AccountQueryService implements IAccountQueryService {
             int id = Integer.parseInt(userId);
             Optional<Account> optionalAccount = accountRepositoryHandler.findById(id);
             if (optionalAccount.isPresent() && notificationIsEnabled(optionalAccount.get())) {
-                kafkaService.sendMessage(topicConstants.getSendIdResult(), "true");
+                kafkaService.sendMessage(kafkaTopic.getSendIdResult(), "true");
             } else {
-                kafkaService.sendMessage(topicConstants.getSendIdResult(), "false");
+                kafkaService.sendMessage(kafkaTopic.getSendIdResult(), "false");
             }
         } catch (NumberFormatException e) {
             LOG.error("Error parsing [{}] to an integer. Cannot find user", userId);

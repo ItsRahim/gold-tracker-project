@@ -39,11 +39,11 @@ public class EmailTokenRowMapper implements RowMapper<EmailToken> {
             String templateName = emailProperty.getTemplateName();
             if (templateName.equals(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)) {
                 LocalDate deleteDate = rs.getDate(AccountRequest.ACCOUNT_DELETE_DATE).toLocalDate();
-                String date = MessageFormatter.getInstance().formatDate(deleteDate);
+                String date = DateFormatter.getInstance().formatDate(deleteDate);
                 emailToken.setDeleteDate(date);
             } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)) {
                 Instant updateAt = rs.getTimestamp(AccountRequest.ACCOUNT_UPDATED_AT).toInstant();
-                String date = MessageFormatter.getInstance().formatInstantDate(updateAt);
+                String date = DateFormatter.getInstance().formatInstantDate(updateAt);
                 emailToken.setUpdatedAt(date);
                 emailToken.setEmail(emailProperty.getOldEmail());
             }

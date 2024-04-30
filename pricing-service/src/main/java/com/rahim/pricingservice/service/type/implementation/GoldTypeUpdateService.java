@@ -48,7 +48,7 @@ public class GoldTypeUpdateService implements IGoldTypeUpdateService {
                 }
             });
             goldTypeRepositoryHandler.updateGoldType(existingGoldType);
-            LOG.info("Successfully updated gold type with ID {}", goldId);
+            LOG.debug("Successfully updated gold type with ID {}", goldId);
         } else {
             LOG.warn("GoldType with ID {} not found", goldId);
         }

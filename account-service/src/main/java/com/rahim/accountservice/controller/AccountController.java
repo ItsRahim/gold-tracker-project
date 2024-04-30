@@ -56,11 +56,9 @@ public class AccountController {
             if (accountOptional.isPresent()) {
                 Account account = accountOptional.get();
                 LOG.info("Account found with ID: {}", accountId);
-
                 return ResponseEntity.status(HttpStatus.OK).body(account);
             } else {
                 LOG.info("Account not found with ID: {}", accountId);
-
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
             }
         } catch (Exception e) {
@@ -104,7 +102,7 @@ public class AccountController {
             if (deletedRequested) {
                 return ResponseEntity.status(HttpStatus.OK).body("Successfully Requested to Delete Account with ID: " + accountId);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found for ID: " + accountId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unable to request deletion of account with ID: " + accountId);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user: " + e.getMessage());

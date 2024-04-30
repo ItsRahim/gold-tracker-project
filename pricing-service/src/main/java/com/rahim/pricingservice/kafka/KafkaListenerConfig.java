@@ -4,8 +4,6 @@ import com.rahim.pricingservice.service.history.IGoldPriceHistoryService;
 import com.rahim.pricingservice.feign.IGoldPriceFeignClient;
 import com.rahim.pricingservice.util.ApiDataProcessor;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaListener;
 
@@ -17,14 +15,12 @@ import org.springframework.kafka.annotation.KafkaListener;
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final IGoldPriceFeignClient goldPriceFeignClient;
     private final IGoldPriceHistoryService goldPriceHistoryService;
     private final ApiDataProcessor apiDataProcessor;
 
     @KafkaListener(topics = "${topics.update-gold-price-job}", groupId = "group2")
-    public void updateGoldPriceJob(String message) {
-        LOG.info("Message received from Scheduler Service: {}", message);
+    public void updateGoldPriceJob() {
         goldPriceFeignClient.getGoldPrice();
     }
 
@@ -34,8 +30,7 @@ public class KafkaListenerConfig {
     }
 
     @KafkaListener(topics = "${topics.update-price-history}", groupId = "group2")
-    public void updateHistoryTable(String message) {
-        LOG.info("Message received from Scheduler Service: {}", message);
+    public void updateHistoryTable() {
         goldPriceFeignClient.getGoldPrice();
         goldPriceHistoryService.updateHistoryTable();
     }

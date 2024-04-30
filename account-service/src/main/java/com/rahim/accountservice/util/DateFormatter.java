@@ -7,16 +7,16 @@ import java.time.format.DateTimeFormatter;
  * @author Rahim Ahmed
  * @created 18/12/2023
  */
-public class MessageFormatter {
+public class DateFormatter {
 
-    private static MessageFormatter messageFormatter = null;
+    private static DateFormatter dateFormatter = null;
 
-    public static MessageFormatter getInstance() {
-        if (messageFormatter == null) {
-            messageFormatter = new MessageFormatter();
+    public static DateFormatter getInstance() {
+        if (dateFormatter == null) {
+            dateFormatter = new DateFormatter();
         }
 
-        return messageFormatter;
+        return dateFormatter;
     }
 
     public String formatInstantDate(Instant instant) {

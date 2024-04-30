@@ -33,7 +33,7 @@ public class GoldPriceHistoryService implements IGoldPriceHistoryService {
             GoldPriceHistory priceHistory = new GoldPriceHistory(pricePerOunce, pricePerGram, effectiveDate);
             goldPriceHistoryRepository.save(priceHistory);
 
-            LOG.info("Gold price history updated successfully");
+            LOG.debug("Gold price history updated successfully");
         } catch (Exception e) {
             LOG.error("Error updating gold price history", e);
             throw new RuntimeException("Error updating gold price history", e);

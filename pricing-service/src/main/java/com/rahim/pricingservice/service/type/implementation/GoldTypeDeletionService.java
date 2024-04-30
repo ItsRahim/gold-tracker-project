@@ -26,7 +26,7 @@ public class GoldTypeDeletionService implements IGoldTypeDeletionService {
         try {
             goldPriceRepositoryHandler.deleteGoldPrice(goldId);
             goldTypeRepositoryHandler.deleteById(goldId);
-            LOG.info("Gold type with ID {} deleted successfully.", goldId);
+            LOG.debug("Gold type with ID {} deleted successfully.", goldId);
         } catch (Exception e) {
             LOG.error("An error has occurred whilst attempting to delete gold type with ID: {}", goldId);
             throw new RuntimeException(e);
