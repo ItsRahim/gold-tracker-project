@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rahim.accountservice.kafka.KafkaTopic;
+import com.rahim.accountservice.kafka.KafkaTopics;
 import com.rahim.accountservice.kafka.IKafkaService;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.model.EmailToken;
@@ -22,14 +22,14 @@ public class EmailTokenGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(EmailTokenGenerator.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IKafkaService kafkaService;
-    private final KafkaTopic kafkaTopic;
+    private final KafkaTopics kafkaTopics;
 
     public void generateEmailTokens(EmailProperty emailProperty) {
         try {
             EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);
             String jsonEmailData = convertToJson(emailToken);
             LOG.trace("Generated tokens: {}", jsonEmailData);
-            kafkaService.sendMessage(kafkaTopic.getSendEmailTopic(), jsonEmailData);
+            kafkaService.sendMessage(kafkaTopics.getSendEmailTopic(), jsonEmailData);
         } catch (JsonProcessingException e) {
             handleException("Error converting tokens to JSON", e);
         } catch (ValidationException e) {

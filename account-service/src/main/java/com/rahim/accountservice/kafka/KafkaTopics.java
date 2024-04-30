@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
  */
 @Getter
 @Component
-public class KafkaTopic {
+public class KafkaTopics {
 
-    private KafkaTopic() {}
+    private KafkaTopics() {}
 
     @Value("${topics.send-email-topic}")
     private String sendEmailTopic;
