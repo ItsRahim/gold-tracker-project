@@ -111,6 +111,11 @@
             <artifactId>jasypt-spring-boot-starter</artifactId>
             <version>3.0.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-spring</artifactId>
+            <version>5.4.0</version>
+        </dependency>
 
         <!-- TEST DEPENDENCIES -->
         <dependency>
