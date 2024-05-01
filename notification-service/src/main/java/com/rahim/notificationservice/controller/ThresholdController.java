@@ -35,27 +35,33 @@ public class ThresholdController {
 
     @GetMapping(THRESHOLD_ID)
     public ResponseEntity<ThresholdAlert> getAlertById(@PathVariable int thresholdId) {
+        LOG.info("Fetching alert by ID: {}", thresholdId);
         Optional<ThresholdAlert> thresholdAlert = thresholdAlertRepositoryHandler.findById(thresholdId);
         if (thresholdAlert.isPresent()) {
             ThresholdAlert alert = thresholdAlert.get();
             return ResponseEntity.status(HttpStatus.OK).body(alert);
         } else {
+            LOG.warn("Alert with ID {} not found", thresholdId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ThresholdAlert());
         }
     }
 
     @GetMapping()
     public ResponseEntity<List<ThresholdAlert>> getAlerts() {
+        LOG.info("Fetching all alerts");
         List<ThresholdAlert> thresholdAlerts = thresholdAlertRepositoryHandler.getAllActiveAlerts();
         return ResponseEntity.status(HttpStatus.OK).body(thresholdAlerts);
     }
 
     @GetMapping(ACCOUNT_ID)
     public ResponseEntity<ThresholdAlert> getAlertByAccountId(@PathVariable int accountId) {
+        LOG.info("Fetching alert by Account ID: {}", accountId);
         Optional<ThresholdAlert> thresholdAlertOptional = thresholdAlertRepositoryHandler.getAlertByAccountId(accountId);
         if (thresholdAlertOptional.isPresent()) {
+            LOG.info("Alert found for Account ID: {}", accountId);
             return ResponseEntity.status(HttpStatus.OK).body(thresholdAlertOptional.get());
         } else {
+            LOG.warn("Alert not found for Account ID: {}", accountId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ThresholdAlert());
         }
     }
@@ -80,14 +86,14 @@ public class ThresholdController {
     public ResponseEntity<String> updateThreshold(@PathVariable int thresholdId, @RequestBody Map<String, String> updatedData) {
         try {
             if (thresholdUpdateService.updateNotification(thresholdId, updatedData)) {
-                LOG.info("Threshold successfully updated");
+                LOG.info("Threshold successfully updated for ID: {}", thresholdId);
                 return ResponseEntity.status(HttpStatus.OK).body("Threshold successfully updated");
             } else {
-                LOG.warn("Failed to update threshold. Threshold not found or update unsuccessful");
+                LOG.warn("Failed to update threshold for ID: {}. Threshold not found or update unsuccessful", thresholdId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Threshold not found or update unsuccessful");
             }
         } catch (Exception e) {
-            LOG.error("Error updating threshold: {}", e.getMessage());
+            LOG.error("Error updating threshold for ID {}: {}", thresholdId, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating threshold: " + e.getMessage());
         }
     }
@@ -96,14 +102,14 @@ public class ThresholdController {
     public ResponseEntity<String> deleteThreshold(@PathVariable int thresholdId) {
         try {
             if (thresholdDeletionService.deleteNotification(thresholdId)) {
-                LOG.info("Threshold successfully deleted");
+                LOG.info("Threshold successfully deleted for ID: {}", thresholdId);
                 return ResponseEntity.status(HttpStatus.OK).body("Threshold successfully deleted");
             } else {
-                LOG.warn("Failed to delete threshold. Threshold not found or deletion unsuccessful");
+                LOG.warn("Failed to delete threshold for ID: {}. Threshold not found or deletion unsuccessful", thresholdId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Threshold not found or deletion unsuccessful");
             }
         } catch (Exception e) {
-            LOG.error("Error deleting threshold: {}", e.getMessage());
+            LOG.error("Error deleting threshold for ID {}: {}", thresholdId, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting threshold: " + e.getMessage());
         }
     }
