@@ -10,9 +10,14 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ThresholdAlertRepository extends JpaRepository<ThresholdAlert, Integer> {
+
+    List<ThresholdAlert> findByIsActiveTrue();
+
+    Optional<ThresholdAlert> findThresholdAlertByAccountId(int accountId);
 
 @Query(value =
         "SELECT " +

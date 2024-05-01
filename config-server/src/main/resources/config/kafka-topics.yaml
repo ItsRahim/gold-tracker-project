@@ -1,11 +1,9 @@
 topics:
-  check-user-id: user-service-check-id
   custom-api-data: gold-price-stream
   scheduler-update-price: pricing-service-update-prices
   scheduler-update-price-history: pricing-service-history-table
   scheduler-user-cleanup: user-service-cleanup-accounts
   send-email-topic: email-service-send-email
-  send-id-result: notification-service-id-result
   send-notification-price: notification-service-price-update
   update-gold-price-job: pricing-service-update-prices
   update-price-history: pricing-service-history-table

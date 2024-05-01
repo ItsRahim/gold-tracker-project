@@ -3,7 +3,6 @@ package com.rahim.pricingservice.kafka;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -17,7 +16,6 @@ import java.util.Map;
  * @author Rahim Ahmed
  * @created 01/12/2023
  */
-@RefreshScope
 @Configuration
 public class KafkaConsumerConfig {
 

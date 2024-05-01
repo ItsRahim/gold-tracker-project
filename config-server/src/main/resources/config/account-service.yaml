@@ -4,20 +4,11 @@ eureka:
       defaultZone: http://localhost:8761/eureka
 
 logging:
-  color:
-    enabled: true
   file:
     name: logs/account-service.log
-  level:
-    com:
-      rahim:
-        accountservice: DEBUG
-    org:
-      springframework: ERROR
-    root: WARN
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
 
 management:
   tracing:
@@ -30,6 +21,8 @@ server:
 spring:
   application:
     name: account-service
+  hazelcast:
+    config: classpath:hazelcast-default.yaml
   output:
     ansi:
       enabled: always

@@ -1,4 +1,4 @@
-package com.rahim.notificationservice.service.implementation;
+package com.rahim.notificationservice.service.kafka.implementation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,8 +9,8 @@ import com.rahim.notificationservice.kafka.IKafkaService;
 import com.rahim.notificationservice.model.EmailData;
 import com.rahim.notificationservice.model.NotificationResult;
 import com.rahim.notificationservice.repository.ThresholdAlertRepository;
-import com.rahim.notificationservice.service.IKafkaDataProcessor;
-import com.rahim.notificationservice.service.IThresholdAlertRepositoryHandler;
+import com.rahim.notificationservice.service.kafka.IKafkaDataProcessor;
+import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

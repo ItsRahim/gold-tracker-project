@@ -1,8 +1,8 @@
-package com.rahim.notificationservice.service.implementation;
+package com.rahim.notificationservice.service.repository.implementation;
 
 import com.rahim.notificationservice.model.ThresholdAlert;
 import com.rahim.notificationservice.repository.ThresholdAlertRepository;
-import com.rahim.notificationservice.service.IThresholdAlertRepositoryHandler;
+import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -70,4 +73,29 @@ public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositor
             }
         });
     }
+
+    @Override
+    public List<ThresholdAlert> getAllActiveAlerts() {
+        List<ThresholdAlert> activeAlerts = Collections.emptyList();
+
+        try {
+            activeAlerts = thresholdAlertRepository.findByIsActiveTrue();
+            if (CollectionUtils.isEmpty(activeAlerts)) {
+                LOG.debug("No active alerts found in the database");
+            } else {
+                LOG.debug("Fetched {} active alerts from the database", activeAlerts.size());
+            }
+
+        } catch (DataAccessException e) {
+            LOG.error("Error occurred while fetching active alerts from the database", e);
+        }
+
+        return activeAlerts;
+    }
+
+    @Override
+    public Optional<ThresholdAlert> getAlertByAccountId(int accountId) {
+        return thresholdAlertRepository.findThresholdAlertByAccountId(accountId);
+    }
+
 }

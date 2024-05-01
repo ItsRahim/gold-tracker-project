@@ -1,5 +1,7 @@
 package com.rahim.accountservice.service.account.implementation;
 
+import com.hazelcast.collection.ISet;
+import com.hazelcast.core.HazelcastInstance;
 import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.exception.EmailTokenException;
 import com.rahim.accountservice.exception.UserNotFoundException;
@@ -14,13 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.Map;
 
-
-/**
- * @author Rahim Ahmed
- * @created 30/12/2023
- */
 @Service
 @RequiredArgsConstructor
 public class AccountUpdateService implements IAccountUpdateService {
@@ -28,33 +26,33 @@ public class AccountUpdateService implements IAccountUpdateService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountUpdateService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
+    private final HazelcastInstance hazelcastInstance;
 
-    /**
-     * @see IAccountUpdateService
-     */
     @Override
-    public void updateAccount(int accountId, Map<String, String> updatedData) {
+    public boolean updateAccount(int accountId, Map<String, String> updatedData) {
         Account account = getAccountById(accountId);
         String oldEmail = account.getEmail();
 
         try {
-            updateEmail(account, updatedData);
-            updatePassword(account, updatedData);
+            OffsetDateTime beforeUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
+            updateFields(account, updatedData);
             accountRepositoryHandler.saveAccount(account);
+            OffsetDateTime afterUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
+
+            if (beforeUpdate.equals(afterUpdate)) {
+                LOG.debug("No updates were applied to the account");
+                return false;
+            }
+
             generateEmailTokens(accountId, oldEmail);
+            return true;
+
         } catch (RuntimeException e) {
             LOG.error("Error updating account with ID {}: {}", accountId, e.getMessage());
             throw e;
         }
     }
 
-    /**
-     * Retrieves an account by its ID.
-     *
-     * @param accountId The ID of the account to be retrieved.
-     * @return The account with the given ID.
-     * @throws UserNotFoundException If the account with the given ID is not found.
-     */
     private Account getAccountById(int accountId) {
         return accountRepositoryHandler.findById(accountId).orElseThrow(() -> {
             LOG.warn("Account with ID {} not found while updating.", accountId);
@@ -62,13 +60,6 @@ public class AccountUpdateService implements IAccountUpdateService {
         });
     }
 
-    /**
-     * Generates email tokens for the given account ID and old email.
-     *
-     * @param accountId The ID of the account.
-     * @param oldEmail The old email of the account.
-     * @throws EmailTokenException If an error occurs while generating the email tokens.
-     */
     private void generateEmailTokens(int accountId, String oldEmail) {
         try {
             EmailProperty emailProperty = EmailProperty.builder()
@@ -85,9 +76,26 @@ public class AccountUpdateService implements IAccountUpdateService {
         }
     }
 
-    private void updateEmail(Account account, Map<String, String> updatedData) {
-        String newEmail = updatedData.get(AccountRequest.ACCOUNT_EMAIL);
-        if (isNotEmpty(newEmail) && !accountRepositoryHandler.existsByEmail(newEmail)) {
+    private void updateFields(Account account, Map<String, String> updatedData) {
+        updatedData.forEach((key, value) -> {
+            switch (key) {
+                case AccountRequest.ACCOUNT_EMAIL:
+                    updateEmail(account, value);
+                    break;
+                case AccountRequest.ACCOUNT_PASSWORD_HASH:
+                    updatePassword(account, value);
+                    break;
+                case AccountRequest.ACCOUNT_NOTIFICATION_SETTING:
+                    updateNotification(account, value);
+                    break;
+                default:
+                    LOG.warn("Ignoring unknown key '{}' in updated data for account with ID {}", key, account.getId());
+            }
+        });
+    }
+
+    private void updateEmail(Account account, String newEmail) {
+        if (isValidChange(account.getEmail(), newEmail) && !accountRepositoryHandler.existsByEmail(newEmail)) {
             account.setEmail(newEmail);
             LOG.debug("Email updated successfully");
         } else {
@@ -95,18 +103,39 @@ public class AccountUpdateService implements IAccountUpdateService {
         }
     }
 
-    private void updatePassword(Account account, Map<String, String> updatedData) {
-        String newPasswordHash = updatedData.get(AccountRequest.ACCOUNT_PASSWORD_HASH);
-        if (isNotEmpty(newPasswordHash)) {
-            account.setPasswordHash(newPasswordHash);
+    private void updatePassword(Account account, String newPassword) {
+        if (isValidChange(account.getPasswordHash(), newPassword)) {
+            account.setPasswordHash(newPassword);
             LOG.debug("Password updated successfully");
         } else {
             LOG.debug("Password update skipped for account with ID: {}", account.getId());
         }
     }
 
-    private boolean isNotEmpty(String value) {
-        return value != null && !value.isEmpty();
+    private void updateNotification(Account account, String value) {
+        try {
+            if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+                boolean notificationEnabled = Boolean.parseBoolean(value);
+                updateNotificationSet(account.getId(), notificationEnabled);
+                account.setNotificationSetting(notificationEnabled);
+            } else {
+                LOG.error("Invalid value passed for notificationSetting. Not Updating");
+            }
+        } catch (NumberFormatException e) {
+            LOG.error("Failed to parse value '{}' to boolean in notificationSetting for account with ID {}", value, account.getId(), e);
+        }
     }
 
+    private void updateNotificationSet(Integer id, boolean notificationEnabled) {
+        ISet<Integer> accountNotificationSet = hazelcastInstance.getSet("accountNotificationSet");
+        if (notificationEnabled) {
+            accountNotificationSet.add(id);
+        } else {
+            accountNotificationSet.remove(id);
+        }
+    }
+
+    private boolean isValidChange(String oldValue, String newValue) {
+        return (newValue != null && !newValue.isEmpty()) && (!oldValue.equals(newValue));
+    }
 }
