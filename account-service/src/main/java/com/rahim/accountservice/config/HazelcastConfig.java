@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HazelcastConfig {
 
-    @Value("${hazelcast.cluster.members}")
+    @Value("${spring.hazelcast.cluster.members}")
     private String clusterMembers;
 
-    @Value("${hazelcast.cluster.name}")
+    @Value("${spring.hazelcast.cluster.name}")
     private String clusterName;
 
     @Bean
