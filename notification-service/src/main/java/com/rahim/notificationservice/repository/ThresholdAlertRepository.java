@@ -14,6 +14,7 @@ import java.util.List;
 @Repository
 public interface ThresholdAlertRepository extends JpaRepository<ThresholdAlert, Integer> {
 
+    List<ThresholdAlert> findByIsActiveTrue();
 @Query(value =
         "SELECT " +
                 NotificationDataAccess.COL_ALERT_ID + " AS alertID, " +

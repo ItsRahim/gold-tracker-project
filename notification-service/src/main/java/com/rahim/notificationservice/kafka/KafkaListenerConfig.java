@@ -1,6 +1,6 @@
 package com.rahim.notificationservice.kafka;
 
-import com.rahim.notificationservice.service.IKafkaDataProcessor;
+import com.rahim.notificationservice.service.kafka.IKafkaDataProcessor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
