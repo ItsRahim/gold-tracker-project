@@ -2,10 +2,13 @@ package com.rahim.accountservice.config;
 
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.client.config.YamlClientConfigBuilder;
 import com.hazelcast.core.HazelcastInstance;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
 
 /**
  * @author Rahim Ahmed
@@ -14,18 +17,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HazelcastConfig {
 
-    @Value("${spring.hazelcast.cluster.members}")
-    private String clusterMembers;
-
-    @Value("${spring.hazelcast.cluster.name}")
-    private String clusterName;
+    @Value("${spring.hazelcast.config}")
+    private String hazelcastConfigLocation;
 
     @Bean
-    public HazelcastInstance hazelcastInstance() {
-        ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getNetworkConfig().addAddress(clusterMembers);
-        clientConfig.setClusterName(clusterName);
-
+    public HazelcastInstance hazelcastInstance() throws IOException {
+        ClientConfig clientConfig = new YamlClientConfigBuilder(hazelcastConfigLocation).build();
         return HazelcastClient.newHazelcastClient(clientConfig);
     }
 }

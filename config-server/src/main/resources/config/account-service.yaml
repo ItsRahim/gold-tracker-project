@@ -22,9 +22,7 @@ spring:
   application:
     name: account-service
   hazelcast:
-    cluster:
-      members: localhost:5701
-      name: rgts
+    config: classpath:hazelcast-default.yaml
   output:
     ansi:
       enabled: always
