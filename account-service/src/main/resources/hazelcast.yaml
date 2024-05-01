@@ -1,0 +1,4 @@
+hazelcast:
+  cluster:
+    members: localhost:5701
+    name: rgts

@@ -1,7 +1,9 @@
 package com.rahim.accountservice.config;
 
-import com.hazelcast.core.Hazelcast;
+import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.core.HazelcastInstance;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,8 +14,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HazelcastConfig {
 
+    @Value("${hazelcast.cluster.members}")
+    private String clusterMembers;
+
+    @Value("${hazelcast.cluster.name}")
+    private String clusterName;
+
     @Bean
     public HazelcastInstance hazelcastInstance() {
-        return Hazelcast.newHazelcastInstance();
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.getNetworkConfig().addAddress(clusterMembers);
+        clientConfig.setClusterName(clusterName);
+
+        return HazelcastClient.newHazelcastClient(clientConfig);
     }
 }

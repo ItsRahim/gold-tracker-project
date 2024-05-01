@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.Map;
 
 @Service
@@ -28,14 +29,24 @@ public class AccountUpdateService implements IAccountUpdateService {
     private final HazelcastInstance hazelcastInstance;
 
     @Override
-    public void updateAccount(int accountId, Map<String, String> updatedData) {
+    public boolean updateAccount(int accountId, Map<String, String> updatedData) {
         Account account = getAccountById(accountId);
         String oldEmail = account.getEmail();
 
         try {
+            OffsetDateTime beforeUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
             updateFields(account, updatedData);
             accountRepositoryHandler.saveAccount(account);
+            OffsetDateTime afterUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
+
+            if (beforeUpdate.equals(afterUpdate)) {
+                LOG.debug("No updates were applied to the account");
+                return false;
+            }
+
             generateEmailTokens(accountId, oldEmail);
+            return true;
+
         } catch (RuntimeException e) {
             LOG.error("Error updating account with ID {}: {}", accountId, e.getMessage());
             throw e;
@@ -103,9 +114,13 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     private void updateNotification(Account account, String value) {
         try {
-            boolean notificationEnabled = Boolean.parseBoolean(value);
-            updateNotificationSet(account.getId(), notificationEnabled);
-            account.setNotificationSetting(notificationEnabled);
+            if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+                boolean notificationEnabled = Boolean.parseBoolean(value);
+                updateNotificationSet(account.getId(), notificationEnabled);
+                account.setNotificationSetting(notificationEnabled);
+            } else {
+                LOG.error("Invalid value passed for notificationSetting. Not Updating");
+            }
         } catch (NumberFormatException e) {
             LOG.error("Failed to parse value '{}' to boolean in notificationSetting for account with ID {}", value, account.getId(), e);
         }

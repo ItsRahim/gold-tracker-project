@@ -5,6 +5,4 @@ spring:
     config:
       enabled: true
   config:
-    import:
-      - configserver:http://localhost:8888
-      - configserver:http://localhost:8888/hazelcast
+    import: configserver:http://localhost:8888

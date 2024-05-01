@@ -1,2 +1,2 @@
-docker run -it --name hazelcast-rgts --network hazelcast-network --rm -e HZ_NETWORK_PUBLICADDRESS=localhost:5701 -e HZ_CLUSTERNAME=rgts -p 5701:5701 hazelcast/hazelcast:latest
-docker run --name hazelcast-mgmt --network hazelcast-network -p 8080:8080 hazelcast/management-center:latest-snapshot
+docker run --name hazelcast -it --network hazelcast-network --rm  -e HZ_NETWORK_PUBLICADDRESS=localhost:5701 -e HZ_CLUSTERNAME=rgts -p 5701:5701 hazelcast/hazelcast:5.4.0
+docker run --name hazelcast-management --network hazelcast-network --rm -p 8080:8080 hazelcast/management-center:5.4.1
