@@ -12,4 +12,5 @@ public interface IThresholdAlertRepositoryHandler {
     void saveThresholdAlert(ThresholdAlert thresholdAlert);
     void deleteThresholdAlert(int alertId);
     List<ThresholdAlert> getAllActiveAlerts();
+    Optional<ThresholdAlert> getAlertByAccountId(int accountId);
 }

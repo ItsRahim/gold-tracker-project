@@ -93,4 +93,9 @@ public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositor
         return activeAlerts;
     }
 
+    @Override
+    public Optional<ThresholdAlert> getAlertByAccountId(int accountId) {
+        return thresholdAlertRepository.findThresholdAlertByAccountId(accountId);
+    }
+
 }

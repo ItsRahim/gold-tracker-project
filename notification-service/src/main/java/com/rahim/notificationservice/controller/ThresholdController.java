@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.rahim.notificationservice.constants.ThresholdControllerEndpoint.BASE_URL;
-import static com.rahim.notificationservice.constants.ThresholdControllerEndpoint.THRESHOLD_ID;
+import static com.rahim.notificationservice.constants.ThresholdControllerEndpoint.*;
 
 /**
  * @author Rahim Ahmed
@@ -49,6 +48,16 @@ public class ThresholdController {
     public ResponseEntity<List<ThresholdAlert>> getAlerts() {
         List<ThresholdAlert> thresholdAlerts = thresholdAlertRepositoryHandler.getAllActiveAlerts();
         return ResponseEntity.status(HttpStatus.OK).body(thresholdAlerts);
+    }
+
+    @GetMapping(ACCOUNT_ID)
+    public ResponseEntity<ThresholdAlert> getAlertByAccountId(@PathVariable int accountId) {
+        Optional<ThresholdAlert> thresholdAlertOptional = thresholdAlertRepositoryHandler.getAlertByAccountId(accountId);
+        if (thresholdAlertOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(thresholdAlertOptional.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ThresholdAlert());
+        }
     }
 
     @PostMapping()
