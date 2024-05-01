@@ -1,9 +1,10 @@
 package com.rahim.notificationservice.service.implementation;
 
+import com.hazelcast.collection.ISet;
+import com.hazelcast.core.HazelcastInstance;
 import com.rahim.notificationservice.model.ThresholdAlert;
 import com.rahim.notificationservice.service.IThresholdAlertRepositoryHandler;
 import com.rahim.notificationservice.service.IThresholdService;
-import com.rahim.notificationservice.service.IUserDataChecker;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,18 +20,23 @@ public class ThresholdService implements IThresholdService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ThresholdService.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
-    private final IUserDataChecker userDataChecker;
+    private final HazelcastInstance hazelcastInstance;
     private static final String THRESHOLD_PRICE = "thresholdPrice";
 
     @Override
     public void createNotification(ThresholdAlert thresholdAlert) {
-        String userId = thresholdAlert.getId().toString();
-        if (userDataChecker.isNotificationValid(userId)) {
+        int accountId = thresholdAlert.getAccountId();
+        if (accountExists(accountId)) {
             thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
-            LOG.info("Successfully added threshold alert for user with ID: {}", userId);
+            LOG.info("Successfully added threshold alert for user with ID: {}", accountId);
         } else {
-            LOG.warn("Failed to create new threshold alert for user with ID: {}. Account invalid/notifications not enabled on account", thresholdAlert.getId());
+            LOG.warn("Failed to create new threshold alert for user with ID: {}. Account invalid/notifications not enabled on account", accountId);
         }
+    }
+
+    private boolean accountExists(int userId) {
+        ISet<Integer> userIds = hazelcastInstance.getSet("accountNotificationSet");
+        return userIds.contains(userId);
     }
 
     @Override

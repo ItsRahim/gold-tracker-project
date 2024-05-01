@@ -1,2 +1,11 @@
-docker run --name hazelcast -it --network hazelcast-network --rm  -e HZ_NETWORK_PUBLICADDRESS=localhost:5701 -e HZ_CLUSTERNAME=rgts -p 5701:5701 hazelcast/hazelcast:5.4.0
-docker run --name hazelcast-management --network hazelcast-network --rm -p 8080:8080 hazelcast/management-center:5.4.1
+1) Create docker network
+	docker network create hazelcast-network
+
+2) Pull hazelcast image and use network created
+	docker run --name hazelcast -it --network hazelcast-network --rm  -e HZ_NETWORK_PUBLICADDRESS=localhost:5701 -e HZ_CLUSTERNAME=dev -p 5701:5701 hazelcast/hazelcast:5.4.0
+
+3) Pull hazelcast management centre and use network created
+	docker run --name hazelcast-management --network hazelcast-network --rm -p 8080:8080 hazelcast/management-center:5.4.1
+
+4) Go to address hazelcast management center is running on and connect to cluster. IP can be found using
+	docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' YOUR_HAZELCAST_CONTAINER_ID

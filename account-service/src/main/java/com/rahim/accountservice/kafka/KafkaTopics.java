@@ -17,7 +17,4 @@ public class KafkaTopics {
     @Value("${topics.send-email-topic}")
     private String sendEmailTopic;
 
-    @Value("${topics.send-id-result}")
-    private String sendIdResult;
-
 }

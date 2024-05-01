@@ -2,7 +2,7 @@ CREATE TABLE rgts.threshold_alerts (
     alert_id SERIAL PRIMARY KEY,
     account_id INT REFERENCES rgts.user_accounts(account_id) ON DELETE CASCADE,
     threshold_price NUMERIC(10,2) NOT NULL,
-    is_active BOOLEAN DEFAULT true
+    is_active BOOLEAN DEFAULT true NOT NULL
 );
 
 CREATE INDEX idx_user_id ON rgts.threshold_alerts(account_id);

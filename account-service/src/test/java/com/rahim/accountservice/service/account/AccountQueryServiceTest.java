@@ -46,9 +46,6 @@ class AccountQueryServiceTest extends AbstractTestConfig {
     @Captor
     ArgumentCaptor<String> messageCaptor;
 
-    @Value("${topics.send-id-result}")
-    String sendIdResult;
-
     @BeforeEach
     public void setUp() {
         final int numOfData = 10;
