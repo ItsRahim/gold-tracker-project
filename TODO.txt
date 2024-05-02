@@ -26,14 +26,17 @@ Issues/Enhancements:
 - Batch Process adds duplicate dates for gold price history - BUG
 - batch service, maybe use JPA instead of JDBCTemplate?
 - If processed file exists in table, do not run batch import until the table is cleared - add new column for table affected default null
-- have url constants in own class - for each controller - WIP
+- have url constants in own class - for each controller - DONE
 - add swagger docs for endpoints
 - When notification service checks if user id exists to add a notification. No check to see if account is active/has push notifications enabled - DONE
 - Different profiles, testing, dev and prod
 - Maven plugin to create and push docker image
 - Update docker to expose specific ports
-- Remove hardcoded data references in custom-api, move to database
-- Add active flag to data sources, depending which is active is the one open feign will use, if all inactive/more than one active, default to uk investing
+- Remove hardcoded data references in custom-api, move to database - DONE
+- Add active flag to data sources, depending which is active is the one open feign will use, if all inactive/more than one active, default to uk investing - DONE
+- Implement Kafka Avro to send email objects to email-service.
+- Implement Hazelcast to share information required for other services - DONE
+- Remove hardcoded reference for cron jobs - DONE
 Linked hashmap maintains the order in which keys are inserted
 
 Performance Testing:
