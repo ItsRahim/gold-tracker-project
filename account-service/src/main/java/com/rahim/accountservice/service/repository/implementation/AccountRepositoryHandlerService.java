@@ -123,4 +123,9 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
         return accountRepository.findUpdatedAtByUserId(userId).atOffset(ZoneOffset.UTC);
     }
 
+    @Override
+    public List<Integer> getAccountActiveNotification() {
+        return accountRepository.getAccountByNotificationSettingTrue();
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.rahim.accountservice.kafka;
+package com.rahim.accountservice.config.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
