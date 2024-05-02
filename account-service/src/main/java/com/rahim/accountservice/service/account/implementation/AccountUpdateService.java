@@ -1,10 +1,10 @@
 package com.rahim.accountservice.service.account.implementation;
 
 import com.hazelcast.collection.ISet;
-import com.hazelcast.core.HazelcastInstance;
 import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.exception.EmailTokenException;
 import com.rahim.accountservice.exception.UserNotFoundException;
+import com.rahim.accountservice.service.hazelcast.CacheManager;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.request.AccountRequest;
@@ -26,7 +26,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountUpdateService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
-    private final HazelcastInstance hazelcastInstance;
+    private final CacheManager hazelcastCacheManager;
 
     @Override
     public boolean updateAccount(int accountId, Map<String, String> updatedData) {
@@ -127,7 +127,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     }
 
     private void updateNotificationSet(Integer id, boolean notificationEnabled) {
-        ISet<Integer> accountNotificationSet = hazelcastInstance.getSet("accountNotificationSet");
+        ISet<Integer> accountNotificationSet = hazelcastCacheManager.getSet("accountNotificationSet");
         if (notificationEnabled) {
             accountNotificationSet.add(id);
         } else {

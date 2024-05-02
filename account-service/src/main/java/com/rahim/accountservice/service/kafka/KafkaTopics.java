@@ -1,4 +1,4 @@
-package com.rahim.accountservice.kafka;
+package com.rahim.accountservice.service.kafka;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

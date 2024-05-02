@@ -1,4 +1,4 @@
-package com.rahim.accountservice.kafka;
+package com.rahim.accountservice.config.kafka;
 
 import com.rahim.accountservice.service.account.IInternalAccountService;
 import lombok.RequiredArgsConstructor;

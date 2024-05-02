@@ -98,4 +98,6 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
             + " = :userId", nativeQuery = true)
     Instant findUpdatedAtByUserId(@Param("userId") Integer userId);
 
+    List<Integer> getAccountByNotificationSettingTrue();
+
 }

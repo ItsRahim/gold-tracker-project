@@ -1,4 +1,4 @@
-package com.rahim.accountservice.config;
+package com.rahim.accountservice.config.hazelcast;
 
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;

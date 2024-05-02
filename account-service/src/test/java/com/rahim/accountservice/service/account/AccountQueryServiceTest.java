@@ -2,7 +2,7 @@ package com.rahim.accountservice.service.account;
 
 import com.rahim.accountservice.AbstractTestConfig;
 import com.rahim.accountservice.TestDataGenerator;
-import com.rahim.accountservice.kafka.IKafkaService;
+import com.rahim.accountservice.service.kafka.IKafkaService;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
