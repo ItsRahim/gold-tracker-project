@@ -2,9 +2,11 @@ package com.rahim.accountservice.service.account.implementation;
 
 import com.rahim.accountservice.constant.AccountState;
 import com.rahim.accountservice.constant.EmailTemplate;
+import com.rahim.accountservice.constant.HazelcastConstant;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
+import com.rahim.accountservice.service.hazelcast.CacheManager;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,8 @@ public class AccountDeletionService implements IAccountDeletionService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountDeletionService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
+    private final HazelcastConstant hazelcastConstant;
+    private final CacheManager hazelcastCacheManager;
 
     /**
      * @see IAccountDeletionService
@@ -46,7 +50,7 @@ public class AccountDeletionService implements IAccountDeletionService {
                 account.setAccountLocked(true);
                 account.setNotificationSetting(false);
                 account.setDeleteDate(deletionDate);
-
+                hazelcastCacheManager.removeFromSet(account.getId(), hazelcastConstant.getAccountIdSet());
                 try {
                     accountRepositoryHandler.saveAccount(account);
                     EmailProperty emailProperty = EmailProperty.builder()

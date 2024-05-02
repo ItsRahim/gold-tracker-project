@@ -7,7 +7,6 @@ import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.account.IInternalAccountService;
-import com.rahim.accountservice.service.hazelcast.CacheManager;
 import com.rahim.accountservice.service.profile.IProfileDeletionService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
@@ -34,8 +33,6 @@ public class InternalAccountService implements IInternalAccountService {
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
     private final IProfileDeletionService profileDeletionService;
-    private final CacheManager cacheManager;
-    private final HazelcastSet hazelcastSet;
 
     /**
      * @see IInternalAccountService
@@ -61,7 +58,6 @@ public class InternalAccountService implements IInternalAccountService {
                     .includeUsername(true)
                     .includeDate(false)
                     .build();
-            cacheManager.removeFromSet(userId, hazelcastSet.getAccountIdSet());
             emailTokenGenerator.generateEmailTokens(emailProperty);
             profileDeletionService.deleteProfile(userId);
             accountRepositoryHandler.deleteAccount(userId);
