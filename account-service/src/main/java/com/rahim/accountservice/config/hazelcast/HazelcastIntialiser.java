@@ -28,19 +28,19 @@ public class HazelcastIntialiser {
     private final CacheManager hazelcastCacheManager;
 
     private static final AtomicBoolean hasInitialised = new AtomicBoolean(false);
-    private static final String HAZELCAST_INITIALISER_MAP = "hazelcastInitialiserMap";
-    private static final String NOTIFICATION_ID_INITIALISER = "notificationIdInitialiser";
+    private static final String HAZELCAST_INITIALISER_MAP = "hzInitStatusMap";
+    private static final String ACTIVE_NOTIFICATION_ID_INITIALISED = "activeNotificationIdInitialised";
     private IMap<String, Boolean> initialiserMap;
 
     @PostConstruct
     public void initialise() {
         initialiserMap = hazelcastCacheManager.getMap(HAZELCAST_INITIALISER_MAP);
-        initialiserMap.putIfAbsent(NOTIFICATION_ID_INITIALISER, false);
+        initialiserMap.putIfAbsent(ACTIVE_NOTIFICATION_ID_INITIALISED, false);
         initialiseActiveNotification();
     }
 
     private void initialiseActiveNotification() {
-        boolean isInitialised = initialiserMap.get(NOTIFICATION_ID_INITIALISER);
+        boolean isInitialised = initialiserMap.get(ACTIVE_NOTIFICATION_ID_INITIALISED);
         if (!isInitialised) {
             if (hasInitialised.compareAndSet(false, true)) {
                 LOG.debug("Initialising Hazelcast Storages...");
@@ -56,7 +56,7 @@ public class HazelcastIntialiser {
                         .filter(accountId -> !activeNotifications.contains(accountId))
                         .forEach(accountId -> hazelcastCacheManager.removeFromSet(accountId, accountIdSet));
 
-                hazelcastCacheManager.addToMap(HAZELCAST_INITIALISER_MAP, NOTIFICATION_ID_INITIALISER, true);
+                hazelcastCacheManager.addToMap(HAZELCAST_INITIALISER_MAP, ACTIVE_NOTIFICATION_ID_INITIALISED, true);
                 LOG.debug("Hazelcast initialisation complete.");
             } else {
                 LOG.debug("Hazelcast has already been initialised, skipping...");
