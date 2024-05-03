@@ -1,6 +1,7 @@
 package com.rahim.accountservice.service.hazelcast;
 
 import com.hazelcast.collection.ISet;
+import com.hazelcast.core.HazelcastInstance;
 
 /**
  * @author Rahim Ahmed
@@ -8,6 +9,7 @@ import com.hazelcast.collection.ISet;
  */
 public interface CacheManager {
 
+    HazelcastInstance getInstance();
     void addToSet(Object value, String setName);
     void removeFromSet(Object value, String setName);
     void clearSet(String setName);

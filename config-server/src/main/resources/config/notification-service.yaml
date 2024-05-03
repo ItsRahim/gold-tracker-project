@@ -11,7 +11,7 @@ logging:
   level:
     com:
       rahim:
-        notificationservice: DEBUG
+        notificationservice: TRACE
     org:
       springframework: ERROR
     root: WARN
