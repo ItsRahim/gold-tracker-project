@@ -9,7 +9,7 @@ logging:
   level:
     com:
       rahim:
-        accountservice: DEBUG
+        accountservice: TRACE
     org:
       springframework: ERROR
     root: WARN

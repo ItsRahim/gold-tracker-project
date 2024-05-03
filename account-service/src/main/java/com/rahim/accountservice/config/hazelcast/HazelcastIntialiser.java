@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Rahim Ahmed
@@ -25,20 +26,31 @@ public class HazelcastIntialiser {
     private final HazelcastConstant hazelcastConstant;
     private final CacheManager hazelcastCacheManager;
 
+    private static final AtomicBoolean hasInitialised = new AtomicBoolean(false);
+
     @PostConstruct
     public void initialise() {
-        LOG.debug("Initialising Hazelcast Storages...");
-        String accountIdSet = hazelcastConstant.getAccountIdSet();
-        List<Integer> activeNotifications = accountRepositoryHandler.getAccountActiveNotification();
-        ISet<Integer> existingNotifications = hazelcastCacheManager.getSet(accountIdSet);
-
-        activeNotifications.stream()
-                .filter(accountId -> !existingNotifications.contains(accountId))
-                .forEach(accountId -> hazelcastCacheManager.addToSet(accountId, accountIdSet));
-
-        existingNotifications.stream()
-                .filter(accountId -> !activeNotifications.contains(accountId))
-                .forEach(accountId -> hazelcastCacheManager.removeFromSet(accountId, accountIdSet));
+        initialiseActiveNotification();
     }
 
+    private void initialiseActiveNotification() {
+        if (hasInitialised.compareAndSet(false, true)) {
+            LOG.debug("Initialising Hazelcast Storages...");
+            String accountIdSet = hazelcastConstant.getAccountIdSet();
+            List<Integer> activeNotifications = accountRepositoryHandler.getAccountActiveNotification();
+            ISet<Integer> existingNotifications = hazelcastCacheManager.getSet(accountIdSet);
+
+            activeNotifications.stream()
+                    .filter(accountId -> !existingNotifications.contains(accountId))
+                    .forEach(accountId -> hazelcastCacheManager.addToSet(accountId, accountIdSet));
+
+            existingNotifications.stream()
+                    .filter(accountId -> !activeNotifications.contains(accountId))
+                    .forEach(accountId -> hazelcastCacheManager.removeFromSet(accountId, accountIdSet));
+
+            LOG.debug("Hazelcast initialisation complete.");
+        } else {
+            LOG.debug("Hazelcast has already been initialised, skipping...");
+        }
+    }
 }

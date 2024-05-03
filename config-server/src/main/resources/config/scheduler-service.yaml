@@ -15,7 +15,7 @@ logging:
   level:
     com:
       rahim:
-        schedulerservice: DEBUG
+        schedulerservice: TRACE
     org:
       springframework: ERROR
     root: WARN
