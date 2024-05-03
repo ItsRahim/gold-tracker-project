@@ -24,6 +24,11 @@ public class HazelcastCacheManager implements CacheManager {
         this.hazelcastInstance = hazelcastInstance;
     }
 
+    @Override
+    public HazelcastInstance getInstance() {
+        return hazelcastInstance;
+    }
+
     public void addToSet(Object value, String setName) {
         LOG.debug("Adding {} to {} Hazelcast set...", value, setName);
         ISet<Object> set = getSet(setName);
