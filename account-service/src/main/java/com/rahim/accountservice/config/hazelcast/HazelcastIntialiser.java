@@ -1,6 +1,7 @@
 package com.rahim.accountservice.config.hazelcast;
 
 import com.hazelcast.collection.ISet;
+import com.hazelcast.map.IMap;
 import com.rahim.accountservice.constant.HazelcastConstant;
 import com.rahim.accountservice.service.hazelcast.CacheManager;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
@@ -27,30 +28,41 @@ public class HazelcastIntialiser {
     private final CacheManager hazelcastCacheManager;
 
     private static final AtomicBoolean hasInitialised = new AtomicBoolean(false);
+    private static final String HAZELCAST_INITIALISER_MAP = "hazelcastInitialiserMap";
+    private static final String NOTIFICATION_ID_INITIALISER = "notificationIdInitialiser";
+    private IMap<String, Boolean> initialiserMap;
 
     @PostConstruct
     public void initialise() {
+        initialiserMap = hazelcastCacheManager.getMap(HAZELCAST_INITIALISER_MAP);
+        initialiserMap.putIfAbsent(NOTIFICATION_ID_INITIALISER, false);
         initialiseActiveNotification();
     }
 
     private void initialiseActiveNotification() {
-        if (hasInitialised.compareAndSet(false, true)) {
-            LOG.debug("Initialising Hazelcast Storages...");
-            String accountIdSet = hazelcastConstant.getAccountIdSet();
-            List<Integer> activeNotifications = accountRepositoryHandler.getAccountActiveNotification();
-            ISet<Integer> existingNotifications = hazelcastCacheManager.getSet(accountIdSet);
+        boolean isInitialised = initialiserMap.get(NOTIFICATION_ID_INITIALISER);
+        if (!isInitialised) {
+            if (hasInitialised.compareAndSet(false, true)) {
+                LOG.debug("Initialising Hazelcast Storages...");
+                String accountIdSet = hazelcastConstant.getAccountIdSet();
+                List<Integer> activeNotifications = accountRepositoryHandler.getAccountActiveNotification();
+                ISet<Integer> existingNotifications = hazelcastCacheManager.getSet(accountIdSet);
 
-            activeNotifications.stream()
-                    .filter(accountId -> !existingNotifications.contains(accountId))
-                    .forEach(accountId -> hazelcastCacheManager.addToSet(accountId, accountIdSet));
+                activeNotifications.stream()
+                        .filter(accountId -> !existingNotifications.contains(accountId))
+                        .forEach(accountId -> hazelcastCacheManager.addToSet(accountId, accountIdSet));
 
-            existingNotifications.stream()
-                    .filter(accountId -> !activeNotifications.contains(accountId))
-                    .forEach(accountId -> hazelcastCacheManager.removeFromSet(accountId, accountIdSet));
+                existingNotifications.stream()
+                        .filter(accountId -> !activeNotifications.contains(accountId))
+                        .forEach(accountId -> hazelcastCacheManager.removeFromSet(accountId, accountIdSet));
 
-            LOG.debug("Hazelcast initialisation complete.");
+                hazelcastCacheManager.addToMap(HAZELCAST_INITIALISER_MAP, NOTIFICATION_ID_INITIALISER, true);
+                LOG.debug("Hazelcast initialisation complete.");
+            } else {
+                LOG.debug("Hazelcast has already been initialised, skipping...");
+            }
         } else {
-            LOG.debug("Hazelcast has already been initialised, skipping...");
+            LOG.debug("Hazelcast has already been initialised by another instance, skipping...");
         }
     }
 }
