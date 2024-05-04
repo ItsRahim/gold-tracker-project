@@ -124,7 +124,7 @@ public class SchedulerManager implements SchedulingConfigurer {
         String cronJobMessage = getNewCronJobMessage();
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_JOB).compareAndSet(false, true)) {
             LOG.info("Running " +  CronJobName.UPDATE_GOLD_PRICE_JOB);
-            kafkaService.sendMessage(kafkaTopic.getCleanupTopic(), cronJobMessage);
+            kafkaService.sendMessage(kafkaTopic.getUpdatePriceTopic(), cronJobMessage);
             jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).set(false);
         } else {
             LOG.warn(CronJobName.UPDATE_GOLD_PRICE_JOB + " is already running. Skipping job execution");
