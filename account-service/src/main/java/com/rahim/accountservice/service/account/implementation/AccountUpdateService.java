@@ -1,6 +1,5 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.hazelcast.collection.ISet;
 import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.constant.HazelcastConstant;
 import com.rahim.accountservice.exception.EmailTokenException;
