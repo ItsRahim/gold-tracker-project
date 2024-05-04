@@ -1,4 +1,4 @@
-package com.rahim.accountservice.constant;
+package com.rahim.common.constant;
 
 /**
  * @author Rahim Ahmed

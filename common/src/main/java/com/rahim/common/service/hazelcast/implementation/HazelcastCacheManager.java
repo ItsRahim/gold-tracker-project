@@ -36,19 +36,19 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     public void addToSet(String setName, Object value) {
-        LOG.debug("Adding {} to {} Hazelcast set...", value, setName);
+        LOG.debug("Adding {} to {} HazelcastConstant set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.add(value);
     }
 
     public void removeFromSet(String setName, Object value) {
-        LOG.debug("Removing {} from {} Hazelcast set...", value, setName);
+        LOG.debug("Removing {} from {} HazelcastConstant set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.remove(value);
     }
 
     public void clearSet(String setName) {
-        LOG.debug("Clearing {} Hazelcast set...", setName);
+        LOG.debug("Clearing {} HazelcastConstant set...", setName);
         ISet<Object> set = getSet(setName);
         set.clear();
     }

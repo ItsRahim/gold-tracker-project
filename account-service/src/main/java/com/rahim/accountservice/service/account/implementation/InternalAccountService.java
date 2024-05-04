@@ -1,6 +1,5 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.dao.AccountDataAccess;
 import com.rahim.accountservice.constant.AccountState;
 import com.rahim.accountservice.model.Account;
@@ -10,6 +9,7 @@ import com.rahim.accountservice.service.account.IInternalAccountService;
 import com.rahim.accountservice.service.profile.IProfileDeletionService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
+import com.rahim.common.constant.EmailTemplate;
 import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
