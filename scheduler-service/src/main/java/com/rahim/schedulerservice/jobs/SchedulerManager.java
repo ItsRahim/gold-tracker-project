@@ -1,9 +1,9 @@
 package com.rahim.schedulerservice.jobs;
 
+import com.rahim.common.constant.KafkaTopic;
+import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.schedulerservice.constant.CronJobName;
-import com.rahim.schedulerservice.kafka.KafkaTopic;
 import com.rahim.schedulerservice.dao.CronJobDataAccess;
-import com.rahim.schedulerservice.kafka.IKafkaService;
 import com.rahim.schedulerservice.repository.CronJobRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,6 @@ public class SchedulerManager implements SchedulingConfigurer {
     private static final Logger LOG = LoggerFactory.getLogger(SchedulerManager.class);
     private final CronJobRepository cronJobRepository;
     private final IKafkaService kafkaService;
-    private final KafkaTopic kafkaTopic;
     private final Map<String, String> cronJobSchedules = new ConcurrentHashMap<>();
     private final Map<String, AtomicBoolean> jobExecutionStatus = new ConcurrentHashMap<>();
 
@@ -112,8 +111,8 @@ public class SchedulerManager implements SchedulingConfigurer {
     private void accountCleanupJob() {
         String cronJobMessage = getNewCronJobMessage();
         if (jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).compareAndSet(false, true)) {
-            LOG.info("Running " +  CronJobName.USER_CLEANUP_JOB);
-            kafkaService.sendMessage(kafkaTopic.getCleanupTopic(), cronJobMessage);
+            LOG.info("Running " + CronJobName.USER_CLEANUP_JOB);
+            kafkaService.sendMessage(KafkaTopic.ACCOUNT_CLEANUP, cronJobMessage);
             jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).set(false);
         } else {
             LOG.warn(CronJobName.USER_CLEANUP_JOB + " is already running. Skipping job execution");
@@ -123,8 +122,8 @@ public class SchedulerManager implements SchedulingConfigurer {
     private void updateGoldPriceJob() {
         String cronJobMessage = getNewCronJobMessage();
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_JOB).compareAndSet(false, true)) {
-            LOG.info("Running " +  CronJobName.UPDATE_GOLD_PRICE_JOB);
-            kafkaService.sendMessage(kafkaTopic.getUpdatePriceTopic(), cronJobMessage);
+            LOG.info("Running " + CronJobName.UPDATE_GOLD_PRICE_JOB);
+            kafkaService.sendMessage(KafkaTopic.PRICE_UPDATE, cronJobMessage);
             jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).set(false);
         } else {
             LOG.warn(CronJobName.UPDATE_GOLD_PRICE_JOB + " is already running. Skipping job execution");
@@ -134,8 +133,8 @@ public class SchedulerManager implements SchedulingConfigurer {
     private void updateGoldPriceHistoryJob() {
         String cronJobMessage = getNewCronJobMessage();
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).compareAndSet(false, true)) {
-            LOG.info("Running " +  CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB);
-            kafkaService.sendMessage(kafkaTopic.getUpdatePriceHistoryTopic(), cronJobMessage);
+            LOG.info("Running " + CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB);
+            kafkaService.sendMessage(KafkaTopic.PRICE_HISTORY_UPDATE, cronJobMessage);
             jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).set(false);
         } else {
             LOG.warn(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB + " is already running. Skipping job execution");

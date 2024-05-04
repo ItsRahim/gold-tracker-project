@@ -1,6 +1,7 @@
 package com.rahim.accountservice.config;
 
 import com.rahim.accountservice.service.account.IInternalAccountService;
+import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.MessageManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class KafkaListenerConfig {
     private final IInternalAccountService internalUserService;
     private final MessageManager messageManager;
 
-    @KafkaListener(topics = "${topics.scheduler-user-cleanup}", groupId = "group2")
+    @KafkaListener(topics = KafkaTopic.ACCOUNT_CLEANUP, groupId = "group2")
     public void cleanupUserAccounts(String message) {
         if (!messageManager.isProcessed(message)) {
             internalUserService.runCleanupJob();

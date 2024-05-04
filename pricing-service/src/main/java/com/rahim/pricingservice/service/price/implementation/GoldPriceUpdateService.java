@@ -1,7 +1,7 @@
 package com.rahim.pricingservice.service.price.implementation;
 
+import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.pricingservice.kafka.KafkaTopic;
-import com.rahim.pricingservice.kafka.IKafkaService;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
@@ -34,8 +34,8 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private final IGoldPriceRepositoryHandler goldPriceRepository;
     private final IGoldTypeRepositoryHandler goldTypeRepository;
     private final GoldPriceCalculator goldPriceCalculator;
-    private final KafkaTopic kafkaTopic;
     private final IKafkaService kafkaService;
+    private final KafkaTopic kafkaTopic;
 
     private static final String GOLD_TICKER = "XAUGBP";
     private static final int GOLD_TICKER_ID = 1;
