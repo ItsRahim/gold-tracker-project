@@ -1,10 +1,10 @@
-package com.rahim.accountservice.config.hazelcast;
+package com.rahim.pricingservice.config.hazelcast;
 
 import com.hazelcast.collection.ISet;
 import com.hazelcast.map.IMap;
 import com.rahim.accountservice.constant.HazelcastConstant;
+import com.rahim.accountservice.service.hazelcast.CacheManager;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
-import com.rahim.common.service.hazelcast.CacheManager;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

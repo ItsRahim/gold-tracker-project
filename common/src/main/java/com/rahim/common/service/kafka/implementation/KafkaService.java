@@ -1,6 +1,6 @@
-package com.rahim.accountservice.service.kafka.implementation;
+package com.rahim.common.service.kafka.implementation;
 
-import com.rahim.accountservice.service.kafka.IKafkaService;
+import com.rahim.common.service.kafka.IKafkaService;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;

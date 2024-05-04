@@ -1,4 +1,4 @@
-package com.rahim.accountservice.service.kafka;
+package com.rahim.common.service.kafka;
 
 /**
  * @author Rahim Ahmed

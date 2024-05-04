@@ -1,9 +1,9 @@
-package com.rahim.accountservice.service.hazelcast.implementation;
+package com.rahim.common.service.hazelcast.implementation;
 
 import com.hazelcast.collection.ISet;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
-import com.rahim.accountservice.service.hazelcast.CacheManager;
+import com.rahim.common.service.hazelcast.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

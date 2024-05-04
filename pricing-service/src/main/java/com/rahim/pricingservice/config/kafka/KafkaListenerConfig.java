@@ -1,4 +1,4 @@
-package com.rahim.pricingservice.kafka;
+package com.rahim.pricingservice.config.kafka;
 
 import com.rahim.pricingservice.service.history.IGoldPriceHistoryService;
 import com.rahim.pricingservice.feign.IGoldPriceFeignClient;

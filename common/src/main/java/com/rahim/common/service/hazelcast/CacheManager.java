@@ -1,4 +1,4 @@
-package com.rahim.accountservice.service.hazelcast;
+package com.rahim.common.service.hazelcast;
 
 import com.hazelcast.collection.ISet;
 import com.hazelcast.core.HazelcastInstance;

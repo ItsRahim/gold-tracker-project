@@ -2,7 +2,7 @@ package com.rahim.accountservice.config.kafka;
 
 import com.hazelcast.collection.ISet;
 import com.rahim.accountservice.service.account.IInternalAccountService;
-import com.rahim.accountservice.service.hazelcast.CacheManager;
+import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.rahim.pricingservice.kafka;
+package com.rahim.pricingservice.config.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
