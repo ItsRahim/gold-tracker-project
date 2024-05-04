@@ -50,11 +50,11 @@ public class HazelcastIntialiser {
 
                 activeNotifications.stream()
                         .filter(accountId -> !existingNotifications.contains(accountId))
-                        .forEach(accountId -> hazelcastCacheManager.addToSet(accountId, accountIdSet));
+                        .forEach(accountId -> hazelcastCacheManager.addToSet(accountIdSet, accountId));
 
                 existingNotifications.stream()
                         .filter(accountId -> !activeNotifications.contains(accountId))
-                        .forEach(accountId -> hazelcastCacheManager.removeFromSet(accountId, accountIdSet));
+                        .forEach(accountId -> hazelcastCacheManager.removeFromSet(accountIdSet, accountId));
 
                 hazelcastCacheManager.addToMap(HAZELCAST_INITIALISER_MAP, ACTIVE_NOTIFICATION_ID_INITIALISED, true);
                 LOG.debug("Hazelcast initialisation complete.");

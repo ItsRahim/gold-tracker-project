@@ -13,12 +13,12 @@ public interface CacheManager {
     HazelcastInstance getInstance();
 
     <T> ISet<T> getSet(String setName);
-    void addToSet(Object value, String setName);
-    void removeFromSet(Object value, String setName);
+    void addToSet(String setName, Object value);
+    void removeFromSet(String setName, Object value);
     void clearSet(String setName);
 
     <K, V> IMap<K, V> getMap(String mapName);
     void addToMap(String mapName, Object key, Object value);
-    void removeFromMap(Object key, String mapName);
+    void removeFromMap(String mapName, Object key);
     void clearMap(String mapName);
 }

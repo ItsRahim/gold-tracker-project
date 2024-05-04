@@ -35,13 +35,13 @@ public class HazelcastCacheManager implements CacheManager {
         return hazelcastInstance.getSet(setName);
     }
 
-    public void addToSet(Object value, String setName) {
+    public void addToSet(String setName, Object value) {
         LOG.debug("Adding {} to {} Hazelcast set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.add(value);
     }
 
-    public void removeFromSet(Object value, String setName) {
+    public void removeFromSet(String setName, Object value) {
         LOG.debug("Removing {} from {} Hazelcast set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.remove(value);
@@ -66,7 +66,7 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     @Override
-    public void removeFromMap(Object key, String mapName) {
+    public void removeFromMap(String mapName, Object key) {
         IMap<Object, Object> map = getMap(mapName);
         map.remove(key);
         LOG.debug("Removed key: {} from map: {}", key, mapName);
