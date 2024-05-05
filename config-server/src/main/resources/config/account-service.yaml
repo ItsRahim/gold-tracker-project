@@ -28,8 +28,6 @@ server:
 spring:
   application:
     name: account-service
-  hazelcast:
-    config: classpath:hazelcast-default.yaml
   output:
     ansi:
       enabled: always
