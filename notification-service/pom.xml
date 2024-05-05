@@ -19,6 +19,14 @@
         <jackson.version>2.16.0-rc1</jackson.version>
     </properties>
     <dependencies>
+        <!-- RGTS Dependencies -->
+        <dependency>
+            <groupId>com.rahim</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Third Part Dependency -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>

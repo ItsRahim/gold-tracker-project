@@ -12,4 +12,5 @@ public class KafkaTopic {
     public static final String ACCOUNT_CLEANUP = "account-cleanup";
     public static final String PRICE_UPDATE = "price-update";
     public static final String PRICE_HISTORY_UPDATE = "price-history-update";
+    public static final String THRESHOLD_PRICE_UPDATE = "threshold-price-update";
 }

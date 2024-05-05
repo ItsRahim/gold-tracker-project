@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class GoldTypeDeletionService implements IGoldTypeDeletionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeDeletionService.class);
-
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
     private final IGoldPriceRepositoryHandler goldPriceRepositoryHandler;
 

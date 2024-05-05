@@ -3,7 +3,7 @@ package com.rahim.pricingservice.config;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.MessageManager;
 import com.rahim.pricingservice.service.history.IGoldPriceHistoryService;
-import com.rahim.pricingservice.feign.IGoldPriceFeignClient;
+import com.rahim.pricingservice.api.GoldPriceApiClient;
 import com.rahim.pricingservice.util.ApiDataProcessor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,8 +20,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 public class KafkaListenerConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
-    private final IGoldPriceFeignClient goldPriceFeignClient;
     private final IGoldPriceHistoryService goldPriceHistoryService;
+    private final GoldPriceApiClient goldPriceFeignClient;
     private final ApiDataProcessor apiDataProcessor;
     private final MessageManager messageManager;
 

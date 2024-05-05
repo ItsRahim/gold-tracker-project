@@ -12,5 +12,6 @@ public final class EmailTemplate {
     public static final String ACCOUNT_DELETION_TEMPLATE = "Account Deletion";
     public static final String ACCOUNT_INACTIVITY_TEMPLATE = "Account Inactivity";
     public static final String ACCOUNT_UPDATE_TEMPLATE = "Account Update";
+    public static final String PRICE_ALERT_TEMPLATE = "Gold Price Alert";
 
 }
