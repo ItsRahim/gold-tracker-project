@@ -10,4 +10,8 @@ import org.slf4j.LoggerFactory;
 public class HazelcastResilienceHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastResilienceHandler.class);
+
+    public static void persistToDB() {
+        LOG.debug("Persisting Hazelcast data to database");
+    }
 }
