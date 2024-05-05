@@ -4,9 +4,9 @@ package com.rahim.common.dao;
  * @author Rahim Ahmed
  * @created 05/05/2024
  */
-public class HazelcastMapDataAccess {
+public class HzMapDataAccess {
 
-    private HazelcastMapDataAccess() {}
+    private HzMapDataAccess() {}
 
     public static final String TABLE_NAME = "rgts.hz_map_data";
     public static final String COL_MAP_ID = "hz_map_id";

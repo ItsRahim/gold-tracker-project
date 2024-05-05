@@ -25,12 +25,12 @@ public class HzSetData {
     private String setName;
 
     @Column(name = "hz_set_value", nullable = false)
-    private String setValue;
+    private Object setValue;
 
     @Column(name = "hz_set_created")
     private OffsetDateTime createdAt;
 
-    public HzSetData(String setName, String setValue) {
+    public HzSetData(String setName, Object setValue) {
         this.setName = setName;
         this.setValue = setValue;
     }

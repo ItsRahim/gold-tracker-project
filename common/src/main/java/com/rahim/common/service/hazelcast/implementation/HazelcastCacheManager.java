@@ -38,12 +38,7 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     public void addToSet(String setName, Object value) {
-        HzPersistenceModel persistenceModel = HzPersistenceModel.builder()
-                .objectType(HzPersistenceModel.ObjectType.SET)
-                .objectName(setName)
-                .objectValue(value)
-                .objectOperation(HzPersistenceModel.ObjectOperation.CREATE)
-                .build();
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value);
         HazelcastResilienceHandler.persistToDB(persistenceModel);
         LOG.debug("Adding {} to {} HazelcastConstant set...", value, setName);
         ISet<Object> set = getSet(setName);
@@ -68,14 +63,16 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     @Override
-    public void addToMap(String mapName, Object key, Object value) {
+    public void addToMap(String mapName, String key, Object value) {
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, value);
+        HazelcastResilienceHandler.persistToDB(persistenceModel);
         IMap<Object, Object> map = getMap(mapName);
         map.put(key, value);
         LOG.debug("Added key: {} with value: {} to map: {}", key, value, mapName);
     }
 
     @Override
-    public void removeFromMap(String mapName, Object key) {
+    public void removeFromMap(String mapName, String key) {
         IMap<Object, Object> map = getMap(mapName);
         map.remove(key);
         LOG.debug("Removed key: {} from map: {}", key, mapName);

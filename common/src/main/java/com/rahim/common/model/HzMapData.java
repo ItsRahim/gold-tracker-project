@@ -27,12 +27,12 @@ public class HzMapData {
     private String mapKey;
 
     @Column(name = "hz_map_value", nullable = false)
-    private String mapValue;
+    private Object mapValue;
 
     @Column(name = "hz_map_updated_at")
     private OffsetDateTime updatedAt;
 
-    public HzMapData(String mapName, String mapKey, String mapValue) {
+    public HzMapData(String mapName, String mapKey, Object mapValue) {
         this.mapName = mapName;
         this.mapKey = mapKey;
         this.mapValue = mapValue;

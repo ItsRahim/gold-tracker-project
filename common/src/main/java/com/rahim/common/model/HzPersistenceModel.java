@@ -15,9 +15,8 @@ import lombok.ToString;
 @ToString
 public class HzPersistenceModel {
     private ObjectType objectType;
-    private String objectName;
-    private String objectKey;
-    private Object objectValue;
+    private HzSetData setData;
+    private HzMapData mapData;
     private ObjectOperation objectOperation;
 
     public enum ObjectOperation {
@@ -30,5 +29,23 @@ public class HzPersistenceModel {
     public enum ObjectType {
         MAP,
         SET
+    }
+
+    public static HzPersistenceModel createSetPersistenceModel(String setName, Object setValue) {
+        HzSetData setData = new HzSetData(setName, setValue);
+        return HzPersistenceModel.builder()
+                .objectType(ObjectType.SET)
+                .setData(setData)
+                .objectOperation(ObjectOperation.CREATE)
+                .build();
+    }
+
+    public static HzPersistenceModel createMapPersistenceModel(String mapName, String mapKey, Object mapValue) {
+        HzMapData mapData = new HzMapData(mapName, mapKey, mapValue);
+        return HzPersistenceModel.builder()
+                .objectType(ObjectType.MAP)
+                .mapData(mapData)
+                .objectOperation(ObjectOperation.CREATE)
+                .build();
     }
 }
