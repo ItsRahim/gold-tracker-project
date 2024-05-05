@@ -2,6 +2,7 @@ package com.rahim.common.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -11,6 +12,7 @@ import java.time.OffsetDateTime;
 @Setter
 @Entity
 @DynamicInsert
+@NoArgsConstructor
 @Table(name = "hz_map_data")
 public class HzMapData {
     @Id
@@ -30,4 +32,9 @@ public class HzMapData {
     @Column(name = "hz_map_updated_at")
     private OffsetDateTime updatedAt;
 
+    public HzMapData(String mapName, String mapKey, String mapValue) {
+        this.mapName = mapName;
+        this.mapKey = mapKey;
+        this.mapValue = mapValue;
+    }
 }
