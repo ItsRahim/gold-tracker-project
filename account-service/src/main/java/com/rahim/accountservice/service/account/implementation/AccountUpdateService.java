@@ -1,17 +1,16 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.hazelcast.collection.ISet;
-import com.rahim.accountservice.constant.EmailTemplate;
-import com.rahim.accountservice.constant.HazelcastConstant;
 import com.rahim.accountservice.exception.EmailTokenException;
 import com.rahim.accountservice.exception.UserNotFoundException;
-import com.rahim.accountservice.service.hazelcast.CacheManager;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.request.AccountRequest;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
+import com.rahim.common.constant.EmailTemplate;
+import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ public class AccountUpdateService implements IAccountUpdateService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountUpdateService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
-    private final HazelcastConstant hazelcastConstant;
     private final CacheManager hazelcastCacheManager;
 
     @Override
@@ -130,9 +128,9 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     private void updateNotificationSet(Integer id, boolean notificationEnabled) {
         if (notificationEnabled) {
-            hazelcastCacheManager.addToSet(id, hazelcastConstant.getAccountIdSet());
+            hazelcastCacheManager.addToSet(HazelcastConstant.ACCOUNT_ID_SET, id);
         } else {
-            hazelcastCacheManager.removeFromSet(id, hazelcastConstant.getAccountIdSet());
+            hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_SET, id);
         }
     }
 

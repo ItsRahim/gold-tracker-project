@@ -1,10 +1,10 @@
 package com.rahim.accountservice.util;
 
-import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.model.EmailToken;
 import com.rahim.accountservice.request.AccountRequest;
 import com.rahim.accountservice.request.ProfileRequest;
+import com.rahim.common.constant.EmailTemplate;
 import lombok.Setter;
 import org.springframework.jdbc.core.RowMapper;
 

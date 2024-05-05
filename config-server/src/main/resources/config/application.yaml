@@ -16,6 +16,7 @@ python-api:
   encrypt: encrypt
   source: uk-investing
   url: http://localhost:8000/api/v1
+  topic: gold-price-stream
 
 spring:
   datasource:

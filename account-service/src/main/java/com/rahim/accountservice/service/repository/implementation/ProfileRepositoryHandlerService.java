@@ -1,6 +1,5 @@
 package com.rahim.accountservice.service.repository.implementation;
 
-import com.rahim.accountservice.constant.EmailTemplate;
 import com.rahim.accountservice.dao.AccountDataAccess;
 import com.rahim.accountservice.dao.ProfileDataAccess;
 import com.rahim.accountservice.model.EmailProperty;
@@ -11,6 +10,7 @@ import com.rahim.accountservice.request.AccountRequest;
 import com.rahim.accountservice.request.ProfileRequest;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenRowMapper;
+import com.rahim.common.constant.EmailTemplate;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

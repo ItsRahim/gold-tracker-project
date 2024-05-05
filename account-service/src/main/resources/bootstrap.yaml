@@ -2,5 +2,3 @@ spring:
   config:
     import:
     - configserver:http://localhost:8888/vault-config
-    - configserver:http://localhost:8888/kafka-topics
-    - configserver:http://localhost:8888/hazelcast-config

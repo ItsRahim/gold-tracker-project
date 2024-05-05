@@ -1,4 +1,5 @@
 hazelcast:
   sets:
     account-id: account_id
+    kafka: processed_kafka
 #  maps:

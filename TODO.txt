@@ -37,6 +37,7 @@ Issues/Enhancements:
 - Implement Kafka Avro to send email objects to email-service.
 - Implement Hazelcast to share information required for other services - DONE
 - Remove hardcoded reference for cron jobs - DONE
+- Add UUID to all kafka messages being send, check in hazelcast map, create new method to generate message+id and another to remove it if it hasnt been processed
 Linked hashmap maintains the order in which keys are inserted
 
 Performance Testing:

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rahim.accountservice.constant.KafkaTopics;
-import com.rahim.accountservice.service.kafka.IKafkaService;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.model.EmailToken;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
+import com.rahim.common.constant.KafkaTopic;
+import com.rahim.common.service.kafka.IKafkaService;
 import io.micrometer.core.instrument.config.validate.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -22,14 +22,13 @@ public class EmailTokenGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(EmailTokenGenerator.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IKafkaService kafkaService;
-    private final KafkaTopics kafkaTopics;
 
     public void generateEmailTokens(EmailProperty emailProperty) {
         try {
             EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);
             String jsonEmailData = convertToJson(emailToken);
             LOG.trace("Generated tokens: {}", jsonEmailData);
-            kafkaService.sendMessage(kafkaTopics.getSendEmailTopic(), jsonEmailData);
+            kafkaService.sendMessage(KafkaTopic.SEND_EMAIL, jsonEmailData);
         } catch (JsonProcessingException e) {
             handleException("Error converting tokens to JSON", e);
         } catch (ValidationException e) {

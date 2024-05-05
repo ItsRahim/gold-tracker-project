@@ -21,7 +21,7 @@
 //import java.util.Map;
 //import java.util.Optional;
 //
-//import static com.rahim.accountservice.constant.EmailTemplate.ACCOUNT_UPDATE_TEMPLATE;
+//import static com.rahim.common.constant.EmailTemplate.ACCOUNT_UPDATE_TEMPLATE;
 //import static org.junit.jupiter.api.Assertions.*;
 //import static org.mockito.ArgumentMatchers.*;
 //import static org.mockito.Mockito.*;

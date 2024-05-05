@@ -1,7 +1,8 @@
 package com.rahim.notificationservice.service.threshold.implementation;
 
 import com.hazelcast.collection.ISet;
-import com.hazelcast.core.HazelcastInstance;
+import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.service.hazelcast.CacheManager;
 import com.rahim.notificationservice.model.ThresholdAlert;
 import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
 import com.rahim.notificationservice.service.threshold.IThresholdCreationService;
@@ -20,7 +21,7 @@ public class ThresholdCreationService implements IThresholdCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ThresholdCreationService.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
-    private final HazelcastInstance hazelcastInstance;
+    private final CacheManager hazelcastCacheManager;
 
     @Override
     public boolean createNotification(ThresholdAlert thresholdAlert) {
@@ -37,7 +38,7 @@ public class ThresholdCreationService implements IThresholdCreationService {
 
     private boolean accountExists(int accountId) {
         LOG.debug("Searching Hazelcast set for account id");
-        ISet<Integer> accountIds = hazelcastInstance.getSet("accountNotificationSet");
+        ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_SET);
         return accountIds.contains(accountId);
     }
 }

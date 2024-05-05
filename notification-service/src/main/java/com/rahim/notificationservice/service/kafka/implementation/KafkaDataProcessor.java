@@ -3,9 +3,9 @@ package com.rahim.notificationservice.service.kafka.implementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rahim.notificationservice.constants.EmailTemplate;
-import com.rahim.notificationservice.kafka.KafkaTopic;
-import com.rahim.notificationservice.kafka.IKafkaService;
+import com.rahim.common.constant.EmailTemplate;
+import com.rahim.common.constant.KafkaTopic;
+import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.notificationservice.model.EmailData;
 import com.rahim.notificationservice.model.NotificationResult;
 import com.rahim.notificationservice.repository.ThresholdAlertRepository;
@@ -30,7 +30,6 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
     private final ThresholdAlertRepository thresholdAlertRepository;
     private final IKafkaService kafkaService;
-    private final KafkaTopic kafkaTopic;
 
     @Override
     public void processKafkaData(String priceData) {
@@ -59,7 +58,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
                     LOG.error("Error converting EmailData to JSON", e);
                 }
 
-                kafkaService.sendMessage(kafkaTopic.getSendEmailTopic(), jsonEmailData);
+                kafkaService.sendMessage(KafkaTopic.SEND_EMAIL, jsonEmailData);
             });
         } catch (NumberFormatException e) {
             LOG.error("Error parsing price data. Invalid format: {}", priceData);
