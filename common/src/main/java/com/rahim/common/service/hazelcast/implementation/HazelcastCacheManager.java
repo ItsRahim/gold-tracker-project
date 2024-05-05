@@ -5,7 +5,7 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.service.hazelcast.CacheManager;
-import com.rahim.common.service.hazelcast.HzDatabasePersistenceService;
+import com.rahim.common.service.hazelcast.HzResilienceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,17 @@ import org.springframework.stereotype.Service;
 public class HazelcastCacheManager implements CacheManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastCacheManager.class);
-    private final HzDatabasePersistenceService hzDatabasePersistenceService;
     private final HazelcastInstance hazelcastInstance;
+    private final HzResilienceService setResilienceService;
+    private final HzResilienceService mapResilienceService;
 
     @Autowired
-    public HazelcastCacheManager(HzDatabasePersistenceService resilienceHandler, @Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance) {
+    public HazelcastCacheManager(@Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance,
+                                 @Qualifier("hzSetResilienceService") HzResilienceService setResilienceService,
+                                 @Qualifier("hzMapResilienceService") HzResilienceService mapResilienceService) {
         this.hazelcastInstance = hazelcastInstance;
-        this.hzDatabasePersistenceService = resilienceHandler;
+        this.setResilienceService = setResilienceService;
+        this.mapResilienceService = mapResilienceService;
     }
 
     @Override
@@ -40,14 +44,16 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     public void addToSet(String setName, Object value) {
-        HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value);
-        hzDatabasePersistenceService.persistToDB(persistenceModel);
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.CREATE);
+        setResilienceService.persistToDB(persistenceModel);
         LOG.debug("Adding {} to {} HazelcastConstant set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.add(value);
     }
 
     public void removeFromSet(String setName, Object value) {
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.DELETE);
+        setResilienceService.removeFromDB(persistenceModel);
         LOG.debug("Removing {} from {} HazelcastConstant set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.remove(value);
@@ -66,8 +72,8 @@ public class HazelcastCacheManager implements CacheManager {
 
     @Override
     public void addToMap(String mapName, String key, Object value) {
-        HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, value);
-        hzDatabasePersistenceService.persistToDB(persistenceModel);
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, value, HzPersistenceModel.ObjectOperation.CREATE);
+        mapResilienceService.persistToDB(persistenceModel);
         IMap<Object, Object> map = getMap(mapName);
         map.put(key, value);
         LOG.debug("Added key: {} with value: {} to map: {}", key, value, mapName);

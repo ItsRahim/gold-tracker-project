@@ -31,21 +31,21 @@ public class HzPersistenceModel {
         SET
     }
 
-    public static HzPersistenceModel createSetPersistenceModel(String setName, Object setValue) {
+    public static HzPersistenceModel createSetPersistenceModel(String setName, Object setValue, ObjectOperation operation) {
         HzSetData setData = new HzSetData(setName, setValue);
         return HzPersistenceModel.builder()
                 .objectType(ObjectType.SET)
                 .setData(setData)
-                .objectOperation(ObjectOperation.CREATE)
+                .objectOperation(operation)
                 .build();
     }
 
-    public static HzPersistenceModel createMapPersistenceModel(String mapName, String mapKey, Object mapValue) {
+    public static HzPersistenceModel createMapPersistenceModel(String mapName, String mapKey, Object mapValue, ObjectOperation operation) {
         HzMapData mapData = new HzMapData(mapName, mapKey, mapValue);
         return HzPersistenceModel.builder()
                 .objectType(ObjectType.MAP)
                 .mapData(mapData)
-                .objectOperation(ObjectOperation.CREATE)
+                .objectOperation(operation)
                 .build();
     }
 }
