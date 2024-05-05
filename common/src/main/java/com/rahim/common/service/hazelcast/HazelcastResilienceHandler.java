@@ -1,5 +1,6 @@
 package com.rahim.common.service.hazelcast;
 
+import com.rahim.common.model.HzPersistenceModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,9 +10,11 @@ import org.slf4j.LoggerFactory;
  */
 public class HazelcastResilienceHandler {
 
+    private HazelcastResilienceHandler() {}
+
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastResilienceHandler.class);
 
-    public static void persistToDB() {
-        LOG.debug("Persisting Hazelcast data to database");
+    public static void persistToDB(HzPersistenceModel persistenceModel) {
+        LOG.debug("Persisting Hazelcast data to database: {}", persistenceModel.toString());
     }
 }

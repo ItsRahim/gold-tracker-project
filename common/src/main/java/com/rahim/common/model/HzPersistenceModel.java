@@ -1,10 +1,9 @@
 package com.rahim.common.model;
 
-import com.rahim.common.enums.HzObjectOperation;
-import com.rahim.common.enums.HzObjectType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author Rahim Ahmed
@@ -13,11 +12,23 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
+@ToString
 public class HzPersistenceModel {
-    private HzObjectType objectType;
+    private ObjectType objectType;
     private String objectName;
     private String objectKey;
     private Object objectValue;
-    private HzObjectOperation objectOperation;
+    private ObjectOperation objectOperation;
 
+    public enum ObjectOperation {
+        CREATE,
+        READ,
+        UPDATE,
+        DELETE
+    }
+
+    public enum ObjectType {
+        MAP,
+        SET
+    }
 }

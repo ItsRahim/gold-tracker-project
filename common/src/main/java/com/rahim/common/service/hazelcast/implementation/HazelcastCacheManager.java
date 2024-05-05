@@ -3,10 +3,9 @@ package com.rahim.common.service.hazelcast.implementation;
 import com.hazelcast.collection.ISet;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
-import com.rahim.common.enums.HzObjectOperation;
-import com.rahim.common.enums.HzObjectType;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.common.service.hazelcast.HazelcastResilienceHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +39,12 @@ public class HazelcastCacheManager implements CacheManager {
 
     public void addToSet(String setName, Object value) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.builder()
-                .objectType(HzObjectType.SET)
+                .objectType(HzPersistenceModel.ObjectType.SET)
                 .objectName(setName)
                 .objectValue(value)
-                .objectOperation(HzObjectOperation.CREATE)
+                .objectOperation(HzPersistenceModel.ObjectOperation.CREATE)
                 .build();
+        HazelcastResilienceHandler.persistToDB(persistenceModel);
         LOG.debug("Adding {} to {} HazelcastConstant set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.add(value);
