@@ -23,6 +23,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/gold
     username: ENC(hRyjggT0Jxn9g0FeRmcmfgTSGVgsc+p1L6R5hzCbsCSkqq1UpqBK1Xkw7GXg9/Vr)
     password: ENC(QmQbHw7zfvdzBoqg6KUUAl/qXlHpQPulk2dYK518mgyQuAuKmFJM1FlE7PXGeG7o)
+  hazelcast:
+    config: classpath:hazelcast-default.yaml
   jasypt:
     encryptor:
       password: ${jasypt.encryptor.password}

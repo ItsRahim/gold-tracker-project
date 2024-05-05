@@ -1,8 +1,3 @@
 spring:
   application:
     name: common
-  cloud:
-    config:
-      enabled: true
-  config:
-    import: configserver:http://localhost:8888

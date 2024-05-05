@@ -30,8 +30,6 @@ server:
 spring:
   application:
     name: notification-service
-  hazelcast:
-    config: classpath:hazelcast-default.yaml
   output:
     ansi:
       enabled: always
