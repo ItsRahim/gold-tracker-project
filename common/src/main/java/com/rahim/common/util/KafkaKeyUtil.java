@@ -12,8 +12,8 @@ public class KafkaKeyUtil {
         return message + "_" + UUID.randomUUID();
     }
 
-    public static String extractDataFromKey(String key) {
-        String[] parts = key.split("_");
+    public static String extractDataFromKey(String message) {
+        String[] parts = message.split("_");
         return parts[0];
     }
 }
