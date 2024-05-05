@@ -5,7 +5,7 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.service.hazelcast.CacheManager;
-import com.rahim.common.service.hazelcast.HzResilienceService;
+import com.rahim.common.service.hazelcast.HzPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +21,13 @@ public class HazelcastCacheManager implements CacheManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastCacheManager.class);
     private final HazelcastInstance hazelcastInstance;
-    private final HzResilienceService setResilienceService;
-    private final HzResilienceService mapResilienceService;
+    private final HzPersistenceService setResilienceService;
+    private final HzPersistenceService mapResilienceService;
 
     @Autowired
     public HazelcastCacheManager(@Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance,
-                                 @Qualifier("hzSetResilienceService") HzResilienceService setResilienceService,
-                                 @Qualifier("hzMapResilienceService") HzResilienceService mapResilienceService) {
+                                 @Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
+                                 @Qualifier("hzMapResilienceService") HzPersistenceService mapResilienceService) {
         this.hazelcastInstance = hazelcastInstance;
         this.setResilienceService = setResilienceService;
         this.mapResilienceService = mapResilienceService;

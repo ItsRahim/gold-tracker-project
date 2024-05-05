@@ -1,11 +1,9 @@
 package com.rahim.common.service.hazelcast.implementation;
 
-import com.rahim.common.dao.HzMapDataAccess;
 import com.rahim.common.dao.HzSetDataAccess;
-import com.rahim.common.model.HzMapData;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.model.HzSetData;
-import com.rahim.common.service.hazelcast.HzResilienceService;
+import com.rahim.common.service.hazelcast.HzPersistenceService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 @RequiredArgsConstructor
 @Service("hzSetResilienceService")
-public class HzSetResilienceService implements HzResilienceService {
+public class HzSetPersistenceService implements HzPersistenceService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HzSetResilienceService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HzSetPersistenceService.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Override

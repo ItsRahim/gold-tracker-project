@@ -3,7 +3,7 @@ package com.rahim.common.service.hazelcast.implementation;
 import com.rahim.common.dao.HzMapDataAccess;
 import com.rahim.common.model.HzMapData;
 import com.rahim.common.model.HzPersistenceModel;
-import com.rahim.common.service.hazelcast.HzResilienceService;
+import com.rahim.common.service.hazelcast.HzPersistenceService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 @Primary
 @RequiredArgsConstructor
 @Service("hzMapResilienceService")
-public class HzMapResilienceService implements HzResilienceService {
+public class HzMapPersistenceService implements HzPersistenceService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HzMapResilienceService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HzMapPersistenceService.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Override
