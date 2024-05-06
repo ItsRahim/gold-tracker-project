@@ -8,7 +8,7 @@ import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
-import com.rahim.common.service.hazelcast.ICacheManager;
+import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class AccountDeletionService implements IAccountDeletionService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountDeletionService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
-    private final ICacheManager hazelcastCacheManager;
+    private final CacheManager hazelcastCacheManager;
 
     /**
      * @see IAccountDeletionService

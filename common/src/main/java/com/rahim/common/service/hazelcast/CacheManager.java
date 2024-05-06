@@ -8,7 +8,7 @@ import com.hazelcast.map.IMap;
  * @author Rahim Ahmed
  * @created 01/05/2024
  */
-public interface ICacheManager {
+public interface CacheManager {
     HazelcastInstance getInstance();
 
     <T> ISet<T> getSet(String setName);

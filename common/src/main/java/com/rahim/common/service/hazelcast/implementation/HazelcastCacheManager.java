@@ -4,7 +4,7 @@ import com.hazelcast.collection.ISet;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.rahim.common.model.HzPersistenceModel;
-import com.rahim.common.service.hazelcast.ICacheManager;
+import com.rahim.common.service.hazelcast.CacheManager;
 import com.rahim.common.service.hazelcast.HzPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
  * @created 01/05/2024
  */
 @Service
-public class HazelcastCacheManager implements ICacheManager {
+public class HazelcastCacheManager implements CacheManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastCacheManager.class);
     private final HazelcastInstance hazelcastInstance;

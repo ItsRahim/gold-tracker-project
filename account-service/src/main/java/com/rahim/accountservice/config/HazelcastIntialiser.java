@@ -4,7 +4,7 @@ import com.hazelcast.collection.ISet;
 import com.hazelcast.map.IMap;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.common.constant.HazelcastConstant;
-import com.rahim.common.service.hazelcast.ICacheManager;
+import com.rahim.common.service.hazelcast.CacheManager;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class HazelcastIntialiser {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastIntialiser.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
-    private final ICacheManager hazelcastCacheManager;
+    private final CacheManager hazelcastCacheManager;
 
     private static final AtomicBoolean hasInitialised = new AtomicBoolean(false);
     private static final String ACTIVE_NOTIFICATION_ID_INITIALISED = "activeNotificationIdInitialised";

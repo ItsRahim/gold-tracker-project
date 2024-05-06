@@ -1,6 +1,6 @@
 package com.rahim.common.config.hazelcast;
 
-import com.rahim.common.service.hazelcast.ICacheManager;
+import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class HazelcastMonitor {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastMonitor.class);
-    private final ICacheManager hazelcastCacheManager;
+    private final CacheManager hazelcastCacheManager;
 
     private static final long HEARTBEAT_INTERVAL = 30000;
 
