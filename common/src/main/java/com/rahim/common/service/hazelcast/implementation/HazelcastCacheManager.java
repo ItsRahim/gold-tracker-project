@@ -24,7 +24,7 @@ public class HazelcastCacheManager implements CacheManager {
     private final HzPersistenceService setResilienceService;
     private final HzPersistenceService mapResilienceService;
 
-    private boolean healthy = true;
+    private volatile boolean healthy = true;
 
     @Autowired
     public HazelcastCacheManager(@Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance,
