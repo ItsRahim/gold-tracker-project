@@ -4,7 +4,7 @@ import com.hazelcast.collection.ISet;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.rahim.common.model.HzPersistenceModel;
-import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.common.service.hazelcast.ICacheManager;
 import com.rahim.common.service.hazelcast.HzPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +17,14 @@ import org.springframework.stereotype.Service;
  * @created 01/05/2024
  */
 @Service
-public class HazelcastCacheManager implements CacheManager {
+public class HazelcastCacheManager implements ICacheManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastCacheManager.class);
     private final HazelcastInstance hazelcastInstance;
     private final HzPersistenceService setResilienceService;
     private final HzPersistenceService mapResilienceService;
+
+    private boolean healthy = true;
 
     @Autowired
     public HazelcastCacheManager(@Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance,
@@ -91,6 +93,16 @@ public class HazelcastCacheManager implements CacheManager {
         IMap<Object, Object> map = getMap(mapName);
         map.clear();
         LOG.debug("Cleared map: {}", mapName);
+    }
+
+    @Override
+    public boolean isHealthy() {
+        return healthy;
+    }
+
+    @Override
+    public void setHealthy(boolean healthy) {
+        this.healthy = healthy;
     }
 
 }

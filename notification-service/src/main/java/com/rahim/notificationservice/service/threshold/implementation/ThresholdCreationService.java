@@ -2,7 +2,7 @@ package com.rahim.notificationservice.service.threshold.implementation;
 
 import com.hazelcast.collection.ISet;
 import com.rahim.common.constant.HazelcastConstant;
-import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.common.service.hazelcast.ICacheManager;
 import com.rahim.notificationservice.model.ThresholdAlert;
 import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
 import com.rahim.notificationservice.service.threshold.IThresholdCreationService;
@@ -21,7 +21,7 @@ public class ThresholdCreationService implements IThresholdCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ThresholdCreationService.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
-    private final CacheManager hazelcastCacheManager;
+    private final ICacheManager hazelcastCacheManager;
 
     @Override
     public boolean createNotification(ThresholdAlert thresholdAlert) {

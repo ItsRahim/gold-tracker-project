@@ -10,7 +10,7 @@ import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
-import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.common.service.hazelcast.ICacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountUpdateService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
-    private final CacheManager hazelcastCacheManager;
+    private final ICacheManager hazelcastCacheManager;
 
     @Override
     public boolean updateAccount(int accountId, Map<String, String> updatedData) {

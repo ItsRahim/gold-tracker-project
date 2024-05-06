@@ -2,7 +2,7 @@ package com.rahim.common.service.kafka;
 
 import com.hazelcast.collection.ISet;
 import com.rahim.common.constant.HazelcastConstant;
-import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.common.service.hazelcast.ICacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class MessageManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageManager.class);
-    private final CacheManager hazelcastCacheManager;
+    private final ICacheManager hazelcastCacheManager;
 
     public boolean isProcessed(String message) {
         ISet<String> processedMessages = hazelcastCacheManager.getSet(HazelcastConstant.PROCESSED_KAFKA_MESSAGES);
