@@ -11,10 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 
-/**
- * @author Rahim Ahmed
- * @created 30/04/2024
- */
 @Configuration
 public class HazelcastConfig {
 
@@ -24,14 +20,16 @@ public class HazelcastConfig {
     @Bean
     public HazelcastInstance hazelcastInstance() throws IOException {
         ClientConfig clientConfig = new YamlClientConfigBuilder(hazelcastConfigLocation).build();
+        customizeConnectionRetryConfig(clientConfig);
+        return HazelcastClient.newHazelcastClient(clientConfig);
+    }
 
+    private void customizeConnectionRetryConfig(ClientConfig clientConfig) {
         ConnectionRetryConfig connectionRetryConfig = clientConfig.getConnectionStrategyConfig().getConnectionRetryConfig();
         connectionRetryConfig.setClusterConnectTimeoutMillis(30000);
         connectionRetryConfig.setInitialBackoffMillis(1000);
         connectionRetryConfig.setMaxBackoffMillis(60000);
         connectionRetryConfig.setMultiplier(2);
-
-        return HazelcastClient.newHazelcastClient(clientConfig);
+        connectionRetryConfig.setJitter(0.1);
     }
-
 }
