@@ -3,7 +3,9 @@ package com.rahim.common.service.hazelcast.implementation;
 import com.hazelcast.collection.ISet;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
+import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.common.service.hazelcast.HzPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,18 @@ public class HazelcastCacheManager implements CacheManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastCacheManager.class);
     private final HazelcastInstance hazelcastInstance;
+    private final HzPersistenceService setResilienceService;
+    private final HzPersistenceService mapResilienceService;
+
+    private volatile boolean healthy = true;
 
     @Autowired
-    public HazelcastCacheManager(@Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance) {
+    public HazelcastCacheManager(@Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance,
+                                 @Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
+                                 @Qualifier("hzMapResilienceService") HzPersistenceService mapResilienceService) {
         this.hazelcastInstance = hazelcastInstance;
+        this.setResilienceService = setResilienceService;
+        this.mapResilienceService = mapResilienceService;
     }
 
     @Override
@@ -36,12 +46,16 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     public void addToSet(String setName, Object value) {
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.CREATE);
+        setResilienceService.persistToDB(persistenceModel);
         LOG.debug("Adding {} to {} HazelcastConstant set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.add(value);
     }
 
     public void removeFromSet(String setName, Object value) {
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.DELETE);
+        setResilienceService.removeFromDB(persistenceModel);
         LOG.debug("Removing {} from {} HazelcastConstant set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.remove(value);
@@ -59,14 +73,16 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     @Override
-    public void addToMap(String mapName, Object key, Object value) {
+    public void addToMap(String mapName, String key, Object value) {
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, value, HzPersistenceModel.ObjectOperation.CREATE);
+        mapResilienceService.persistToDB(persistenceModel);
         IMap<Object, Object> map = getMap(mapName);
         map.put(key, value);
         LOG.debug("Added key: {} with value: {} to map: {}", key, value, mapName);
     }
 
     @Override
-    public void removeFromMap(String mapName, Object key) {
+    public void removeFromMap(String mapName, String key) {
         IMap<Object, Object> map = getMap(mapName);
         map.remove(key);
         LOG.debug("Removed key: {} from map: {}", key, mapName);
@@ -77,6 +93,16 @@ public class HazelcastCacheManager implements CacheManager {
         IMap<Object, Object> map = getMap(mapName);
         map.clear();
         LOG.debug("Cleared map: {}", mapName);
+    }
+
+    @Override
+    public boolean isHealthy() {
+        return healthy;
+    }
+
+    @Override
+    public void setHealthy(boolean healthy) {
+        this.healthy = healthy;
     }
 
 }

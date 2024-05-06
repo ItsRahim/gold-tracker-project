@@ -114,15 +114,26 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     private void updateNotification(Account account, String value) {
         try {
-            if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
-                boolean notificationEnabled = Boolean.parseBoolean(value);
-                updateNotificationSet(account.getId(), notificationEnabled);
-                account.setNotificationSetting(notificationEnabled);
+            Boolean newNotificationSetting = parseNotificationSetting(value);
+            if (isValidChange(account.getNotificationSetting(), newNotificationSetting)) {
+                updateNotificationSet(account.getId(), newNotificationSetting);
+                account.setNotificationSetting(newNotificationSetting);
+                LOG.debug("Notification setting updated successfully for account with ID {}: {}", account.getId(), newNotificationSetting);
             } else {
-                LOG.error("Invalid value passed for notificationSetting. Not Updating");
+                LOG.error("Invalid value passed or no change in notificationSetting. Not updating for account with ID {}", account.getId());
             }
-        } catch (NumberFormatException e) {
-            LOG.error("Failed to parse value '{}' to boolean in notificationSetting for account with ID {}", value, account.getId(), e);
+        } catch (IllegalArgumentException e) {
+            LOG.error("Failed to update notificationSetting for account with ID {}: {}", account.getId(), e.getMessage());
+        }
+    }
+
+    private boolean parseNotificationSetting(String value) {
+        if (value.equalsIgnoreCase("true")) {
+            return true;
+        } else if (value.equalsIgnoreCase("false")) {
+            return false;
+        } else {
+            throw new IllegalArgumentException("Invalid value for notificationSetting: " + value);
         }
     }
 
@@ -134,7 +145,7 @@ public class AccountUpdateService implements IAccountUpdateService {
         }
     }
 
-    private boolean isValidChange(String oldValue, String newValue) {
-        return (newValue != null && !newValue.isEmpty()) && (!oldValue.equals(newValue));
+    private <T> boolean isValidChange(T oldValue, T newValue) {
+        return (newValue != null) && (!newValue.equals(oldValue));
     }
 }

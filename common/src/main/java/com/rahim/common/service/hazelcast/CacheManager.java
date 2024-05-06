@@ -9,7 +9,6 @@ import com.hazelcast.map.IMap;
  * @created 01/05/2024
  */
 public interface CacheManager {
-
     HazelcastInstance getInstance();
 
     <T> ISet<T> getSet(String setName);
@@ -18,7 +17,10 @@ public interface CacheManager {
     void clearSet(String setName);
 
     <K, V> IMap<K, V> getMap(String mapName);
-    void addToMap(String mapName, Object key, Object value);
-    void removeFromMap(String mapName, Object key);
+    void addToMap(String mapName, String key, Object value);
+    void removeFromMap(String mapName, String key);
     void clearMap(String mapName);
+
+    boolean isHealthy();
+    void setHealthy(boolean healthy);
 }
