@@ -1,7 +1,9 @@
+import json
+import uuid
+
 from kafka import KafkaProducer, KafkaAdminClient
 from kafka.admin import NewTopic
 from app.config.logging import log
-import json
 
 from app.config.load_config import load_config
 
@@ -38,7 +40,8 @@ class KafkaHandler:
             log.info(f"Kafka topic '{self.TOPIC_NAME}' created successfully")
 
     def send_price(self, data):
-        message = json.dumps(data.to_dict())
+        random_uuid = str(uuid.uuid4())
+        message = json.dumps(data.to_dict()) + "_" + random_uuid
         try:
             self.kafka_producer.send(self.TOPIC_NAME, message)
             log.info(f"Sent message to Kafka topic: {self.TOPIC_NAME}")
