@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
+import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.notificationservice.model.EmailData;
 import com.rahim.notificationservice.model.NotificationResult;
 import com.rahim.notificationservice.repository.ThresholdAlertRepository;
@@ -53,7 +54,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
 
                 String jsonEmailData = null;
                 try {
-                    jsonEmailData = convertToJson(emailData);
+                    jsonEmailData = KafkaKeyUtil.generateKeyWithUUID(convertToJson(emailData));
                 } catch (JsonProcessingException e) {
                     LOG.error("Error converting EmailData to JSON", e);
                 }

@@ -1,16 +1,14 @@
 import ast
+from datetime import datetime
 
 from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
 
 from app.config.logging import log
-from app.service.scraper import get_gold_price
 from app.data.gold_sources import get_source
-from datetime import datetime
-
 from app.kafka.producer import KafkaHandler
 from app.models.gold import Gold
-
+from app.service.scraper import get_gold_price
 
 price_router = APIRouter()
 kafka_handler = KafkaHandler()
@@ -32,6 +30,7 @@ async def root(requested_source: str) -> Gold | dict[str, str]:
         log.info(f"Retrieved gold price from {source_name}")
 
         gold = Gold(source_name, gold_price, request_time)
+
         kafka_handler.send_price(gold)
         log.debug("Gold object data sent to Kafka producer")
 

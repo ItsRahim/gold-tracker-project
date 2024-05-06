@@ -2,6 +2,7 @@ package com.rahim.pricingservice.service.price.implementation;
 
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
+import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
@@ -20,7 +21,6 @@ import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * @author Rahim Ahmed
@@ -50,7 +50,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
             goldPriceOptional.ifPresent(goldTicker -> {
                 BigDecimal newPrice = processedData.getPrice().setScale(2, RoundingMode.HALF_UP);
                 updateTickerPrice(goldTicker, newPrice);
-                String priceData = generatePriceKafkaData(newPrice);
+                String priceData = KafkaKeyUtil.generateKeyWithUUID(String.valueOf(newPrice));
                 kafkaService.sendMessage(KafkaTopic.THRESHOLD_PRICE_UPDATE, priceData);
 
                 LOG.info("Gold ticker price updated successfully. New price: {}, Updated time: {}", newPrice, goldTicker.getUpdatedAt());
@@ -59,11 +59,6 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
         } catch (Exception e) {
             LOG.error("Error updating gold ticker price: {}", e.getMessage(), e);
         }
-    }
-
-    private String generatePriceKafkaData(BigDecimal price) {
-        String uniqueId = UUID.randomUUID().toString();
-        return String.format("%s_%s", price, uniqueId);
     }
 
     private void updateTickerPrice(GoldPrice goldPrice, BigDecimal newPrice) {

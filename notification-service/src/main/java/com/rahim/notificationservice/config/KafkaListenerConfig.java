@@ -2,6 +2,7 @@ package com.rahim.notificationservice.config;
 
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.MessageManager;
+import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.notificationservice.service.kafka.IKafkaDataProcessor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,13 +20,12 @@ public class KafkaListenerConfig {
 
     @KafkaListener(topics = KafkaTopic.THRESHOLD_PRICE_UPDATE, groupId = "group2")
     public void priceListener(String priceData) {
-        int index = priceData.indexOf('_');
-        String processedData = index != -1 ? priceData.substring(0, index) : priceData;
-        if (!messageManager.isProcessed(processedData)) {
-            kafkaDataProcessor.processKafkaData(processedData);
-            messageManager.markAsProcessed(processedData);
+        if (!messageManager.isProcessed(priceData)) {
+            String kafkaData = KafkaKeyUtil.extractDataFromKey(priceData);
+            kafkaDataProcessor.processKafkaData(kafkaData);
+            messageManager.markAsProcessed(priceData);
         } else {
-            LOG.debug("Message '{}' has already been processed. Skipping sending email notification event", processedData);
+            LOG.debug("Message '{}' has already been processed. Skipping sending email notification event", priceData);
         }
     }
 

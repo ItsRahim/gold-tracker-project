@@ -8,12 +8,18 @@ import java.util.UUID;
  */
 public class KafkaKeyUtil {
 
+    private KafkaKeyUtil() {}
+
     public static String generateKeyWithUUID(String message) {
         return message + "_" + UUID.randomUUID();
     }
 
     public static String extractDataFromKey(String message) {
-        String[] parts = message.split("_");
-        return parts[0];
+        int lastIndex = message.lastIndexOf("_");
+        if (lastIndex != -1) {
+            return message.substring(0, lastIndex);
+        } else {
+            return message;
+        }
     }
 }
