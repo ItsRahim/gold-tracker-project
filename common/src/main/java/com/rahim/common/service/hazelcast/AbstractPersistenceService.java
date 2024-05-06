@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @created 06/05/2024
  */
 @RequiredArgsConstructor
-public abstract class AbstractHzPersistenceService implements HzPersistenceService {
+public abstract class AbstractPersistenceService implements HzPersistenceService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractHzPersistenceService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractPersistenceService.class);
     protected final JdbcTemplate jdbcTemplate;
 
     @Override

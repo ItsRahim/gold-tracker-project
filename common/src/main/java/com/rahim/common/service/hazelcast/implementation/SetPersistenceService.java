@@ -3,7 +3,7 @@ package com.rahim.common.service.hazelcast.implementation;
 import com.rahim.common.dao.HzSetDataAccess;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.model.HzSetData;
-import com.rahim.common.service.hazelcast.AbstractHzPersistenceService;
+import com.rahim.common.service.hazelcast.AbstractPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Service;
  */
 @Primary
 @Service("hzSetResilienceService")
-public class HzSetPersistenceService extends AbstractHzPersistenceService {
+public class SetPersistenceService extends AbstractPersistenceService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HzSetPersistenceService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SetPersistenceService.class);
 
-    public HzSetPersistenceService(JdbcTemplate jdbcTemplate) {
+    public SetPersistenceService(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
 
