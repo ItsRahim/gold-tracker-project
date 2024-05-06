@@ -15,7 +15,11 @@ public class KafkaKeyUtil {
     }
 
     public static String extractDataFromKey(String message) {
-        String[] parts = message.split("_");
-        return parts[0];
+        int lastIndex = message.lastIndexOf("_");
+        if (lastIndex != -1) {
+            return message.substring(0, lastIndex);
+        } else {
+            return message;
+        }
     }
 }
