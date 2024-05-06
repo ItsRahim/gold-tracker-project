@@ -1,4 +1,5 @@
 import ast
+import uuid
 
 from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
@@ -32,7 +33,10 @@ async def root(requested_source: str) -> Gold | dict[str, str]:
         log.info(f"Retrieved gold price from {source_name}")
 
         gold = Gold(source_name, gold_price, request_time)
-        kafka_handler.send_price(gold)
+        random_uuid = str(uuid.uuid4())
+        gold_with_uuid = gold + "_" + random_uuid
+
+        kafka_handler.send_price(gold_with_uuid)
         log.debug("Gold object data sent to Kafka producer")
 
         return jsonable_encoder(gold)
