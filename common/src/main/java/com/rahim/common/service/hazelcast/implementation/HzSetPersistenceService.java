@@ -3,46 +3,25 @@ package com.rahim.common.service.hazelcast.implementation;
 import com.rahim.common.dao.HzSetDataAccess;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.model.HzSetData;
-import com.rahim.common.service.hazelcast.HzPersistenceService;
-import lombok.RequiredArgsConstructor;
+import com.rahim.common.service.hazelcast.AbstractHzPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Rahim Ahmed
  * @created 05/05/2024
  */
 @Primary
-@RequiredArgsConstructor
 @Service("hzSetResilienceService")
-public class HzSetPersistenceService implements HzPersistenceService {
+public class HzSetPersistenceService extends AbstractHzPersistenceService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HzSetPersistenceService.class);
-    private final JdbcTemplate jdbcTemplate;
 
-    @Override
-    @Transactional
-    public void persistToDB(HzPersistenceModel persistenceModel) {
-        LOG.debug("Persisting Hazelcast set to database: {}", persistenceModel);
-        try {
-            if (persistenceModel.getObjectOperation() != HzPersistenceModel.ObjectOperation.CREATE) {
-                LOG.error("Skipping database persistence for non-create operation: {}", persistenceModel);
-                return;
-            }
-
-            String query = generateQuery(persistenceModel);
-            Object[] params = generateParameters(persistenceModel);
-            jdbcTemplate.update(query, params);
-            LOG.debug("Persisted {} to database", persistenceModel);
-
-        } catch (Exception e) {
-            LOG.error("Error persisting data to database: {}", e.getMessage());
-        }
-
+    public HzSetPersistenceService(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
     }
 
     @Override
@@ -83,7 +62,8 @@ public class HzSetPersistenceService implements HzPersistenceService {
         }
     }
 
-    private String generateQuery(HzPersistenceModel persistenceModel) {
+    @Override
+    protected String generateQuery(HzPersistenceModel persistenceModel) {
         try {
             HzSetData setData = persistenceModel.getSetData();
             validateSetData(setData);
@@ -92,15 +72,13 @@ public class HzSetPersistenceService implements HzPersistenceService {
                 LOG.error("Set with name {} and value {} already exists", setData.getSetName(), setData.getSetValue());
                 throw new IllegalArgumentException("Set with name " + setData.getSetName() + " and value " + setData.getSetValue() + " already exists");
             }
-            StringBuilder sqlBuilder = new StringBuilder("INSERT INTO ");
-            sqlBuilder.append(HzSetDataAccess.TABLE_NAME)
-                    .append(" (")
-                    .append(HzSetDataAccess.COL_SET_NAME)
-                    .append(", ")
-                    .append(HzSetDataAccess.COL_SET_VALUE)
-                    .append(") VALUES (?, ?)");
 
-            return sqlBuilder.toString();
+            return "INSERT INTO " + HzSetDataAccess.TABLE_NAME +
+                    " (" +
+                    HzSetDataAccess.COL_SET_NAME +
+                    ", " +
+                    HzSetDataAccess.COL_SET_VALUE +
+                    ") VALUES (?, ?)";
         } catch (Exception ex) {
             LOG.error("Error generating SQL query: {}", ex.getMessage());
             throw new RuntimeException("Error generating SQL query", ex);
@@ -127,7 +105,8 @@ public class HzSetPersistenceService implements HzPersistenceService {
         return count != null && count > 0;
     }
 
-    private String[] generateParameters(HzPersistenceModel persistenceModel) {
+    @Override
+    protected String[] generateParameters(HzPersistenceModel persistenceModel) {
         HzSetData setData = persistenceModel.getSetData();
         Object[] parameters = new Object[]{setData.getSetName(), setData.getSetValue()};
 

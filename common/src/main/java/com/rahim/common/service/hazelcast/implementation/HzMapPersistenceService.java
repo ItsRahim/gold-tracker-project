@@ -3,8 +3,7 @@ package com.rahim.common.service.hazelcast.implementation;
 import com.rahim.common.dao.HzMapDataAccess;
 import com.rahim.common.model.HzMapData;
 import com.rahim.common.model.HzPersistenceModel;
-import com.rahim.common.service.hazelcast.HzPersistenceService;
-import lombok.RequiredArgsConstructor;
+import com.rahim.common.service.hazelcast.AbstractHzPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -16,32 +15,13 @@ import org.springframework.stereotype.Service;
  * @created 05/05/2024
  */
 @Primary
-@RequiredArgsConstructor
 @Service("hzMapResilienceService")
-public class HzMapPersistenceService implements HzPersistenceService {
+public class HzMapPersistenceService extends AbstractHzPersistenceService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HzMapPersistenceService.class);
-    private final JdbcTemplate jdbcTemplate;
 
-    @Override
-    public void persistToDB(HzPersistenceModel persistenceModel) {
-        LOG.debug("Persisting Hazelcast map to database: {}", persistenceModel);
-
-        try {
-            if (persistenceModel.getObjectOperation() != HzPersistenceModel.ObjectOperation.CREATE) {
-                LOG.error("Skipping database persistence for non-create operation: {}", persistenceModel);
-                return;
-            }
-
-            String query = generateQuery(persistenceModel);
-            Object[] params = generateParameters(persistenceModel);
-            jdbcTemplate.update(query, params);
-            LOG.debug("Persisted {} to database", persistenceModel);
-
-        } catch (Exception e) {
-            LOG.error("Error persisting data to database: {}", e.getMessage());
-        }
-
+    public HzMapPersistenceService(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
     }
 
     @Override
@@ -49,21 +29,19 @@ public class HzMapPersistenceService implements HzPersistenceService {
         //Not applicable to maps
     }
 
-    private String generateQuery(HzPersistenceModel persistenceModel) {
+    @Override
+    protected String generateQuery(HzPersistenceModel persistenceModel) {
         HzMapData mapData = persistenceModel.getMapData();
         validateMapData(mapData);
 
-        StringBuilder sqlBuilder = new StringBuilder("INSERT INTO ");
-        sqlBuilder.append(HzMapDataAccess.TABLE_NAME)
-                .append(" (")
-                .append(HzMapDataAccess.COL_MAP_NAME)
-                .append(", ")
-                .append(HzMapDataAccess.COL_MAP_KEY)
-                .append(", ")
-                .append(HzMapDataAccess.COL_MAP_VALUE)
-                .append(") VALUES (?, ?, ?)");
-
-        return sqlBuilder.toString();
+        return "INSERT INTO " + HzMapDataAccess.TABLE_NAME +
+                " (" +
+                HzMapDataAccess.COL_MAP_NAME +
+                ", " +
+                HzMapDataAccess.COL_MAP_KEY +
+                ", " +
+                HzMapDataAccess.COL_MAP_VALUE +
+                ") VALUES (?, ?, ?)";
     }
 
     private void validateMapData(HzMapData mapData) {
@@ -73,7 +51,8 @@ public class HzMapPersistenceService implements HzPersistenceService {
         }
     }
 
-    private String[] generateParameters(HzPersistenceModel persistenceModel) {
+    @Override
+    protected String[] generateParameters(HzPersistenceModel persistenceModel) {
         HzMapData mapData = persistenceModel.getMapData();
         Object[] parameters = new Object[]{mapData.getMapName(), mapData.getMapKey(), mapData.getMapValue()};
 

@@ -20,11 +20,11 @@ public class HazelcastConfig {
     @Bean
     public HazelcastInstance hazelcastInstance() throws IOException {
         ClientConfig clientConfig = new YamlClientConfigBuilder(hazelcastConfigLocation).build();
-        customizeConnectionRetryConfig(clientConfig);
+        setConnectionRetryConfig(clientConfig);
         return HazelcastClient.newHazelcastClient(clientConfig);
     }
 
-    private void customizeConnectionRetryConfig(ClientConfig clientConfig) {
+    private void setConnectionRetryConfig(ClientConfig clientConfig) {
         ConnectionRetryConfig connectionRetryConfig = clientConfig.getConnectionStrategyConfig().getConnectionRetryConfig();
         connectionRetryConfig.setClusterConnectTimeoutMillis(30000);
         connectionRetryConfig.setInitialBackoffMillis(1000);
