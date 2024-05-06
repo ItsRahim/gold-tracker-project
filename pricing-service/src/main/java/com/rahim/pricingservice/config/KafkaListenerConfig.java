@@ -39,7 +39,7 @@ public class KafkaListenerConfig {
     @KafkaListener(topics = "${python-api.topic}", groupId = "group2")
     public void processPriceChange(String priceData) {
         if (!messageManager.isProcessed(priceData)) {
-            String data = KafkaKeyUtil.extractDataFromKey(priceData);
+            String data = KafkaKeyUtil.extractDataFromKey(priceData) + "\"";
             apiDataProcessor.processApiData(data);
             messageManager.markAsProcessed(priceData);
         } else {

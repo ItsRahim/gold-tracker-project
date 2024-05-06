@@ -24,7 +24,6 @@ public class ApiDataProcessor {
 
     public void processApiData(String kafkaData) {
         try {
-            kafkaData = kafkaData + "\"";
             processedData = new GoldData(kafkaData);
             GoldPriceCalculator.calculatePricePerGram(processedData.getPrice());
             goldPriceUpdateService.updateGoldTickerPrice(processedData);
