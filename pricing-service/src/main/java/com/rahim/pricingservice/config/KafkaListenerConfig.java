@@ -36,7 +36,6 @@ public class KafkaListenerConfig {
         }
     }
 
-    //TODO: Send random UUID with this too, cleanup and then pass to method
     @KafkaListener(topics = "${python-api.topic}", groupId = "group2")
     public void processPriceChange(String priceData) {
         if (!messageManager.isProcessed(priceData)) {
