@@ -2,6 +2,7 @@ package com.rahim.schedulerservice.jobs;
 
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
+import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.schedulerservice.constant.CronJobName;
 import com.rahim.schedulerservice.dao.CronJobDataAccess;
 import com.rahim.schedulerservice.repository.CronJobRepository;
@@ -17,7 +18,6 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -35,6 +35,7 @@ public class SchedulerManager implements SchedulingConfigurer {
     private final IKafkaService kafkaService;
     private final Map<String, String> cronJobSchedules = new ConcurrentHashMap<>();
     private final Map<String, AtomicBoolean> jobExecutionStatus = new ConcurrentHashMap<>();
+    private static final String CRON_MESSAGE = "InitiateCronJob";
 
     @PostConstruct
     private void init() {
@@ -98,10 +99,6 @@ public class SchedulerManager implements SchedulingConfigurer {
         };
     }
 
-    private String getNewCronJobMessage() {
-        return "Initiate Cron Job_" + UUID.randomUUID();
-    }
-
     /**
      * --------------------------------------------------------
      * JOB CONFIGURATIONS
@@ -109,7 +106,7 @@ public class SchedulerManager implements SchedulingConfigurer {
      */
 
     private void accountCleanupJob() {
-        String cronJobMessage = getNewCronJobMessage();
+        String cronJobMessage = KafkaKeyUtil.generateKeyWithUUID(CRON_MESSAGE);
         if (jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).compareAndSet(false, true)) {
             LOG.info("Running " + CronJobName.USER_CLEANUP_JOB);
             kafkaService.sendMessage(KafkaTopic.ACCOUNT_CLEANUP, cronJobMessage);
@@ -120,7 +117,7 @@ public class SchedulerManager implements SchedulingConfigurer {
     }
 
     private void updateGoldPriceJob() {
-        String cronJobMessage = getNewCronJobMessage();
+        String cronJobMessage = KafkaKeyUtil.generateKeyWithUUID(CRON_MESSAGE);
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_JOB).compareAndSet(false, true)) {
             LOG.info("Running " + CronJobName.UPDATE_GOLD_PRICE_JOB);
             kafkaService.sendMessage(KafkaTopic.PRICE_UPDATE, cronJobMessage);
@@ -131,7 +128,7 @@ public class SchedulerManager implements SchedulingConfigurer {
     }
 
     private void updateGoldPriceHistoryJob() {
-        String cronJobMessage = getNewCronJobMessage();
+        String cronJobMessage = KafkaKeyUtil.generateKeyWithUUID(CRON_MESSAGE);
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).compareAndSet(false, true)) {
             LOG.info("Running " + CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB);
             kafkaService.sendMessage(KafkaTopic.PRICE_HISTORY_UPDATE, cronJobMessage);

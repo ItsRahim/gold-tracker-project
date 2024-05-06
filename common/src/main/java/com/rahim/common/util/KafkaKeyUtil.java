@@ -8,6 +8,8 @@ import java.util.UUID;
  */
 public class KafkaKeyUtil {
 
+    private KafkaKeyUtil() {}
+
     public static String generateKeyWithUUID(String message) {
         return message + "_" + UUID.randomUUID();
     }
