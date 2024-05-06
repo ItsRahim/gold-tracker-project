@@ -32,7 +32,7 @@ public class KafkaListenerConfig {
             goldPriceFeignClient.getGoldPrice();
             messageManager.markAsProcessed(message);
         } else {
-
+            LOG.debug("Message '{}' has already been processed. Skipping update price job.", message);
         }
     }
 
