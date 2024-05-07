@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 /**
  * @author Rahim Ahmed
  * @created 06/05/2024
@@ -18,41 +20,44 @@ public class FallbackServiceImpl implements IFallbackService {
 
     @Override
     public <T> ISet<T> fallbackGetSet(String setName) {
+        LOG.info("RUNNING FALLBACK");
         return null;
     }
 
     @Override
     public void fallbackAddToSet(String setName, Object value) {
+        LOG.info("RUNNING FALLBACK");
 
     }
 
     @Override
     public void fallbackRemoveFromSet(String setName, Object value) {
-
+        LOG.info("RUNNING FALLBACK");
     }
 
     @Override
     public void fallbackClearSet(String setName) {
-
+        LOG.info("RUNNING FALLBACK");
     }
 
     @Override
     public <K, V> IMap<K, V> fallbackGetMap(String mapName) {
+        LOG.info("RUNNING FALLBACK");
         return null;
     }
 
     @Override
     public void fallbackAddToMap(String mapName, String key, Object value) {
-
+        LOG.info("RUNNING FALLBACK");
     }
 
     @Override
     public void fallbackRemoveFromMap(String mapName, String key) {
-
+        LOG.info("RUNNING FALLBACK");
     }
 
     @Override
     public void fallbackClearMap(String mapName) {
-
+        LOG.info("RUNNING FALLBACK");
     }
 }

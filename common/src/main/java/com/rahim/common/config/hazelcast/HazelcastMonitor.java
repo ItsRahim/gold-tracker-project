@@ -15,26 +15,38 @@ public class HazelcastMonitor {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastMonitor.class);
     private final CacheManager hazelcastCacheManager;
+    private final HzCheckAspect hzCheckAspect;
 
-    private static final long HEARTBEAT_INTERVAL = 30000;
-    private boolean previousClusterHealth = true;
+    private static final long HEARTBEAT_INTERVAL = 1000;
+    private volatile boolean previousClusterHealth = true;
 
-    @Scheduled(fixedRate = HEARTBEAT_INTERVAL)
-    public void sendHeartbeat() {
-        LOG.debug("Checking Hazelcast cluster health");
-        boolean isClusterHealthy = checkClusterHealth();
-        if (isClusterHealthy != previousClusterHealth) {
-            if (!isClusterHealthy) {
-                LOG.warn("Unhealthy Hazelcast cluster detected. Defaulting to Database...");
-                hazelcastCacheManager.setHealthy(false);
-            } else {
-                LOG.debug("Healthy Hazelcast cluster detected");
-                hazelcastCacheManager.setHealthy(true);
-                //TODO: add method to update hazelcast storages from DB
-            }
-            previousClusterHealth = isClusterHealthy;
-        }
+//    @Scheduled(fixedRate = HEARTBEAT_INTERVAL)
+//    public void sendHeartbeat() {
+//        boolean isClusterHealthy = checkClusterHealth();
+//        if (isClusterHealthy != previousClusterHealth) {
+//            LOG.debug("Change in Hazelcast cluster status...");
+//
+//            if (!isClusterHealthy) {
+//                handleUnhealthyCluster();
+//            } else {
+//                handleHealthyCluster();
+//            }
+//
+//            previousClusterHealth = isClusterHealthy;
+//        }
+//    }
+
+    private void handleUnhealthyCluster() {
+        LOG.warn("Unhealthy Hazelcast cluster detected. Defaulting to Database...");
+        hzCheckAspect.setHealthy(false);
     }
+
+    private void handleHealthyCluster() {
+        LOG.debug("Healthy Hazelcast cluster detected");
+        hzCheckAspect.setHealthy(true);
+        // TODO: add method to update hazelcast storages from DB
+    }
+
 
     private boolean checkClusterHealth() {
         return !hazelcastCacheManager.getInstance().getCluster().getMembers().isEmpty();

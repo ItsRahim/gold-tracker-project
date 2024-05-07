@@ -3,6 +3,7 @@ package com.rahim.common.service.hazelcast.implementation;
 import com.hazelcast.collection.ISet;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
+import com.rahim.common.config.HealthCheck;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.service.hazelcast.CacheManager;
 import com.rahim.common.service.hazelcast.HzPersistenceService;
@@ -24,8 +25,6 @@ public class HazelcastCacheManager implements CacheManager {
     private final HzPersistenceService setResilienceService;
     private final HzPersistenceService mapResilienceService;
 
-    private volatile boolean healthy = true;
-
     @Autowired
     public HazelcastCacheManager(@Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance,
                                  @Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
@@ -41,10 +40,12 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     @Override
+    @HealthCheck(type = "hazelcast")
     public <T> ISet<T> getSet(String setName) {
         return hazelcastInstance.getSet(setName);
     }
 
+    @HealthCheck(type = "hazelcast")
     public void addToSet(String setName, Object value) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.CREATE);
         setResilienceService.persistToDB(persistenceModel);
@@ -53,6 +54,8 @@ public class HazelcastCacheManager implements CacheManager {
         set.add(value);
     }
 
+    @Override
+    @HealthCheck(type = "hazelcast")
     public void removeFromSet(String setName, Object value) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.DELETE);
         setResilienceService.removeFromDB(persistenceModel);
@@ -61,6 +64,8 @@ public class HazelcastCacheManager implements CacheManager {
         set.remove(value);
     }
 
+    @Override
+    @HealthCheck(type = "hazelcast")
     public void clearSet(String setName) {
         LOG.debug("Clearing {} HazelcastConstant set...", setName);
         ISet<Object> set = getSet(setName);
@@ -68,11 +73,13 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     @Override
+    @HealthCheck(type = "hazelcast")
     public <K, V> IMap<K, V> getMap(String mapName) {
         return hazelcastInstance.getMap(mapName);
     }
 
     @Override
+    @HealthCheck(type = "hazelcast")
     public void addToMap(String mapName, String key, Object value) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, value, HzPersistenceModel.ObjectOperation.CREATE);
         mapResilienceService.persistToDB(persistenceModel);
@@ -82,6 +89,7 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     @Override
+    @HealthCheck(type = "hazelcast")
     public void removeFromMap(String mapName, String key) {
         IMap<Object, Object> map = getMap(mapName);
         map.remove(key);
@@ -89,20 +97,11 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     @Override
+    @HealthCheck(type = "hazelcast")
     public void clearMap(String mapName) {
         IMap<Object, Object> map = getMap(mapName);
         map.clear();
         LOG.debug("Cleared map: {}", mapName);
-    }
-
-    @Override
-    public boolean isHealthy() {
-        return healthy;
-    }
-
-    @Override
-    public void setHealthy(boolean healthy) {
-        this.healthy = healthy;
     }
 
 }
