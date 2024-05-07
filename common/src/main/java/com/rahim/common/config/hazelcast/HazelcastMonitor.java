@@ -20,21 +20,21 @@ public class HazelcastMonitor {
     private static final long HEARTBEAT_INTERVAL = 1000;
     private volatile boolean previousClusterHealth = true;
 
-//    @Scheduled(fixedRate = HEARTBEAT_INTERVAL)
-//    public void sendHeartbeat() {
-//        boolean isClusterHealthy = checkClusterHealth();
-//        if (isClusterHealthy != previousClusterHealth) {
-//            LOG.debug("Change in Hazelcast cluster status...");
-//
-//            if (!isClusterHealthy) {
-//                handleUnhealthyCluster();
-//            } else {
-//                handleHealthyCluster();
-//            }
-//
-//            previousClusterHealth = isClusterHealthy;
-//        }
-//    }
+    @Scheduled(fixedRate = HEARTBEAT_INTERVAL)
+    public void sendHeartbeat() {
+        boolean isClusterHealthy = checkClusterHealth();
+        if (isClusterHealthy != previousClusterHealth) {
+            LOG.debug("Change in Hazelcast cluster status...");
+
+            if (!isClusterHealthy) {
+                handleUnhealthyCluster();
+            } else {
+                handleHealthyCluster();
+            }
+
+            previousClusterHealth = isClusterHealthy;
+        }
+    }
 
     private void handleUnhealthyCluster() {
         LOG.warn("Unhealthy Hazelcast cluster detected. Defaulting to Database...");

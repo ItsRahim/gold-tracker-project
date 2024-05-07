@@ -26,7 +26,7 @@ public class HzCheckAspect {
 
     private static final Logger LOG = LoggerFactory.getLogger(HzCheckAspect.class);
     private final IFallbackService fallbackService;
-    private volatile boolean isHealthy = false;
+    private volatile boolean isHealthy = true;
 
     @Around("@annotation(com.rahim.common.config.HealthCheck)")
     public Object checkHealthAndExecute(ProceedingJoinPoint joinPoint) {
