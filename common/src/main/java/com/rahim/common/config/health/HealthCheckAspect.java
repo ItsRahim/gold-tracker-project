@@ -90,79 +90,79 @@ public class HealthCheckAspect {
 
     private Object handleSetOperations(String methodName, Object[] args, Class<?> returnType) {
         if (args.length < 1 || !(args[0] instanceof String setName)) {
-            LOG.error("Invalid parameters for {} fallback method", methodName);
+            LOG.error("Invalid parameters for {} set fallback methods", methodName);
             return null;
         }
-        switch (methodName) {
-            case "getSet":
-                return executeFallback(() -> hazelcastFailover.getSet(setName), returnType);
-            case "addToSet":
-                if (args.length < 2 || args[1] == null) {
+
+        Object value = args.length >= 2 ? args[1] : null;
+
+        return switch (methodName) {
+            case "getSet" -> executeFallback(() -> hazelcastFailover.getSet(setName), returnType);
+            case "addToSet" -> executeFallback(() -> {
+                if (value == null) {
                     LOG.error("Value cannot be null for addToSet fallback method");
                     return null;
                 }
-                return executeFallback(() -> {
-                    Object value = args[1];
-                    hazelcastFailover.addToSet(setName, value);
-                    return getDefaultValueForReturnType(returnType);
-                }, returnType);
-            case "removeFromSet":
-                if (args.length < 2) {
+                hazelcastFailover.addToSet(setName, value);
+                return getDefaultValueForReturnType(returnType);
+            }, returnType);
+            case "removeFromSet" -> executeFallback(() -> {
+                if (value == null) {
                     LOG.error("Invalid parameters for removeFromSet fallback method");
                     return null;
                 }
-                Object value = args[1];
-                return executeFallback(() -> {
-                    hazelcastFailover.removeFromSet(setName, value);
-                    return getDefaultValueForReturnType(returnType);
-                }, returnType);
-            case "clearSet":
-                return executeFallback(() -> {
-                    hazelcastFailover.clearSet(setName);
-                    return getDefaultValueForReturnType(returnType);
-                }, returnType);
-            default:
-                return null;
-        }
+                hazelcastFailover.removeFromSet(setName, value);
+                return getDefaultValueForReturnType(returnType);
+            }, returnType);
+            case "clearSet" -> executeFallback(() -> {
+                hazelcastFailover.clearSet(setName);
+                return getDefaultValueForReturnType(returnType);
+            }, returnType);
+            default -> null;
+        };
     }
 
     private Object handleMapOperations(String methodName, Object[] args, Class<?> returnType) {
         if (args.length < 1 || !(args[0] instanceof String mapName)) {
-            LOG.error("Invalid parameters for {} fallback method", methodName);
+            LOG.error("Invalid parameters for {} map fallback methods", methodName);
             return null;
         }
-        switch (methodName) {
-            case "getMap":
-                return executeFallback(() -> hazelcastFailover.getMap(mapName), returnType);
-            case "addToMap":
-                if (args.length < 3 || args[1] == null) {
+
+        String key;
+        Object value;
+
+        if (args.length >= 3) {
+            key = (String) args[1];
+            value = args[2];
+        } else {
+            value = null;
+            key = null;
+        }
+
+        return switch (methodName) {
+            case "getMap" -> executeFallback(() -> hazelcastFailover.getMap(mapName), returnType);
+            case "addToMap" -> executeFallback(() -> {
+                if (key == null || value == null) {
                     LOG.error("Key or value cannot be null for addToMap fallback method");
                     return null;
                 }
-                String key = (String) args[1];
-                Object value = args[2];
-                return executeFallback(() -> {
-                    hazelcastFailover.addToMap(mapName, key, value);
-                    return getDefaultValueForReturnType(returnType);
-                }, returnType);
-            case "removeFromMap":
-                if (args.length < 2) {
+                hazelcastFailover.addToMap(mapName, key, value);
+                return getDefaultValueForReturnType(returnType);
+            }, returnType);
+            case "removeFromMap" -> executeFallback(() -> {
+                if (key == null) {
                     LOG.error("Invalid parameters for removeFromMap fallback method");
                     return null;
                 }
-                key = (String) args[1];
-                return executeFallback(() -> {
-                    hazelcastFailover.removeFromMap(mapName, key);
-                    return getDefaultValueForReturnType(returnType);
-                }, returnType);
-            case "clearMap":
-                return executeFallback(() -> {
-                    hazelcastFailover.clearMap(mapName);
-                    return getDefaultValueForReturnType(returnType);
-                }, returnType);
-            default:
-                return null;
-        }
+                hazelcastFailover.removeFromMap(mapName, key);
+                return getDefaultValueForReturnType(returnType);
+            }, returnType);
+            case "clearMap" -> executeFallback(() -> {
+                hazelcastFailover.clearMap(mapName);
+                return getDefaultValueForReturnType(returnType);
+            }, returnType);
+            default -> null;
+        };
     }
 
     private Object executeFallback(FallbackOperation operation, Class<?> returnType) {
