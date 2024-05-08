@@ -21,6 +21,4 @@ public interface CacheManager {
     void removeFromMap(String mapName, String key);
     void clearMap(String mapName);
 
-    boolean isHealthy();
-    void setHealthy(boolean healthy);
 }

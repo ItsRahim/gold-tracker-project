@@ -1,5 +1,6 @@
 package com.rahim.common.service.kafka.implementation;
 
+import com.rahim.common.config.health.HealthCheck;
 import com.rahim.common.service.kafka.IKafkaService;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -24,10 +25,10 @@ public class KafkaService implements IKafkaService {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
+    @HealthCheck(type = "kafka")
     public void sendMessage(String topic, String data) {
         try {
             ProducerRecord<String, String> record = new ProducerRecord<>(topic, data);
-
             CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record);
 
             future.whenComplete((result, ex) -> {
