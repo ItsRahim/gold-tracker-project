@@ -1,6 +1,7 @@
 package com.rahim.common.config.health;
 
-import com.rahim.common.service.hazelcast.HzFallbackService;
+import com.rahim.common.service.hazelcast.HazelcastFailover;
+import com.rahim.common.service.kafka.KafkaFailover;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -24,9 +25,10 @@ import java.lang.reflect.Method;
 public class HealthCheckAspect {
 
     private static final Logger LOG = LoggerFactory.getLogger(HealthCheckAspect.class);
-    private final HzFallbackService hzFallbackService;
+    private final HazelcastFailover hazelcastFailover;
+    private final KafkaFailover kafkaFailover;
     private volatile boolean isHzHealthy = true;
-    private volatile boolean isKafkaHealthy = true;
+    private volatile boolean isKafkaHealthy = false;
 
     @Around("@annotation(com.rahim.common.config.health.HealthCheck)")
     public Object checkHealthAndExecute(ProceedingJoinPoint joinPoint) {
@@ -59,6 +61,7 @@ public class HealthCheckAspect {
             }
             return null;
         } catch (Throwable e) {
+            LOG.error("An error has occurred attempting to process HealthCheck annotation");
             throw new RuntimeException(e);
         }
     }
@@ -82,7 +85,7 @@ public class HealthCheckAspect {
         }
         switch (methodName) {
             case "getSet":
-                return executeFallback(() -> hzFallbackService.fallbackGetSet(setName), returnType);
+                return executeFallback(() -> hazelcastFailover.getSet(setName), returnType);
             case "addToSet":
                 if (args.length < 2 || args[1] == null) {
                     LOG.error("Value cannot be null for addToSet fallback method");
@@ -90,7 +93,7 @@ public class HealthCheckAspect {
                 }
                 return executeFallback(() -> {
                     Object value = args[1];
-                    hzFallbackService.fallbackAddToSet(setName, value);
+                    hazelcastFailover.addToSet(setName, value);
                     return getDefaultValueForReturnType(returnType);
                 }, returnType);
             case "removeFromSet":
@@ -100,12 +103,12 @@ public class HealthCheckAspect {
                 }
                 Object value = args[1];
                 return executeFallback(() -> {
-                    hzFallbackService.fallbackRemoveFromSet(setName, value);
+                    hazelcastFailover.removeFromSet(setName, value);
                     return getDefaultValueForReturnType(returnType);
                 }, returnType);
             case "clearSet":
                 return executeFallback(() -> {
-                    hzFallbackService.fallbackClearSet(setName);
+                    hazelcastFailover.clearSet(setName);
                     return getDefaultValueForReturnType(returnType);
                 }, returnType);
             default:
@@ -120,7 +123,7 @@ public class HealthCheckAspect {
         }
         switch (methodName) {
             case "getMap":
-                return executeFallback(() -> hzFallbackService.fallbackGetMap(mapName), returnType);
+                return executeFallback(() -> hazelcastFailover.getMap(mapName), returnType);
             case "addToMap":
                 if (args.length < 3 || args[1] == null) {
                     LOG.error("Key or value cannot be null for addToMap fallback method");
@@ -129,7 +132,7 @@ public class HealthCheckAspect {
                 String key = (String) args[1];
                 Object value = args[2];
                 return executeFallback(() -> {
-                    hzFallbackService.fallbackAddToMap(mapName, key, value);
+                    hazelcastFailover.addToMap(mapName, key, value);
                     return getDefaultValueForReturnType(returnType);
                 }, returnType);
             case "removeFromMap":
@@ -139,12 +142,12 @@ public class HealthCheckAspect {
                 }
                 key = (String) args[1];
                 return executeFallback(() -> {
-                    hzFallbackService.fallbackRemoveFromMap(mapName, key);
+                    hazelcastFailover.removeFromMap(mapName, key);
                     return getDefaultValueForReturnType(returnType);
                 }, returnType);
             case "clearMap":
                 return executeFallback(() -> {
-                    hzFallbackService.fallbackClearMap(mapName);
+                    hazelcastFailover.clearMap(mapName);
                     return getDefaultValueForReturnType(returnType);
                 }, returnType);
             default:
@@ -177,7 +180,12 @@ public class HealthCheckAspect {
     }
 
     private Object handleKafkaFallback(Object[] args, Class<?> returnType) {
-        return null;
+        String topic = (String) args[0];
+        String data = (String) args[1];
+        LOG.debug("Fallback triggered for Kafka send operation. Topic: {}", topic);
+
+        kafkaFailover.persistToDb(topic, data);
+        return getDefaultValueForReturnType(returnType);
     }
 
 }
