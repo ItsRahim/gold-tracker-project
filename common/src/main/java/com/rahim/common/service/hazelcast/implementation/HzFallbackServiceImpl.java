@@ -2,21 +2,19 @@ package com.rahim.common.service.hazelcast.implementation;
 
 import com.hazelcast.collection.ISet;
 import com.hazelcast.map.IMap;
-import com.rahim.common.service.hazelcast.IFallbackService;
+import com.rahim.common.service.hazelcast.HzFallbackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 
 /**
  * @author Rahim Ahmed
  * @created 06/05/2024
  */
 @Service
-public class FallbackServiceImpl implements IFallbackService {
+public class HzFallbackServiceImpl implements HzFallbackService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FallbackServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HzFallbackServiceImpl.class);
 
     @Override
     public <T> ISet<T> fallbackGetSet(String setName) {

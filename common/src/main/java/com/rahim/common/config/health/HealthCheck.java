@@ -1,4 +1,4 @@
-package com.rahim.common.config;
+package com.rahim.common.config.health;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -7,7 +7,7 @@ import com.hazelcast.map.IMap;
  * @author Rahim Ahmed
  * @created 06/05/2024
  */
-public interface IFallbackService {
+public interface HzFallbackService {
     <T> ISet<T> fallbackGetSet(String setName);
     void fallbackAddToSet(String setName, Object value);
     void fallbackRemoveFromSet(String setName, Object value);

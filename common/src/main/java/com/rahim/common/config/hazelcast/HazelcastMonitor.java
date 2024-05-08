@@ -1,5 +1,6 @@
 package com.rahim.common.config.hazelcast;
 
+import com.rahim.common.config.health.HealthCheckAspect;
 import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ public class HazelcastMonitor {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastMonitor.class);
     private final CacheManager hazelcastCacheManager;
-    private final HzCheckAspect hzCheckAspect;
+    private final HealthCheckAspect healthCheckAspect;
 
     private static final long HEARTBEAT_INTERVAL = 1000;
     private volatile boolean previousClusterHealth = true;
@@ -38,12 +39,12 @@ public class HazelcastMonitor {
 
     private void handleUnhealthyCluster() {
         LOG.warn("Unhealthy Hazelcast cluster detected. Defaulting to Database...");
-        hzCheckAspect.setHealthy(false);
+        healthCheckAspect.setHzHealthy(false);
     }
 
     private void handleHealthyCluster() {
         LOG.debug("Healthy Hazelcast cluster detected");
-        hzCheckAspect.setHealthy(true);
+        healthCheckAspect.setHzHealthy(true);
         // TODO: add method to update hazelcast storages from DB
     }
 

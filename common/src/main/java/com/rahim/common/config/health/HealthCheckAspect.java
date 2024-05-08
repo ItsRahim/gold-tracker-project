@@ -1,7 +1,6 @@
-package com.rahim.common.config.hazelcast;
+package com.rahim.common.config.health;
 
-import com.rahim.common.config.HealthCheck;
-import com.rahim.common.service.hazelcast.IFallbackService;
+import com.rahim.common.service.hazelcast.HzFallbackService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,29 +21,40 @@ import java.lang.reflect.Method;
 @Setter
 @Component
 @RequiredArgsConstructor
-public class HzCheckAspect {
+public class HealthCheckAspect {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HzCheckAspect.class);
-    private final IFallbackService fallbackService;
-    private volatile boolean isHealthy = true;
+    private static final Logger LOG = LoggerFactory.getLogger(HealthCheckAspect.class);
+    private final HzFallbackService hzFallbackService;
+    private volatile boolean isHzHealthy = true;
+    private volatile boolean isKafkaHealthy = true;
 
-    @Around("@annotation(com.rahim.common.config.HealthCheck)")
+    @Around("@annotation(com.rahim.common.config.health.HealthCheck)")
     public Object checkHealthAndExecute(ProceedingJoinPoint joinPoint) {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
+            Class<?> returnType = signature.getReturnType();
 
             if (method.isAnnotationPresent(HealthCheck.class)) {
                 HealthCheck healthCheckAnnotation = method.getAnnotation(HealthCheck.class);
 
                 if ("hazelcast".equals(healthCheckAnnotation.type())) {
-                    if (isHealthy) {
+                    if (isHzHealthy) {
                         return joinPoint.proceed();
                     } else {
                         Object[] args = joinPoint.getArgs();
                         String methodName = method.getName();
-                        return handleHazelcastFallbackCall(methodName, args, signature.getReturnType());
+                        return handleHazelcastFallbackCall(methodName, args, returnType);
                     }
+                } else if ("kafka".equals(healthCheckAnnotation.type())) {
+                    if (isKafkaHealthy) {
+                        return joinPoint.proceed();
+                    } else {
+                        Object[] args = joinPoint.getArgs();
+                        return handleKafkaFallback(args, returnType);
+                    }
+                } else {
+                    LOG.error("Unknown type provided in annotation. Unable to process");
                 }
             }
             return null;
@@ -57,42 +67,8 @@ public class HzCheckAspect {
         switch (methodName) {
             case "getSet", "addToSet", "removeFromSet", "clearSet":
                 return handleSetOperations(methodName, args, returnType);
-            case "getMap":
-                if (args.length == 1 && args[0] instanceof String mapName) {
-                    return fallbackService.fallbackGetMap(mapName);
-                } else {
-                    LOG.error("Invalid parameters for getMap fallback method");
-                    return null;
-                }
-            case "addToMap":
-                if (args.length == 3 && args[0] instanceof String mapName) {
-                    if (args[1] != null) {
-                        String key = (String) args[1];
-                        Object value = args[2];
-                        fallbackService.fallbackAddToMap(mapName, key, value);
-                        return getDefaultValueForReturnType(returnType);
-                    } else {
-                        LOG.error("Value cannot be null for addToMap fallback method");
-                        return null;
-                    }
-                }
-            case "removeFromMap":
-                if (args.length == 2 && args[0] instanceof String mapName) {
-                    String key = (String) args[1];
-                    fallbackService.fallbackRemoveFromMap(mapName, key);
-                    return getDefaultValueForReturnType(returnType);
-                } else {
-                    LOG.error("Invalid parameters for removeFromMap fallback method");
-                    return null;
-                }
-            case "clearMap":
-                if (args.length == 1 && args[0] instanceof String mapName) {
-                    fallbackService.fallbackClearMap(mapName);
-                    return getDefaultValueForReturnType(returnType);
-                } else {
-                    LOG.error("Invalid parameters for clearMap fallback method");
-                    return null;
-                }
+            case "getMap", "addToMap", "removeFromMap", "clearMap":
+                return handleMapOperations(methodName, args, returnType);
             default:
                 LOG.error("Unsupported method: {}", methodName);
                 return null;
@@ -106,7 +82,7 @@ public class HzCheckAspect {
         }
         switch (methodName) {
             case "getSet":
-                return executeFallback(() -> fallbackService.fallbackGetSet(setName), returnType);
+                return executeFallback(() -> hzFallbackService.fallbackGetSet(setName), returnType);
             case "addToSet":
                 if (args.length < 2 || args[1] == null) {
                     LOG.error("Value cannot be null for addToSet fallback method");
@@ -114,7 +90,7 @@ public class HzCheckAspect {
                 }
                 return executeFallback(() -> {
                     Object value = args[1];
-                    fallbackService.fallbackAddToSet(setName, value);
+                    hzFallbackService.fallbackAddToSet(setName, value);
                     return getDefaultValueForReturnType(returnType);
                 }, returnType);
             case "removeFromSet":
@@ -124,12 +100,51 @@ public class HzCheckAspect {
                 }
                 Object value = args[1];
                 return executeFallback(() -> {
-                    fallbackService.fallbackRemoveFromSet(setName, value);
+                    hzFallbackService.fallbackRemoveFromSet(setName, value);
                     return getDefaultValueForReturnType(returnType);
                 }, returnType);
             case "clearSet":
                 return executeFallback(() -> {
-                    fallbackService.fallbackClearSet(setName);
+                    hzFallbackService.fallbackClearSet(setName);
+                    return getDefaultValueForReturnType(returnType);
+                }, returnType);
+            default:
+                return null;
+        }
+    }
+
+    private Object handleMapOperations(String methodName, Object[] args, Class<?> returnType) {
+        if (args.length < 1 || !(args[0] instanceof String mapName)) {
+            LOG.error("Invalid parameters for {} fallback method", methodName);
+            return null;
+        }
+        switch (methodName) {
+            case "getMap":
+                return executeFallback(() -> hzFallbackService.fallbackGetMap(mapName), returnType);
+            case "addToMap":
+                if (args.length < 3 || args[1] == null) {
+                    LOG.error("Key or value cannot be null for addToMap fallback method");
+                    return null;
+                }
+                String key = (String) args[1];
+                Object value = args[2];
+                return executeFallback(() -> {
+                    hzFallbackService.fallbackAddToMap(mapName, key, value);
+                    return getDefaultValueForReturnType(returnType);
+                }, returnType);
+            case "removeFromMap":
+                if (args.length < 2) {
+                    LOG.error("Invalid parameters for removeFromMap fallback method");
+                    return null;
+                }
+                key = (String) args[1];
+                return executeFallback(() -> {
+                    hzFallbackService.fallbackRemoveFromMap(mapName, key);
+                    return getDefaultValueForReturnType(returnType);
+                }, returnType);
+            case "clearMap":
+                return executeFallback(() -> {
+                    hzFallbackService.fallbackClearMap(mapName);
                     return getDefaultValueForReturnType(returnType);
                 }, returnType);
             default:
@@ -158,7 +173,11 @@ public class HzCheckAspect {
     }
 
     private interface FallbackOperation {
-        Object execute() throws Exception;
+        Object execute();
+    }
+
+    private Object handleKafkaFallback(Object[] args, Class<?> returnType) {
+        return null;
     }
 
 }
