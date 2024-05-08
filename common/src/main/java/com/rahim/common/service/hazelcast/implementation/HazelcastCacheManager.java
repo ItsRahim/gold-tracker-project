@@ -3,7 +3,7 @@ package com.rahim.common.service.hazelcast.implementation;
 import com.hazelcast.collection.ISet;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
-import com.rahim.common.config.HealthCheck;
+import com.rahim.common.config.aspect.HealthCheck;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.service.hazelcast.CacheManager;
 import com.rahim.common.service.hazelcast.HzPersistenceService;

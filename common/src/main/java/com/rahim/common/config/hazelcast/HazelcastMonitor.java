@@ -1,5 +1,6 @@
 package com.rahim.common.config.hazelcast;
 
+import com.rahim.common.config.aspect.HzCheckAspect;
 import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

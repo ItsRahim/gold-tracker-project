@@ -1,4 +1,4 @@
-package com.rahim.common.config;
+package com.rahim.common.config.aspect;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

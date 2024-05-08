@@ -1,12 +1,9 @@
-package com.rahim.common.config.hazelcast;
+package com.rahim.common.config.aspect;
 
-import com.rahim.common.config.HealthCheck;
 import com.rahim.common.service.hazelcast.IFallbackService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,39 +15,32 @@ import java.lang.reflect.Method;
  * @author Rahim Ahmed
  * @created 07/05/2024
  */
-@Aspect
 @Setter
 @Component
 @RequiredArgsConstructor
-public class HzCheckAspect {
+public class HzCheckAspect extends AbstractHealthCheck{
 
     private static final Logger LOG = LoggerFactory.getLogger(HzCheckAspect.class);
     private final IFallbackService fallbackService;
     private volatile boolean isHealthy = true;
 
-    @Around("@annotation(com.rahim.common.config.HealthCheck)")
-    public Object checkHealthAndExecute(ProceedingJoinPoint joinPoint) {
+    @Override
+    protected Object handleHazelcast(Method method, ProceedingJoinPoint joinPoint) {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-            Method method = signature.getMethod();
-
-            if (method.isAnnotationPresent(HealthCheck.class)) {
-                HealthCheck healthCheckAnnotation = method.getAnnotation(HealthCheck.class);
-
-                if ("hazelcast".equals(healthCheckAnnotation.type())) {
-                    if (isHealthy) {
-                        return joinPoint.proceed();
-                    } else {
-                        Object[] args = joinPoint.getArgs();
-                        String methodName = method.getName();
-                        return handleHazelcastFallbackCall(methodName, args, signature.getReturnType());
-                    }
-                }
+            Class<?> returnType = signature.getReturnType();
+            if (isHealthy) {
+                return joinPoint.proceed();
+            } else {
+                Object[] args = joinPoint.getArgs();
+                String methodName = method.getName();
+                return handleHazelcastFallbackCall(methodName, args, returnType);
             }
-            return null;
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            LOG.error("Some error");
         }
+
+        return null;
     }
 
     private Object handleHazelcastFallbackCall(String methodName, Object[] args, Class<?> returnType) {
