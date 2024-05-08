@@ -28,54 +28,64 @@ public class HealthCheckAspect {
     private final HazelcastFailover hazelcastFailover;
     private final KafkaFailover kafkaFailover;
     private volatile boolean isHzHealthy = true;
-    private volatile boolean isKafkaHealthy = false;
+    private volatile boolean isKafkaHealthy = true;
+
+    private static final String HAZELCAST_TYPE = "hazelcast";
+    private static final String KAFKA_TYPE = "kafka";
 
     @Around("@annotation(com.rahim.common.config.health.HealthCheck)")
     public Object checkHealthAndExecute(ProceedingJoinPoint joinPoint) {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
-            Class<?> returnType = signature.getReturnType();
+            HealthCheck healthCheckAnnotation = method.getAnnotation(HealthCheck.class);
 
-            if (method.isAnnotationPresent(HealthCheck.class)) {
-                HealthCheck healthCheckAnnotation = method.getAnnotation(HealthCheck.class);
-
-                if ("hazelcast".equals(healthCheckAnnotation.type())) {
-                    if (isHzHealthy) {
-                        return joinPoint.proceed();
-                    } else {
-                        Object[] args = joinPoint.getArgs();
-                        String methodName = method.getName();
-                        return handleHazelcastFallbackCall(methodName, args, returnType);
-                    }
-                } else if ("kafka".equals(healthCheckAnnotation.type())) {
-                    if (isKafkaHealthy) {
-                        return joinPoint.proceed();
-                    } else {
-                        Object[] args = joinPoint.getArgs();
-                        return handleKafkaFallback(args, returnType);
-                    }
-                } else {
-                    LOG.error("Unknown type provided in annotation. Unable to process");
-                }
+            if (healthCheckAnnotation == null) {
+                return null;
             }
-            return null;
+
+            String type = healthCheckAnnotation.type();
+            Class<?> returnType = signature.getReturnType();
+            Object[] args = joinPoint.getArgs();
+
+            if (HAZELCAST_TYPE.equals(type) && !isHzHealthy) {
+                return handleHazelcastFallback(args, method, returnType);
+            } else if (KAFKA_TYPE.equals(type) && !isKafkaHealthy) {
+                return handleKafkaFallback(args, returnType);
+            } else {
+                return joinPoint.proceed();
+            }
         } catch (Throwable e) {
-            LOG.error("An error has occurred attempting to process HealthCheck annotation");
+            LOG.error("An error has occurred attempting to process HealthCheck annotation", e);
             throw new RuntimeException(e);
         }
     }
 
-    private Object handleHazelcastFallbackCall(String methodName, Object[] args, Class<?> returnType) {
-        switch (methodName) {
-            case "getSet", "addToSet", "removeFromSet", "clearSet":
-                return handleSetOperations(methodName, args, returnType);
-            case "getMap", "addToMap", "removeFromMap", "clearMap":
-                return handleMapOperations(methodName, args, returnType);
-            default:
-                LOG.error("Unsupported method: {}", methodName);
-                return null;
+    private Object handleHazelcastFallback(Object[] args, Method method, Class<?> returnType) {
+        String methodName = method.getName();
+        String operationType = getOperationType(methodName);
+
+        if (operationType == null) {
+            LOG.error("Unsupported method: {}", methodName);
+            return null;
         }
+
+        return switch (operationType) {
+            case "set" -> handleSetOperations(methodName, args, returnType);
+            case "map" -> handleMapOperations(methodName, args, returnType);
+            default -> {
+                LOG.error("Unsupported operation type: {}", operationType);
+                yield null;
+            }
+        };
+    }
+
+    private String getOperationType(String methodName) {
+        return switch (methodName) {
+            case "getSet", "addToSet", "removeFromSet", "clearSet" -> "set";
+            case "getMap", "addToMap", "removeFromMap", "clearMap" -> "map";
+            default -> null;
+        };
     }
 
     private Object handleSetOperations(String methodName, Object[] args, Class<?> returnType) {
@@ -189,4 +199,3 @@ public class HealthCheckAspect {
     }
 
 }
-
