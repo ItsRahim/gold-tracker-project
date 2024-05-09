@@ -1,13 +1,18 @@
 package com.rahim.common.service.hazelcast;
 
+import com.hazelcast.collection.ISet;
+import com.hazelcast.config.Config;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.map.IMap;
+import com.rahim.common.model.HzPersistenceModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Rahim Ahmed
@@ -17,53 +22,87 @@ import java.util.Set;
 public class HazelcastFailover {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastFailover.class);
+    private final HzPersistenceService setResilienceService;
+    private final HzPersistenceService mapResilienceService;
 
-    private final Map<String, Set<Object>> setStorage = new HashMap<>();
-    private final Map<String, Map<String, Object>> mapStorage = new HashMap<>();
+    private static final AtomicReference<HazelcastInstance> hazelcastInstance = new AtomicReference<>();
+    private static final String CLUSTER_NAME = "fallback-cluster";
 
-    public <T> Set<T> getSet(String setName) {
-        LOG.info("RUNNING FALLBACK: Retrieving set '{}' from storage", setName);
-        return (Set<T>) setStorage.getOrDefault(setName, new HashSet<>());
+    @Autowired
+    public HazelcastFailover(@Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
+                             @Qualifier("hzMapResilienceService") HzPersistenceService mapResilienceService) {
+        this.setResilienceService = setResilienceService;
+        this.mapResilienceService = mapResilienceService;
+    }
+
+    private static HazelcastInstance hazelcastInstance() {
+        if (hazelcastInstance.get() == null) {
+            synchronized (HazelcastFailover.class) {
+                if (hazelcastInstance.get() == null) {
+                    Config localConfig = new Config();
+                    localConfig.setClusterName(CLUSTER_NAME);
+                    hazelcastInstance.set(Hazelcast.newHazelcastInstance(localConfig));
+                }
+            }
+        }
+        return hazelcastInstance.get();
+    }
+
+    public void shutdownInstance() {
+        HazelcastInstance instance = hazelcastInstance.get();
+        if (instance != null) {
+            instance.shutdown();
+            hazelcastInstance.set(null);
+        }
+    }
+
+    public <T> ISet<T> getSet(String setName) {
+        return hazelcastInstance().getSet(setName);
     }
 
     public void addToSet(String setName, Object value) {
-        LOG.info("RUNNING FALLBACK: Adding value '{}' to set '{}'", value, setName);
-        setStorage.computeIfAbsent(setName, k -> new HashSet<>()).add(value);
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.CREATE);
+        setResilienceService.persistToDB(persistenceModel);
+        LOG.debug("Adding {} to {} HazelcastConstant set...", value, setName);
+        ISet<Object> set = getSet(setName);
+        set.add(value);
     }
 
     public void removeFromSet(String setName, Object value) {
-        LOG.info("RUNNING FALLBACK: Removing value '{}' from set '{}'", value, setName);
-        Set<Object> set = setStorage.get(setName);
-        if (set != null) {
-            set.remove(value);
-        }
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.DELETE);
+        setResilienceService.removeFromDB(persistenceModel);
+        LOG.debug("Removing {} from {} HazelcastConstant set...", value, setName);
+        ISet<Object> set = getSet(setName);
+        set.remove(value);
     }
 
     public void clearSet(String setName) {
-        LOG.info("RUNNING FALLBACK: Clearing set '{}'", setName);
-        setStorage.remove(setName);
+        LOG.debug("Clearing {} HazelcastConstant set...", setName);
+        ISet<Object> set = getSet(setName);
+        set.clear();
     }
 
-    public <K, V> Map<K, V> getMap(String mapName) {
-        LOG.info("RUNNING FALLBACK: Retrieving map '{}' from storage", mapName);
-        return (Map<K, V>) mapStorage.getOrDefault(mapName, new HashMap<>());
+    public <K, V> IMap<K, V> getMap(String mapName) {
+        return hazelcastInstance().getMap(mapName);
     }
 
     public void addToMap(String mapName, String key, Object value) {
-        LOG.info("RUNNING FALLBACK: Adding value '{}' with key '{}' to map '{}'", value, key, mapName);
-        mapStorage.computeIfAbsent(mapName, k -> new HashMap<>()).put(key, value);
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, value, HzPersistenceModel.ObjectOperation.CREATE);
+        mapResilienceService.persistToDB(persistenceModel);
+        IMap<Object, Object> map = getMap(mapName);
+        map.put(key, value);
+        LOG.debug("Added key: {} with value: {} to map: {}", key, value, mapName);
     }
-
+    
     public void removeFromMap(String mapName, String key) {
-        LOG.info("RUNNING FALLBACK: Removing value with key '{}' from map '{}'", key, mapName);
-        Map<String, Object> map = mapStorage.get(mapName);
-        if (map != null) {
-            map.remove(key);
-        }
+        IMap<Object, Object> map = getMap(mapName);
+        map.remove(key);
+        LOG.debug("Removed key: {} from map: {}", key, mapName);
     }
 
     public void clearMap(String mapName) {
-        LOG.info("RUNNING FALLBACK: Clearing map '{}'", mapName);
-        mapStorage.remove(mapName);
+        IMap<Object, Object> map = getMap(mapName);
+        map.clear();
+        LOG.debug("Cleared map: {}", mapName);
     }
 }

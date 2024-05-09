@@ -39,7 +39,7 @@ Issues/Enhancements:
 - Remove hardcoded reference for cron jobs - DONE
 - Add UUID to all kafka messages being send, check in hazelcast map, create new method to generate message+id and another to remove it if it hasnt been processed - DONE
 Linked hashmap maintains the order in which keys are inserted
--Add failover mechanism upon failed retries to read from db if hazelcast is down. Same for kafka
+-Add failover mechanism upon failed retries to read from db if hazelcast is down. Same for kafka - DONE for kafka, WIP for hazelcast
 -Fix issue with wrong UTC being inserted, its one hour behind
 Performance Testing:
 - VisualVM
