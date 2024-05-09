@@ -27,7 +27,7 @@ public class HealthCheckAspect {
     private static final Logger LOG = LoggerFactory.getLogger(HealthCheckAspect.class);
     private final HazelcastFailover hazelcastFailover;
     private final KafkaFailover kafkaFailover;
-    private volatile boolean isHzHealthy = true;
+    private volatile boolean isHzHealthy = false;
     private volatile boolean isKafkaHealthy = true;
 
     private static final String HAZELCAST_TYPE = "hazelcast";

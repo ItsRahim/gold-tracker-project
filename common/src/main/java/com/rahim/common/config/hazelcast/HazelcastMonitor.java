@@ -20,10 +20,11 @@ public class HazelcastMonitor {
     private final HealthCheckAspect healthCheckAspect;
     private final HazelcastFailover hazelcastFailover;
 
-    private static final long HEARTBEAT_INTERVAL = 1000;
-    private volatile boolean previousClusterHealth = true;
+    private static final long INITIAL_DELAY = 60000;
+    private static final long HEARTBEAT_INTERVAL = 10000;
+    private volatile boolean previousClusterHealth = false;
 
-    @Scheduled(fixedRate = HEARTBEAT_INTERVAL)
+    @Scheduled(initialDelay = INITIAL_DELAY, fixedRate = HEARTBEAT_INTERVAL)
     public void sendHeartbeat() {
         boolean isClusterHealthy = checkClusterHealth();
         if (isClusterHealthy != previousClusterHealth) {
@@ -40,14 +41,14 @@ public class HazelcastMonitor {
     }
 
     private void handleUnhealthyCluster() {
-        LOG.warn("Unhealthy Hazelcast cluster detected. Defaulting to Database...");
+        LOG.info("Unhealthy Hazelcast cluster detected. Defaulting to Hazelcast failover cluster...");
         healthCheckAspect.setHzHealthy(false);
     }
 
     private void handleHealthyCluster() {
-        LOG.debug("Healthy Hazelcast cluster detected");
-        healthCheckAspect.setHzHealthy(true);
+        LOG.info("Healthy Hazelcast cluster detected. Shutting down failover Hazelcast cluster");
         hazelcastFailover.shutdownInstance();
+        healthCheckAspect.setHzHealthy(true);
         // TODO: add method to update hazelcast storages from DB
     }
 

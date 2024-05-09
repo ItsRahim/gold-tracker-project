@@ -54,16 +54,18 @@ public class HazelcastFailover {
             instance.shutdown();
             hazelcastInstance.set(null);
         }
+        LOG.info("Shutdown failover cluster...");
     }
 
     public <T> ISet<T> getSet(String setName) {
+        LOG.debug("Running failover: Retrieving set '{}' from storage...", setName);
         return hazelcastInstance().getSet(setName);
     }
 
     public void addToSet(String setName, Object value) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.CREATE);
         setResilienceService.persistToDB(persistenceModel);
-        LOG.debug("Adding {} to {} HazelcastConstant set...", value, setName);
+        LOG.debug("Running failover: Adding '{}' to '{}' Hazelcast set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.add(value);
     }
@@ -71,38 +73,39 @@ public class HazelcastFailover {
     public void removeFromSet(String setName, Object value) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.DELETE);
         setResilienceService.removeFromDB(persistenceModel);
-        LOG.debug("Removing {} from {} HazelcastConstant set...", value, setName);
+        LOG.debug("Running failover: Removing '{}' from '{}' Hazelcast set...", value, setName);
         ISet<Object> set = getSet(setName);
         set.remove(value);
     }
 
     public void clearSet(String setName) {
-        LOG.debug("Clearing {} HazelcastConstant set...", setName);
+        LOG.debug("Running failover: Clearing '{}' Hazelcast set...", setName);
         ISet<Object> set = getSet(setName);
         set.clear();
     }
 
     public <K, V> IMap<K, V> getMap(String mapName) {
+        LOG.debug("Running failover: Retrieving map '{}' from storage...", mapName);
         return hazelcastInstance().getMap(mapName);
     }
 
     public void addToMap(String mapName, String key, Object value) {
+        LOG.debug("Running failover: Adding key: '{}' with value: '{}' to map: '{}'...", key, value, mapName);
         HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, value, HzPersistenceModel.ObjectOperation.CREATE);
         mapResilienceService.persistToDB(persistenceModel);
         IMap<Object, Object> map = getMap(mapName);
         map.put(key, value);
-        LOG.debug("Added key: {} with value: {} to map: {}", key, value, mapName);
     }
-    
+
     public void removeFromMap(String mapName, String key) {
+        LOG.debug("Running failover: Removing key: '{}' from map: '{}'...", key, mapName);
         IMap<Object, Object> map = getMap(mapName);
         map.remove(key);
-        LOG.debug("Removed key: {} from map: {}", key, mapName);
     }
 
     public void clearMap(String mapName) {
+        LOG.debug("Running failover: Clearing map '{}'...", mapName);
         IMap<Object, Object> map = getMap(mapName);
         map.clear();
-        LOG.debug("Cleared map: {}", mapName);
     }
 }
