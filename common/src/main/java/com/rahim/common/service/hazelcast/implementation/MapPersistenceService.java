@@ -120,4 +120,28 @@ public class MapPersistenceService extends AbstractPersistenceService {
         return stringParameters;
     }
 
+    @Override
+    public void clearFromDB(HzPersistenceModel persistenceModel) {
+        try {
+            HzMapData mapData = persistenceModel.getMapData();
+            String mapName = mapData.getMapName().trim();
+            if (mapName.isBlank() || mapName.isEmpty()) {
+                LOG.error("Invalid map name: {}", (Object) null);
+                throw new IllegalArgumentException("Map name cannot be null or blank");
+            }
+
+            String query = "DELETE FROM "
+                    + HzMapDataAccess.TABLE_NAME
+                    + " WHERE "
+                    + HzMapDataAccess.COL_MAP_NAME
+                    + " = ?";
+            int rowsAffected = jdbcTemplate.update(query, mapName);
+
+            LOG.debug("Cleared data associated with map name '{}' from the database. Rows affected: {}", mapName, rowsAffected);
+        } catch (Exception e) {
+            LOG.error("Error clearing data from database: {}", e.getMessage());
+            throw new RuntimeException("Error clearing data from database", e);
+        }
+    }
+
 }

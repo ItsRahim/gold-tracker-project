@@ -118,5 +118,28 @@ public class SetPersistenceService extends AbstractPersistenceService {
         return stringParameters;
     }
 
+    @Override
+    public void clearFromDB(HzPersistenceModel persistenceModel) {
+        try {
+            HzSetData setData = persistenceModel.getSetData();
+            String setName = setData.getSetName().trim();
+            if (setName.isBlank() || setName.isEmpty()) {
+                LOG.error("Invalid set name");
+                throw new IllegalArgumentException("Set name cannot be null or blank");
+            }
+
+            String query = "DELETE FROM "
+                    + HzSetDataAccess.TABLE_NAME
+                    + " WHERE "
+                    + HzSetDataAccess.COL_SET_NAME
+                    + " = ?";
+            int rowsAffected = jdbcTemplate.update(query, setName);
+
+            LOG.debug("Cleared data associated with set name '{}' from the database. Rows affected: {}", setData.getSetName(), rowsAffected);
+        } catch (Exception e) {
+            LOG.error("Error clearing data from database: {}", e.getMessage());
+            throw new RuntimeException("Error clearing data from database", e);
+        }
+    }
 
 }
