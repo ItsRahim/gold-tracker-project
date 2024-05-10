@@ -76,6 +76,7 @@ public class KafkaMonitor {
     private void handleHealthyKafka() {
         LOG.info("Healthy Kafka detected. Reattempting to send failed messages");
         healthCheckAspect.setKafkaHealthy(true);
+        //TODO: implement retry logic
     }
 
     private void handleUnhealthyKafka() {

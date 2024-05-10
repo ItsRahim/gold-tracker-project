@@ -56,7 +56,7 @@ public class HazelcastFailover {
     }
 
     private static void loadFromDb() {
-        //TODO
+        //TODO: load values into hazelcast from db
     }
 
     public void shutdownInstance() {
