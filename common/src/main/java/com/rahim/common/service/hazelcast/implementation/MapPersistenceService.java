@@ -26,13 +26,56 @@ public class MapPersistenceService extends AbstractPersistenceService {
 
     @Override
     public void removeFromDB(HzPersistenceModel persistenceModel) {
-        //Not applicable to maps
+        LOG.debug("Removing Hazelcast set from database: {}", persistenceModel);
+
+        try {
+            if (!persistenceModel.getObjectOperation().equals(HzPersistenceModel.ObjectOperation.DELETE) ||
+                    !persistenceModel.getObjectType().equals(HzPersistenceModel.ObjectType.MAP)) {
+                LOG.error("Skipping database deletion for non-delete operation/object type: {}", persistenceModel);
+                return;
+            }
+
+            HzMapData mapData = persistenceModel.getMapData();
+            String mapName = mapData.getMapName();
+            String mapKey = mapData.getMapKey();
+
+            if (mapName == null || mapKey == null || !mapKeyExists(mapName, mapKey)) {
+                LOG.error("Skipping database deletion due to missing map name or map key: {}", persistenceModel);
+                return;
+            }
+
+            String query = "DELETE FROM "
+                    + HzMapDataAccess.TABLE_NAME
+                    + " WHERE "
+                    + HzMapDataAccess.COL_MAP_NAME
+                    + " = ? AND "
+                    + HzMapDataAccess.COL_MAP_KEY + " = ?";
+            Object[] params = {mapName, mapKey};
+
+            int rowsAffected = jdbcTemplate.update(query, params);
+            if (rowsAffected == 0) {
+                LOG.warn("No rows found for deletion with map name: {} and key value: {}", mapName, mapKey);
+            } else if (rowsAffected != 1) {
+                throw new IllegalStateException("Unexpected number of rows removed: " + rowsAffected);
+            }
+
+            LOG.debug("Successfully removed {} rows from the database for persistence model: {}", rowsAffected, persistenceModel);
+        } catch (Exception e) {
+            LOG.error("Error deleting data from database: {}", e.getMessage());
+            throw new RuntimeException("Error deleting data from database", e);
+        }
     }
 
     @Override
     protected String generateQuery(HzPersistenceModel persistenceModel) {
         HzMapData mapData = persistenceModel.getMapData();
         validateMapData(mapData);
+        String mapName = mapData.getMapName();
+        String mapKey = mapData.getMapKey();
+        if (mapKeyExists(mapName, mapKey)) {
+            LOG.error("Map with name {} and key {} already exists", mapName, mapKey);
+            throw new IllegalArgumentException("Set with name " + mapName + " and value " + mapKey + " already exists");
+        }
 
         return "INSERT INTO " + HzMapDataAccess.TABLE_NAME +
                 " (" +
@@ -42,6 +85,19 @@ public class MapPersistenceService extends AbstractPersistenceService {
                 ", " +
                 HzMapDataAccess.COL_MAP_VALUE +
                 ") VALUES (?, ?, ?)";
+    }
+
+    private boolean mapKeyExists(String mapName, String mapKey) {
+        String query = "SELECT COUNT(*) FROM "
+                + HzMapDataAccess.TABLE_NAME
+                + " WHERE "
+                + HzMapDataAccess.COL_MAP_NAME
+                + " = ? AND "
+                + HzMapDataAccess.COL_MAP_KEY
+                + " = ?";
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class, mapName, mapKey);
+
+        return count != null && count > 0;
     }
 
     private void validateMapData(HzMapData mapData) {

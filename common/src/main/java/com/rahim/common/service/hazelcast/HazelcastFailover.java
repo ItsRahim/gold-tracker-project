@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -26,6 +27,7 @@ public class HazelcastFailover {
     private final HzPersistenceService mapResilienceService;
 
     private static final AtomicReference<HazelcastInstance> hazelcastInstance = new AtomicReference<>();
+    private static final AtomicBoolean isInitialised = new AtomicBoolean(false);
     private static final String CLUSTER_NAME = "fallback-cluster";
 
     @Autowired
@@ -45,7 +47,13 @@ public class HazelcastFailover {
                 }
             }
         }
+        if (isInitialised.compareAndSet(false, true)) {
+            loadFromDb();
+        }
         return hazelcastInstance.get();
+    }
+
+    private static void loadFromDb() {
     }
 
     public void shutdownInstance() {
@@ -90,11 +98,7 @@ public class HazelcastFailover {
     }
 
     public void addToMap(String mapName, String key, Object value) {
-        LOG.debug("Running failover: Adding key: '{}' with value: '{}' to map: '{}'...", key, value, mapName);
-        HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, value, HzPersistenceModel.ObjectOperation.CREATE);
-        mapResilienceService.persistToDB(persistenceModel);
-        IMap<Object, Object> map = getMap(mapName);
-        map.put(key, value);
+
     }
 
     public void removeFromMap(String mapName, String key) {
