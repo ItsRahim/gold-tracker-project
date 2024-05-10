@@ -47,9 +47,11 @@ public class HazelcastFailover {
                 }
             }
         }
+
         if (isInitialised.compareAndSet(false, true)) {
             loadFromDb();
         }
+
         return hazelcastInstance.get();
     }
 
