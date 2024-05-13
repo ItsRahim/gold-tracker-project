@@ -5,13 +5,21 @@ import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
+import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.dao.HzMapDataAccess;
+import com.rahim.common.dao.HzSetDataAccess;
+import com.rahim.common.model.HzMapData;
 import com.rahim.common.model.HzPersistenceModel;
+import com.rahim.common.model.HzSetData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -25,47 +33,136 @@ public class HazelcastFailover {
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastFailover.class);
     private final HzPersistenceService setResilienceService;
     private final HzPersistenceService mapResilienceService;
+    private final JdbcTemplate jdbcTemplate;
 
-    private static final AtomicReference<HazelcastInstance> hazelcastInstance = new AtomicReference<>();
+    private static final AtomicReference<HazelcastInstance> hazelcastInstanceRef = new AtomicReference<>();
     private static final AtomicBoolean isInitialised = new AtomicBoolean(false);
+    private static final String INITIALISED_FLAG_KEY = "initialisedFlag";
     private static final String CLUSTER_NAME = "fallback-cluster";
 
     @Autowired
     public HazelcastFailover(@Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
-                             @Qualifier("hzMapResilienceService") HzPersistenceService mapResilienceService) {
+                             @Qualifier("hzMapResilienceService") HzPersistenceService mapResilienceService,
+                             JdbcTemplate jdbcTemplate) {
         this.setResilienceService = setResilienceService;
         this.mapResilienceService = mapResilienceService;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    private static HazelcastInstance hazelcastInstance() {
-        if (hazelcastInstance.get() == null) {
+    /**
+     * Method to initialise a fallback local hazelcast cluster
+     * @return The initialised HazelcastInstance.
+     */
+    private HazelcastInstance hazelcastInstance() {
+        if (hazelcastInstanceRef.get() == null) {
             synchronized (HazelcastFailover.class) {
-                if (hazelcastInstance.get() == null) {
+                if (hazelcastInstanceRef.get() == null) {
                     Config localConfig = new Config();
                     localConfig.setClusterName(CLUSTER_NAME);
-                    hazelcastInstance.set(Hazelcast.newHazelcastInstance(localConfig));
+                    hazelcastInstanceRef.set(Hazelcast.newHazelcastInstance(localConfig));
+
+                    if (isInitialised.compareAndSet(false, true)) {
+                        initialiseHazelcastData(hazelcastInstanceRef.get());
+                    }
                 }
             }
         }
 
-        if (isInitialised.compareAndSet(false, true)) {
-            loadFromDb();
+        return hazelcastInstanceRef.get();
+    }
+
+    /**
+     * Initialises Hazelcast data by loading maps and sets from the database if not already loaded.
+     * @param instance The Hazelcast instance.
+     */
+    private void initialiseHazelcastData(HazelcastInstance instance) {
+        IMap<String, Boolean> initialiserMap = instance.getMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP);
+        Boolean isDataLoaded = initialiserMap.putIfAbsent(INITIALISED_FLAG_KEY, false);
+
+        if (isDataLoaded == null || !isDataLoaded) {
+            LOG.debug("Loading maps and sets into Hazelcast from the database...");
+            loadMaps();
+            loadSets();
+            initialiserMap.set(INITIALISED_FLAG_KEY, true);
+            LOG.info("Maps and sets loaded into Hazelcast.");
+        } else {
+            LOG.debug("Fallback Hazelcast has already been initialised, skipping data loading.");
         }
-
-        return hazelcastInstance.get();
     }
 
-    private static void loadFromDb() {
-        //TODO: load values into hazelcast from db
+    /**
+     * Loads map data from the database and adds it to Hazelcast.
+     */
+    private void loadMaps() {
+        String query = "SELECT "
+                + HzMapDataAccess.COL_MAP_NAME
+                + ", "
+                + HzMapDataAccess.COL_MAP_KEY
+                + ", "
+                + HzMapDataAccess.COL_MAP_VALUE
+                + " FROM " + HzMapDataAccess.TABLE_NAME;
+
+        try {
+            List<HzMapData> mapDataList = jdbcTemplate.query(
+                    query,
+                    (resultSet, i) -> new HzMapData(
+                            resultSet.getString(HzMapDataAccess.COL_MAP_NAME),
+                            resultSet.getString(HzMapDataAccess.COL_MAP_KEY),
+                            resultSet.getObject(HzMapDataAccess.COL_MAP_VALUE)
+                    )
+            );
+
+            for (HzMapData mapData : mapDataList) {
+                addToMap(mapData.getMapName(), mapData.getMapKey(), mapData.getMapValue());
+            }
+
+            LOG.debug("Successfully loaded maps into fallback hazelcast cluster from database");
+
+        } catch (DataAccessException e) {
+            LOG.error("An error occurred while accessing the database", e);
+        }
     }
 
+    /**
+     * Loads set data from the database and adds it to Hazelcast.
+     */
+    private void loadSets() {
+        String query = "SELECT "
+                + HzSetDataAccess.COL_SET_NAME
+                + ", "
+                + HzSetDataAccess.COL_SET_VALUE
+                + " FROM " + HzSetDataAccess.TABLE_NAME;
+
+        try {
+            List<HzSetData> setDataList = jdbcTemplate.query(
+                    query,
+                    (resultSet, i) -> new HzSetData(
+                            resultSet.getString(HzSetDataAccess.COL_SET_NAME),
+                            resultSet.getObject(HzSetDataAccess.COL_SET_VALUE)
+                    )
+            );
+
+            for (HzSetData setData : setDataList) {
+                addToSet(setData.getSetName(), setData.getSetValue());
+            }
+
+            LOG.debug("Successfully loaded sets into fallback hazelcast cluster from database");
+
+        } catch (DataAccessException e) {
+            LOG.error("An error occurred while accessing the database", e);
+        }
+    }
+
+    /**
+     * Shuts down fallback hazelcast cluster. Triggered upon healthy cluster being detected
+     */
     public void shutdownInstance() {
-        HazelcastInstance instance = hazelcastInstance.get();
+        HazelcastInstance instance = hazelcastInstance();
         if (instance != null) {
             instance.shutdown();
-            hazelcastInstance.set(null);
+            hazelcastInstanceRef.set(null);
+            LOG.info("Shutdown failover cluster...");
         }
-        LOG.info("Shutdown failover cluster...");
     }
 
     public <T> ISet<T> getSet(String setName) {
