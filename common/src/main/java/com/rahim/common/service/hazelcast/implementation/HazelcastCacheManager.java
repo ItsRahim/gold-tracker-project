@@ -26,7 +26,7 @@ public class HazelcastCacheManager implements CacheManager {
     private final HzPersistenceService mapResilienceService;
 
     @Autowired
-    public HazelcastCacheManager(@Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance,
+    public HazelcastCacheManager(@Qualifier("defaultHazelcastCluster") HazelcastInstance hazelcastInstance,
                                  @Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
                                  @Qualifier("hzMapResilienceService") HzPersistenceService mapResilienceService) {
         this.hazelcastInstance = hazelcastInstance;

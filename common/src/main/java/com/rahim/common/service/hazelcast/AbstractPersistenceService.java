@@ -33,7 +33,7 @@ public abstract class AbstractPersistenceService implements HzPersistenceService
             LOG.debug("Persisted {} to database", persistenceModel);
 
         } catch (Exception e) {
-            LOG.error("Error persisting data to database: {}", e.getMessage());
+            LOG.warn("Error persisting data to database: {}", e.getMessage());
         }
     }
 

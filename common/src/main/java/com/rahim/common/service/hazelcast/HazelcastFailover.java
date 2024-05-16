@@ -1,16 +1,16 @@
 package com.rahim.common.service.hazelcast;
 
 import com.hazelcast.collection.ISet;
-import com.hazelcast.config.Config;
-import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
+import com.rahim.common.config.hazelcast.HazelcastInstanceFactory;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.dao.HzMapDataAccess;
 import com.rahim.common.dao.HzSetDataAccess;
 import com.rahim.common.model.HzMapData;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.model.HzSetData;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Rahim Ahmed
@@ -31,52 +30,46 @@ import java.util.concurrent.atomic.AtomicReference;
 public class HazelcastFailover {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastFailover.class);
+    private final HazelcastInstanceFactory hazelcastInstanceFactory;
     private final HzPersistenceService setResilienceService;
     private final HzPersistenceService mapResilienceService;
+    private final HazelcastInstance hazelcastInstance;
     private final JdbcTemplate jdbcTemplate;
 
-    private static final AtomicReference<HazelcastInstance> hazelcastInstanceRef = new AtomicReference<>();
     private static final AtomicBoolean isInitialised = new AtomicBoolean(false);
     private static final String INITIALISED_FLAG_KEY = "initialisedFlag";
-    private static final String CLUSTER_NAME = "fallback-cluster";
 
     @Autowired
-    public HazelcastFailover(@Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
+    public HazelcastFailover(HazelcastInstanceFactory hazelcastInstanceFactory,
+                             @Qualifier("fallbackHazelcastCluster") HazelcastInstance hazelcastInstance,
+                             @Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
                              @Qualifier("hzMapResilienceService") HzPersistenceService mapResilienceService,
                              JdbcTemplate jdbcTemplate) {
+        this.hazelcastInstanceFactory = hazelcastInstanceFactory;
+        this.hazelcastInstance = hazelcastInstance;
         this.setResilienceService = setResilienceService;
         this.mapResilienceService = mapResilienceService;
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    /**
-     * Method to initialise a fallback local hazelcast cluster
-     * @return The initialised HazelcastInstance.
-     */
-    private HazelcastInstance hazelcastInstance() {
-        if (hazelcastInstanceRef.get() == null) {
-            synchronized (HazelcastFailover.class) {
-                if (hazelcastInstanceRef.get() == null) {
-                    Config localConfig = new Config();
-                    localConfig.setClusterName(CLUSTER_NAME);
-                    hazelcastInstanceRef.set(Hazelcast.newHazelcastInstance(localConfig));
-
-                    if (isInitialised.compareAndSet(false, true)) {
-                        initialiseHazelcastData(hazelcastInstanceRef.get());
-                    }
-                }
-            }
+    @PostConstruct
+    public void init() {
+        if (!hazelcastInstance.getLifecycleService().isRunning()) {
+            LOG.error("Fallback Hazelcast instance is not running!");
+            hazelcastInstanceFactory.fallbackHazelcastInstance();
         }
 
-        return hazelcastInstanceRef.get();
+        if (isInitialised.compareAndSet(false, true)) {
+            initialiseHazelcastData();
+        }
     }
 
     /**
      * Initialises Hazelcast data by loading maps and sets from the database if not already loaded.
      * @param instance The Hazelcast instance.
      */
-    private void initialiseHazelcastData(HazelcastInstance instance) {
-        IMap<String, Boolean> initialiserMap = instance.getMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP);
+    private void initialiseHazelcastData() {
+        IMap<String, Boolean> initialiserMap = hazelcastInstance.getMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP);
         Boolean isDataLoaded = initialiserMap.putIfAbsent(INITIALISED_FLAG_KEY, false);
 
         if (isDataLoaded == null || !isDataLoaded) {
@@ -108,19 +101,47 @@ public class HazelcastFailover {
                     (resultSet, i) -> new HzMapData(
                             resultSet.getString(HzMapDataAccess.COL_MAP_NAME),
                             resultSet.getString(HzMapDataAccess.COL_MAP_KEY),
-                            resultSet.getObject(HzMapDataAccess.COL_MAP_VALUE)
+                            resultSet.getString(HzMapDataAccess.COL_MAP_VALUE) // Retrieve as String
                     )
             );
 
             for (HzMapData mapData : mapDataList) {
+                String valueStr = (String) mapData.getMapValue();
+                Object parsedValue = parseValue(valueStr);
+                mapData.setMapValue(parsedValue);
+
                 addToMap(mapData.getMapName(), mapData.getMapKey(), mapData.getMapValue());
             }
 
             LOG.debug("Successfully loaded maps into fallback hazelcast cluster from database");
 
         } catch (DataAccessException e) {
-            LOG.error("An error occurred while accessing the database", e);
+            LOG.error("An error occurred while accessing the database: {}", e.getMessage(), e);
         }
+    }
+
+    private Object parseValue(String valueStr) {
+        if (valueStr == null) {
+            return null;
+        }
+
+        if ("true".equalsIgnoreCase(valueStr) || "false".equalsIgnoreCase(valueStr)) {
+            return Boolean.parseBoolean(valueStr);
+        }
+
+        try {
+            return Integer.parseInt(valueStr);
+        } catch (NumberFormatException e) {
+            //Do nothing
+        }
+
+        try {
+            return Double.parseDouble(valueStr);
+        } catch (NumberFormatException e) {
+            //Do nothing
+        }
+
+        return valueStr;
     }
 
     /**
@@ -153,21 +174,9 @@ public class HazelcastFailover {
         }
     }
 
-    /**
-     * Shuts down fallback hazelcast cluster. Triggered upon healthy cluster being detected
-     */
-    public void shutdownInstance() {
-        HazelcastInstance instance = hazelcastInstance();
-        if (instance != null) {
-            instance.shutdown();
-            hazelcastInstanceRef.set(null);
-            LOG.info("Shutdown failover cluster...");
-        }
-    }
-
     public <T> ISet<T> getSet(String setName) {
         LOG.debug("Running failover: Retrieving set '{}' from storage...", setName);
-        return hazelcastInstance().getSet(setName);
+        return hazelcastInstance.getSet(setName);
     }
 
     public void addToSet(String setName, Object value) {
@@ -196,7 +205,7 @@ public class HazelcastFailover {
 
     public <K, V> IMap<K, V> getMap(String mapName) {
         LOG.debug("Running failover: Retrieving map '{}' from storage...", mapName);
-        return hazelcastInstance().getMap(mapName);
+        return hazelcastInstance.getMap(mapName);
     }
 
     public void addToMap(String mapName, String key, Object value) {

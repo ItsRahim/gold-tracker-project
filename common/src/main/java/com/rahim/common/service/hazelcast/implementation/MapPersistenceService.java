@@ -73,7 +73,7 @@ public class MapPersistenceService extends AbstractPersistenceService {
         String mapName = mapData.getMapName();
         String mapKey = mapData.getMapKey();
         if (mapKeyExists(mapName, mapKey)) {
-            LOG.error("Map with name {} and key {} already exists", mapName, mapKey);
+            LOG.warn("Map with name {} and key {} already exists", mapName, mapKey);
             throw new IllegalArgumentException("Set with name " + mapName + " and value " + mapKey + " already exists");
         }
 
