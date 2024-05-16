@@ -2,6 +2,7 @@ package com.rahim.common.service.kafka.implementation;
 
 import com.rahim.common.config.health.HealthCheck;
 import com.rahim.common.service.kafka.IKafkaService;
+import com.rahim.common.service.kafka.KafkaFailover;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ public class KafkaService implements IKafkaService {
 
     private static final Logger LOG = LoggerFactory.getLogger(KafkaService.class);
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaFailover kafkaFailover;
 
     @Override
     @HealthCheck(type = "kafka")
@@ -34,6 +36,7 @@ public class KafkaService implements IKafkaService {
             future.whenComplete((result, ex) -> {
                 if (ex != null) {
                     LOG.error("Error sending message to topic '{}': {}", topic, ex.getMessage(), ex);
+                    kafkaFailover.persistToDb(topic, data);
                 } else {
                     LOG.debug("Message sent to topic '{}' successfully. Partition: {}, Offset: {}",
                             topic, result.getRecordMetadata().partition(), result.getRecordMetadata().offset());

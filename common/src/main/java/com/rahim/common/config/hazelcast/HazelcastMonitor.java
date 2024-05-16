@@ -1,27 +1,33 @@
 package com.rahim.common.config.hazelcast;
 
-import com.rahim.common.config.health.HealthCheckAspect;
-import com.rahim.common.service.hazelcast.CacheManager;
-import lombok.RequiredArgsConstructor;
+import com.hazelcast.core.HazelcastInstance;
+import com.rahim.common.config.health.HealthStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @EnableScheduling
-@RequiredArgsConstructor
 public class HazelcastMonitor {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastMonitor.class);
-    private final CacheManager hazelcastCacheManager;
-    private final HealthCheckAspect healthCheckAspect;
+    private final HazelcastInstanceFactory hazelcastInstanceFactory;
+    private final HazelcastInstance hazelcastInstance;
 
-    private static final long HEARTBEAT_INTERVAL = 1000;
-    private volatile boolean previousClusterHealth = true;
+    private static final long INITIAL_DELAY = 60000;
+    private static final long HEARTBEAT_INTERVAL = 10000;
+    private volatile boolean previousClusterHealth = false;
 
-    @Scheduled(fixedRate = HEARTBEAT_INTERVAL)
+    public HazelcastMonitor(HazelcastInstanceFactory hazelcastInstanceFactory,
+                            @Qualifier("defaultHazelcastCluster")HazelcastInstance hazelcastInstance) {
+        this.hazelcastInstanceFactory = hazelcastInstanceFactory;
+        this.hazelcastInstance = hazelcastInstance;
+    }
+
+    @Scheduled(initialDelay = INITIAL_DELAY, fixedRate = HEARTBEAT_INTERVAL)
     public void sendHeartbeat() {
         boolean isClusterHealthy = checkClusterHealth();
         if (isClusterHealthy != previousClusterHealth) {
@@ -38,18 +44,17 @@ public class HazelcastMonitor {
     }
 
     private void handleUnhealthyCluster() {
-        LOG.warn("Unhealthy Hazelcast cluster detected. Defaulting to Database...");
-        healthCheckAspect.setHzHealthy(false);
+        LOG.info("Unhealthy Hazelcast cluster detected. Using fallback cluster");
+        HealthStatus.setHzHealthy(false);
+        hazelcastInstanceFactory.fallbackHazelcastInstance();
     }
 
     private void handleHealthyCluster() {
-        LOG.debug("Healthy Hazelcast cluster detected");
-        healthCheckAspect.setHzHealthy(true);
-        // TODO: add method to update hazelcast storages from DB
+        LOG.info("Healthy Hazelcast cluster detected");
+        HealthStatus.setHzHealthy(true);
     }
 
-
     private boolean checkClusterHealth() {
-        return !hazelcastCacheManager.getInstance().getCluster().getMembers().isEmpty();
+        return !hazelcastInstance.getCluster().getMembers().isEmpty();
     }
 }

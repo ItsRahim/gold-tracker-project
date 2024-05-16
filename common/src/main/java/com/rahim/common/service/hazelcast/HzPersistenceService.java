@@ -9,4 +9,5 @@ import com.rahim.common.model.HzPersistenceModel;
 public interface HzPersistenceService {
     void persistToDB(HzPersistenceModel persistenceModel);
     void removeFromDB(HzPersistenceModel persistenceModel);
+    void clearFromDB(HzPersistenceModel persistenceModel);
 }

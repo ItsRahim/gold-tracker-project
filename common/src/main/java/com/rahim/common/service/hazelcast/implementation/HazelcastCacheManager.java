@@ -26,7 +26,7 @@ public class HazelcastCacheManager implements CacheManager {
     private final HzPersistenceService mapResilienceService;
 
     @Autowired
-    public HazelcastCacheManager(@Qualifier("hazelcastInstance") HazelcastInstance hazelcastInstance,
+    public HazelcastCacheManager(@Qualifier("defaultHazelcastCluster") HazelcastInstance hazelcastInstance,
                                  @Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
                                  @Qualifier("hzMapResilienceService") HzPersistenceService mapResilienceService) {
         this.hazelcastInstance = hazelcastInstance;
@@ -67,6 +67,8 @@ public class HazelcastCacheManager implements CacheManager {
     @Override
     @HealthCheck(type = "hazelcast")
     public void clearSet(String setName) {
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, null, HzPersistenceModel.ObjectOperation.DELETE);
+        setResilienceService.clearFromDB(persistenceModel);
         LOG.debug("Clearing {} HazelcastConstant set...", setName);
         ISet<Object> set = getSet(setName);
         set.clear();
@@ -99,6 +101,8 @@ public class HazelcastCacheManager implements CacheManager {
     @Override
     @HealthCheck(type = "hazelcast")
     public void clearMap(String mapName) {
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, null, null, HzPersistenceModel.ObjectOperation.DELETE);
+        mapResilienceService.clearFromDB(persistenceModel);
         IMap<Object, Object> map = getMap(mapName);
         map.clear();
         LOG.debug("Cleared map: {}", mapName);

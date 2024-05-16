@@ -15,7 +15,8 @@ CREATE TABLE rgts.hz_map_data (
     hz_map_name VARCHAR(255) NOT NULL,
     hz_map_key VARCHAR(255) UNIQUE,
     hz_map_value VARCHAR(255) NOT NULL,
-    hz_map_updated_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'UTC')
+    hz_map_updated_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'UTC'),
+    CONSTRAINT unique_map_entry UNIQUE (hz_map_name, hz_map_key)
 );
 
 CREATE OR REPLACE FUNCTION update_hz_map_updated_at()

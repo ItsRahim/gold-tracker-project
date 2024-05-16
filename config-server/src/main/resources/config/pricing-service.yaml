@@ -9,7 +9,7 @@ logging:
   level:
     com:
       rahim:
-        pricingservice: TRACE
+        pricingservice: DEBUG
     org:
       springframework: ERROR
     root: WARN

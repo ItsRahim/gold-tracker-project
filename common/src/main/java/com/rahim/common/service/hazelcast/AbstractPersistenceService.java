@@ -23,7 +23,7 @@ public abstract class AbstractPersistenceService implements HzPersistenceService
         LOG.debug("Persisting to database: {}", persistenceModel);
         try {
             if (persistenceModel.getObjectOperation() != HzPersistenceModel.ObjectOperation.CREATE) {
-                LOG.error("Skipping database persistence for non-create operation: {}", persistenceModel);
+                LOG.warn("Skipping database persistence for non-create operation: {}", persistenceModel);
                 return;
             }
 
@@ -33,7 +33,7 @@ public abstract class AbstractPersistenceService implements HzPersistenceService
             LOG.debug("Persisted {} to database", persistenceModel);
 
         } catch (Exception e) {
-            LOG.error("Error persisting data to database: {}", e.getMessage());
+            LOG.warn("Error persisting data to database: {}", e.getMessage());
         }
     }
 
