@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ import java.util.Optional;
  * @created 30/12/2023
  */
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProfileRepositoryHandlerService implements IProfileRepositoryHandler {
 

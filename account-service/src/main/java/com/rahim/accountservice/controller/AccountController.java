@@ -42,21 +42,23 @@ public class AccountController {
     private final IAccountUpdateService accountUpdateService;
     private final IAccountRepositoryHandler accountRepositoryHandler;
 
-    @Operation(summary = "Create a new account")
+    @Operation(summary = "Create new accounts")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Account and Profile created successfully", content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "Error Creating Account and Profile", content = @Content(mediaType = "text/plain"))
+            @ApiResponse(responseCode = "201", description = "Accounts and Profiles created successfully", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Error Creating Accounts and Profiles", content = @Content(mediaType = "text/plain"))
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> createAccount(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<String> createAccounts(@RequestBody List<UserRequest> userRequests) {
         try {
-            accountCreationService.createAccount(userRequest);
-            LOG.info("Successfully Created Account: {}", userRequest.getProfile().getUsername());
+            for (UserRequest userRequest : userRequests) {
+                accountCreationService.createAccount(userRequest);
+                LOG.info("Successfully Created Account: {}", userRequest.getProfile().getUsername());
+            }
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Account and Profile created successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Accounts and Profiles created successfully");
         } catch (Exception e) {
-            LOG.error("Error creating Account and Profile: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error Creating Account and Profile");
+            LOG.error("Error creating Accounts and Profiles: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error Creating Accounts and Profiles");
         }
     }
 
