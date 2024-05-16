@@ -6,10 +6,17 @@ import com.rahim.accountservice.service.account.IAccountCreationService;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +33,7 @@ import static com.rahim.accountservice.constant.AccountControllerEndpoint.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL)
+@Tag(name = "Account Management", description = "Endpoints for managing user accounts")
 public class AccountController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
@@ -34,7 +42,12 @@ public class AccountController {
     private final IAccountUpdateService accountUpdateService;
     private final IAccountRepositoryHandler accountRepositoryHandler;
 
-    @PostMapping()
+    @Operation(summary = "Create a new account")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Account and Profile created successfully", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Error Creating Account and Profile", content = @Content(mediaType = "text/plain"))
+    })
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> createAccount(@RequestBody UserRequest userRequest) {
         try {
             accountCreationService.createAccount(userRequest);
@@ -47,7 +60,13 @@ public class AccountController {
         }
     }
 
-    @GetMapping(ACCOUNT_ID)
+    @Operation(summary = "Get account by account id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account found successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+            @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Error finding account", content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findAccountById(@PathVariable int accountId) {
         try {
             Optional<Account> accountOptional = accountRepositoryHandler.findById(accountId);
@@ -67,7 +86,12 @@ public class AccountController {
     }
 
 
-    @PutMapping(ACCOUNT_ID)
+    @Operation(summary = "Update an existing account")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account updated successfully", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Error updating account", content = @Content(mediaType = "text/plain"))
+    })
+    @PutMapping(value = ACCOUNT_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> updateAccount(@PathVariable int accountId, @RequestBody Map<String, String> updatedData) {
         try {
             boolean hasUpdated = accountUpdateService.updateAccount(accountId, updatedData);
@@ -78,13 +102,29 @@ public class AccountController {
         }
     }
 
-    @GetMapping()
+    @Operation(summary = "Get all accounts")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved all accounts", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Account>> getAllAccounts() {
-        List<Account> accountDTOS = accountRepositoryHandler.getAllAccounts();
-        return ResponseEntity.status(HttpStatus.OK).body(accountDTOS);
+        try {
+            List<Account> accountDTOS = accountRepositoryHandler.getAllAccounts();
+            return ResponseEntity.status(HttpStatus.OK).body(accountDTOS);
+        } catch (Exception e) {
+            LOG.error("Error retrieving all accounts", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @DeleteMapping(ACCOUNT_ID)
+    @Operation(summary = "Delete an account")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully deleted the account"),
+            @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
+    @DeleteMapping(value = ACCOUNT_ID, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> deleteAccount(@PathVariable int accountId) {
         try {
             boolean deletedRequested = accountDeletionService.requestAccountDelete(accountId);

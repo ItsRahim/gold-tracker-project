@@ -26,6 +26,10 @@ python-api:
   url: http://localhost:8000/api/v1
   topic: gold-price-stream
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/gold
