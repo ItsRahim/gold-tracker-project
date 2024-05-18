@@ -4,7 +4,7 @@ import com.rahim.accountservice.exception.EmailTokenException;
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.EmailProperty;
-import com.rahim.accountservice.request.AccountRequest;
+import com.rahim.accountservice.request.AccountJson;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
@@ -79,13 +79,13 @@ public class AccountUpdateService implements IAccountUpdateService {
     private void updateFields(Account account, Map<String, String> updatedData) {
         updatedData.forEach((key, value) -> {
             switch (key) {
-                case AccountRequest.ACCOUNT_EMAIL:
+                case AccountJson.ACCOUNT_EMAIL:
                     updateEmail(account, value);
                     break;
-                case AccountRequest.ACCOUNT_PASSWORD_HASH:
+                case AccountJson.ACCOUNT_PASSWORD_HASH:
                     updatePassword(account, value);
                     break;
-                case AccountRequest.ACCOUNT_NOTIFICATION_SETTING:
+                case AccountJson.ACCOUNT_NOTIFICATION_SETTING:
                     updateNotification(account, value);
                     break;
                 default:

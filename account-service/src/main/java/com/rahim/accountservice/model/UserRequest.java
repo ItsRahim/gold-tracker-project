@@ -1,5 +1,7 @@
 package com.rahim.accountservice.model;
 
+import com.rahim.accountservice.dto.AccountRequestDto;
+import com.rahim.accountservice.dto.ProfileRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +14,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UserRequest {
-    private Account account;
-    private Profile profile;
+    private AccountRequestDto account;
+    private ProfileRequestDto profile;
 }

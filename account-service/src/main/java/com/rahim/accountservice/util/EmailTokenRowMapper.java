@@ -2,8 +2,8 @@ package com.rahim.accountservice.util;
 
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.model.EmailToken;
-import com.rahim.accountservice.request.AccountRequest;
-import com.rahim.accountservice.request.ProfileRequest;
+import com.rahim.accountservice.request.AccountJson;
+import com.rahim.accountservice.request.ProfileJson;
 import com.rahim.common.constant.EmailTemplate;
 import lombok.Setter;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,22 +27,22 @@ public class EmailTokenRowMapper implements RowMapper<EmailToken> {
         EmailToken emailToken = new EmailToken();
 
         if (emailProperty.isIncludeUsername()) {
-            emailToken.setUsername(rs.getString(ProfileRequest.PROFILE_USERNAME));
+            emailToken.setUsername(rs.getString(ProfileJson.PROFILE_USERNAME));
         }
 
-        emailToken.setFirstName(rs.getString(ProfileRequest.PROFILE_FIRST_NAME));
-        emailToken.setLastName(rs.getString(ProfileRequest.PROFILE_LAST_NAME));
-        emailToken.setEmail(rs.getString(AccountRequest.ACCOUNT_EMAIL));
+        emailToken.setFirstName(rs.getString(ProfileJson.PROFILE_FIRST_NAME));
+        emailToken.setLastName(rs.getString(ProfileJson.PROFILE_LAST_NAME));
+        emailToken.setEmail(rs.getString(AccountJson.ACCOUNT_EMAIL));
         emailToken.setEmailTemplate(emailProperty.getTemplateName());
 
         if (emailProperty.isIncludeDate()) {
             String templateName = emailProperty.getTemplateName();
             if (templateName.equals(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)) {
-                LocalDate deleteDate = rs.getDate(AccountRequest.ACCOUNT_DELETE_DATE).toLocalDate();
+                LocalDate deleteDate = rs.getDate(AccountJson.ACCOUNT_DELETE_DATE).toLocalDate();
                 String date = DateFormatter.getInstance().formatDate(deleteDate);
                 emailToken.setDeleteDate(date);
             } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)) {
-                Instant updateAt = rs.getTimestamp(AccountRequest.ACCOUNT_UPDATED_AT).toInstant();
+                Instant updateAt = rs.getTimestamp(AccountJson.ACCOUNT_UPDATED_AT).toInstant();
                 String date = DateFormatter.getInstance().formatInstantDate(updateAt);
                 emailToken.setUpdatedAt(date);
                 emailToken.setEmail(emailProperty.getOldEmail());

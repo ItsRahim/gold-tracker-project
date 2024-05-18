@@ -1,5 +1,6 @@
 package com.rahim.accountservice.service.account.implementation;
 
+import com.rahim.accountservice.dto.ModelMapper;
 import com.rahim.accountservice.exception.DuplicateAccountException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.Profile;
@@ -37,9 +38,9 @@ public class AccountCreationService implements IAccountCreationService {
      * @see IAccountCreationService
      */
     @Override
-    public void createAccount(UserRequest userRequest) throws DuplicateAccountException {
-        Account account = userRequest.getAccount();
-        Profile profile = userRequest.getProfile();
+    public void createAccount(UserRequest userRequest) {
+        Account account = ModelMapper.INSTANCE.toAccountEntity(userRequest.getAccount());
+        Profile profile = ModelMapper.INSTANCE.toProfileEntity(userRequest.getProfile());
 
         validateInput(account, profile);
 
