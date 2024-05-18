@@ -4,7 +4,7 @@ import com.rahim.accountservice.exception.EmailTokenException;
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.EmailProperty;
-import com.rahim.accountservice.request.AccountJson;
+import com.rahim.accountservice.json.AccountJson;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;

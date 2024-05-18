@@ -1,4 +1,4 @@
-package com.rahim.accountservice.request;
+package com.rahim.accountservice.json;
 
 /**
  * @author Rahim Ahmed

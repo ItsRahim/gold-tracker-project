@@ -2,7 +2,7 @@ package com.rahim.accountservice.service.profile.implementation;
 
 import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Profile;
-import com.rahim.accountservice.request.ProfileJson;
+import com.rahim.accountservice.json.ProfileJson;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import lombok.RequiredArgsConstructor;
