@@ -6,6 +6,7 @@ import com.rahim.pricingservice.service.type.IGoldTypeCreationService;
 import com.rahim.pricingservice.service.type.IGoldTypeDeletionService;
 import com.rahim.pricingservice.service.type.IGoldTypeUpdateService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,10 +48,14 @@ public class GoldTypeController {
             @ApiResponse(responseCode = "200", description = "Gold types retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoldType.class))),
             @ApiResponse(responseCode = "500", description = "Error retrieving gold types", content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GoldType>> getAllGoldTypes() {
-        List<GoldType> goldTypes = goldTypeRepositoryHandler.getAllGoldTypes();
-        return ResponseEntity.status(HttpStatus.OK).body(goldTypes);
+        try {
+            List<GoldType> goldTypes = goldTypeRepositoryHandler.getAllGoldTypes();
+            return ResponseEntity.status(HttpStatus.OK).body(goldTypes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Operation(summary = "Get gold type by ID")
@@ -58,8 +64,9 @@ public class GoldTypeController {
             @ApiResponse(responseCode = "404", description = "Gold type not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Error retrieving gold type", content = @Content)
     })
-    @GetMapping(GOLD_TYPE_ID)
-    public ResponseEntity<GoldType> getGoldTypeById(@PathVariable int goldTypeId) {
+    @GetMapping(value = GOLD_TYPE_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GoldType> getGoldTypeById(
+            @Parameter(description = "ID of the gold type to be retrieved", required = true) @PathVariable int goldTypeId) {
         try {
             Optional<GoldType> goldTypeOptional = goldTypeRepositoryHandler.findById(goldTypeId);
 
@@ -77,8 +84,9 @@ public class GoldTypeController {
             @ApiResponse(responseCode = "409", description = "Gold type already exists", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error creating gold type", content = @Content(mediaType = "application/json"))
     })
-    @PostMapping()
-    public ResponseEntity<Object> addGoldType(@RequestBody GoldType goldType) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addGoldType(
+            @Parameter(description = "The details of the gold type to be added", required = true) @RequestBody GoldType goldType) {
         try {
             String goldTypeName = goldType.getName();
             if (goldTypeRepositoryHandler.existsByName(goldTypeName)){
@@ -100,8 +108,10 @@ public class GoldTypeController {
             @ApiResponse(responseCode = "404", description = "Gold type not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error updating gold type", content = @Content(mediaType = "application/json"))
     })
-    @PutMapping(GOLD_TYPE_ID)
-    public ResponseEntity<String> updateGoldType(@PathVariable int goldTypeId, @RequestBody Map<String, String> updatedData) {
+    @PutMapping(value = GOLD_TYPE_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> updateGoldType(
+            @Parameter(description = "ID of the gold type to be updated", required = true) @PathVariable int goldTypeId,
+            @Parameter(description = "Map of updated gold type data", required = true) @RequestBody Map<String, String> updatedData) {
         try {
             if (goldTypeRepositoryHandler.existsById(goldTypeId)) {
                 goldTypeUpdateService.updateGoldType(goldTypeId, updatedData);
@@ -121,8 +131,9 @@ public class GoldTypeController {
             @ApiResponse(responseCode = "404", description = "Gold type not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error deleting gold type", content = @Content(mediaType = "application/json"))
     })
-    @DeleteMapping(GOLD_TYPE_ID)
-    public ResponseEntity<String> deleteGoldType(@PathVariable int goldTypeId) {
+    @DeleteMapping(value = GOLD_TYPE_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> deleteGoldType(
+            @Parameter(description = "ID of the gold type to be deleted", required = true) @PathVariable int goldTypeId) {
         try {
             if (goldTypeRepositoryHandler.existsById(goldTypeId)) {
                 LOG.info("Gold Type with ID {} found. Attempting to delete...", goldTypeId);

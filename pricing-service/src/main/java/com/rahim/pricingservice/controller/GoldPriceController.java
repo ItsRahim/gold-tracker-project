@@ -3,6 +3,7 @@ package com.rahim.pricingservice.controller;
 import com.rahim.pricingservice.dto.GoldPriceDTO;
 import com.rahim.pricingservice.service.repository.implementation.GoldPriceRepositoryHandler;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,8 +45,9 @@ public class GoldPriceController {
             @ApiResponse(responseCode = "404", description = "Gold price not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error retrieving gold price", content = @Content(mediaType = "application/json"))
     })
-    @GetMapping(GOLD_ID)
-    public ResponseEntity<GoldPriceDTO> getGoldPrice(@PathVariable int goldPriceId) {
+    @GetMapping(value = GOLD_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GoldPriceDTO> getGoldPrice(
+            @Parameter(description = "ID of gold price to be fetched") @PathVariable int goldPriceId) {
         try {
             Optional<GoldPriceDTO> goldPriceDTOOptional = goldPriceRepositoryHandler.getGoldPrice(goldPriceId);
 
@@ -62,7 +65,7 @@ public class GoldPriceController {
             @ApiResponse(responseCode = "200", description = "Gold prices retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoldPriceDTO.class))),
             @ApiResponse(responseCode = "500", description = "Error retrieving gold prices", content = @Content(mediaType = "application/json"))
     })
-    @GetMapping()
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GoldPriceDTO>> getAllGoldPrices() {
         List<GoldPriceDTO> goldPrices = goldPriceRepositoryHandler.getAllGoldPrices();
 

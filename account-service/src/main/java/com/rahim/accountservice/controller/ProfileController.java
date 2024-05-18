@@ -4,6 +4,7 @@ import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +43,7 @@ public class ProfileController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved all profiles", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Profile.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    @GetMapping()
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Profile>> getAllProfiles() {
         try {
             List<Profile> profiles = profileRepositoryHandler.getAllProfiles();
@@ -57,8 +59,10 @@ public class ProfileController {
             @ApiResponse(responseCode = "200", description = "Profile updated successfully", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "404", description = "Profile not found", content = @Content(mediaType = "text/plain"))
     })
-    @PutMapping(PROFILE_ID)
-    public ResponseEntity<String> updateUserProfile(@PathVariable int profileId, @RequestBody Map<String, String> updatedData) {
+    @PutMapping(value = PROFILE_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> updateUserProfile(
+            @Parameter(description = "ID of the profile to be updated", required = true) @PathVariable int profileId,
+            @Parameter(description = "Map of updated profile data", required = true) @RequestBody Map<String, String> updatedData) {
         try {
             profileUpdateService.updateProfile(profileId, updatedData);
             return ResponseEntity.status(HttpStatus.OK).body("Profile updated successfully");
@@ -73,8 +77,9 @@ public class ProfileController {
             @ApiResponse(responseCode = "404", description = "Profile not found", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
     })
-    @GetMapping(USERNAME)
-    public ResponseEntity<Object> findProfileByUsername(@PathVariable String username) {
+    @GetMapping(value = USERNAME, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> findProfileByUsername(
+            @Parameter(description = "Username of the profile to be found", required = true) @PathVariable String username) {
         try {
             Optional<Profile> profileOptional = profileRepositoryHandler.getProfileByUsername(username);
 

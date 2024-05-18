@@ -7,6 +7,7 @@ import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,7 +49,8 @@ public class AccountController {
             @ApiResponse(responseCode = "500", description = "Error Creating Accounts and Profiles", content = @Content(mediaType = "text/plain"))
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> createAccounts(@RequestBody List<UserRequest> userRequests) {
+    public ResponseEntity<String> createAccounts(
+            @Parameter(description = "User account details", required = true) @RequestBody List<UserRequest> userRequests) {
         try {
             for (UserRequest userRequest : userRequests) {
                 accountCreationService.createAccount(userRequest);
@@ -68,8 +70,9 @@ public class AccountController {
             @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error finding account", content = @Content(mediaType = "application/json"))
     })
-    @GetMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> findAccountById(@PathVariable int accountId) {
+    @GetMapping(value = ACCOUNT_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> findAccountById(
+            @Parameter(description = "ID of the account to fetch", required = true) @PathVariable int accountId) {
         try {
             Optional<Account> accountOptional = accountRepositoryHandler.findById(accountId);
 
@@ -87,14 +90,15 @@ public class AccountController {
         }
     }
 
-
     @Operation(summary = "Update an existing account")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Account updated successfully", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Error updating account", content = @Content(mediaType = "text/plain"))
     })
     @PutMapping(value = ACCOUNT_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> updateAccount(@PathVariable int accountId, @RequestBody Map<String, String> updatedData) {
+    public ResponseEntity<String> updateAccount(
+            @Parameter(description = "ID of the account to be updated", required = true) @PathVariable int accountId,
+            @Parameter(description = "Map of updated account data", required = true) @RequestBody Map<String, String> updatedData) {
         try {
             boolean hasUpdated = accountUpdateService.updateAccount(accountId, updatedData);
             return hasUpdated ? ResponseEntity.status(HttpStatus.OK).body("Account updated successfully.") : ResponseEntity.status(HttpStatus.OK).body("No updates were applied to the account.");
@@ -126,8 +130,9 @@ public class AccountController {
             @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    @DeleteMapping(value = ACCOUNT_ID, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> deleteAccount(@PathVariable int accountId) {
+    @DeleteMapping(value = ACCOUNT_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> deleteAccount(
+            @Parameter(description = "ID of the account to be deleted", required = true) @PathVariable int accountId) {
         try {
             boolean deletedRequested = accountDeletionService.requestAccountDelete(accountId);
 
