@@ -25,6 +25,7 @@
         <jackson.version>2.16.0-rc1</jackson.version>
         <test-container.version>1.19.3</test-container.version>
         <instancio.version>3.7.1</instancio.version>
+        <org-mapstruct.version>1.6.0.Beta2</org-mapstruct.version>
     </properties>
     <dependencies>
         <!-- RGTS Dependencies -->
@@ -73,11 +74,6 @@
             <artifactId>zipkin-reporter-brave</artifactId>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.14</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
@@ -114,6 +110,16 @@
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
             <version>3.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org-mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org-mapstruct.version}</version>
         </dependency>
 
         <!-- TEST DEPENDENCIES -->

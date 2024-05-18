@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ import java.util.Optional;
  * @created 29/12/2023
  */
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountRepositoryHandlerService implements IAccountRepositoryHandler {
 

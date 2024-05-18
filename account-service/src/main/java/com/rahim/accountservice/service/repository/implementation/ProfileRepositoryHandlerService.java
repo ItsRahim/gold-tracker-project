@@ -6,8 +6,8 @@ import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.model.EmailToken;
 import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.repository.ProfileRepository;
-import com.rahim.accountservice.request.AccountRequest;
-import com.rahim.accountservice.request.ProfileRequest;
+import com.rahim.accountservice.json.AccountJson;
+import com.rahim.accountservice.json.ProfileJson;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenRowMapper;
 import com.rahim.common.constant.EmailTemplate;
@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ import java.util.Optional;
  * @created 30/12/2023
  */
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProfileRepositoryHandlerService implements IProfileRepositoryHandler {
 
@@ -105,20 +107,20 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     public EmailToken generateEmailTokens(EmailProperty emailProperty) {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("SELECT ");
-        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_FIRST_NAME).append(" AS ").append(ProfileRequest.PROFILE_FIRST_NAME).append(", ");
-        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_LAST_NAME).append(" AS ").append(ProfileRequest.PROFILE_LAST_NAME).append(", ");
-        sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_EMAIL).append(" AS ").append(AccountRequest.ACCOUNT_EMAIL).append(", ");
+        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_FIRST_NAME).append(" AS ").append(ProfileJson.PROFILE_FIRST_NAME).append(", ");
+        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_LAST_NAME).append(" AS ").append(ProfileJson.PROFILE_LAST_NAME).append(", ");
+        sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_EMAIL).append(" AS ").append(AccountJson.ACCOUNT_EMAIL).append(", ");
 
         if (emailProperty.isIncludeUsername()) {
-            sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_USERNAME).append(" AS ").append(ProfileRequest.PROFILE_USERNAME).append(", ");
+            sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_USERNAME).append(" AS ").append(ProfileJson.PROFILE_USERNAME).append(", ");
         }
 
         if (emailProperty.isIncludeDate()) {
             String templateName = emailProperty.getTemplateName();
             if (templateName.equals(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)) {
-                sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_DELETE_DATE).append(" AS ").append(AccountRequest.ACCOUNT_DELETE_DATE).append(", ");
+                sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_DELETE_DATE).append(" AS ").append(AccountJson.ACCOUNT_DELETE_DATE).append(", ");
             } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)) {
-                sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_UPDATED_AT).append(" AS ").append(AccountRequest.ACCOUNT_UPDATED_AT).append(", ");
+                sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_UPDATED_AT).append(" AS ").append(AccountJson.ACCOUNT_UPDATED_AT).append(", ");
             }
         }
 

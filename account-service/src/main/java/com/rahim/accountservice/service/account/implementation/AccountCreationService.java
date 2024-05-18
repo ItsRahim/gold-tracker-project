@@ -1,5 +1,6 @@
 package com.rahim.accountservice.service.account.implementation;
 
+import com.rahim.accountservice.dto.ModelMapper;
 import com.rahim.accountservice.exception.DuplicateAccountException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.Profile;
@@ -15,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This service class is responsible for creating new accounts.
@@ -38,10 +38,9 @@ public class AccountCreationService implements IAccountCreationService {
      * @see IAccountCreationService
      */
     @Override
-    @Transactional
-    public void createAccount(UserRequest userRequest) throws DuplicateAccountException {
-        Account account = userRequest.getAccount();
-        Profile profile = userRequest.getProfile();
+    public void createAccount(UserRequest userRequest) {
+        Account account = ModelMapper.INSTANCE.toAccountEntity(userRequest.getAccount());
+        Profile profile = ModelMapper.INSTANCE.toProfileEntity(userRequest.getProfile());
 
         validateInput(account, profile);
 
