@@ -45,7 +45,7 @@ public class GoldPriceController {
             @ApiResponse(responseCode = "404", description = "Gold price not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error retrieving gold price", content = @Content(mediaType = "application/json"))
     })
-    @GetMapping(value = GOLD_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = GOLD_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GoldPriceDTO> getGoldPrice(
             @Parameter(description = "ID of gold price to be fetched") @PathVariable int goldPriceId) {
         try {

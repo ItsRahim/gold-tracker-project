@@ -64,7 +64,7 @@ public class GoldTypeController {
             @ApiResponse(responseCode = "404", description = "Gold type not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Error retrieving gold type", content = @Content)
     })
-    @GetMapping(value = GOLD_TYPE_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = GOLD_TYPE_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GoldType> getGoldTypeById(
             @Parameter(description = "ID of the gold type to be retrieved", required = true) @PathVariable int goldTypeId) {
         try {
@@ -131,7 +131,7 @@ public class GoldTypeController {
             @ApiResponse(responseCode = "404", description = "Gold type not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error deleting gold type", content = @Content(mediaType = "application/json"))
     })
-    @DeleteMapping(value = GOLD_TYPE_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @DeleteMapping(value = GOLD_TYPE_ID, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> deleteGoldType(
             @Parameter(description = "ID of the gold type to be deleted", required = true) @PathVariable int goldTypeId) {
         try {

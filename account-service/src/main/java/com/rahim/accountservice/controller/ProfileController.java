@@ -77,7 +77,7 @@ public class ProfileController {
             @ApiResponse(responseCode = "404", description = "Profile not found", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
     })
-    @GetMapping(value = USERNAME, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = USERNAME, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findProfileByUsername(
             @Parameter(description = "Username of the profile to be found", required = true) @PathVariable String username) {
         try {

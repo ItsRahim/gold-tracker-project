@@ -47,7 +47,7 @@ public class ThresholdController {
             @ApiResponse(responseCode = "200", description = "Threshold alert found successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ThresholdAlert.class))),
             @ApiResponse(responseCode = "404", description = "Threshold alert not found", content = @Content(mediaType = "application/json"))
     })
-    @GetMapping(value = THRESHOLD_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = THRESHOLD_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ThresholdAlert> getAlertById(
             @Parameter(description = "ID of the alert to fetch", required = true) @PathVariable int thresholdId) {
         LOG.info("Fetching alert by ID: {}", thresholdId);
@@ -84,7 +84,7 @@ public class ThresholdController {
             @ApiResponse(responseCode = "404", description = "Alert not found for the given Account ID", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    @GetMapping(value = ACCOUNT_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ThresholdAlert> getAlertByAccountId(
             @Parameter(description = "ID of the account to fetch the alert for", required = true) @PathVariable int accountId) {
         LOG.info("Fetching alert by Account ID: {}", accountId);
@@ -127,7 +127,7 @@ public class ThresholdController {
             @ApiResponse(responseCode = "404", description = "Threshold not found or update unsuccessful", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error updating threshold", content = @Content(mediaType = "application/json"))
     })
-    @PutMapping("/{thresholdId}")
+    @PutMapping(THRESHOLD_ID)
     public ResponseEntity<String> updateThreshold(
             @Parameter(description = "ID of the threshold to update", required = true) @PathVariable int thresholdId,
             @Parameter(description = "Updated data for the threshold", required = true) @RequestBody Map<String, String> updatedData) {
@@ -151,7 +151,7 @@ public class ThresholdController {
             @ApiResponse(responseCode = "404", description = "Threshold not found or deletion unsuccessful", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error deleting threshold", content = @Content(mediaType = "application/json"))
     })
-    @DeleteMapping(value = "/{thresholdId}", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = THRESHOLD_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteThreshold(
             @Parameter(description = "ID of the threshold to delete", required = true) @PathVariable int thresholdId) {
         try {

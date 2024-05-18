@@ -70,7 +70,7 @@ public class AccountController {
             @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error finding account", content = @Content(mediaType = "application/json"))
     })
-    @GetMapping(value = ACCOUNT_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findAccountById(
             @Parameter(description = "ID of the account to fetch", required = true) @PathVariable int accountId) {
         try {
@@ -130,7 +130,7 @@ public class AccountController {
             @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    @DeleteMapping(value = ACCOUNT_ID, consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @DeleteMapping(value = ACCOUNT_ID, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> deleteAccount(
             @Parameter(description = "ID of the account to be deleted", required = true) @PathVariable int accountId) {
         try {
