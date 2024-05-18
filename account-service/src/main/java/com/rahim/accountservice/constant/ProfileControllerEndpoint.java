@@ -10,7 +10,7 @@ public final class ProfileControllerEndpoint {
 
     private ProfileControllerEndpoint() {}
 
-    public static final String BASE_URL = "/api/v1/gold/profile";
+    public static final String BASE_URL = "/api/v1/gold/user-service/profile";
     public static final String PROFILE_ID= "/{profileId}";
     public static final String USERNAME = "/{username}";
 }

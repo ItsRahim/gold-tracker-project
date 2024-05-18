@@ -10,6 +10,6 @@ public final class AccountControllerEndpoint {
 
     private AccountControllerEndpoint(){}
 
-    public static final String BASE_URL = "/api/v1/gold/account";
+    public static final String BASE_URL = "/api/v1/gold/user-service/account";
     public static final String ACCOUNT_ID = "/{accountId}";
 }
