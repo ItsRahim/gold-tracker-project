@@ -41,6 +41,7 @@ Issues/Enhancements:
 Linked hashmap maintains the order in which keys are inserted
 -Add failover mechanism upon failed retries to read from db if hazelcast is down. Same for kafka - DONE for kafka, WIP for hazelcast
 -Fix issue with wrong UTC being inserted, its one hour behind
+-Create db users for each microservice, control operations on tables and which can be seen
 Performance Testing:
 - VisualVM
 - Apache JMeter
