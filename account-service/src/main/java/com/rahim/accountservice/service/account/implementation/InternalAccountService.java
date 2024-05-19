@@ -10,6 +10,8 @@ import com.rahim.accountservice.service.profile.IProfileDeletionService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.EmailTemplate;
+import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.service.hazelcast.CacheManager;
 import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -29,10 +31,11 @@ import java.util.List;
 public class InternalAccountService implements IInternalAccountService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternalAccountService.class);
-    private final IAccountDeletionService accountDeletionService;
     private final IAccountRepositoryHandler accountRepositoryHandler;
-    private final EmailTokenGenerator emailTokenGenerator;
+    private final IAccountDeletionService accountDeletionService;
     private final IProfileDeletionService profileDeletionService;
+    private final EmailTokenGenerator emailTokenGenerator;
+    private final CacheManager hazelcastCacheManager;
 
     /**
      * @see IInternalAccountService
@@ -61,11 +64,17 @@ public class InternalAccountService implements IInternalAccountService {
             emailTokenGenerator.generateEmailTokens(emailProperty);
             profileDeletionService.deleteProfile(userId);
             accountRepositoryHandler.deleteAccount(userId);
+            removeFromHazelcastSet(userId);
 
             LOG.debug("Account with ID {} deleted successfully.", userId);
         } catch (DataAccessException e) {
             handleDataAccessException("deleting", userId, e);
         }
+    }
+
+    private void removeFromHazelcastSet(int userId) {
+        hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_SET, userId);
+        LOG.debug("Removed deleted account from Hazelcast set");
     }
 
     /**
