@@ -1,5 +1,6 @@
 package com.rahim.investmentservice.model;
 
+import com.rahim.investmentservice.enums.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -39,12 +40,11 @@ public class Transaction {
 
     @Size(max = 4)
     @Column(name = "transaction_type")
-    private String transactionType;
+    private TransactionType transactionType;
 
     @Column(name = "transaction_price")
     private BigDecimal transactionPrice;
 
     @Column(name = "transaction_date")
     private OffsetDateTime transactionDate;
-
 }
