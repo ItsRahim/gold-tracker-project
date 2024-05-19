@@ -27,6 +27,12 @@ public class Transaction {
     @Column(name = "transaction_id", nullable = false)
     private Integer id;
 
+    @Column(name = "account_id", nullable = false)
+    private Integer accountId;
+
+    @Column(name = "gold_type_id", nullable = false)
+    private Integer goldTypeId;
+
     @ColumnDefault("1")
     @Column(name = "quantity")
     private Integer quantity;

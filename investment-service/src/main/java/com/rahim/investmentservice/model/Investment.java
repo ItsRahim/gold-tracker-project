@@ -22,6 +22,9 @@ public class Investment {
     @Column(name = "investment_id", nullable = false)
     private Integer id;
 
+    @Column(name = "account_id", nullable = false)
+    private Integer accountId;
+
     @Column(name = "total_purchase_amount")
     private BigDecimal totalPurchaseAmount;
 
