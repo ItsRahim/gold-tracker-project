@@ -37,9 +37,7 @@ spring:
     password: ENC(QmQbHw7zfvdzBoqg6KUUAl/qXlHpQPulk2dYK518mgyQuAuKmFJM1FlE7PXGeG7o)
   hazelcast:
     config: classpath:hazelcast-default.yaml
-  jasypt:
-    encryptor:
-      password: ${jasypt.encryptor.password}
+    gi
   jpa:
     database: postgresql
     show-sql: false
