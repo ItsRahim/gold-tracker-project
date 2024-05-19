@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @created 19/05/2024
  */
 @Repository
-public interface HoldingRepository extends JpaRepository<Integer, Holding> {
+public interface HoldingRepository extends JpaRepository<Holding, Integer> {
 }

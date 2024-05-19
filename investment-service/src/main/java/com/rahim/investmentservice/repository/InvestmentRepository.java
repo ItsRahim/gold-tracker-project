@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @created 19/05/2024
  */
 @Repository
-public interface InvestmentRepository extends JpaRepository<Integer, Investment> {
+public interface InvestmentRepository extends JpaRepository<Investment, Integer> {
 }

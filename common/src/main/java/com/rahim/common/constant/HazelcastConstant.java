@@ -16,4 +16,7 @@ public class HazelcastConstant {
 
     /*Map containing hazelcast storage initialisation state from various microservices*/
     public static final String HAZELCAST_INITIALISER_MAP = "init-status";
+
+    /*Map containing all gold type names and their id in the system*/
+    public static final String GOLD_TYPE_MAP = "gold-types";
 }

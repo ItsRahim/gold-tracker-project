@@ -18,7 +18,7 @@ public class KafkaListenerConfig {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final MessageManager messageManager;
 
-    @KafkaListener(topics = "UPDATE TOPIC", groupId = "group2")
+    @KafkaListener(topics = "UPDATE-TOPIC", groupId = "group2")
     public void someMethod(String message) {
         if (!messageManager.isProcessed(message)) {
             //Some method to do

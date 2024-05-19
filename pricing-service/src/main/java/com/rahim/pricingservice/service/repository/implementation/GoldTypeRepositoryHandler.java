@@ -104,4 +104,9 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
         goldTypeRepository.deleteById(goldId);
     }
 
+    @Override
+    public String getGoldTypeNameById(int goldTypeId) {
+        return goldTypeRepository.getGoldTypeNameById(goldTypeId);
+    }
+
 }
