@@ -1,0 +1,33 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+logging:
+  file:
+    name: logs/investment-service.log
+  level:
+    com:
+      rahim:
+        accountservice: DEBUG
+    org:
+      springframework: ERROR
+    root: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+server:
+  port: 8087
+
+spring:
+  application:
+    name: investment-service
+  output:
+    ansi:
+      enabled: always

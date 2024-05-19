@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: investment-service
+  cloud:
+    config:
+      enabled: true
+  config:
+    import: configserver:http://localhost:8888
