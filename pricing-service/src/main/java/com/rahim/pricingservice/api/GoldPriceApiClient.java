@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface GoldPriceApiClient {
 
     @GetMapping("/${python-api.source}")
-    String getGoldPrice();
+    void getGoldPrice();
 
 }
