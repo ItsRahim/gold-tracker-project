@@ -47,4 +47,13 @@ public class Transaction {
 
     @Column(name = "transaction_date")
     private OffsetDateTime transactionDate;
+
+    public Transaction(Integer accountId, Integer goldTypeId, Integer quantity, TransactionType transactionType, BigDecimal transactionPrice, OffsetDateTime transactionDate) {
+        this.accountId = accountId;
+        this.goldTypeId = goldTypeId;
+        this.quantity = quantity;
+        this.transactionType = transactionType;
+        this.transactionPrice = transactionPrice;
+        this.transactionDate = transactionDate;
+    }
 }

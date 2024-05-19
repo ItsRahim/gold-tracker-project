@@ -24,6 +24,9 @@ public class Holding {
     @Column(name = "holding_id", nullable = false)
     private Integer id;
 
+    @Column(name = "transaction_id", nullable = false)
+    private Integer transactionId;
+
     @Column(name = "account_id", nullable = false)
     private Integer accountId;
 

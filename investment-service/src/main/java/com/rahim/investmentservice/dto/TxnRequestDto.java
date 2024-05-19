@@ -1,6 +1,8 @@
 package com.rahim.investmentservice.dto;
 
 import com.rahim.investmentservice.enums.TransactionType;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -9,6 +11,8 @@ import java.time.OffsetDateTime;
  * @author Rahim Ahmed
  * @created 19/05/2024
  */
+@Getter
+@Setter
 public class TxnRequestDto {
 
     private String goldTypeName;
