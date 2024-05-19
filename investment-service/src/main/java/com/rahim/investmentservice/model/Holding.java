@@ -1,0 +1,36 @@
+package com.rahim.investmentservice.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Getter
+@Setter
+@ToString
+@Entity
+@DynamicInsert
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "rgts.holdings", indexes = {
+        @Index(name = "idx_holdings_account_gold", columnList = "account_id, gold_type_id"),
+        @Index(name = "idx_holdings_account_id", columnList = "account_id")
+})
+public class Holding {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "holding_id", nullable = false)
+    private Integer id;
+
+    @Column(name = "quantity")
+    private Integer quantity;
+
+    @Column(name = "purchase_price")
+    private BigDecimal purchasePrice;
+
+    @Column(name = "purchase_date")
+    private LocalDate purchaseDate;
+
+}
