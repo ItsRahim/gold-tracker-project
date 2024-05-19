@@ -1,5 +1,7 @@
 package com.rahim.investmentservice.controller;
 
+import com.rahim.investmentservice.dto.TxnRequestDto;
+import com.rahim.investmentservice.service.transaction.TxnCreationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.rahim.investmentservice.constants.TransactionControllerEndpoint.BASE_URL;
 
@@ -28,6 +28,7 @@ import static com.rahim.investmentservice.constants.TransactionControllerEndpoin
 public class TransactionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);
+    private final TxnCreationService txnCreationService;
 
     @Operation(summary = "Some summary")
     @ApiResponses(value = {
@@ -44,8 +45,9 @@ public class TransactionController {
             @ApiResponse(responseCode = "201", description = "TODO", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "TODO", content = @Content(mediaType = "text/plain"))
     })
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getSomething() {
+    @PostMapping(value = "{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addNewTxn(@PathVariable Integer accountId, @RequestBody TxnRequestDto txnRequestDto) {
+        txnCreationService.addNewTransaction(accountId, txnRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("TODO");
     }
 }

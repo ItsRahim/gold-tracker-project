@@ -8,5 +8,5 @@ import com.rahim.investmentservice.dto.TxnRequestDto;
  */
 public interface TxnCreationService {
 
-    void addNewTransaction(TxnRequestDto txnRequestDto);
+    void addNewTransaction(int accountId, TxnRequestDto txnRequestDto);
 }

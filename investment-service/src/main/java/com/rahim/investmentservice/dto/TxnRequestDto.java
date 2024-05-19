@@ -11,7 +11,6 @@ import java.time.OffsetDateTime;
  */
 public class TxnRequestDto {
 
-    private Integer accountId;
     private String goldTypeName;
     private Integer quantity;
     private TransactionType transactionType;

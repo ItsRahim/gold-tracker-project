@@ -9,7 +9,7 @@ public class HazelcastConstant {
     private HazelcastConstant() {}
 
     /*Set containing account ids with notifications enabled*/
-    public static final String ACCOUNT_ID_SET = "account-id";
+    public static final String ACCOUNT_ID_NOTIFICATION_SET = "account-id";
 
     /*Set containing kafka messages which have been processed*/
     public static final String PROCESSED_KAFKA_MESSAGES = "processed-kafka-messages";

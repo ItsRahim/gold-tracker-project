@@ -38,7 +38,7 @@ public class ThresholdCreationService implements IThresholdCreationService {
 
     private boolean accountExists(int accountId) {
         LOG.debug("Searching Hazelcast set for account id");
-        ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_SET);
+        ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET);
         return accountIds.contains(accountId);
     }
 }
