@@ -19,5 +19,5 @@ public interface ModelMapper {
 
     Investment toInvestmentEntity(InvestmentRequestDto investmentDto);
 
-    Transaction toTransactionEntity(TransactionRequestDto transactionDto);
+    Transaction toTransactionEntity(TxnRequestDto transactionDto);
 }

@@ -9,10 +9,10 @@ import java.time.OffsetDateTime;
  * @author Rahim Ahmed
  * @created 19/05/2024
  */
-public class TransactionRequestDto {
+public class TxnRequestDto {
 
     private Integer accountId;
-    private Integer goldTypeId;
+    private String goldTypeName;
     private Integer quantity;
     private TransactionType transactionType;
     private BigDecimal transactionPrice;

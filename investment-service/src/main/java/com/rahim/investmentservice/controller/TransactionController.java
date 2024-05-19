@@ -38,4 +38,14 @@ public class TransactionController {
     public ResponseEntity<Object> getSomething() {
         return ResponseEntity.status(HttpStatus.CREATED).body("TODO");
     }
+
+    @Operation(summary = "Create a new transaction")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "TODO", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "TODO", content = @Content(mediaType = "text/plain"))
+    })
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getSomething() {
+        return ResponseEntity.status(HttpStatus.CREATED).body("TODO");
+    }
 }
