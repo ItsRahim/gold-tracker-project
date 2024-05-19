@@ -3,6 +3,7 @@ package com.rahim.investmentservice.controller;
 import com.rahim.investmentservice.dto.TxnRequestDto;
 import com.rahim.investmentservice.service.transaction.TxnCreationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,24 +31,22 @@ public class TransactionController {
     private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);
     private final TxnCreationService txnCreationService;
 
-    @Operation(summary = "Some summary")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "TODO", content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "TODO", content = @Content(mediaType = "text/plain"))
-    })
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getSomething() {
-        return ResponseEntity.status(HttpStatus.CREATED).body("TODO");
-    }
-
     @Operation(summary = "Create a new transaction")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "TODO", content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "TODO", content = @Content(mediaType = "text/plain"))
+            @ApiResponse(responseCode = "201", description = "Transaction created successfully", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
     })
     @PostMapping(value = "{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> addNewTxn(@PathVariable Integer accountId, @RequestBody TxnRequestDto txnRequestDto) {
-        txnCreationService.addNewTransaction(accountId, txnRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("TODO");
+    public ResponseEntity<Object> addNewTxn(
+            @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
+            @Parameter(description = "The transaction details", required = true) @RequestBody TxnRequestDto txnRequestDto) {
+        try {
+            txnCreationService.addNewTransaction(accountId, txnRequestDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Transaction created successfully");
+        } catch (IllegalStateException e) {
+            LOG.error("An error occurred processing new transaction");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
     }
+
 }
