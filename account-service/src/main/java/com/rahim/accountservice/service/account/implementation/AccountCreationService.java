@@ -9,6 +9,8 @@ import com.rahim.accountservice.service.account.IAccountCreationService;
 import com.rahim.accountservice.service.profile.IProfileCreationService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
+import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,8 +33,9 @@ public class AccountCreationService implements IAccountCreationService {
     private static final Logger LOG = LoggerFactory.getLogger(AccountCreationService.class);
 
     private final IAccountRepositoryHandler accountRepositoryHandler;
-    private final IProfileCreationService profileCreation;
     private final IProfileRepositoryHandler profileRepositoryHandler;
+    private final IProfileCreationService profileCreation;
+    private final CacheManager hazelcastCacheManager;
 
     /**
      * @see IAccountCreationService
@@ -55,12 +58,18 @@ public class AccountCreationService implements IAccountCreationService {
         try {
             accountRepositoryHandler.saveAccount(account);
             profileCreation.createProfile(account, profile);
+            addToHazelcastSet(account.getId());
 
             LOG.debug("Successfully created Account and Account Profile for: {}", profile.getUsername());
         } catch (DataAccessException e) {
             LOG.error("Unexpected error creating Account and Account Profile: {}", e.getMessage());
             throw new RuntimeException("Unexpected error creating Account and Account Profile.", e);
         }
+    }
+
+    private void addToHazelcastSet(Integer id) {
+        hazelcastCacheManager.addToSet(HazelcastConstant.ACCOUNT_ID_SET, id);
+        LOG.debug("Added new account id to hazelcast set");
     }
 
     /**
