@@ -95,8 +95,10 @@ public class TxnCreationServiceImpl implements TxnCreationService {
     }
 
     private void handleSellTxn(Transaction transaction) {
+        //STUB METHOD
     }
 
     private void handleBuyTxn(Transaction transaction) {
+        //STUB METHOD
     }
 }

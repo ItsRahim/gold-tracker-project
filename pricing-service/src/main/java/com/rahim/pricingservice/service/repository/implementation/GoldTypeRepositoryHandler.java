@@ -109,4 +109,9 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
         return goldTypeRepository.getGoldTypeNameById(goldTypeId);
     }
 
+    @Override
+    public List<Object[]> getGoldTypeNameAndId() {
+        return goldTypeRepository.getGoldTypeNameAndId();
+    }
+
 }

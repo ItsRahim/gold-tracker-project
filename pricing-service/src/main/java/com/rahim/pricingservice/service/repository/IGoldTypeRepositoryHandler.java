@@ -28,4 +28,6 @@ public interface IGoldTypeRepositoryHandler {
     void deleteById(int goldId);
 
     String getGoldTypeNameById(int goldTypeId);
+
+    List<Object[]> getGoldTypeNameAndId();
 }
