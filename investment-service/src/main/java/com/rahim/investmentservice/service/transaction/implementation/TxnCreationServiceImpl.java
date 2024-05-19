@@ -31,7 +31,7 @@ public class TxnCreationServiceImpl implements TxnCreationService {
     }
 
     private boolean accountExists(int accountId) {
-        ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.);
+        ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_SET);
 
         return accountIds.contains(accountId);
     }
