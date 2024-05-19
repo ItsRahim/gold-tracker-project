@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.rahim.investmentservice.constants.InvestmentControllerEndpoint.BASE_URL;
+import static com.rahim.investmentservice.constants.TransactionControllerEndpoint.BASE_URL;
 
 /**
  * @author Rahim Ahmed
@@ -15,7 +15,7 @@ import static com.rahim.investmentservice.constants.InvestmentControllerEndpoint
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL)
-public class InvestmentController {
+public class TransactionController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InvestmentController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);
 }
