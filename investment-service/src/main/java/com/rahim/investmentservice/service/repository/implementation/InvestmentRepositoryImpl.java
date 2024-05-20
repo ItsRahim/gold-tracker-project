@@ -20,13 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvestmentRepositoryImpl implements InvestmentRepositoryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(InvestmentRepositoryImpl.class);
-    private final InvestmentRepository investmentRepository;
+    //private final InvestmentRepository investmentRepository;
 
     @Override
     public void save(Investment investment) {
         try {
             LOG.debug("Attempting to save investment: {}", investment);
-            investmentRepository.save(investment);
+            //investmentRepository.save(investment);
         } catch (DataAccessException e) {
             LOG.error("Failed to save investment: {} due to database error", investment, e);
             throw new RuntimeException("Failing to save investment with account id: " + investment.getAccountId());

@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "rgts.holdings", indexes = {
+@Table(name = "holdings", schema = "rgts", indexes = {
         @Index(name = "idx_holdings_account_id", columnList = "account_id")
 })
 public class Holding {

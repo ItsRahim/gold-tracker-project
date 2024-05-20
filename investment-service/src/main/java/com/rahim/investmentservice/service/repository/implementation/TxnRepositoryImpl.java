@@ -18,5 +18,5 @@ import org.springframework.transaction.annotation.Transactional;
 public class TxnRepositoryImpl implements TxnRepositoryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(TxnRepositoryImpl.class);
-    private final TxnRepository txnRepository;
+    //private final TxnRepository txnRepository;
 }

@@ -18,5 +18,5 @@ import org.springframework.transaction.annotation.Transactional;
 public class HoldingRepositoryImpl implements HoldingRepositoryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(HoldingRepositoryImpl.class);
-    private final HoldingRepository holdingRepository;
+    //private final HoldingRepository holdingRepository;
 }

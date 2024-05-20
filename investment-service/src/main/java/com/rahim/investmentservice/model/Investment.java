@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "rgts.investments", indexes = {
+@Table(name = "investments", schema = "rgts", indexes = {
         @Index(name = "idx_investments_account_gold", columnList = "account_id, gold_type_id"),
         @Index(name = "idx_investments_account_id", columnList = "account_id")
 })
@@ -29,6 +29,9 @@ public class Investment {
     @Column(name = "account_id", nullable = false)
     private Integer accountId;
 
+    @Column(name = "gold_type_id", nullable = false)
+    private Integer goldTypeId;
+
     @Column(name = "quantity")
     private Integer quantity;
 
@@ -38,4 +41,11 @@ public class Investment {
     @Column(name = "purchase_date")
     private LocalDate purchaseDate;
 
+    public Investment(Integer accountId, Integer goldTypeId, Integer quantity, BigDecimal purchasePrice, LocalDate purchaseDate) {
+        this.accountId = accountId;
+        this.goldTypeId = goldTypeId;
+        this.quantity = quantity;
+        this.purchasePrice = purchasePrice;
+        this.purchaseDate = purchaseDate;
+    }
 }

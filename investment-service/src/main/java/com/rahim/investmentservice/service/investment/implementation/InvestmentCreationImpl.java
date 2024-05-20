@@ -8,6 +8,7 @@ import com.rahim.investmentservice.dto.InvestmentRequestDto;
 import com.rahim.investmentservice.enums.TransactionType;
 import com.rahim.investmentservice.model.Investment;
 import com.rahim.investmentservice.model.Transaction;
+import com.rahim.investmentservice.repository.InvestmentRepository;
 import com.rahim.investmentservice.service.investment.InvestmentCreationService;
 import com.rahim.investmentservice.service.repository.InvestmentRepositoryHandler;
 import com.rahim.investmentservice.service.transaction.TxnCreationService;
@@ -31,7 +32,7 @@ import java.time.ZoneOffset;
 public class InvestmentCreationImpl implements InvestmentCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InvestmentCreationImpl.class);
-    private final InvestmentRepositoryHandler investmentRepositoryHandler;
+    private final InvestmentRepository investmentRepository;
     private final TxnCreationService txnCreationService;
     private final CacheManager hazelcastCacheManager;
 
@@ -63,10 +64,10 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
         }
 
         Investment investment = new Investment(accountId, goldTypeId, quantityValue, purchasePrice, purchaseDate);
-        investmentRepositoryHandler.save(investment);
+        investmentRepository.save(investment);
 
         OffsetDateTime offsetDateTime = purchaseDate.atStartOfDay().atOffset(ZoneOffset.UTC);
-        Transaction transaction = new Transaction(accountId, goldTypeId, quantity, TransactionType.BUY, purchasePrice, offsetDateTime);
+        Transaction transaction = new Transaction(accountId, goldTypeId, quantity, TransactionType.BUY.getValue(), purchasePrice, offsetDateTime);
         txnCreationService.addNewTransaction(transaction);
     }
 

@@ -1,6 +1,7 @@
 package com.rahim.investmentservice.service.transaction.implementation;
 
 import com.rahim.investmentservice.model.Transaction;
+import com.rahim.investmentservice.repository.TxnRepository;
 import com.rahim.investmentservice.service.repository.TxnRepositoryHandler;
 import com.rahim.investmentservice.service.transaction.TxnCreationService;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,10 @@ import org.springframework.stereotype.Service;
 public class TxnCreationImpl implements TxnCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TxnCreationImpl.class);
-    private final TxnRepositoryHandler txnRepositoryHandler;
+    private final TxnRepository txnRepository;
 
     @Override
     public void addNewTransaction(Transaction transaction) {
-        //to do this
+        txnRepository.save(transaction);
     }
 }

@@ -17,7 +17,7 @@ import java.time.OffsetDateTime;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "rgts.transactions", indexes = {
+@Table(name = "transactions", schema = "rgts", indexes = {
         @Index(name = "idx_transactions_account_date", columnList = "account_id, transaction_date"),
         @Index(name = "idx_transactions_account_id", columnList = "account_id"),
         @Index(name = "idx_transactions_gold_type_id", columnList = "gold_type_id")
@@ -40,7 +40,7 @@ public class Transaction {
 
     @Size(max = 4)
     @Column(name = "transaction_type")
-    private TransactionType transactionType;
+    private String transactionType;
 
     @Column(name = "transaction_price")
     private BigDecimal transactionPrice;
@@ -48,7 +48,7 @@ public class Transaction {
     @Column(name = "transaction_date")
     private OffsetDateTime transactionDate;
 
-    public Transaction(Integer accountId, Integer goldTypeId, Integer quantity, TransactionType transactionType, BigDecimal transactionPrice, OffsetDateTime transactionDate) {
+    public Transaction(Integer accountId, Integer goldTypeId, Integer quantity, String transactionType, BigDecimal transactionPrice, OffsetDateTime transactionDate) {
         this.accountId = accountId;
         this.goldTypeId = goldTypeId;
         this.quantity = quantity;
