@@ -9,7 +9,7 @@ import com.rahim.investmentservice.enums.TransactionType;
 import com.rahim.investmentservice.model.Investment;
 import com.rahim.investmentservice.model.Transaction;
 import com.rahim.investmentservice.service.investment.InvestmentCreationService;
-import com.rahim.investmentservice.service.repository.HoldingRepositoryHandler;
+import com.rahim.investmentservice.service.repository.InvestmentRepositoryHandler;
 import com.rahim.investmentservice.service.transaction.TxnCreationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ import java.time.ZoneOffset;
 public class InvestmentCreationImpl implements InvestmentCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InvestmentCreationImpl.class);
-    private final HoldingRepositoryHandler holdingRepositoryHandler;
+    private final InvestmentRepositoryHandler investmentRepositoryHandler;
     private final TxnCreationService txnCreationService;
     private final CacheManager hazelcastCacheManager;
 
@@ -63,7 +63,7 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
         }
 
         Investment investment = new Investment(accountId, goldTypeId, quantityValue, purchasePrice, purchaseDate);
-        holdingRepositoryHandler.save(investment);
+        investmentRepositoryHandler.save(investment);
 
         OffsetDateTime offsetDateTime = purchaseDate.atStartOfDay().atOffset(ZoneOffset.UTC);
         Transaction transaction = new Transaction(accountId, goldTypeId, quantity, TransactionType.BUY, purchasePrice, offsetDateTime);
