@@ -44,6 +44,7 @@ public class InvestmentController {
                 investmentCreationService.addNewInvestment(accountId, investmentRequestDto);
             }
 
+            LOG.info("Investment created successfully for account ID: {}", accountId);
             return ResponseEntity.status(HttpStatus.CREATED).body("Investment created successfully");
         } catch (IllegalStateException e) {
             LOG.error("An error occurred processing new transaction");
