@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @created 19/05/2024
  */
 @Repository
-public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
+public interface TxnRepository extends JpaRepository<Transaction, Integer> {
 }

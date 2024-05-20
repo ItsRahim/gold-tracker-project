@@ -1,9 +1,5 @@
 package com.rahim.investmentservice.service.transaction.implementation;
 
-import com.hazelcast.collection.ISet;
-import com.hazelcast.map.IMap;
-import com.rahim.common.constant.HazelcastConstant;
-import com.rahim.common.service.hazelcast.CacheManager;
 import com.rahim.investmentservice.model.Transaction;
 import com.rahim.investmentservice.service.repository.TxnRepositoryHandler;
 import com.rahim.investmentservice.service.transaction.TxnCreationService;
@@ -22,28 +18,9 @@ public class TxnCreationImpl implements TxnCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TxnCreationImpl.class);
     private final TxnRepositoryHandler txnRepositoryHandler;
-    private final CacheManager hazelcastCacheManager;
 
     @Override
     public void addNewTransaction(Transaction transaction) {
-    }
-
-
-    private boolean accountExists(int accountId) {
-        ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_SET);
-        return accountIds.contains(accountId);
-    }
-
-    private Integer getGoldTypeId(String goldType) {
-        IMap<String, Integer> goldTypeMap = hazelcastCacheManager.getMap(HazelcastConstant.GOLD_TYPE_MAP);
-        return goldTypeMap.get(goldType);
-    }
-
-    private void handleSellTxn(Transaction transaction) {
-        //STUB METHOD
-    }
-
-    private void handleBuyTxn(Transaction transaction) {
-        //STUB METHOD
+        //to do this
     }
 }

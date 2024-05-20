@@ -21,10 +21,6 @@ import java.util.List;
 import static com.rahim.investmentservice.constants.InvestmentControllerEndpoint.ACCOUNT_ID;
 import static com.rahim.investmentservice.constants.InvestmentControllerEndpoint.BASE_URL;
 
-/**
- * @author Rahim Ahmed
- * @created 19/05/2024
- */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL)
