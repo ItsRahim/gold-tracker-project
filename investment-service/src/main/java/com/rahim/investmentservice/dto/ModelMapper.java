@@ -1,6 +1,5 @@
 package com.rahim.investmentservice.dto;
 
-import com.rahim.investmentservice.model.Investment;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -12,7 +11,5 @@ import org.mapstruct.factory.Mappers;
 public interface ModelMapper {
 
     ModelMapper INSTANCE = Mappers.getMapper(ModelMapper.class);
-
-    Investment toInvestmentEntity(InvestmentRequestDto investmentDto);
 
 }

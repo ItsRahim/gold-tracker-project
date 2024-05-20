@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.rahim</groupId>
-    <artifactId>HOLDINGSNEW-service</artifactId>
+    <artifactId>investment-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>HOLDINGSNEW-service</name>
-    <description>HOLDINGSNEW-service</description>
+    <name>investment-service</name>
+    <description>investment-service</description>
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
