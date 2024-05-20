@@ -8,5 +8,5 @@ import com.rahim.investmentservice.dto.InvestmentRequestDto;
  */
 public interface InvestmentCreationService {
 
-    void addNewHolding(int accountId, InvestmentRequestDto investmentRequestDto);
+    void addNewInvestment(int accountId, InvestmentRequestDto investmentRequestDto);
 }

@@ -36,7 +36,7 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
     private final CacheManager hazelcastCacheManager;
 
     @Override
-    public void addNewHolding(int accountId, InvestmentRequestDto investmentRequestDto) {
+    public void addNewInvestment(int accountId, InvestmentRequestDto investmentRequestDto) {
         validateRequest(investmentRequestDto);
 
         final String goldType = investmentRequestDto.getGoldTypeName();

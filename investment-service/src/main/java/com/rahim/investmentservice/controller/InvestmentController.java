@@ -41,7 +41,7 @@ public class InvestmentController {
             @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
             @Parameter(description = "The new investment details", required = true) @RequestBody InvestmentRequestDto investmentRequestDto) {
         try {
-            investmentCreationService.addNewHolding(accountId, investmentRequestDto);
+            investmentCreationService.addNewInvestment(accountId, investmentRequestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body("Investment created successfully");
         } catch (IllegalStateException e) {
             LOG.error("An error occurred processing new transaction");
