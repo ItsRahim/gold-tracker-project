@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.service.investment;
 
-import com.rahim.investmentservice.dto.HoldingRequestDto;
+import com.rahim.investmentservice.dto.InvestmentRequestDto;
 
 /**
  * @author Rahim Ahmed
@@ -8,5 +8,5 @@ import com.rahim.investmentservice.dto.HoldingRequestDto;
  */
 public interface InvestmentCreationService {
 
-    void addNewHolding(int accountId, HoldingRequestDto holdingRequestDto);
+    void addNewHolding(int accountId, InvestmentRequestDto investmentRequestDto);
 }

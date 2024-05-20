@@ -4,7 +4,7 @@ import com.hazelcast.collection.ISet;
 import com.hazelcast.map.IMap;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.service.hazelcast.CacheManager;
-import com.rahim.investmentservice.dto.HoldingRequestDto;
+import com.rahim.investmentservice.dto.InvestmentRequestDto;
 import com.rahim.investmentservice.enums.TransactionType;
 import com.rahim.investmentservice.model.Investment;
 import com.rahim.investmentservice.model.Transaction;
@@ -36,13 +36,13 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
     private final CacheManager hazelcastCacheManager;
 
     @Override
-    public void addNewHolding(int accountId, HoldingRequestDto holdingRequestDto) {
-        validateRequest(holdingRequestDto);
+    public void addNewHolding(int accountId, InvestmentRequestDto investmentRequestDto) {
+        validateRequest(investmentRequestDto);
 
-        final String goldType = holdingRequestDto.getGoldTypeName();
-        final Integer quantity = holdingRequestDto.getQuantity();
-        final BigDecimal purchasePrice = holdingRequestDto.getPurchasePrice();
-        LocalDate purchaseDate = holdingRequestDto.getPurchaseDate();
+        final String goldType = investmentRequestDto.getGoldTypeName();
+        final Integer quantity = investmentRequestDto.getQuantity();
+        final BigDecimal purchasePrice = investmentRequestDto.getPurchasePrice();
+        LocalDate purchaseDate = investmentRequestDto.getPurchaseDate();
 
         if (!accountExists(accountId)) {
             LOG.warn("Unable to add transaction for account id: {}. Account does not exist", accountId);
@@ -70,11 +70,11 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
         txnCreationService.addNewTransaction(transaction);
     }
 
-    private void validateRequest(HoldingRequestDto holdingRequestDto) {
-        if (holdingRequestDto == null) {
+    private void validateRequest(InvestmentRequestDto investmentRequestDto) {
+        if (investmentRequestDto == null) {
             throw new IllegalArgumentException("Investment request cannot be null");
         }
-        if (holdingRequestDto.getPurchasePrice() == null || holdingRequestDto.getPurchasePrice().compareTo(BigDecimal.ZERO) <= 0) {
+        if (investmentRequestDto.getPurchasePrice() == null || investmentRequestDto.getPurchasePrice().compareTo(BigDecimal.ZERO) <= 0) {
             LOG.warn("Unable to process transaction. Transaction price is null or non-positive");
             throw new IllegalStateException("Invalid purchase price provided");
         }
