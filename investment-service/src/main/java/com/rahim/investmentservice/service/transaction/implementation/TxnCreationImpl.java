@@ -26,22 +26,6 @@ public class TxnCreationImpl implements TxnCreationService {
 
     @Override
     public void addNewTransaction(Transaction transaction) {
-
-        // Create the transaction object
-        Transaction transaction = new Transaction(accountId, goldTypeId, quantityValue, transactionType, transactionPrice, transactionDate);
-
-        // Handle the transaction based on its type
-        switch (transactionType) {
-            case BUY:
-                handleBuyTxn(transaction);
-                break;
-            case SELL:
-                handleSellTxn(transaction);
-                break;
-            default:
-                LOG.error("Unknown transaction type request. Unable to process");
-                break;
-        }
     }
 
 

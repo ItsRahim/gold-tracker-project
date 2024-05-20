@@ -16,6 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+import static com.rahim.investmentservice.constants.InvestmentControllerEndpoint.ACCOUNT_ID;
 import static com.rahim.investmentservice.constants.InvestmentControllerEndpoint.BASE_URL;
 
 /**
@@ -31,17 +34,20 @@ public class InvestmentController {
     private static final Logger LOG = LoggerFactory.getLogger(InvestmentController.class);
     private final InvestmentCreationService investmentCreationService;
 
-    @Operation(summary = "Create a new transaction")
+    @Operation(summary = "Add a new investment")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Investment created successfully", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
     })
-    @PostMapping(value = "{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addNewInvestment(
             @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
-            @Parameter(description = "The new investment details", required = true) @RequestBody InvestmentRequestDto investmentRequestDto) {
+            @Parameter(description = "The new investment details", required = true) @RequestBody List<InvestmentRequestDto> investmentRequestDtos) {
         try {
-            investmentCreationService.addNewInvestment(accountId, investmentRequestDto);
+            for (InvestmentRequestDto investmentRequestDto : investmentRequestDtos) {
+                investmentCreationService.addNewInvestment(accountId, investmentRequestDto);
+            }
+
             return ResponseEntity.status(HttpStatus.CREATED).body("Investment created successfully");
         } catch (IllegalStateException e) {
             LOG.error("An error occurred processing new transaction");

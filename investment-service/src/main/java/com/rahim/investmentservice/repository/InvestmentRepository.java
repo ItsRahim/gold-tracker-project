@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.repository;
 
-import com.rahim.investmentservice.model.Holding;
+import com.rahim.investmentservice.model.Investment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @created 19/05/2024
  */
 @Repository
-public interface InvestmentRepository extends JpaRepository<Holding, Integer> {
+public interface InvestmentRepository extends JpaRepository<Investment, Integer> {
 }
