@@ -23,7 +23,7 @@ CREATE TABLE rgts.transactions (
     quantity INT CHECK (quantity > 0) DEFAULT 1,
     transaction_type VARCHAR(4) CHECK (transaction_type IN ('BUY', 'SELL')),
     transaction_price NUMERIC(10, 2),
-    transaction_date TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'UTC')
+    transaction_date DATE DEFAULT CURRENT_DATE
 );
 
 COMMENT ON TABLE rgts.transactions IS 'A table to store all transactions made by users';
@@ -33,7 +33,7 @@ COMMENT ON COLUMN rgts.transactions.gold_type_id IS 'The ID of the gold type inv
 COMMENT ON COLUMN rgts.transactions.quantity IS 'The quantity of the gold type involved in the transaction';
 COMMENT ON COLUMN rgts.transactions.transaction_type IS 'An indicator if the transaction was a buy or sell';
 COMMENT ON COLUMN rgts.transactions.transaction_price IS 'The price of the transaction';
-COMMENT ON COLUMN rgts.transactions.transaction_date IS 'The date and time of the transaction';
+COMMENT ON COLUMN rgts.transactions.transaction_date IS 'The date of the transaction';
 
 -- Creating investments table to store total holding overview for each account
 CREATE TABLE rgts.holdings (

@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Getter
@@ -46,9 +47,9 @@ public class Transaction {
     private BigDecimal transactionPrice;
 
     @Column(name = "transaction_date")
-    private OffsetDateTime transactionDate;
+    private LocalDate transactionDate;
 
-    public Transaction(Integer accountId, Integer goldTypeId, Integer quantity, String transactionType, BigDecimal transactionPrice, OffsetDateTime transactionDate) {
+    public Transaction(Integer accountId, Integer goldTypeId, Integer quantity, String transactionType, BigDecimal transactionPrice, LocalDate transactionDate) {
         this.accountId = accountId;
         this.goldTypeId = goldTypeId;
         this.quantity = quantity;

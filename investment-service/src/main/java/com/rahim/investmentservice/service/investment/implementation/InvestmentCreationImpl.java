@@ -32,7 +32,7 @@ import java.time.ZoneOffset;
 public class InvestmentCreationImpl implements InvestmentCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InvestmentCreationImpl.class);
-    private final InvestmentRepository investmentRepository;
+    private final InvestmentRepositoryHandler investmentRepositoryHandler;
     private final TxnCreationService txnCreationService;
     private final CacheManager hazelcastCacheManager;
 
@@ -63,11 +63,15 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
             purchaseDate = LocalDate.now(ZoneId.of("UTC"));
         }
 
-        Investment investment = new Investment(accountId, goldTypeId, quantityValue, purchasePrice, purchaseDate);
-        investmentRepository.save(investment);
+        LOG.debug("Adding new investment for account ID: {}, gold type ID: {}, quantity: {}, purchase price: {}, purchase date: {}",
+                accountId, goldTypeId, quantityValue, purchasePrice, purchaseDate);
 
-        OffsetDateTime offsetDateTime = purchaseDate.atStartOfDay().atOffset(ZoneOffset.UTC);
-        Transaction transaction = new Transaction(accountId, goldTypeId, quantity, TransactionType.BUY.getValue(), purchasePrice, offsetDateTime);
+        Investment investment = new Investment(accountId, goldTypeId, quantityValue, purchasePrice, purchaseDate);
+        investmentRepositoryHandler.saveInvestment(investment);
+
+        LOG.debug("Investment saved successfully for account ID: {}", accountId);
+
+        Transaction transaction = new Transaction(accountId, goldTypeId, quantity, TransactionType.BUY.getValue(), purchasePrice, purchaseDate);
         txnCreationService.addNewTransaction(transaction);
     }
 

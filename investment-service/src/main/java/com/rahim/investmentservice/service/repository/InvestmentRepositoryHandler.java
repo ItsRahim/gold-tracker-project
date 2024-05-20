@@ -8,5 +8,5 @@ import com.rahim.investmentservice.model.Investment;
  */
 public interface InvestmentRepositoryHandler {
 
-    void save(Investment investment);
+    void saveInvestment(Investment investment);
 }

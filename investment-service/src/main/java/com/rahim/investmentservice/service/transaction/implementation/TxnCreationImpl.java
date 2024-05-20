@@ -23,5 +23,6 @@ public class TxnCreationImpl implements TxnCreationService {
     @Override
     public void addNewTransaction(Transaction transaction) {
         txnRepository.save(transaction);
+        LOG.debug("Transaction added successfully for account ID: {}", transaction.getAccountId());
     }
 }
