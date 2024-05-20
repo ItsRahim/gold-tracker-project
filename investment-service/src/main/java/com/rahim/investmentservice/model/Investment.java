@@ -14,14 +14,13 @@ import java.time.LocalDate;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "rgts.holdings", indexes = {
-        @Index(name = "idx_holdings_account_gold", columnList = "account_id, gold_type_id"),
-        @Index(name = "idx_holdings_account_id", columnList = "account_id")
+@Table(name = "rgts.investments", indexes = {
+        @Index(name = "idx_investments_account_id", columnList = "account_id")
 })
 public class Investment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "holding_id", nullable = false)
+    @Column(name = "investment_id", nullable = false)
     private Integer id;
 
     @Column(name = "account_id", nullable = false)

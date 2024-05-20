@@ -1,6 +1,6 @@
 -- Creating holdings table to store details of current user investments, non grouped
 CREATE TABLE rgts.investments (
-    holding_id SERIAL PRIMARY KEY,
+    investment_id SERIAL PRIMARY KEY,
     account_id INT REFERENCES rgts.user_accounts(account_id) ON DELETE CASCADE NOT NULL,
     gold_type_id INT REFERENCES rgts.gold_types(gold_type_id) ON DELETE CASCADE NOT NULL,
     quantity INT CHECK (quantity > 0) DEFAULT 1,
@@ -9,7 +9,7 @@ CREATE TABLE rgts.investments (
 );
 
 COMMENT ON TABLE rgts.investments IS 'A table to store all current investments users';
-COMMENT ON COLUMN rgts.investments.holding_id IS 'A unique identifier for each user investment';
+COMMENT ON COLUMN rgts.investments.investment_id IS 'A unique identifier for each user investment';
 COMMENT ON COLUMN rgts.investments.gold_type_id IS 'The ID of the gold type the user is currently investment';
 COMMENT ON COLUMN rgts.investments.quantity IS 'The quantity of gold held by the user';
 COMMENT ON COLUMN rgts.investments.purchase_price IS 'The price at which the user bought the gold item';
@@ -34,8 +34,6 @@ COMMENT ON COLUMN rgts.transactions.quantity IS 'The quantity of the gold type i
 COMMENT ON COLUMN rgts.transactions.transaction_type IS 'An indicator if the transaction was a buy or sell';
 COMMENT ON COLUMN rgts.transactions.transaction_price IS 'The price of the transaction';
 COMMENT ON COLUMN rgts.transactions.transaction_date IS 'The date and time of the transaction';
-
-
 
 -- Creating investments table to store total holding overview for each account
 CREATE TABLE rgts.holdings (
