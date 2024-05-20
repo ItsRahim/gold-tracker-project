@@ -1,6 +1,5 @@
 package com.rahim.investmentservice.controller;
 
-import com.rahim.investmentservice.service.transaction.TxnCreationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,6 +19,5 @@ import static com.rahim.investmentservice.constants.TransactionControllerEndpoin
 public class TransactionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);
-    private final TxnCreationService txnCreationService;
 
 }

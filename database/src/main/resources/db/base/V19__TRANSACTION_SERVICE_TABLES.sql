@@ -37,9 +37,9 @@ COMMENT ON COLUMN rgts.transactions.transaction_date IS 'The date and time of th
 
 
 
--- Creating investments table to store total HOLDINGSNEW overview for each account
+-- Creating investments table to store total holding overview for each account
 CREATE TABLE rgts.holdings (
-   investment_id SERIAL PRIMARY KEY,
+   holding_id SERIAL PRIMARY KEY,
    account_id INT REFERENCES rgts.user_accounts(account_id) ON DELETE CASCADE NOT NULL,
    total_purchase_amount NUMERIC(15, 2),
    current_value NUMERIC(15, 2),
@@ -48,14 +48,14 @@ CREATE TABLE rgts.holdings (
 );
 
 COMMENT ON TABLE rgts.holdings IS 'This table stores holdings data.';
-COMMENT ON COLUMN rgts.holdings.investment_id IS 'Unique identifier for each HOLDINGSNEW';
+COMMENT ON COLUMN rgts.holdings.holding_id IS 'Unique identifier for each holding';
 COMMENT ON COLUMN rgts.holdings.account_id IS 'Foreign key referencing user accounts';
-COMMENT ON COLUMN rgts.holdings.total_purchase_amount IS 'Total amount spent on the HOLDINGSNEW';
-COMMENT ON COLUMN rgts.holdings.current_value IS 'Current value of the HOLDINGSNEW';
+COMMENT ON COLUMN rgts.holdings.total_purchase_amount IS 'Total amount spent on the holding';
+COMMENT ON COLUMN rgts.holdings.current_value IS 'Current value of the holding';
 COMMENT ON COLUMN rgts.holdings.profit_loss IS 'Profit or loss amount';
-COMMENT ON COLUMN rgts.holdings.total_weight IS 'Weight of the HOLDINGSNEW in the portfolio';
+COMMENT ON COLUMN rgts.holdings.total_weight IS 'Weight of the holding in the portfolio';
 
--- Indexes for holdings table
+-- Indexes for investments table
 CREATE INDEX idx_investments_account_id ON rgts.investments(account_id);
 CREATE INDEX idx_investments_account_gold ON rgts.investments(account_id, gold_type_id);
 
@@ -64,5 +64,5 @@ CREATE INDEX idx_transactions_account_id ON rgts.transactions(account_id);
 CREATE INDEX idx_transactions_account_date ON rgts.transactions(account_id, transaction_date);
 CREATE INDEX idx_transactions_gold_type_id ON rgts.transactions(gold_type_id);
 
--- Index for investments table
+-- Index for holdings table
 CREATE INDEX idx_holdings_account_id ON rgts.holdings(account_id);

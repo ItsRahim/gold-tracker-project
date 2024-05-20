@@ -37,9 +37,9 @@ public class InvestmentController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
     })
     @PostMapping(value = "{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> addNewTxn(
+    public ResponseEntity<Object> addNewInvestment(
             @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
-            @Parameter(description = "The new holding details", required = true) @RequestBody InvestmentRequestDto investmentRequestDto) {
+            @Parameter(description = "The new investment details", required = true) @RequestBody InvestmentRequestDto investmentRequestDto) {
         try {
             investmentCreationService.addNewHolding(accountId, investmentRequestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body("Investment created successfully");
