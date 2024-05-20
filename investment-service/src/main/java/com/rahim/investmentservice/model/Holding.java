@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -14,32 +13,28 @@ import java.time.LocalDate;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "rgts.holdings", indexes = {
-        @Index(name = "idx_holdings_account_gold", columnList = "account_id, gold_type_id"),
-        @Index(name = "idx_holdings_account_id", columnList = "account_id")
+@Table(name = "rgts.investments", indexes = {
+        @Index(name = "idx_investments_account_id", columnList = "account_id")
 })
 public class Holding {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "holding_id", nullable = false)
+    @Column(name = "investment_id", nullable = false)
     private Integer id;
-
-    @Column(name = "transaction_id", nullable = false)
-    private Integer transactionId;
 
     @Column(name = "account_id", nullable = false)
     private Integer accountId;
 
-    @Column(name = "gold_type_id", nullable = false)
-    private Integer goldTypeId;
+    @Column(name = "total_purchase_amount")
+    private BigDecimal totalPurchaseAmount;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "current_value")
+    private BigDecimal currentValue;
 
-    @Column(name = "purchase_price")
-    private BigDecimal purchasePrice;
+    @Column(name = "profit_loss")
+    private BigDecimal profitLoss;
 
-    @Column(name = "purchase_date")
-    private LocalDate purchaseDate;
+    @Column(name = "total_weight")
+    private BigDecimal totalWeight;
 
 }

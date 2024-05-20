@@ -31,22 +31,4 @@ public class TransactionController {
     private static final Logger LOG = LoggerFactory.getLogger(TransactionController.class);
     private final TxnCreationService txnCreationService;
 
-    @Operation(summary = "Create a new transaction")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Transaction created successfully", content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
-    })
-    @PostMapping(value = "{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> addNewTxn(
-            @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
-            @Parameter(description = "The transaction details", required = true) @RequestBody TxnRequestDto txnRequestDto) {
-        try {
-            txnCreationService.addNewTransaction(accountId, txnRequestDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Transaction created successfully");
-        } catch (IllegalStateException e) {
-            LOG.error("An error occurred processing new transaction");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
-        }
-    }
-
 }

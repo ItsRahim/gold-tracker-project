@@ -1,7 +1,7 @@
 package com.rahim.investmentservice.dto;
 
-import com.rahim.investmentservice.model.Holding;
 import com.rahim.investmentservice.model.Investment;
+import com.rahim.investmentservice.model.Holding;
 import com.rahim.investmentservice.model.Transaction;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -15,9 +15,9 @@ public interface ModelMapper {
 
     ModelMapper INSTANCE = Mappers.getMapper(ModelMapper.class);
 
-    Holding toHoldingEntity(HoldingRequestDto holdingDto);
+    Investment toHoldingEntity(HoldingRequestDto holdingDto);
 
-    Investment toInvestmentEntity(InvestmentRequestDto investmentDto);
+    Holding toInvestmentEntity(InvestmentRequestDto investmentDto);
 
     Transaction toTransactionEntity(TxnRequestDto transactionDto);
 }

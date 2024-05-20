@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.service.transaction;
 
-import com.rahim.investmentservice.dto.TxnRequestDto;
+import com.rahim.investmentservice.model.Transaction;
 
 /**
  * @author Rahim Ahmed
@@ -8,5 +8,5 @@ import com.rahim.investmentservice.dto.TxnRequestDto;
  */
 public interface TxnCreationService {
 
-    void addNewTransaction(int accountId, TxnRequestDto txnRequestDto);
+    void addNewTransaction(Transaction transaction);
 }
