@@ -1,5 +1,6 @@
 package com.rahim.investmentservice.service.repository.implementation;
 
+import com.rahim.investmentservice.repository.TxnRepository;
 import com.rahim.investmentservice.service.repository.TxnRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,5 +18,5 @@ import org.springframework.transaction.annotation.Transactional;
 public class TxnRepositoryHandlerService implements TxnRepositoryHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(TxnRepositoryHandlerService.class);
-    //private final TxnRepository txnRepository;
+    private final TxnRepository txnRepository;
 }

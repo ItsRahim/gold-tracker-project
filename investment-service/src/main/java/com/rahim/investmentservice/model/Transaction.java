@@ -1,6 +1,5 @@
 package com.rahim.investmentservice.model;
 
-import com.rahim.investmentservice.enums.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -9,12 +8,12 @@ import org.hibernate.annotations.DynamicInsert;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 @Getter
 @Setter
 @ToString
 @Entity
+@Builder
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor

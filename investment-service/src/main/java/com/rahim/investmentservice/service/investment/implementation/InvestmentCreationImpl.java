@@ -6,9 +6,10 @@ import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.service.hazelcast.CacheManager;
 import com.rahim.investmentservice.dto.InvestmentRequestDto;
 import com.rahim.investmentservice.enums.TransactionType;
+import com.rahim.investmentservice.model.Holding;
 import com.rahim.investmentservice.model.Investment;
 import com.rahim.investmentservice.model.Transaction;
-import com.rahim.investmentservice.repository.InvestmentRepository;
+import com.rahim.investmentservice.service.holding.HoldingCreationService;
 import com.rahim.investmentservice.service.investment.InvestmentCreationService;
 import com.rahim.investmentservice.service.repository.InvestmentRepositoryHandler;
 import com.rahim.investmentservice.service.transaction.TxnCreationService;
@@ -19,9 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 
 /**
  * @author Rahim Ahmed
@@ -33,6 +32,7 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InvestmentCreationImpl.class);
     private final InvestmentRepositoryHandler investmentRepositoryHandler;
+    private final HoldingCreationService holdingCreationService;
     private final TxnCreationService txnCreationService;
     private final CacheManager hazelcastCacheManager;
 
@@ -71,7 +71,10 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
 
         LOG.debug("Investment saved successfully for account ID: {}", accountId);
 
-        Transaction transaction = new Transaction(accountId, goldTypeId, quantity, TransactionType.BUY.getValue(), purchasePrice, purchaseDate);
+        Holding holding = new Holding(accountId, investment.getId(), purchasePrice);
+        holdingCreationService.processNewHolding(holding, goldTypeId, quantityValue);
+
+        Transaction transaction = new Transaction(accountId, goldTypeId, quantityValue, TransactionType.BUY.getValue(), purchasePrice, purchaseDate);
         txnCreationService.addNewTransaction(transaction);
     }
 

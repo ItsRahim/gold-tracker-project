@@ -15,6 +15,23 @@ COMMENT ON COLUMN rgts.investments.quantity IS 'The quantity of gold held by the
 COMMENT ON COLUMN rgts.investments.purchase_price IS 'The price at which the user bought the gold item';
 COMMENT ON COLUMN rgts.investments.purchase_date IS 'The purchase date of the gold item';
 
+-- Creating investments table to store total holding overview for each account
+CREATE TABLE rgts.holdings (
+    holding_id SERIAL PRIMARY KEY,
+    account_id INT REFERENCES rgts.user_accounts(account_id) ON DELETE CASCADE NOT NULL,
+    investment_id INT REFERENCES investments(investment_id) ON DELETE CASCADE NOT NULL,
+    total_purchase_amount NUMERIC(15, 2),
+    current_value NUMERIC(15, 2),
+    profit_loss NUMERIC(15, 2)
+);
+
+COMMENT ON TABLE rgts.holdings IS 'This table stores holdings data.';
+COMMENT ON COLUMN rgts.holdings.holding_id IS 'Unique identifier for each holding';
+COMMENT ON COLUMN rgts.holdings.account_id IS 'Foreign key referencing user accounts';
+COMMENT ON COLUMN rgts.holdings.total_purchase_amount IS 'Total amount spent on the holding';
+COMMENT ON COLUMN rgts.holdings.current_value IS 'Current value of the holding';
+COMMENT ON COLUMN rgts.holdings.profit_loss IS 'Profit or loss amount';
+
 -- Creating transactions table to store details of transactions made by users
 CREATE TABLE rgts.transactions (
     transaction_id SERIAL PRIMARY KEY,
@@ -34,24 +51,6 @@ COMMENT ON COLUMN rgts.transactions.quantity IS 'The quantity of the gold type i
 COMMENT ON COLUMN rgts.transactions.transaction_type IS 'An indicator if the transaction was a buy or sell';
 COMMENT ON COLUMN rgts.transactions.transaction_price IS 'The price of the transaction';
 COMMENT ON COLUMN rgts.transactions.transaction_date IS 'The date of the transaction';
-
--- Creating investments table to store total holding overview for each account
-CREATE TABLE rgts.holdings (
-   holding_id SERIAL PRIMARY KEY,
-   account_id INT REFERENCES rgts.user_accounts(account_id) ON DELETE CASCADE NOT NULL,
-   total_purchase_amount NUMERIC(15, 2),
-   current_value NUMERIC(15, 2),
-   profit_loss NUMERIC(15, 2),
-   total_weight NUMERIC(15, 2)
-);
-
-COMMENT ON TABLE rgts.holdings IS 'This table stores holdings data.';
-COMMENT ON COLUMN rgts.holdings.holding_id IS 'Unique identifier for each holding';
-COMMENT ON COLUMN rgts.holdings.account_id IS 'Foreign key referencing user accounts';
-COMMENT ON COLUMN rgts.holdings.total_purchase_amount IS 'Total amount spent on the holding';
-COMMENT ON COLUMN rgts.holdings.current_value IS 'Current value of the holding';
-COMMENT ON COLUMN rgts.holdings.profit_loss IS 'Profit or loss amount';
-COMMENT ON COLUMN rgts.holdings.total_weight IS 'Weight of the holding in the portfolio';
 
 -- Indexes for investments table
 CREATE INDEX idx_investments_account_id ON rgts.investments(account_id);

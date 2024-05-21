@@ -9,4 +9,8 @@ import com.rahim.investmentservice.model.Investment;
 public interface InvestmentRepositoryHandler {
 
     void saveInvestment(Investment investment);
+
+    boolean investmentExists(int accountId, int investmentId);
+
+    Investment getInvestmentById(int investmentId);
 }

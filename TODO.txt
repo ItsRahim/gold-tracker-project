@@ -42,6 +42,11 @@ Linked hashmap maintains the order in which keys are inserted
 -Add failover mechanism upon failed retries to read from db if hazelcast is down. Same for kafka - DONE for kafka, WIP for hazelcast
 -Fix issue with wrong UTC being inserted, its one hour behind
 -Create db users for each microservice, control operations on tables and which can be seen
+-Handle user adding investment on purchase date older than gold data available - ENHANCEMENT
+-Fix issue of fallback hazelcast instance being created when main cluster is up and switching - BUG
+-Fix issue of kafka health monitor getting wrong status - BUG
+-Add rollback upon an error in code, do this when upgrading exception handling
+-Enhancement/Improvements to gold creation methods needed
 Performance Testing:
 - VisualVM
 - Apache JMeter

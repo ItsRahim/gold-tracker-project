@@ -27,6 +27,9 @@ public class Holding {
     @Column(name = "account_id", nullable = false)
     private Integer accountId;
 
+    @Column(name = "investment_id", nullable = false)
+    private Integer investmentId;
+
     @Column(name = "total_purchase_amount", precision = 15, scale = 2)
     private BigDecimal totalPurchaseAmount;
 
@@ -36,8 +39,9 @@ public class Holding {
     @Column(name = "profit_loss", precision = 15, scale = 2)
     private BigDecimal profitLoss;
 
-    @Column(name = "total_weight", precision = 15, scale = 2)
-    private BigDecimal totalWeight;
-
-
+    public Holding(Integer accountId, Integer investmentId, BigDecimal totalPurchaseAmount) {
+        this.accountId = accountId;
+        this.investmentId = investmentId;
+        this.totalPurchaseAmount = totalPurchaseAmount;
+    }
 }
