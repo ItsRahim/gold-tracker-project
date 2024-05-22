@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class ThresholdUpdateService implements IThresholdUpdateService {
     private static final String THRESHOLD_PRICE = "thresholdPrice";
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateNotification(int thresholdId, Map<String, String> updatedData) {
         Optional<ThresholdAlert> optionalAlert = thresholdAlertRepositoryHandler.findById(thresholdId);
         if (optionalAlert.isEmpty()) {

@@ -25,6 +25,7 @@ public class GoldPriceHistoryService implements IGoldPriceHistoryService {
     private final ApiDataProcessor apiDataProcessor;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateHistoryTable() {
         try {
             GoldData apiData = apiDataProcessor.getProcessedData();

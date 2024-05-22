@@ -63,7 +63,6 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void addNewGoldType(GoldType goldType) {
         if (!ObjectUtils.allNotNull(goldType, goldType.getName(), goldType.getNetWeight(), goldType.getCarat(), goldType.getDescription())) {
             LOG.error("GoldType object is null or contains null properties. Unable to save.");
@@ -79,7 +78,6 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void updateGoldType(GoldType goldType) {
         if (goldType == null || goldType.getId() == null) {
             LOG.error("Invalid gold type or gold type ID is null. Unable to save.");
@@ -107,7 +105,6 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void deleteById(int goldId) {
         goldTypeRepository.deleteById(goldId);
     }

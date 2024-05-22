@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class GoldTypeUpdateService implements IGoldTypeUpdateService {
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateGoldType(int goldId, Map<String, String> updatedData) {
         Optional<GoldType> optionalGoldType = goldTypeRepositoryHandler.findById(goldId);
 

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class ThresholdDeletionService implements IThresholdDeletionService {
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteNotification(int alertId) {
         Optional<ThresholdAlert> optionalAlert = thresholdAlertRepositoryHandler.findById(alertId);
         if (optionalAlert.isPresent()) {
