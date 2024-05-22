@@ -8,7 +8,7 @@ public final class InvestmentControllerEndpoint {
 
     private InvestmentControllerEndpoint() {}
 
-    public static final String BASE_URL = "/api/v1/gold/investment-service/invest";
+    public static final String BASE_URL = "/api/v1/invest";
     public static final String ACCOUNT_ID = "{accountId}";
     public static final String INVESTMENT_ID = "{investmentId}";
 }

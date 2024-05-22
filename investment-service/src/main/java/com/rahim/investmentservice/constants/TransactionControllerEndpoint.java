@@ -8,5 +8,5 @@ public final class TransactionControllerEndpoint {
 
     private TransactionControllerEndpoint() {}
 
-    public static final String BASE_URL = "/api/v1/gold/investment-service/transaction";
+    public static final String BASE_URL = "/api/v1/transaction";
 }
