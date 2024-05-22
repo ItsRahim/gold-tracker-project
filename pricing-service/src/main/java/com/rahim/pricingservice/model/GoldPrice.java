@@ -3,6 +3,7 @@ package com.rahim.pricingservice.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "gold_prices", schema = "rgts")
 public class GoldPrice {
     @Id
@@ -35,4 +37,8 @@ public class GoldPrice {
     @JsonProperty("updatedAt")
     private OffsetDateTime updatedAt;
 
+    public GoldPrice(GoldType goldType, BigDecimal currentPrice) {
+        this.goldType = goldType;
+        this.currentPrice = currentPrice;
+    }
 }

@@ -1,5 +1,6 @@
 package com.rahim.pricingservice.service.price.implementation;
 
+import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldPriceRepository;
 import com.rahim.pricingservice.service.price.IGoldPriceCreationService;
@@ -33,7 +34,8 @@ public class GoldPriceCreationService implements IGoldPriceCreationService {
             BigDecimal goldPrice = calculatePrice(goldType.getCarat(), goldType.getNetWeight());
             LOG.debug("Gold price calculated: £{} for carat {} and net weight {} grams", goldPrice, goldType.getCarat(), goldType.getNetWeight());
 
-            goldPriceRepository.insertGoldPrice(goldType.getId(), goldPrice);
+            GoldPrice goldPriceModel = new GoldPrice(goldType, goldPrice);
+            goldPriceRepository.save(goldPriceModel);
         } catch (Exception e) {
             LOG.error("Error processing new gold type with ID {}: {}", goldType.getId(), e.getMessage());
             throw new RuntimeException("Error processing new gold type", e);

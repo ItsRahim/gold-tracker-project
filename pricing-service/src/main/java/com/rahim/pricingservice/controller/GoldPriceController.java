@@ -23,8 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
-import static com.rahim.pricingservice.constant.GoldPriceURLConstant.GOLD_ID;
-import static com.rahim.pricingservice.constant.GoldPriceURLConstant.PRICE_BASE_URL;
+import static com.rahim.pricingservice.constant.GoldPriceURLConstant.*;
 
 /**
  * @author Rahim Ahmed

@@ -67,7 +67,6 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
         return goldPriceRepository.findByGoldTypeId(goldTypeId);
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public Optional<GoldPriceDTO> getGoldPrice(int goldId) {

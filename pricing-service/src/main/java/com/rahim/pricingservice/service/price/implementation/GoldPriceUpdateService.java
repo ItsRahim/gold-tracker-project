@@ -76,7 +76,6 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
                 List<GoldPrice> pricesToUpdate = goldPriceRepository.findByTypeId(goldTypeId);
                 pricesToUpdate.forEach(this::updateGoldPrice);
             }
-
         } catch (Exception e) {
             LOG.error("Error updating gold prices: {}", e.getMessage(), e);
         }
