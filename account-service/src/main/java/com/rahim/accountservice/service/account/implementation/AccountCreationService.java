@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This service class is responsible for creating new accounts.
@@ -41,6 +42,7 @@ public class AccountCreationService implements IAccountCreationService {
      * @see IAccountCreationService
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void createAccount(UserRequest userRequest) {
         Account account = ModelMapper.INSTANCE.toAccountEntity(userRequest.getAccount());
         Profile profile = ModelMapper.INSTANCE.toProfileEntity(userRequest.getProfile());

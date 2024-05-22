@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,6 +42,7 @@ public class InternalAccountService implements IInternalAccountService {
      * @see IInternalAccountService
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void runCleanupJob() {
         findAndUpdateInactiveUsers();
         processInactiveUsers();

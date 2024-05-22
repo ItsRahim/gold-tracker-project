@@ -28,7 +28,6 @@ import java.util.Optional;
  * @created 29/12/2023
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class AccountRepositoryHandlerService implements IAccountRepositoryHandler {
 
@@ -36,6 +35,7 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
     private final AccountRepository accountRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Account> findById(int accountId) {
         try {
             Optional<Account> accountOptional = accountRepository.findById(accountId);
@@ -82,26 +82,31 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByEmail(String email) {
         return accountRepository.existsAccountByEmail(email);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Account> getInactiveUsers(LocalDate cutoffDate) {
         return accountRepository.getInactiveUsers(cutoffDate);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Integer> getUsersToDelete(LocalDate cutoffDate) {
         return accountRepository.getUsersToDelete(cutoffDate);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Tuple> getPendingDeleteUsers() {
         return accountRepository.getPendingDeleteUsers();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Account> getAllAccounts() {
         List<Account> accounts = Collections.emptyList();
 
@@ -121,13 +126,21 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OffsetDateTime getUpdatedAtByUserId(Integer userId) {
         return accountRepository.findUpdatedAtByUserId(userId).atOffset(ZoneOffset.UTC);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Integer> getAccountActiveNotification() {
         return accountRepository.getAccountByNotificationSettingTrue();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> getAllAccountIds() {
+        return accountRepository.getAllAccountId();
     }
 
 }

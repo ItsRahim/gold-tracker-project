@@ -27,5 +27,6 @@ public interface IAccountRepositoryHandler {
     List<Account> getAllAccounts();
     OffsetDateTime getUpdatedAtByUserId(Integer userId);
     List<Integer> getAccountActiveNotification();
+    List<Integer> getAllAccountIds();
 
 }

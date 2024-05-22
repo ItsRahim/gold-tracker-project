@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     private final CacheManager hazelcastCacheManager;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateAccount(int accountId, Map<String, String> updatedData) {
         Account account = getAccountById(accountId);
         String oldEmail = account.getEmail();
