@@ -8,7 +8,7 @@ public class EncryptionControllerURLConstant {
 
     private EncryptionControllerURLConstant() {}
 
-    public static final String ENCRYPTOR_BASE_URL = "/api/v1/gold/config-server";
+    public static final String ENCRYPTOR_BASE_URL = "/api/v1/config-server";
     public static final String ENCRYPT = "/encrypt";
     public static final String PYTHON_ENCRYPT = ENCRYPT + "/python";
 }

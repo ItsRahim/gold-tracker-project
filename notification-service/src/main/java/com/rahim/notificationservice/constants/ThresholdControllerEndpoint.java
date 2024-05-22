@@ -10,7 +10,7 @@ public final class ThresholdControllerEndpoint {
 
     private ThresholdControllerEndpoint(){}
 
-    public static final String BASE_URL = "/api/v1/gold/notification-service";
+    public static final String BASE_URL = "/api/v1/notification";
     public static final String THRESHOLD_ID = "/{thresholdId}";
     public static final String ACCOUNT_ID = "account/{accountId}";
 }

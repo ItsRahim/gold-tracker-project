@@ -8,5 +8,5 @@ public final class HoldingControllerEndpoint {
 
     private HoldingControllerEndpoint() {}
 
-    public static final String BASE_URL = "/api/v1/gold/investment-service/holding";
+    public static final String BASE_URL = "/api/v1/holding";
 }
