@@ -30,8 +30,8 @@ public class Holding {
     @Column(name = "investment_id", nullable = false)
     private Integer investmentId;
 
-    @Column(name = "total_purchase_amount", precision = 15, scale = 2)
-    private BigDecimal totalPurchaseAmount;
+    @Column(name = "purchase_amount", precision = 15, scale = 2)
+    private BigDecimal purchaseAmount;
 
     @Column(name = "current_value", precision = 15, scale = 2)
     private BigDecimal currentValue;
@@ -39,17 +39,16 @@ public class Holding {
     @Column(name = "profit_loss", precision = 15, scale = 2)
     private BigDecimal profitLoss;
 
-    public Holding(Integer accountId, Integer investmentId, BigDecimal totalPurchaseAmount) {
+    public Holding(Integer accountId, Integer investmentId) {
         this.accountId = accountId;
         this.investmentId = investmentId;
-        this.totalPurchaseAmount = totalPurchaseAmount;
     }
 
     public Holding(Holding holding) {
         this.accountId = holding.getAccountId();
         this.investmentId = holding.getInvestmentId();
-        this.totalPurchaseAmount = holding.getTotalPurchaseAmount();
-        this.currentValue = holding.getTotalPurchaseAmount();
+        this.purchaseAmount = holding.getPurchaseAmount();
+        this.currentValue = holding.getCurrentValue();
         this.profitLoss = holding.getProfitLoss();
     }
 }

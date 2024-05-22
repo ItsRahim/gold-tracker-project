@@ -20,7 +20,7 @@ CREATE TABLE rgts.holdings (
     holding_id SERIAL PRIMARY KEY,
     account_id INT REFERENCES rgts.user_accounts(account_id) ON DELETE CASCADE NOT NULL,
     investment_id INT REFERENCES investments(investment_id) ON DELETE CASCADE NOT NULL,
-    total_purchase_amount NUMERIC(15, 2),
+    purchase_amount NUMERIC(15, 2),
     current_value NUMERIC(15, 2),
     profit_loss NUMERIC(15, 2)
 );
@@ -28,7 +28,7 @@ CREATE TABLE rgts.holdings (
 COMMENT ON TABLE rgts.holdings IS 'This table stores holdings data.';
 COMMENT ON COLUMN rgts.holdings.holding_id IS 'Unique identifier for each holding';
 COMMENT ON COLUMN rgts.holdings.account_id IS 'Foreign key referencing user accounts';
-COMMENT ON COLUMN rgts.holdings.total_purchase_amount IS 'Total amount spent on the holding';
+COMMENT ON COLUMN rgts.holdings.purchase_amount IS 'Total amount spent on the holding';
 COMMENT ON COLUMN rgts.holdings.current_value IS 'Current value of the holding';
 COMMENT ON COLUMN rgts.holdings.profit_loss IS 'Profit or loss amount';
 

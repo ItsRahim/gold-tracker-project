@@ -32,10 +32,12 @@ public class HoldingCreationImpl implements HoldingCreationService {
     private final HttpService httpService;
 
     @Override
-    public void processNewHolding(Holding holding, int goldTypeId, int quantity) {
+    public void processNewHolding(Holding holding, int goldTypeId, BigDecimal purchasePrice, int quantity) {
         BigDecimal currentValue = getCurrentValue(goldTypeId);
-        BigDecimal profileLoss = calculateProfitLossPercentage(holding.getTotalPurchaseAmount(), currentValue);
+        BigDecimal purchaseAmount = calculateIndividualAmount(purchasePrice, quantity);
+        BigDecimal profileLoss = calculateProfitLossPercentage(purchaseAmount, currentValue);
 
+        holding.setPurchaseAmount(purchaseAmount);
         holding.setCurrentValue(currentValue);
         holding.setProfitLoss(profileLoss);
 
@@ -49,13 +51,26 @@ public class HoldingCreationImpl implements HoldingCreationService {
         LOG.info("New holding processed successfully: {}", holding);
     }
 
+    private BigDecimal calculateIndividualAmount(BigDecimal purchasePrice, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be a positive integer");
+        }
+
+        return purchasePrice.divide(BigDecimal.valueOf(quantity), 4, RoundingMode.HALF_UP);
+    }
+
     private BigDecimal calculateProfitLossPercentage(BigDecimal totalPurchaseAmount, BigDecimal currentValue) {
         if (totalPurchaseAmount == null || currentValue == null || totalPurchaseAmount.compareTo(BigDecimal.ZERO) == 0) {
             throw new IllegalArgumentException("Total purchase amount must not be null or zero, and current value must not be null");
         }
 
-        BigDecimal profitLoss = currentValue.subtract(totalPurchaseAmount);
-        return profitLoss.divide(totalPurchaseAmount, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+        BigDecimal difference = currentValue.subtract(totalPurchaseAmount);
+
+        BigDecimal percentage = difference
+                .divide(totalPurchaseAmount, 4, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100));
+
+        return percentage.setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getCurrentValue(int goldTypeId) {

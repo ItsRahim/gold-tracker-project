@@ -73,8 +73,8 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
 
         LOG.debug("Investment saved successfully for account ID: {}", accountId);
 
-        Holding holding = new Holding(accountId, investment.getId(), purchasePrice);
-        holdingCreationService.processNewHolding(holding, goldTypeId, quantityValue);
+        Holding holding = new Holding(accountId, investment.getId());
+        holdingCreationService.processNewHolding(holding, goldTypeId, purchasePrice, quantityValue);
 
         Transaction transaction = new Transaction(accountId, goldTypeId, quantityValue, TransactionType.BUY.getValue(), purchasePrice, purchaseDate);
         txnCreationService.addNewTransaction(transaction);

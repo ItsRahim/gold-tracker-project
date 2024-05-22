@@ -12,6 +12,4 @@ import java.util.List;
  */
 @Repository
 public interface HoldingRepository extends JpaRepository<Holding, Integer> {
-
-    <S extends Holding> List<S> saveAll(Iterable<S> entities);
 }
