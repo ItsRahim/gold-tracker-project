@@ -47,6 +47,9 @@ Linked hashmap maintains the order in which keys are inserted
 -Fix issue of kafka health monitor getting wrong status - BUG
 -Add rollback upon an error in code, do this when upgrading exception handling
 -Enhancement/Improvements to gold creation methods needed
+-Bug in calling http endpoints
+-Need to improve endpoint names
+-Simplify investment creation logic once code is working and complete
 Performance Testing:
 - VisualVM
 - Apache JMeter
