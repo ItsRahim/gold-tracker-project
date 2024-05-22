@@ -44,4 +44,12 @@ public class Holding {
         this.investmentId = investmentId;
         this.totalPurchaseAmount = totalPurchaseAmount;
     }
+
+    public Holding(Holding holding) {
+        this.accountId = holding.getAccountId();
+        this.investmentId = holding.getInvestmentId();
+        this.totalPurchaseAmount = holding.getTotalPurchaseAmount();
+        this.currentValue = holding.getTotalPurchaseAmount();
+        this.profitLoss = holding.getProfitLoss();
+    }
 }

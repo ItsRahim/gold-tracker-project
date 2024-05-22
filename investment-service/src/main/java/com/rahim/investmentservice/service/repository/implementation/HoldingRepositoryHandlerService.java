@@ -10,6 +10,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author Rahim Ahmed
  * @created 19/05/2024
@@ -35,6 +37,23 @@ public class HoldingRepositoryHandlerService implements HoldingRepositoryHandler
         } else {
             LOG.error("Holding information provided is null or contains null properties. Unable to save");
             throw new IllegalArgumentException("Holding information provided is null or contains null properties. Unable to save");
+        }
+    }
+
+    @Override
+    public void saveAllHoldings(List<Holding> holdings) {
+        if (holdings != null && !holdings.isEmpty()) {
+            try {
+                LOG.debug("Attempting to save holdings: {}", holdings);
+                holdingRepository.saveAll(holdings);
+                LOG.debug("Successfully saved all holdings");
+            } catch (DataAccessException e) {
+                LOG.error("Failed to save holdings due to database error", e);
+                throw new RuntimeException("Failing to save holdings");
+            }
+        } else {
+            LOG.error("Holding list provided is null or empty. Unable to save");
+            throw new IllegalArgumentException("Holding list provided is null or empty. Unable to save");
         }
     }
 }
