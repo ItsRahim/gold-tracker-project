@@ -44,12 +44,13 @@ Linked hashmap maintains the order in which keys are inserted
 -Handle user adding investment on purchase date older than gold data available - ENHANCEMENT
 -Fix issue of fallback hazelcast instance being created when main cluster is up and switching - BUG
 -Fix issue of kafka health monitor getting wrong status - BUG
--Add rollback upon an error in code, do this when upgrading exception handling
+-Add rollback upon an error in code, do this when upgrading exception handling - DONE
 -Enhancement/Improvements to gold creation methods needed
 -Bug in calling http endpoints
 -Need to improve endpoint names - DONE
 -Simplify investment creation logic once code is working and complete
 -Update gateway service to refer to eureka service names instead of hard coded host
+-Improve exception handling, in classes with transaction to return info, contoller advice and no generic exceptions
 Performance Testing:
 - VisualVM
 - Apache JMeter
