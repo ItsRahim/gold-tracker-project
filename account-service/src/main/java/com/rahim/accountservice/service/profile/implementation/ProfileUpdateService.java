@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +27,7 @@ public class ProfileUpdateService implements IProfileUpdateService {
     private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateProfile(int profileId, Map<String, String> updatedData) {
         Optional<Profile> profileOptional = profileRepositoryHandler.findById(profileId);
 

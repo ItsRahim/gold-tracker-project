@@ -84,6 +84,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Profile> findById(int profileId) {
         try {
             Optional<Profile> profileOptional = profileRepository.findById(profileId);
@@ -99,11 +100,13 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByUsername(String username) {
         return profileRepository.existsByUsernameIgnoreCase(username);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public EmailToken generateEmailTokens(EmailProperty emailProperty) {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("SELECT ");
@@ -140,16 +143,19 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Profile> getProfileByUsername(String username) {
         return profileRepository.findByUsername(username);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getProfileIdByUserId(int userId) {
         return profileRepository.getProfileIdByUserId(userId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Profile> getAllProfiles() {
         return profileRepository.findAll();
     }

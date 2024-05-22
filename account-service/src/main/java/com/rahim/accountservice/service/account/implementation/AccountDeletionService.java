@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class AccountDeletionService implements IAccountDeletionService {
      * @see IAccountDeletionService
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean requestAccountDelete(int accountId) {
         Optional<Account> existingAccountOptional = accountRepositoryHandler.findById(accountId);
 
