@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -28,6 +29,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class GoldPriceUpdateService implements IGoldPriceUpdateService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceUpdateService.class);
@@ -74,7 +76,6 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
                 List<GoldPrice> pricesToUpdate = goldPriceRepository.findByTypeId(goldTypeId);
                 pricesToUpdate.forEach(this::updateGoldPrice);
             }
-
         } catch (Exception e) {
             LOG.error("Error updating gold prices: {}", e.getMessage(), e);
         }

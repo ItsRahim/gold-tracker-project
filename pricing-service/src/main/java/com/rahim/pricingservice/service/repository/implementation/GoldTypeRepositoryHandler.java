@@ -30,6 +30,7 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     private final GoldTypeRepository goldTypeRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Integer> allGoldTypeIds() {
         try {
             return goldTypeRepository
@@ -44,6 +45,7 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<GoldType> findById(Integer goldTypeId) {
         try {
             Objects.requireNonNull(goldTypeId, "Gold Type ID must not be null");
@@ -55,11 +57,13 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GoldType> getAllGoldTypes() {
         return goldTypeRepository.findAll();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addNewGoldType(GoldType goldType) {
         if (!ObjectUtils.allNotNull(goldType, goldType.getName(), goldType.getNetWeight(), goldType.getCarat(), goldType.getDescription())) {
             LOG.error("GoldType object is null or contains null properties. Unable to save.");
@@ -75,6 +79,7 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateGoldType(GoldType goldType) {
         if (goldType == null || goldType.getId() == null) {
             LOG.error("Invalid gold type or gold type ID is null. Unable to save.");
@@ -90,26 +95,31 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByName(String name) {
         return goldTypeRepository.existsByName(name);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsById(int goldId) {
         return goldTypeRepository.existsById(goldId);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(int goldId) {
         goldTypeRepository.deleteById(goldId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String getGoldTypeNameById(int goldTypeId) {
         return goldTypeRepository.getGoldTypeNameById(goldTypeId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Object[]> getGoldTypeNameAndId() {
         return goldTypeRepository.getGoldTypeNameAndId();
     }

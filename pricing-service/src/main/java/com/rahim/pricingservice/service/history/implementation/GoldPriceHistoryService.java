@@ -10,12 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class GoldPriceHistoryService implements IGoldPriceHistoryService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GoldPriceHistoryService.class);
