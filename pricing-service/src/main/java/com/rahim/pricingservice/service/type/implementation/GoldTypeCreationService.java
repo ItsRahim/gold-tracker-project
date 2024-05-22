@@ -11,6 +11,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Rahim Ahmed
@@ -26,6 +27,7 @@ public class GoldTypeCreationService implements IGoldTypeCreationService {
     private final CacheManager hazelcastCacheManager;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addGoldType(GoldType goldType) {
         try {
             if (!ObjectUtils.anyNull(goldType)) {

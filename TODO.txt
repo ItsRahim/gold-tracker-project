@@ -30,7 +30,6 @@ Issues/Enhancements:
 - add swagger docs for endpoints
 - When notification service checks if user id exists to add a notification. No check to see if account is active/has push notifications enabled - DONE
 - Different profiles, testing, dev and prod
-- Maven plugin to create and push docker image
 - Update docker to expose specific ports
 - Remove hardcoded data references in custom-api, move to database - DONE
 - Add active flag to data sources, depending which is active is the one open feign will use, if all inactive/more than one active, default to uk investing - DONE
@@ -48,7 +47,7 @@ Linked hashmap maintains the order in which keys are inserted
 -Add rollback upon an error in code, do this when upgrading exception handling
 -Enhancement/Improvements to gold creation methods needed
 -Bug in calling http endpoints
--Need to improve endpoint names
+-Need to improve endpoint names - DONE
 -Simplify investment creation logic once code is working and complete
 -Update gateway service to refer to eureka service names instead of hard coded host
 Performance Testing:

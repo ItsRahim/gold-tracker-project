@@ -34,6 +34,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveGoldPrice(GoldPrice goldPrice) {
         if (!ObjectUtils.allNotNull(goldPrice, goldPrice.getCurrentPrice(), goldPrice.getGoldType(), goldPrice.getUpdatedAt())) {
             LOG.error("GoldPrice object is null or contains null properties. Unable to save.");
@@ -49,6 +50,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<GoldPrice> findById(int goldId) {
         try {
             return goldPriceRepository.findById(goldId);
@@ -60,12 +62,14 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GoldPrice> findByTypeId(int goldTypeId) {
         return goldPriceRepository.findByGoldTypeId(goldTypeId);
     }
 
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<GoldPriceDTO> getGoldPrice(int goldId) {
         try {
             Optional<GoldPrice> goldPriceOptional = findById(goldId);
@@ -78,6 +82,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GoldPriceDTO> getAllGoldPrices() {
         try {
             return goldPriceRepository
@@ -93,6 +98,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteGoldPrice(int goldTypeId) {
         try {
             Integer priceId = goldPriceRepository.getPriceIdByTypeId(goldTypeId);
