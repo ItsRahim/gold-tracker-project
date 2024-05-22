@@ -50,6 +50,7 @@ Linked hashmap maintains the order in which keys are inserted
 -Bug in calling http endpoints
 -Need to improve endpoint names
 -Simplify investment creation logic once code is working and complete
+-Update gateway service to refer to eureka service names instead of hard coded host
 Performance Testing:
 - VisualVM
 - Apache JMeter
