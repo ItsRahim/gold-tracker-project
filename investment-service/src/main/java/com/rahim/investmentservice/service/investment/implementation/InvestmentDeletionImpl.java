@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class InvestmentDeletionImpl implements InvestmentDeletionService {
     private final TxnCreationService txnCreationService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void sellInvestment(int accountId, int investmentId) {
         if (!investmentExists(accountId, investmentId)) {
             LOG.warn("Investment for ID: {} does not exist for account with ID: {}", investmentId, accountId);

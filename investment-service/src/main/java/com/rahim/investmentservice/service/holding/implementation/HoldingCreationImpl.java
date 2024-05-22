@@ -29,7 +29,6 @@ public class HoldingCreationImpl implements HoldingCreationService {
     private final HttpClientService httpClientService;
     private final ObjectMapper objectMapper;
 
-
     private static final String PRICING_SERVICE = "PRICING-SERVICE";
 
     @Override
