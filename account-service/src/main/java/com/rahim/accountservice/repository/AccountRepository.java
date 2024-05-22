@@ -107,4 +107,7 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
             + " = 'true'", nativeQuery = true)
     List<Integer> getAccountByNotificationSettingTrue();
 
+    @Query(value = "SELECT " + AccountDataAccess.COL_ACCOUNT_ID + " FROM " + AccountDataAccess.TABLE_NAME, nativeQuery = true)
+    List<Integer> getAllAccountId();
+
 }

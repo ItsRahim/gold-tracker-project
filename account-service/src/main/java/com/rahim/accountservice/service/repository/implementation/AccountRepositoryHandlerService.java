@@ -130,4 +130,9 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
         return accountRepository.getAccountByNotificationSettingTrue();
     }
 
+    @Override
+    public List<Integer> getAllAccountIds() {
+        return accountRepository.getAllAccountId();
+    }
+
 }
