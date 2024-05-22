@@ -1,0 +1,68 @@
+package com.rahim.investmentservice.controller;
+
+import com.rahim.investmentservice.dto.InvestmentRequestDto;
+import com.rahim.investmentservice.service.investment.InvestmentCreationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static com.rahim.investmentservice.constants.InvestmentControllerEndpoint.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping(BASE_URL)
+@Tag(name = "Endpoint to manage user investments")
+public class InvestmentController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(InvestmentController.class);
+    private final InvestmentCreationService investmentCreationService;
+
+    @Operation(summary = "Add a new investment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Investment created successfully", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
+    })
+    @PostMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addNewInvestment(
+            @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
+            @Parameter(description = "The new investment details", required = true) @RequestBody List<InvestmentRequestDto> investmentRequestDtos) {
+        try {
+            for (InvestmentRequestDto investmentRequestDto : investmentRequestDtos) {
+                investmentCreationService.addNewInvestment(accountId, investmentRequestDto);
+            }
+
+            LOG.info("Investment created successfully for account ID: {}", accountId);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Investment created successfully");
+        } catch (IllegalStateException e) {
+            LOG.error("An error occurred processing new transaction");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
+//    @Operation(summary = "Sell an investment")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Investment sold successfully", content = @Content(mediaType = "text/plain")),
+//            @ApiResponse(responseCode = "404", description = "Investment not found", content = @Content(mediaType = "text/plain")),
+//            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
+//    })
+//    @DeleteMapping(value = ACCOUNT_ID + "/" + INVESTMENT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Object> sellInvestment(
+//            @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
+//            @Parameter(description = "The ID of the investment to sell", required = true) @PathVariable Integer investmentId) {
+//        try {
+//
+//        }
+//    }
+}

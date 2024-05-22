@@ -139,9 +139,9 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     private void updateNotificationSet(Integer id, boolean notificationEnabled) {
         if (notificationEnabled) {
-            hazelcastCacheManager.addToSet(HazelcastConstant.ACCOUNT_ID_SET, id);
+            hazelcastCacheManager.addToSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, id);
         } else {
-            hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_SET, id);
+            hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, id);
         }
     }
 

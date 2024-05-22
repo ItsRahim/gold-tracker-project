@@ -26,4 +26,8 @@ public interface IGoldTypeRepositoryHandler {
     boolean existsById(int goldId);
 
     void deleteById(int goldId);
+
+    String getGoldTypeNameById(int goldTypeId);
+
+    List<Object[]> getGoldTypeNameAndId();
 }

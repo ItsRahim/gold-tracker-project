@@ -49,7 +49,7 @@ public class AccountDeletionService implements IAccountDeletionService {
                 account.setAccountLocked(true);
                 account.setNotificationSetting(false);
                 account.setDeleteDate(deletionDate);
-                hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_SET, account.getId());
+                hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, account.getId());
                 try {
                     accountRepositoryHandler.saveAccount(account);
                     EmailProperty emailProperty = EmailProperty.builder()
