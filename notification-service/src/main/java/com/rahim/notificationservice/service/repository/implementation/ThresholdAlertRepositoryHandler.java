@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -25,6 +26,7 @@ public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositor
     private final ThresholdAlertRepository thresholdAlertRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<ThresholdAlert> findById(int alertId) {
         try {
             return thresholdAlertRepository.findById(alertId);
@@ -75,6 +77,7 @@ public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositor
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ThresholdAlert> getAllActiveAlerts() {
         List<ThresholdAlert> activeAlerts = Collections.emptyList();
 
@@ -94,6 +97,7 @@ public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositor
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<ThresholdAlert> getAlertByAccountId(int accountId) {
         return thresholdAlertRepository.findThresholdAlertByAccountId(accountId);
     }

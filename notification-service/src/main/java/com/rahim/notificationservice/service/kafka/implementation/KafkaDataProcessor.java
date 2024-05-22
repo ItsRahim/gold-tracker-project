@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
     private final IKafkaService kafkaService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void processKafkaData(String priceData) {
         try {
             BigDecimal currentPrice = new BigDecimal(priceData);

@@ -34,7 +34,6 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void saveGoldPrice(GoldPrice goldPrice) {
         if (!ObjectUtils.allNotNull(goldPrice, goldPrice.getCurrentPrice(), goldPrice.getGoldType(), goldPrice.getUpdatedAt())) {
             LOG.error("GoldPrice object is null or contains null properties. Unable to save.");
@@ -97,7 +96,6 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void deleteGoldPrice(int goldTypeId) {
         try {
             Integer priceId = goldPriceRepository.getPriceIdByTypeId(goldTypeId);
