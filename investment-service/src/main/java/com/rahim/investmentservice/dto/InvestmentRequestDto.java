@@ -13,6 +13,6 @@ import java.time.LocalDate;
 public class InvestmentRequestDto {
     private String goldTypeName;
     private Integer quantity;
-    private BigDecimal purchasePrice;
+    private BigDecimal totalPurchasePrice;
     private LocalDate purchaseDate;
 }
