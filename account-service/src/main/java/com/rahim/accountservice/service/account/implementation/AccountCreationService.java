@@ -1,7 +1,6 @@
 package com.rahim.accountservice.service.account.implementation;
 
 import com.rahim.accountservice.dto.ModelMapper;
-import com.rahim.accountservice.exception.DuplicateAccountException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.model.UserRequest;
@@ -34,16 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountCreationService implements IAccountCreationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountCreationService.class);
-
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IProfileCreationService profileCreation;
     private final CacheManager hazelcastCacheManager;
 
-    /**
-     * @return
-     * @see IAccountCreationService
-     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<String> createAccount(UserRequest userRequest) {
@@ -79,9 +73,7 @@ public class AccountCreationService implements IAccountCreationService {
     }
 
     /**
-     * This method is used to validate the input account and profile.
-     * It checks if any of the account or profile objects are null, and if any of the fields in these objects are null or blank.
-     * If any null or blank values are found, it throws an IllegalArgumentException.
+     * This method is used to check if all required fields to save an account and profile are not null
      *
      * @param account the Account object to be validated
      * @param profile the Profile object to be validated
