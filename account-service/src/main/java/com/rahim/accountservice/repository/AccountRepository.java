@@ -3,7 +3,6 @@ package com.rahim.accountservice.repository;
 import com.rahim.accountservice.constant.AccountState;
 import com.rahim.accountservice.dao.AccountDataAccess;
 import com.rahim.accountservice.model.Account;
-import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -64,16 +63,15 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
      */
     @Query(value = "SELECT "
             + AccountDataAccess.COL_ACCOUNT_ID
-            + ","
-            + AccountDataAccess.COL_ACCOUNT_DELETE_DATE
             + " FROM "
             + AccountDataAccess.TABLE_NAME
             + " WHERE "
             + AccountDataAccess.COL_ACCOUNT_STATUS
             + " = '"
             + AccountState.PENDING_DELETE
-            + "'", nativeQuery = true)
-    List<Tuple> getPendingDeleteUsers();
+            + "' AND "
+            + AccountDataAccess.COL_ACCOUNT_DELETE_DATE + " = :deleteDate", nativeQuery = true)
+    List<Integer> getUsersPendingDeletion(LocalDate deleteDate);
 
     /**
      * This method is used to check if a user account exists by a given email.

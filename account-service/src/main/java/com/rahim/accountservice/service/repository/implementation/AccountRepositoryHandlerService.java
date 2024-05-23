@@ -4,7 +4,6 @@ import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.repository.AccountRepository;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
@@ -88,8 +87,8 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     @Transactional(readOnly = true)
-    public List<Tuple> getPendingDeleteUsers() {
-        return accountRepository.getPendingDeleteUsers();
+    public List<Integer> getUsersPendingDeletion(LocalDate deletionDate) {
+        return accountRepository.getUsersPendingDeletion(deletionDate);
     }
 
     @Override

@@ -23,7 +23,7 @@ public interface IAccountRepositoryHandler {
     boolean existsByEmail(String email);
     List<Account> getInactiveUsers(LocalDate cutoffDate);
     List<Integer> getUsersToDelete(LocalDate cutoffDate);
-    List<Tuple> getPendingDeleteUsers();
+    List<Integer> getUsersPendingDeletion(LocalDate deletionDate);
     List<Account> getAllAccounts();
     OffsetDateTime getUpdatedAtByUserId(Integer userId);
     List<Integer> getAccountActiveNotification();
