@@ -21,7 +21,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -36,20 +35,8 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Account> findById(int accountId) {
-        try {
-            Optional<Account> accountOptional = accountRepository.findById(accountId);
-            if(accountOptional.isPresent()) {
-                LOG.debug("Found user account with ID: {}", accountId);
-            } else {
-                LOG.debug("Account not found for ID: {}", accountId);
-            }
-
-            return accountOptional;
-        } catch (Exception e) {
-            LOG.error("An error occurred while retrieving account with ID: {}", accountId, e);
-            return Optional.empty();
-        }
+    public Account findById(int accountId) {
+        return accountRepository.findById(accountId).orElse(new Account());
     }
 
     @Override

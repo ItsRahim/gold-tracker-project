@@ -74,15 +74,14 @@ public class AccountController {
     public ResponseEntity<Object> findAccountById(
             @Parameter(description = "ID of the account to fetch", required = true) @PathVariable int accountId) {
         try {
-            Optional<Account> accountOptional = accountRepositoryHandler.findById(accountId);
+            Account account = accountRepositoryHandler.findById(accountId);
 
-            if (accountOptional.isPresent()) {
-                Account account = accountOptional.get();
-                LOG.info("Account found with ID: {}", accountId);
-                return ResponseEntity.status(HttpStatus.OK).body(account);
-            } else {
+            if (account.getId() == null) {
                 LOG.info("Account not found with ID: {}", accountId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+            } else {
+                LOG.info("Account found with ID: {}", accountId);
+                return ResponseEntity.status(HttpStatus.OK).body(account);
             }
         } catch (Exception e) {
             LOG.error("Error finding user with ID: {}", accountId, e);

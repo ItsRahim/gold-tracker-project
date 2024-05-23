@@ -32,48 +32,49 @@ public class AccountDeletionService implements IAccountDeletionService {
     private final EmailTokenGenerator emailTokenGenerator;
     private final CacheManager hazelcastCacheManager;
 
-    /**
-     * @see IAccountDeletionService
-     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean requestAccountDelete(int accountId) {
-        Optional<Account> existingAccountOptional = accountRepositoryHandler.findById(accountId);
+        Account account = accountRepositoryHandler.findById(accountId);
 
-        if (existingAccountOptional.isPresent()) {
-            Account account = existingAccountOptional.get();
-
-            String accountStatus = account.getAccountStatus();
-            if (accountStatus.equals(AccountState.ACTIVE)) {
-                LocalDate deletionDate = LocalDate.now().plusDays(30);
-
-                account.setAccountStatus(AccountState.PENDING_DELETE);
-                account.setAccountLocked(true);
-                account.setNotificationSetting(false);
-                account.setDeleteDate(deletionDate);
-                hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, account.getId());
-                try {
-                    accountRepositoryHandler.saveAccount(account);
-                    EmailProperty emailProperty = EmailProperty.builder()
-                            .accountId(accountId)
-                            .templateName(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)
-                            .includeUsername(true)
-                            .includeDate(true)
-                            .build();
-                    emailTokenGenerator.generateEmailTokens(emailProperty);
-                    return true;
-                } catch (DataAccessException e) {
-                    LOG.error("Error updating account with ID {} - {}", accountId, e.getMessage());
-                    throw new RuntimeException("Failed to update account.", e);
-                }
-            } else {
-                LOG.debug("Account with ID {} is not eligible for deletion", accountId);
-            }
-        } else {
+        if (account.getId() == null) {
             LOG.warn("Account with ID {} not found.", accountId);
+            return false;
         }
 
-        return false;
+        if (!isAccountEligibleForDeletion(account)) {
+            LOG.debug("Account with ID {} is not eligible for deletion", accountId);
+            return false;
+        }
+
+        LocalDate deletionDate = LocalDate.now().plusDays(30);
+        updateAccountForDeletion(account, deletionDate);
+        sendAccountDeletionEmail(accountId);
+
+        return true;
     }
 
+    private boolean isAccountEligibleForDeletion(Account account) {
+        return account.getAccountStatus().equals(AccountState.ACTIVE);
+    }
+
+    private void updateAccountForDeletion(Account account, LocalDate deletionDate) {
+        account.setAccountStatus(AccountState.PENDING_DELETE);
+        account.setAccountLocked(true);
+        account.setNotificationSetting(false);
+        account.setDeleteDate(deletionDate);
+        accountRepositoryHandler.saveAccount(account);
+        hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, account.getId());
+    }
+
+    private void sendAccountDeletionEmail(int accountId) {
+        EmailProperty emailProperty = EmailProperty.builder()
+                .accountId(accountId)
+                .templateName(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)
+                .includeUsername(true)
+                .includeDate(true)
+                .build();
+
+        emailTokenGenerator.generateEmailTokens(emailProperty);
+    }
 }

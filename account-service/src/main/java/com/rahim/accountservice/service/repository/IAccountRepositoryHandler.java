@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 public interface IAccountRepositoryHandler {
 
-    Optional<Account> findById(int accountId);
+    Account findById(int accountId);
     void saveAccount(Account account);
     void deleteAccount(int accountId);
     boolean existsByEmail(String email);
