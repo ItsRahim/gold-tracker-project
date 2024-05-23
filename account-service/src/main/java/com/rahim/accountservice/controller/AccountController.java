@@ -34,9 +34,9 @@ import static com.rahim.accountservice.constant.AccountControllerEndpoint.*;
 public class AccountController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
+    private final AccountControllerService accountControllerService;
     private final IAccountCreationService accountCreationService;
     private final IAccountUpdateService accountUpdateService;
-    private final AccountControllerService accountControllerService;
 
     @Operation(summary = "Create new accounts")
     @ApiResponses(value = {
@@ -65,7 +65,7 @@ public class AccountController {
             @ApiResponse(responseCode = "500", description = "Error updating account", content = @Content(mediaType = "text/plain"))
     })
     @PutMapping(value = ACCOUNT_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> updateAccount(
+    public ResponseEntity<Object> updateAccount(
             @Parameter(description = "ID of the account to be updated", required = true) @PathVariable int accountId,
             @Parameter(description = "Map of updated account data", required = true) @RequestBody Map<String, String> updatedData) {
         return accountUpdateService.updateAccount(accountId, updatedData);

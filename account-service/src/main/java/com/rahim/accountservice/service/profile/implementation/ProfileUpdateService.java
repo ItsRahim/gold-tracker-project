@@ -8,6 +8,8 @@ import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,21 +29,22 @@ public class ProfileUpdateService implements IProfileUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateProfile(int profileId, Map<String, String> updatedData) {
+    public ResponseEntity<Object> updateProfile(int profileId, Map<String, String> updatedData) {
         Profile profile = profileRepositoryHandler.findById(profileId);
 
         if (profile.getId() == null) {
             LOG.warn("Profile with ID {} not found.", profileId);
-            throw new UserNotFoundException("Profile not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profile does not exist. Unable to update");
         }
 
         try {
             updateProfileData(profile, updatedData);
             profileRepositoryHandler.updateProfile(profile);
             LOG.info("Profile with ID {} updated successfully", profileId);
+            return ResponseEntity.status(HttpStatus.OK).body(profile);
         } catch (Exception e) {
             LOG.error("Error updating profile with ID {}: {}", profileId, e.getMessage());
-            throw new RuntimeException("Failed to update profile.", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: Unable to update profile");
         }
     }
 

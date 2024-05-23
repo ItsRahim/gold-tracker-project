@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -131,8 +130,8 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Profile> getProfileByUsername(String username) {
-        return profileRepository.findByUsername(username);
+    public Profile getProfileByUsername(String username) {
+        return profileRepository.findByUsername(username).orElse(new Profile());
     }
 
     @Override

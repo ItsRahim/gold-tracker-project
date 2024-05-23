@@ -26,7 +26,7 @@ public class AccountControllerService {
     public ResponseEntity<Object> findAccountById(int accountId) {
         try {
             Account account = accountRepositoryHandler.findById(accountId);
-            return (account.getId() != null) ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found") : ResponseEntity.status(HttpStatus.OK).body(account);
+            return (account.getId() != null) ? ResponseEntity.status(HttpStatus.OK).body(account): ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
         } catch (Exception e) {
             LOG.error("Error finding user: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: Error finding account");

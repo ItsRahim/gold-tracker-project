@@ -33,7 +33,7 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<String> updateAccount(int accountId, Map<String, String> updatedData) {
+    public ResponseEntity<Object> updateAccount(int accountId, Map<String, String> updatedData) {
         Account account = accountRepositoryHandler.findById(accountId);
 
         if (account.getId() == null) {
@@ -53,7 +53,7 @@ public class AccountUpdateService implements IAccountUpdateService {
             }
 
             generateEmailTokens(accountId, oldEmail);
-            return ResponseEntity.status(HttpStatus.OK).body("Account updated successfully.");
+            return ResponseEntity.status(HttpStatus.OK).body(account);
         } catch (DataAccessException e) {
             LOG.error("Data access error while updating account: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Data access error while updating account");

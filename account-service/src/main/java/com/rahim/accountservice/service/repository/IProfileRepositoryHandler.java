@@ -19,7 +19,7 @@ public interface IProfileRepositoryHandler {
     Profile findById(int profileId);
     boolean existsByUsername(String username);
     EmailToken generateEmailTokens(EmailProperty emailProperty);
-    Optional<Profile> getProfileByUsername(String username);
+    Profile getProfileByUsername(String username);
     int getProfileIdByAccountId(int accountId);
     List<Profile> getAllProfiles();
 }

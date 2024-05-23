@@ -1,5 +1,7 @@
 package com.rahim.accountservice.service.profile;
 
+import org.springframework.http.ResponseEntity;
+
 import java.util.Map;
 
 /**
@@ -14,5 +16,5 @@ public interface IProfileUpdateService {
      * @param profileId The ID of the profile to update.
      * @param updatedData The new data for the profile.
      */
-    void updateProfile(int profileId, Map<String, String> updatedData);
+    ResponseEntity<Object> updateProfile(int profileId, Map<String, String> updatedData);
 }
