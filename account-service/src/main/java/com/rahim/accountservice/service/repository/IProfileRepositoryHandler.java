@@ -16,10 +16,10 @@ public interface IProfileRepositoryHandler {
     void createNewProfile(Profile profile);
     void updateProfile(Profile profile);
     void deleteProfile(int profileId);
-    Optional<Profile> findById(int profileId);
+    Profile findById(int profileId);
     boolean existsByUsername(String username);
     EmailToken generateEmailTokens(EmailProperty emailProperty);
-    Optional<Profile> getProfileByUsername(String username);
-    int getProfileIdByUserId(int userId);
+    Profile getProfileByUsername(String username);
+    int getProfileIdByAccountId(int accountId);
     List<Profile> getAllProfiles();
 }

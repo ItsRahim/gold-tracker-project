@@ -1,7 +1,5 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.rahim.accountservice.exception.EmailTokenException;
-import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.json.AccountJson;
@@ -14,6 +12,8 @@ import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +31,15 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateAccount(int accountId, Map<String, String> updatedData) {
-        Account account = getAccountById(accountId);
-        String oldEmail = account.getEmail();
+    public ResponseEntity<Object> updateAccount(int accountId, Map<String, String> updatedData) {
+        Account account = accountRepositoryHandler.findById(accountId);
+
+        if (account.getId() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account was not found");
+        }
 
         try {
+            String oldEmail = account.getEmail();
             OffsetDateTime beforeUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
             updateFields(account, updatedData);
             accountRepositoryHandler.saveAccount(account);
@@ -43,52 +47,46 @@ public class AccountUpdateService implements IAccountUpdateService {
 
             if (beforeUpdate.equals(afterUpdate)) {
                 LOG.debug("No updates were applied to the account");
-                return false;
+                return ResponseEntity.status(HttpStatus.OK).body("No updates were applied to the account.");
             }
 
             generateEmailTokens(accountId, oldEmail);
-            return true;
-
-        } catch (RuntimeException e) {
-            LOG.error("Error updating account with ID {}: {}", accountId, e.getMessage());
-            throw e;
+            return ResponseEntity.status(HttpStatus.OK).body(account);
+        } catch (Exception e) {
+            LOG.error("An unexpected error occurred while updating account: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred while updating account");
         }
-    }
-
-    private Account getAccountById(int accountId) {
-        return accountRepositoryHandler.findById(accountId).orElseThrow(() -> {
-            LOG.warn("Account with ID {} not found while updating.", accountId);
-            return new UserNotFoundException("Account with ID " + accountId + " not found");
-        });
     }
 
     private void generateEmailTokens(int accountId, String oldEmail) {
-        try {
-            EmailProperty emailProperty = EmailProperty.builder()
-                    .accountId(accountId)
-                    .templateName(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)
-                    .includeUsername(true)
-                    .includeDate(true)
-                    .oldEmail(oldEmail)
-                    .build();
-            emailTokenGenerator.generateEmailTokens(emailProperty);
-        } catch (EmailTokenException e) {
-            LOG.error("Error generating email tokens for account with ID {}", accountId, e);
-            throw new RuntimeException("Failed to generate email tokens for account.", e);
-        }
+        EmailProperty emailProperty = EmailProperty.builder()
+                .accountId(accountId)
+                .templateName(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)
+                .includeUsername(true)
+                .includeDate(true)
+                .oldEmail(oldEmail)
+                .build();
+
+        emailTokenGenerator.generateEmailTokens(emailProperty);
     }
 
     private void updateFields(Account account, Map<String, String> updatedData) {
         updatedData.forEach((key, value) -> {
             switch (key) {
                 case AccountJson.ACCOUNT_EMAIL:
-                    updateEmail(account, value);
+                    if (isValidChange(account.getEmail(), value)) {
+                        updateEmail(account, value);
+                    }
                     break;
                 case AccountJson.ACCOUNT_PASSWORD_HASH:
-                    updatePassword(account, value);
+                    if (isValidChange(account.getPasswordHash(), value)) {
+                        updatePassword(account, value);
+                    }
                     break;
                 case AccountJson.ACCOUNT_NOTIFICATION_SETTING:
-                    updateNotification(account, value);
+                    if (isValidChange(account.getNotificationSetting(), value)) {
+                        updateNotification(account, value);
+                    }
                     break;
                 default:
                     LOG.warn("Ignoring unknown key '{}' in updated data for account with ID {}", key, account.getId());
@@ -97,21 +95,15 @@ public class AccountUpdateService implements IAccountUpdateService {
     }
 
     private void updateEmail(Account account, String newEmail) {
-        if (isValidChange(account.getEmail(), newEmail) && !accountRepositoryHandler.existsByEmail(newEmail)) {
+        if (!accountRepositoryHandler.existsByEmail(newEmail)) {
             account.setEmail(newEmail);
             LOG.debug("Email updated successfully");
-        } else {
-            LOG.debug("Email address update skipped for account with ID: {}", account.getId());
         }
     }
 
     private void updatePassword(Account account, String newPassword) {
-        if (isValidChange(account.getPasswordHash(), newPassword)) {
-            account.setPasswordHash(newPassword);
-            LOG.debug("Password updated successfully");
-        } else {
-            LOG.debug("Password update skipped for account with ID: {}", account.getId());
-        }
+        account.setPasswordHash(newPassword);
+        LOG.debug("Password updated successfully");
     }
 
     private void updateNotification(Account account, String value) {

@@ -1,5 +1,7 @@
 package com.rahim.accountservice.service.account;
 
+import org.springframework.http.ResponseEntity;
+
 import java.util.Map;
 
 /**
@@ -15,5 +17,5 @@ public interface IAccountUpdateService {
      * @param updatedData The map containing the updated data.
      * @throws RuntimeException If an error occurs while updating the account.
      */
-    boolean updateAccount(int userId, Map<String, String> updatedData);
+    ResponseEntity<Object> updateAccount(int accountId, Map<String, String> updatedData);
 }

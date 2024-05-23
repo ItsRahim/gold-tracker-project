@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -68,35 +67,22 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
         }
     }
 
-
     @Override
     public void deleteProfile(int profileId) {
-        findById(profileId).ifPresent(profile -> {
-            try {
-                LOG.trace("Deleting profile with ID: {}", profileId);
-                profileRepository.deleteById(profileId);
-                LOG.trace("Profile with ID {} deleted successfully", profileId);
-            } catch (Exception e) {
-                LOG.warn("Attempted to delete non-existing profile with ID: {}", profileId);
-                throw new EntityNotFoundException("Profile with ID " + profileId + " not found");
-            }
-        });
+        Profile profile = findById(profileId);
+
+        if (profile.getId() == null) {
+            LOG.warn("Attempted to delete non-existing profile with ID: {}", profileId);
+            throw new EntityNotFoundException("Profile with ID " + profileId + " not found");
+        }
+
+        profileRepository.deleteById(profileId);
+        LOG.debug("Profile with ID {} deleted successfully", profileId);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Profile> findById(int profileId) {
-        try {
-            Optional<Profile> profileOptional = profileRepository.findById(profileId);
-            profileOptional.ifPresentOrElse(
-                    profile -> LOG.trace("Found profile with ID: {}", profileId),
-                    () -> LOG.trace("Profile not found for ID: {}", profileId)
-            );
-            return profileOptional;
-        } catch (Exception e) {
-            LOG.error("An error occurred while retrieving profile with ID: {}", profileId, e);
-            return Optional.empty();
-        }
+    public Profile findById(int profileId) {
+        return profileRepository.findById(profileId).orElse(new Profile());
     }
 
     @Override
@@ -144,14 +130,14 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Profile> getProfileByUsername(String username) {
-        return profileRepository.findByUsername(username);
+    public Profile getProfileByUsername(String username) {
+        return profileRepository.findByUsername(username).orElse(new Profile());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int getProfileIdByUserId(int userId) {
-        return profileRepository.getProfileIdByUserId(userId);
+    public int getProfileIdByAccountId(int accountId) {
+        return profileRepository.getProfileIdByUserId(accountId);
     }
 
     @Override

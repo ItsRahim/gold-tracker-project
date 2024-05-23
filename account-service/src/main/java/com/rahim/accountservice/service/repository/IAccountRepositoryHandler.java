@@ -17,13 +17,13 @@ import java.util.Optional;
  */
 public interface IAccountRepositoryHandler {
 
-    Optional<Account> findById(int accountId);
+    Account findById(int accountId);
     void saveAccount(Account account);
     void deleteAccount(int accountId);
     boolean existsByEmail(String email);
     List<Account> getInactiveUsers(LocalDate cutoffDate);
     List<Integer> getUsersToDelete(LocalDate cutoffDate);
-    List<Tuple> getPendingDeleteUsers();
+    List<Integer> getUsersPendingDeletion(LocalDate deletionDate);
     List<Account> getAllAccounts();
     OffsetDateTime getUpdatedAtByUserId(Integer userId);
     List<Integer> getAccountActiveNotification();

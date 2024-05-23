@@ -4,24 +4,18 @@ import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.repository.AccountRepository;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -35,21 +29,8 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
     private final AccountRepository accountRepository;
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Account> findById(int accountId) {
-        try {
-            Optional<Account> accountOptional = accountRepository.findById(accountId);
-            if(accountOptional.isPresent()) {
-                LOG.debug("Found user account with ID: {}", accountId);
-            } else {
-                LOG.debug("Account not found for ID: {}", accountId);
-            }
-
-            return accountOptional;
-        } catch (Exception e) {
-            LOG.error("An error occurred while retrieving account with ID: {}", accountId, e);
-            return Optional.empty();
-        }
+    public Account findById(int accountId) {
+        return accountRepository.findById(accountId).orElse(new Account());
     }
 
     @Override
@@ -69,16 +50,15 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     public void deleteAccount(int accountId) {
-        findById(accountId).ifPresent(userAccount -> {
-            try {
-                LOG.debug("Deleting account with ID: {}", accountId);
-                accountRepository.deleteById(accountId);
-                LOG.debug("Account with ID {} deleted successfully", accountId);
-            } catch (EmptyResultDataAccessException e) {
-                LOG.warn("Attempted to delete non-existing account with ID: {}", accountId);
-                throw new EntityNotFoundException("Account with ID " + accountId + " not found");
-            }
-        });
+        Account account = findById(accountId);
+
+        if (account.getId() == null) {
+            LOG.warn("Attempted to delete non-existing account with ID: {}", accountId);
+            throw new EntityNotFoundException("Account with ID " + accountId + " not found");
+        }
+
+        accountRepository.deleteById(accountId);
+        LOG.debug("Account with ID {} deleted successfully", accountId);
     }
 
     @Override
@@ -101,28 +81,14 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     @Transactional(readOnly = true)
-    public List<Tuple> getPendingDeleteUsers() {
-        return accountRepository.getPendingDeleteUsers();
+    public List<Integer> getUsersPendingDeletion(LocalDate deletionDate) {
+        return accountRepository.getUsersPendingDeletion(deletionDate);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Account> getAllAccounts() {
-        List<Account> accounts = Collections.emptyList();
-
-        try {
-            accounts = accountRepository.findAll();
-            if (CollectionUtils.isEmpty(accounts)) {
-                LOG.debug("No accounts found in the database");
-            } else {
-                LOG.debug("Fetched {} accounts from the database", accounts.size());
-            }
-
-        } catch (DataAccessException e) {
-            LOG.error("Error occurred while fetching accounts from the database", e);
-        }
-
-        return accounts;
+        return accountRepository.findAll();
     }
 
     @Override

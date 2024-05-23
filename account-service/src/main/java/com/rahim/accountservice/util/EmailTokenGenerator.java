@@ -28,7 +28,7 @@ public class EmailTokenGenerator {
         try {
             EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);
             String jsonEmailData = KafkaKeyUtil.generateKeyWithUUID(convertToJson(emailToken));
-            LOG.trace("Generated tokens: {}", jsonEmailData);
+            LOG.debug("Generated tokens: {}", jsonEmailData);
             kafkaService.sendMessage(KafkaTopic.SEND_EMAIL, jsonEmailData);
         } catch (JsonProcessingException e) {
             handleException("Error converting tokens to JSON", e);
