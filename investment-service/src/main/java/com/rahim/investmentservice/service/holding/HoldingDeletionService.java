@@ -8,5 +8,5 @@ import java.util.List;
  */
 public interface HoldingDeletionService {
 
-    void sellHolding(List<Integer> holdingIds, int accountId);
+    List<Integer> sellHolding(List<Integer> holdingIds, int accountId);
 }

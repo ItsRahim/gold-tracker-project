@@ -4,7 +4,6 @@ import com.rahim.investmentservice.model.Holding;
 import com.rahim.investmentservice.service.holding.HoldingDeletionService;
 import com.rahim.investmentservice.service.investment.InvestmentDeletionService;
 import com.rahim.investmentservice.service.repository.HoldingRepositoryHandler;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,14 +28,16 @@ public class HoldingDeletionImpl implements HoldingDeletionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void sellHolding(List<Integer> holdingIds, int accountId) {
+    public List<Integer> sellHolding(List<Integer> holdingIds, int accountId) {
         LOG.debug("Initiating bulk sale of holdings for account with ID {}", accountId);
 
+        List<Integer> failedHoldingIds = new ArrayList<>();
         for (int holdingId : holdingIds) {
             Holding holding = holdingRepositoryHandler.getHoldingByIdAndAccountId(holdingId, accountId);
 
-            if (holding == null) {
+            if (holding.getId() == null) {
                 LOG.warn("Holding with ID {} does not exist for account with ID {}. Skipping.", holdingId, accountId);
+                failedHoldingIds.add(holdingId);
                 continue;
             }
 
@@ -50,6 +52,7 @@ public class HoldingDeletionImpl implements HoldingDeletionService {
 
             LOG.info("Holding with ID {} for account with ID {} sold successfully.", holdingId, accountId);
         }
+        return failedHoldingIds;
     }
 
     private void deleteHolding(int holdingId) {

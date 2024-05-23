@@ -42,7 +42,10 @@ public class HoldingController {
             @Parameter(description = "The account id of account selling holdings", required = true) @PathVariable int accountId,
             @Parameter(description = "List of holding ids being sold", required = true) @RequestBody List<Integer> holdingIds) {
         try {
-            holdingDeletionService.sellHolding(holdingIds, accountId);
+            List<Integer> failedHoldingIds = holdingDeletionService.sellHolding(holdingIds, accountId);
+            if (!failedHoldingIds.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Holdings could not be sold for account with ID " + accountId + ". Some holdings do not exist for this account: " + failedHoldingIds);
+            }
             return ResponseEntity.status(HttpStatus.OK).body("Holdings sold successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
