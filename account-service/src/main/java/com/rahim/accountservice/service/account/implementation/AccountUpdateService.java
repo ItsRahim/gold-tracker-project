@@ -54,9 +54,6 @@ public class AccountUpdateService implements IAccountUpdateService {
 
             generateEmailTokens(accountId, oldEmail);
             return ResponseEntity.status(HttpStatus.OK).body(account);
-        } catch (DataAccessException e) {
-            LOG.error("Data access error while updating account: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Data access error while updating account");
         } catch (Exception e) {
             LOG.error("An unexpected error occurred while updating account: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred while updating account");
