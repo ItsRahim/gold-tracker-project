@@ -59,17 +59,12 @@ public class InternalAccountService implements IInternalAccountService {
             sendEmail(accountId, EmailTemplate.ACCOUNT_DELETED_TEMPLATE, true, false);
             profileDeletionService.deleteProfile(accountId);
             accountRepositoryHandler.deleteAccount(accountId);
-            removeFromHazelcastSet(accountId);
+            hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_SET, accountId);
 
             LOG.debug("Account with ID {} deleted successfully.", accountId);
         } catch (DataAccessException e) {
             LOG.error("An error occurred deleting user: {}", e.getMessage());
         }
-    }
-
-    private void removeFromHazelcastSet(int userId) {
-        hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_SET, userId);
-        LOG.debug("Removed deleted account from Hazelcast set");
     }
 
     /**
