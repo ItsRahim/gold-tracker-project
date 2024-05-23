@@ -19,9 +19,9 @@ public interface InvestmentRepository extends JpaRepository<Investment, Integer>
     @Query(value = "SELECT COUNT(*) > 0 FROM "
             + InvestmentsDataAccess.TABLE_NAME
             + " WHERE "
-            + InvestmentsDataAccess.COL_ACCOUNT_ID + " =: accountId"
+            + InvestmentsDataAccess.COL_INVESTMENT_ID + " = :investmentId"
             + " AND "
-            + InvestmentsDataAccess.COL_INVESTMENT_ID + " =: investmentId", nativeQuery = true)
+            + InvestmentsDataAccess.COL_ACCOUNT_ID + " = :accountId", nativeQuery = true)
     boolean existsInvestmentByAccountId(@Param("investmentId") int investmentId, @Param("accountId") int accountId);
 
     Optional<Investment> getInvestmentById(int investmentId);

@@ -10,7 +10,9 @@ public interface InvestmentRepositoryHandler {
 
     void saveInvestment(Investment investment);
 
-    boolean investmentExists(int accountId, int investmentId);
+    boolean investmentExists(int investmentId, int accountId);
 
     Investment getInvestmentById(int investmentId);
+
+    void deleteInvestment(int investmentId);
 }

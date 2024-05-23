@@ -1,0 +1,40 @@
+Sell a whole investment, delete all holdings, Sell txn
+sell a holding, need to remove one of investment id from table, -1 quantity and update total purchase price of that investment, purhcase price = purchae price - (purhcaseprice/quantity), if quantity is 1 then delete
+
+Kafka Avro to send goldTypeID and new price as new object for investment to be recaulated
+
+-- report for a users current holdings performance
+SELECT
+    h.account_id,
+    SUM(g.net_weight) AS total_weight,
+    SUM(i.purchase_price) AS investment_value,
+    SUM(h.current_value) AS current_value,
+    SUM(h.profit_loss) AS profit_loss,
+    MIN(i.purchase_date) AS earliest_purchase_date,
+    MAX(i.purchase_date) AS latest_purchase_date
+FROM
+    rgts.gold_types g
+        JOIN
+    rgts.investments i ON g.gold_type_id = i.gold_type_id
+        JOIN
+    rgts.holdings h ON i.investment_id = h.investment_id
+WHERE
+	h.account_id = 1
+GROUP BY
+    h.account_id;
+
+-- report showing users transaction history maybe showing buy only or showing sell only, default both
+SELECT
+    t.transaction_date,
+    t.transaction_type,
+    g.name AS gold_type_name,
+    t.quantity,
+    t.transaction_price
+FROM
+    rgts.transactions t
+        JOIN
+    rgts.gold_types g ON t.gold_type_id = g.gold_type_id
+WHERE
+    t.account_id = 1
+ORDER BY
+    t.account_id, t.transaction_date;

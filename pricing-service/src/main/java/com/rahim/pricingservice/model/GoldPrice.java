@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -16,6 +17,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @Entity
+@DynamicInsert
 @NoArgsConstructor
 @Table(name = "gold_prices", schema = "rgts")
 public class GoldPrice {

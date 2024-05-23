@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -37,12 +38,13 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
     private final CacheManager hazelcastCacheManager;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addNewInvestment(int accountId, InvestmentRequestDto investmentRequestDto) {
         validateRequest(investmentRequestDto);
 
         final String goldType = investmentRequestDto.getGoldTypeName();
         final Integer quantity = investmentRequestDto.getQuantity();
-        final BigDecimal purchasePrice = investmentRequestDto.getPurchasePrice();
+        final BigDecimal totalPurchasePrice = investmentRequestDto.getTotalPurchasePrice();
         LocalDate purchaseDate = investmentRequestDto.getPurchaseDate();
 
         if (!accountExists(accountId)) {
@@ -64,17 +66,17 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
         }
 
         LOG.debug("Adding new investment for account ID: {}, gold type ID: {}, quantity: {}, purchase price: {}, purchase date: {}",
-                accountId, goldTypeId, quantityValue, purchasePrice, purchaseDate);
+                accountId, goldTypeId, quantityValue, totalPurchasePrice, purchaseDate);
 
-        Investment investment = new Investment(accountId, goldTypeId, quantityValue, purchasePrice, purchaseDate);
+        Investment investment = new Investment(accountId, goldTypeId, quantityValue, totalPurchasePrice, purchaseDate);
         investmentRepositoryHandler.saveInvestment(investment);
 
         LOG.debug("Investment saved successfully for account ID: {}", accountId);
 
-        Holding holding = new Holding(accountId, investment.getId(), purchasePrice);
-        holdingCreationService.processNewHolding(holding, goldTypeId, quantityValue);
+        Holding holding = new Holding(accountId, investment.getId());
+        holdingCreationService.processNewHolding(holding, goldTypeId, totalPurchasePrice, quantityValue);
 
-        Transaction transaction = new Transaction(accountId, goldTypeId, quantityValue, TransactionType.BUY.getValue(), purchasePrice, purchaseDate);
+        Transaction transaction = new Transaction(accountId, goldTypeId, quantityValue, TransactionType.BUY.getValue(), totalPurchasePrice, purchaseDate);
         txnCreationService.addNewTransaction(transaction);
     }
 
@@ -82,7 +84,7 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
         if (investmentRequestDto == null) {
             throw new IllegalArgumentException("Investment request cannot be null");
         }
-        if (investmentRequestDto.getPurchasePrice() == null || investmentRequestDto.getPurchasePrice().compareTo(BigDecimal.ZERO) <= 0) {
+        if (investmentRequestDto.getTotalPurchasePrice() == null || investmentRequestDto.getTotalPurchasePrice().compareTo(BigDecimal.ZERO) <= 0) {
             LOG.warn("Unable to process transaction. Transaction price is null or non-positive");
             throw new IllegalStateException("Invalid purchase price provided");
         }

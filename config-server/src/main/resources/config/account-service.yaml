@@ -5,17 +5,12 @@ eureka:
 
 logging:
   file:
-    name: logs/account-service.log
+    name: logs/${spring.application.name}.log
   level:
-    com:
-      rahim:
-        accountservice: DEBUG
-    org:
-      springframework: ERROR
+    com.rahim.accountservice: DEBUG
+    org.springframework: ERROR
     root: WARN
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
+  package: com.rahim.accountservice
 
 management:
   tracing:
@@ -28,6 +23,3 @@ server:
 spring:
   application:
     name: account-service
-  output:
-    ansi:
-      enabled: always

@@ -51,18 +51,4 @@ public class InvestmentController {
         }
     }
 
-//    @Operation(summary = "Sell an investment")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Investment sold successfully", content = @Content(mediaType = "text/plain")),
-//            @ApiResponse(responseCode = "404", description = "Investment not found", content = @Content(mediaType = "text/plain")),
-//            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
-//    })
-//    @DeleteMapping(value = ACCOUNT_ID + "/" + INVESTMENT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Object> sellInvestment(
-//            @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
-//            @Parameter(description = "The ID of the investment to sell", required = true) @PathVariable Integer investmentId) {
-//        try {
-//
-//        }
-//    }
 }

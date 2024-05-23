@@ -42,13 +42,18 @@ public class InvestmentRepositoryHandlerService implements InvestmentRepositoryH
 
     @Override
     @Transactional(readOnly = true)
-    public boolean investmentExists(int accountId, int investmentId) {
-        return investmentRepository.existsInvestmentByAccountId(accountId, investmentId);
+    public boolean investmentExists(int investmentId, int accountId) {
+        return investmentRepository.existsInvestmentByAccountId(investmentId, accountId);
     }
 
     @Override
     public Investment getInvestmentById(int investmentId) {
         Optional<Investment> investmentOptional = investmentRepository.getInvestmentById(investmentId);
         return investmentOptional.orElseGet(Investment::new);
+    }
+
+    @Override
+    public void deleteInvestment(int investmentId) {
+        investmentRepository.deleteById(investmentId);
     }
 }

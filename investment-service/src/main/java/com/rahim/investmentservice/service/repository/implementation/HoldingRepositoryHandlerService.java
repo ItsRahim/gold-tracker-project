@@ -10,6 +10,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * @author Rahim Ahmed
  * @created 19/05/2024
@@ -36,5 +39,47 @@ public class HoldingRepositoryHandlerService implements HoldingRepositoryHandler
             LOG.error("Holding information provided is null or contains null properties. Unable to save");
             throw new IllegalArgumentException("Holding information provided is null or contains null properties. Unable to save");
         }
+    }
+
+    @Override
+    public void saveAllHoldings(List<Holding> holdings) {
+        if (holdings != null && !holdings.isEmpty()) {
+            try {
+                LOG.debug("Attempting to save holdings: {}", holdings);
+                holdingRepository.saveAll(holdings);
+                LOG.debug("Successfully saved all holdings");
+            } catch (DataAccessException e) {
+                LOG.error("Failed to save holdings due to database error", e);
+                throw new RuntimeException("Failing to save holdings");
+            }
+        } else {
+            LOG.error("Holding list provided is null or empty. Unable to save");
+            throw new IllegalArgumentException("Holding list provided is null or empty. Unable to save");
+        }
+    }
+
+    @Override
+    public void deleteHolding(int holdingId) {
+        holdingRepository.deleteById(holdingId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean holdingExistsById(int holdingId) {
+        return holdingRepository.existsHoldingById(holdingId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Holding getHoldingByIdAndAccountId(int holdingId, int accountId) {
+        Optional<Holding> holdingOptional = holdingRepository.getHoldingByIdAndAccountId(holdingId, accountId);
+        return holdingOptional.orElseGet(Holding::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Holding getHoldingById(int holdingId) {
+        Optional<Holding> holdingOptional = holdingRepository.findById(holdingId);
+        return holdingOptional.orElseGet(Holding::new);
     }
 }
