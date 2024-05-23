@@ -5,17 +5,12 @@ eureka:
 
 logging:
   file:
-    name: logs/investment-service.log
+    name: logs/${spring.application.name}.log
   level:
-    com:
-      rahim:
-        investmentservice: DEBUG
-    org:
-      springframework: ERROR
+    com.rahim.investmentservice: DEBUG
+    org.springframework: ERROR
     root: WARN
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
+  package: com.rahim.investmentservice
 
 management:
   tracing:

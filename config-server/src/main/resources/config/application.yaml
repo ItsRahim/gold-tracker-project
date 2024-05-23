@@ -7,12 +7,7 @@ jasypt:
     password: ${jasypt.encryptor.password}
 logging:
   level:
-    com:
-      rahim:
-        common: DEBUG
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
+    com.rahim.common: DEBUG
 
 management:
   endpoints:

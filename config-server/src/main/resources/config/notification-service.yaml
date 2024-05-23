@@ -4,20 +4,13 @@ eureka:
       defaultZone: http://localhost:8761/eureka
 
 logging:
-  color:
-    enabled: true
   file:
-    name: logs/notification-service.log
+    name: logs/${spring.application.name}.log
   level:
-    com:
-      rahim:
-        notificationservice: DEBUG
-    org:
-      springframework: ERROR
+    com.rahim.notificationservice: DEBUG
+    org.springframework: ERROR
     root: WARN
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  package: com.rahim.notificationservice
 
 management:
   tracing:

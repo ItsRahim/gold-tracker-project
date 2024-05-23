@@ -50,10 +50,11 @@ Linked hashmap maintains the order in which keys are inserted
 -Need to improve endpoint names - DONE
 -Simplify investment creation logic once code is working and complete
 -Update gateway service to refer to eureka service names instead of hard coded host in feign calls by services
--Improve exception handling, in classes with transaction to return info, contoller advice and no generic exceptions
+-Improve exception handling, in classes with transaction to return info, controller advice and no generic exceptions
 -create a reporting service to generate holding performance, transaction reports, can also allow users to export gold type price information and generate report graphs too using python?
 - as types price update, send id and price via kafka to update it in real time in investment service
 - create a graph of investment over time or something, create a new python program to consume and generate graphs and render it to someplace
+-create different user with roles and permissions for each microservice
 Performance Testing:
 - VisualVM
 - Apache JMeter
