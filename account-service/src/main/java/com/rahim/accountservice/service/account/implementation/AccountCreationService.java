@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,11 +41,12 @@ public class AccountCreationService implements IAccountCreationService {
     private final CacheManager hazelcastCacheManager;
 
     /**
+     * @return
      * @see IAccountCreationService
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createAccount(UserRequest userRequest) {
+    public ResponseEntity<String> createAccount(UserRequest userRequest) {
         Account account = ModelMapper.INSTANCE.toAccountEntity(userRequest.getAccount());
         Profile profile = ModelMapper.INSTANCE.toProfileEntity(userRequest.getProfile());
 
@@ -54,7 +57,7 @@ public class AccountCreationService implements IAccountCreationService {
 
         if (accountRepositoryHandler.existsByEmail(email) || profileRepositoryHandler.existsByUsername(username)) {
             LOG.warn("Account with email and/or username already exists. Not creating duplicate.");
-            throw new DuplicateAccountException("Account with email an/or username exists");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account with email and/or username already exists. Not creating duplicate.");
         }
 
         try {
@@ -63,9 +66,10 @@ public class AccountCreationService implements IAccountCreationService {
             addToHazelcastSet(account.getId());
 
             LOG.debug("Successfully created Account and Account Profile for: {}", profile.getUsername());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Account created successfully");
         } catch (DataAccessException e) {
             LOG.error("Unexpected error creating Account and Account Profile: {}", e.getMessage());
-            throw new RuntimeException("Unexpected error creating Account and Account Profile.", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error creating Account and Account Profile.");
         }
     }
 

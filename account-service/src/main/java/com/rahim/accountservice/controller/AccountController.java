@@ -2,10 +2,9 @@ package com.rahim.accountservice.controller;
 
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.UserRequest;
+import com.rahim.accountservice.service.account.AccountControllerService;
 import com.rahim.accountservice.service.account.IAccountCreationService;
-import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
-import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,14 +15,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.rahim.accountservice.constant.AccountControllerEndpoint.*;
 
@@ -39,9 +35,8 @@ public class AccountController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
     private final IAccountCreationService accountCreationService;
-    private final IAccountDeletionService accountDeletionService;
     private final IAccountUpdateService accountUpdateService;
-    private final IAccountRepositoryHandler accountRepositoryHandler;
+    private final AccountControllerService accountControllerService;
 
     @Operation(summary = "Create new accounts")
     @ApiResponses(value = {
@@ -49,19 +44,8 @@ public class AccountController {
             @ApiResponse(responseCode = "500", description = "Error Creating Accounts and Profiles", content = @Content(mediaType = "text/plain"))
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> createAccounts(
-            @Parameter(description = "User account details", required = true) @RequestBody List<UserRequest> userRequests) {
-        try {
-            for (UserRequest userRequest : userRequests) {
-                accountCreationService.createAccount(userRequest);
-                LOG.info("Successfully Created Account: {}", userRequest.getProfile().getUsername());
-            }
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("Accounts and Profiles created successfully");
-        } catch (Exception e) {
-            LOG.error("Error creating Accounts and Profiles: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error Creating Accounts and Profiles");
-        }
+    public ResponseEntity<String> createAccounts(@Parameter(description = "User account details", required = true) UserRequest userRequest) {
+        return accountCreationService.createAccount(userRequest);
     }
 
     @Operation(summary = "Get account by account id")
@@ -71,22 +55,8 @@ public class AccountController {
             @ApiResponse(responseCode = "500", description = "Error finding account", content = @Content(mediaType = "application/json"))
     })
     @GetMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> findAccountById(
-            @Parameter(description = "ID of the account to fetch", required = true) @PathVariable int accountId) {
-        try {
-            Account account = accountRepositoryHandler.findById(accountId);
-
-            if (account.getId() == null) {
-                LOG.info("Account not found with ID: {}", accountId);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
-            } else {
-                LOG.info("Account found with ID: {}", accountId);
-                return ResponseEntity.status(HttpStatus.OK).body(account);
-            }
-        } catch (Exception e) {
-            LOG.error("Error finding user with ID: {}", accountId, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user");
-        }
+    public ResponseEntity<Object> findAccountById(@Parameter(description = "ID of the account to fetch", required = true) @PathVariable int accountId) {
+        return accountControllerService.findAccountById(accountId);
     }
 
     @Operation(summary = "Update an existing account")
@@ -98,13 +68,7 @@ public class AccountController {
     public ResponseEntity<String> updateAccount(
             @Parameter(description = "ID of the account to be updated", required = true) @PathVariable int accountId,
             @Parameter(description = "Map of updated account data", required = true) @RequestBody Map<String, String> updatedData) {
-        try {
-            boolean hasUpdated = accountUpdateService.updateAccount(accountId, updatedData);
-            return hasUpdated ? ResponseEntity.status(HttpStatus.OK).body("Account updated successfully.") : ResponseEntity.status(HttpStatus.OK).body("No updates were applied to the account.");
-        } catch (Exception e) {
-            LOG.error("Error updating account: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating account");
-        }
+        return accountUpdateService.updateAccount(accountId, updatedData);
     }
 
     @Operation(summary = "Get all accounts")
@@ -113,14 +77,8 @@ public class AccountController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Account>> getAllAccounts() {
-        try {
-            List<Account> accountDTOS = accountRepositoryHandler.getAllAccounts();
-            return ResponseEntity.status(HttpStatus.OK).body(accountDTOS);
-        } catch (Exception e) {
-            LOG.error("Error retrieving all accounts", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<Object> getAllAccounts() {
+        return accountControllerService.getAllAccounts();
     }
 
     @Operation(summary = "Delete an account")
@@ -130,18 +88,7 @@ public class AccountController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
     @DeleteMapping(value = ACCOUNT_ID, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> deleteAccount(
-            @Parameter(description = "ID of the account to be deleted", required = true) @PathVariable int accountId) {
-        try {
-            boolean deletedRequested = accountDeletionService.requestAccountDelete(accountId);
-
-            if (deletedRequested) {
-                return ResponseEntity.status(HttpStatus.OK).body("Successfully Requested to Delete Account with ID: " + accountId);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unable to request deletion of account with ID: " + accountId);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error finding user: " + e.getMessage());
-        }
+    public ResponseEntity<String> deleteAccount(@Parameter(description = "ID of the account to be deleted", required = true) @PathVariable int accountId) {
+        return accountControllerService.deleteAccount(accountId);
     }
 }

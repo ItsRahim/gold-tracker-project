@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.Optional;
 
 
 /**
@@ -29,22 +28,20 @@ public class ProfileUpdateService implements IProfileUpdateService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateProfile(int profileId, Map<String, String> updatedData) {
-        Optional<Profile> profileOptional = profileRepositoryHandler.findById(profileId);
+        Profile profile = profileRepositoryHandler.findById(profileId);
 
-        if (profileOptional.isPresent()) {
-            Profile profile = profileOptional.get();
-
-            try {
-                updateProfileData(profile, updatedData);
-                profileRepositoryHandler.updateProfile(profile);
-                LOG.info("Profile with ID {} updated successfully", profileId);
-            } catch (Exception e) {
-                LOG.error("Error updating profile with ID {}: {}", profileId, e.getMessage());
-                throw new RuntimeException("Failed to update profile.", e);
-            }
-        } else {
+        if (profile.getId() == null) {
             LOG.warn("Profile with ID {} not found.", profileId);
             throw new UserNotFoundException("Profile not found.");
+        }
+
+        try {
+            updateProfileData(profile, updatedData);
+            profileRepositoryHandler.updateProfile(profile);
+            LOG.info("Profile with ID {} updated successfully", profileId);
+        } catch (Exception e) {
+            LOG.error("Error updating profile with ID {}: {}", profileId, e.getMessage());
+            throw new RuntimeException("Failed to update profile.", e);
         }
     }
 

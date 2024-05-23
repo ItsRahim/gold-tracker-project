@@ -19,17 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileDeletionService implements IProfileDeletionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProfileDeletionService.class);
-
     private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteProfile(int userId) {
+    public void deleteProfile(int accountId) {
         try {
-            int profileId = profileRepositoryHandler.getProfileIdByUserId(userId);
+            int profileId = profileRepositoryHandler.getProfileIdByAccountId(accountId);
             profileRepositoryHandler.deleteProfile(profileId);
         } catch (Exception e) {
-            LOG.error("Error deleting user profile for user ID {}: {}", userId, e.getMessage(), e);
+            LOG.error("Error deleting user profile for user ID {}: {}", accountId, e.getMessage(), e);
         }
     }
 }
