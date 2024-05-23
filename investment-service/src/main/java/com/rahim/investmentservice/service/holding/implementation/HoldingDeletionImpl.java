@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Rahim Ahmed
@@ -27,26 +28,28 @@ public class HoldingDeletionImpl implements HoldingDeletionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void sellHolding(int accountId, int holdingId) {
-        LOG.debug("Initiating sale of holding with ID {} for account with ID {}", holdingId, accountId);
+    public void sellHolding(List<Integer> holdingIds, int accountId) {
+        LOG.debug("Initiating bulk sale of holdings for account with ID {}", accountId);
 
-        Holding holding = holdingRepositoryHandler.getHoldingByIdAndAccountId(holdingId, accountId);
+        for (int holdingId : holdingIds) {
+            Holding holding = holdingRepositoryHandler.getHoldingByIdAndAccountId(holdingId, accountId);
 
-        if (holding.getId() == null) {
-            LOG.warn("Holding with ID {} does not exist for account with ID {}. Unable to sell", holdingId, accountId);
-            throw new EntityNotFoundException("Holding does not exist with ID: " + holdingId);
+            if (holding == null) {
+                LOG.warn("Holding with ID {} does not exist for account with ID {}. Skipping.", holdingId, accountId);
+                continue;
+            }
+
+            LOG.debug("Holding with ID {} found for account with ID {}. Proceeding with sale.", holdingId, accountId);
+
+            int investmentId = holding.getInvestmentId();
+            BigDecimal transactionAmount = holding.getCurrentValue().negate();
+            BigDecimal purchaseAmount = holding.getPurchaseAmount();
+
+            deleteHolding(holdingId);
+            investmentDeletionService.sellInvestment(investmentId, accountId, transactionAmount, purchaseAmount);
+
+            LOG.info("Holding with ID {} for account with ID {} sold successfully.", holdingId, accountId);
         }
-
-        LOG.debug("Holding with ID {} found for account with ID {}. Proceeding with sale.", holdingId, accountId);
-
-        int investmentId = holding.getInvestmentId();
-        BigDecimal transactionAmount = holding.getCurrentValue().negate();
-        BigDecimal purchaseAmount = holding.getPurchaseAmount();
-
-        deleteHolding(holdingId);
-        investmentDeletionService.sellInvestment(investmentId, accountId, transactionAmount, purchaseAmount);
-
-        LOG.info("Holding with ID {} for account with ID {} sold successfully.", holdingId, accountId);
     }
 
     private void deleteHolding(int holdingId) {

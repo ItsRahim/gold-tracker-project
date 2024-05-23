@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.rahim.investmentservice.constants.HoldingControllerEndpoint.*;
 
 /**
@@ -30,21 +32,21 @@ public class HoldingController {
     private static final Logger LOG = LoggerFactory.getLogger(HoldingController.class);
     private final HoldingDeletionService holdingDeletionService;
 
-    @Operation(summary = "Sell a holding")
+    @Operation(summary = "Sell holdings")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Holding sold successfully", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "200", description = "Holdings sold successfully", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
     })
-    @DeleteMapping(value = HOLDING_BY_ACCOUNT_AND_ID, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> sellHolding(
-            @Parameter(description = "The account id of account selling holding", required = true) @PathVariable int accountId,
-            @Parameter(description = "The holding id being sold", required = true) @PathVariable int holdingId) {
+    @DeleteMapping(value = ACCOUNT_ID, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> sellHoldings(
+            @Parameter(description = "The account id of account selling holdings", required = true) @PathVariable int accountId,
+            @Parameter(description = "List of holding ids being sold", required = true) @RequestBody List<Integer> holdingIds) {
         try {
-            holdingDeletionService.sellHolding(accountId, holdingId);
-            return ResponseEntity.status(HttpStatus.OK).body("Holding sold successfully");
+            holdingDeletionService.sellHolding(holdingIds, accountId);
+            return ResponseEntity.status(HttpStatus.OK).body("Holdings sold successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }
     }
-
 }
+
