@@ -1,6 +1,5 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.json.AccountJson;
@@ -13,7 +12,6 @@ import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
