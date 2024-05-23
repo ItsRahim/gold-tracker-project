@@ -7,7 +7,7 @@ logging:
   file:
     name: logs/${spring.application.name}.log
   level:
-    com.rahim.investmentservice: DEBUG
+    com.rahim.accountservice: DEBUG
     org.springframework: ERROR
     root: WARN
   package: com.rahim.accountservice

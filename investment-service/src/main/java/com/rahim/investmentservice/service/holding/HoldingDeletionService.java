@@ -6,5 +6,5 @@ package com.rahim.investmentservice.service.holding;
  */
 public interface HoldingDeletionService {
 
-    void sellHolding(int holdingId);
+    void sellHolding(int accountId, int holdingId);
 }

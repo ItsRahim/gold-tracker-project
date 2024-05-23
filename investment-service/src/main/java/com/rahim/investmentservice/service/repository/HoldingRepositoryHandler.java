@@ -12,4 +12,7 @@ public interface HoldingRepositoryHandler {
 
     void saveHolding(Holding holding);
     void saveAllHoldings(List<Holding> holdings);
+    boolean holdingExistsById(int holdingId);
+    Holding getHoldingByIdAndAccountId(int holdingId, int accountId);
+    Holding getHoldingById(int holdingId);
 }

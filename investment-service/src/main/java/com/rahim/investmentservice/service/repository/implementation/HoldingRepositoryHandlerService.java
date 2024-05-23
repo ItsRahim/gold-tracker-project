@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -55,5 +56,24 @@ public class HoldingRepositoryHandlerService implements HoldingRepositoryHandler
             LOG.error("Holding list provided is null or empty. Unable to save");
             throw new IllegalArgumentException("Holding list provided is null or empty. Unable to save");
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean holdingExistsById(int holdingId) {
+        return holdingRepository.existsHoldingById(holdingId);
+    }
+
+    @Override
+    public Holding getHoldingByIdAndAccountId(int holdingId, int accountId) {
+        Optional<Holding> holdingOptional = holdingRepository.getHoldingByIdAndAccountId(holdingId, accountId);
+        return holdingOptional.orElseGet(Holding::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Holding getHoldingById(int holdingId) {
+        Optional<Holding> holdingOptional = holdingRepository.findById(holdingId);
+        return holdingOptional.orElseGet(Holding::new);
     }
 }
