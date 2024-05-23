@@ -31,23 +31,23 @@ public class InvestmentDeletionImpl implements InvestmentDeletionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void sellInvestment(int accountId, int investmentId, BigDecimal purchaseAmount) {
-        if (!investmentExists(accountId, investmentId)) {
+    public void sellInvestment(int investmentId, int accountId, BigDecimal transactionAmount, BigDecimal purchaseAmount) {
+        if (!investmentExists(investmentId, accountId)) {
             LOG.warn("Investment with ID {} does not exist for account with ID {}. Unable to sell.", investmentId, accountId);
             throw new EntityNotFoundException("Investment does not exist with ID: " + investmentId);
         }
 
         Investment investment = investmentRepositoryHandler.getInvestmentById(investmentId);
-        Transaction transaction = Transaction.builder()
+        Transaction txn = Transaction.builder()
                 .accountId(accountId)
                 .goldTypeId(investment.getGoldTypeId())
-                .quantity(investment.getQuantity())
+                .quantity(1)
                 .transactionType(TransactionType.SELL.getValue())
-                .transactionPrice(purchaseAmount)
+                .transactionPrice(transactionAmount)
                 .transactionDate(LocalDate.now(ZoneId.of("UTC")))
                 .build();
 
-        txnCreationService.addNewTransaction(transaction);
+        txnCreationService.addNewTransaction(txn);
 
         if (investment.getQuantity() == 1) {
             investmentRepositoryHandler.deleteInvestment(investmentId);
@@ -65,7 +65,7 @@ public class InvestmentDeletionImpl implements InvestmentDeletionService {
         }
     }
 
-    private boolean investmentExists(int accountId, int investmentId) {
-        return investmentRepositoryHandler.investmentExists(accountId, investmentId);
+    private boolean investmentExists(int investmentId, int accountId) {
+        return investmentRepositoryHandler.investmentExists(investmentId, accountId);
     }
 }

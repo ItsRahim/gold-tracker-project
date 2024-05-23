@@ -8,5 +8,5 @@ import java.math.BigDecimal;
  */
 public interface InvestmentDeletionService {
 
-    void sellInvestment(int accountId, int investmentId, BigDecimal purchaseAmount);
+    void sellInvestment(int investmentId, int accountId, BigDecimal transactionAmount, BigDecimal purchaseAmount);
 }

@@ -30,9 +30,9 @@ public class HoldingDeletionImpl implements HoldingDeletionService {
     public void sellHolding(int accountId, int holdingId) {
         LOG.debug("Initiating sale of holding with ID {} for account with ID {}", holdingId, accountId);
 
-        Holding holding = holdingRepositoryHandler.getHoldingByIdAndAccountId(accountId, holdingId);
+        Holding holding = holdingRepositoryHandler.getHoldingByIdAndAccountId(holdingId, accountId);
 
-        if (holding == null) {
+        if (holding.getId() == null) {
             LOG.warn("Holding with ID {} does not exist for account with ID {}. Unable to sell", holdingId, accountId);
             throw new EntityNotFoundException("Holding does not exist with ID: " + holdingId);
         }
@@ -40,16 +40,17 @@ public class HoldingDeletionImpl implements HoldingDeletionService {
         LOG.debug("Holding with ID {} found for account with ID {}. Proceeding with sale.", holdingId, accountId);
 
         int investmentId = holding.getInvestmentId();
+        BigDecimal transactionAmount = holding.getCurrentValue().negate();
         BigDecimal purchaseAmount = holding.getPurchaseAmount();
 
         deleteHolding(holdingId);
-        investmentDeletionService.sellInvestment(accountId, investmentId, purchaseAmount);
+        investmentDeletionService.sellInvestment(investmentId, accountId, transactionAmount, purchaseAmount);
 
         LOG.info("Holding with ID {} for account with ID {} sold successfully.", holdingId, accountId);
     }
 
     private void deleteHolding(int holdingId) {
+        LOG.debug("Attempting to delete holding with ID: {}", holdingId);
         holdingRepositoryHandler.deleteHolding(holdingId);
-        LOG.debug("Holding with ID {} deleted successfully.", holdingId);
     }
 }
