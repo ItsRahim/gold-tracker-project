@@ -97,16 +97,6 @@ public class InternalAccountService implements IInternalAccountService {
         LOG.debug("Inactive users found. Account status successfully updated");
     }
 
-    private void sendEmail(Integer accountId, String emailTemplate, boolean includeUsername, boolean includeDate) {
-        EmailProperty emailProperty = EmailProperty.builder()
-                .accountId(accountId)
-                .templateName(emailTemplate)
-                .includeUsername(includeUsername)
-                .includeDate(includeDate)
-                .build();
-        emailTokenGenerator.generateEmailTokens(emailProperty);
-    }
-
     /**
      * Processes all user accounts that are pending deletion. If the delete date of an account is the current date,
      * the account is deleted. Otherwise, the account is skipped.
@@ -161,6 +151,16 @@ public class InternalAccountService implements IInternalAccountService {
 
     private LocalDate generateDate() {
         return LocalDate.now(ZoneId.of("UTC"));
+    }
+
+    private void sendEmail(Integer accountId, String emailTemplate, boolean includeUsername, boolean includeDate) {
+        EmailProperty emailProperty = EmailProperty.builder()
+                .accountId(accountId)
+                .templateName(emailTemplate)
+                .includeUsername(includeUsername)
+                .includeDate(includeDate)
+                .build();
+        emailTokenGenerator.generateEmailTokens(emailProperty);
     }
 
 }
