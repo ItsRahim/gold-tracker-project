@@ -6,6 +6,7 @@ import com.rahim.investmentservice.model.Transaction;
 import com.rahim.investmentservice.service.investment.InvestmentDeletionService;
 import com.rahim.investmentservice.service.repository.InvestmentRepositoryHandler;
 import com.rahim.investmentservice.service.transaction.TxnCreationService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +31,10 @@ public class InvestmentDeletionImpl implements InvestmentDeletionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void sellInvestment(int accountId, int investmentId) {
+    public void sellInvestment(int accountId, int investmentId, BigDecimal purchaseAmount) {
         if (!investmentExists(accountId, investmentId)) {
-            LOG.warn("Investment for ID: {} does not exist for account with ID: {}", investmentId, accountId);
+            LOG.warn("Investment with ID {} does not exist for account with ID {}. Unable to sell.", investmentId, accountId);
+            throw new EntityNotFoundException("Investment does not exist with ID: " + investmentId);
         }
 
         Investment investment = investmentRepositoryHandler.getInvestmentById(investmentId);
@@ -41,16 +43,26 @@ public class InvestmentDeletionImpl implements InvestmentDeletionService {
                 .goldTypeId(investment.getGoldTypeId())
                 .quantity(investment.getQuantity())
                 .transactionType(TransactionType.SELL.getValue())
-                .transactionPrice(BigDecimal.ZERO)
+                .transactionPrice(purchaseAmount)
                 .transactionDate(LocalDate.now(ZoneId.of("UTC")))
                 .build();
 
         txnCreationService.addNewTransaction(transaction);
 
         if (investment.getQuantity() == 1) {
-            //remove row from txnTable
-        }
+            investmentRepositoryHandler.deleteInvestment(investmentId);
+            LOG.debug("Investment with ID {} deleted successfully after selling all units.", investmentId);
+        } else {
+            BigDecimal remainingPurchaseAmount = investment.getPurchasePrice().subtract(purchaseAmount);
+            int remainingQuantity = investment.getQuantity() - 1;
 
+            investment.setPurchasePrice(remainingPurchaseAmount);
+            investment.setQuantity(remainingQuantity);
+            investmentRepositoryHandler.saveInvestment(investment);
+
+            LOG.debug("Remaining purchase amount for investment with ID {}: {}. Quantity decreased to {} after selling one unit.",
+                    investmentId, remainingPurchaseAmount, remainingQuantity);
+        }
     }
 
     private boolean investmentExists(int accountId, int investmentId) {

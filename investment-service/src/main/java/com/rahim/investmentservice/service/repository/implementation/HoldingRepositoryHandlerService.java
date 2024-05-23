@@ -59,12 +59,18 @@ public class HoldingRepositoryHandlerService implements HoldingRepositoryHandler
     }
 
     @Override
+    public void deleteHolding(int holdingId) {
+        holdingRepository.deleteById(holdingId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public boolean holdingExistsById(int holdingId) {
         return holdingRepository.existsHoldingById(holdingId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Holding getHoldingByIdAndAccountId(int holdingId, int accountId) {
         Optional<Holding> holdingOptional = holdingRepository.getHoldingByIdAndAccountId(holdingId, accountId);
         return holdingOptional.orElseGet(Holding::new);

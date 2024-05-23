@@ -51,4 +51,9 @@ public class InvestmentRepositoryHandlerService implements InvestmentRepositoryH
         Optional<Investment> investmentOptional = investmentRepository.getInvestmentById(investmentId);
         return investmentOptional.orElseGet(Investment::new);
     }
+
+    @Override
+    public void deleteInvestment(int investmentId) {
+        investmentRepository.deleteById(investmentId);
+    }
 }

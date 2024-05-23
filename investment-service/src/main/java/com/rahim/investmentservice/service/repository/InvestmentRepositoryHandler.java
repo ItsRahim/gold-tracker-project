@@ -13,4 +13,6 @@ public interface InvestmentRepositoryHandler {
     boolean investmentExists(int accountId, int investmentId);
 
     Investment getInvestmentById(int investmentId);
+
+    void deleteInvestment(int investmentId);
 }
