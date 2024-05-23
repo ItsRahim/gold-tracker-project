@@ -55,6 +55,7 @@ Linked hashmap maintains the order in which keys are inserted
 - as types price update, send id and price via kafka to update it in real time in investment service
 - create a graph of investment over time or something, create a new python program to consume and generate graphs and render it to someplace
 -create different user with roles and permissions for each microservice
+-Use @NotBlank when doing checks for creating new objects
 Performance Testing:
 - VisualVM
 - Apache JMeter
