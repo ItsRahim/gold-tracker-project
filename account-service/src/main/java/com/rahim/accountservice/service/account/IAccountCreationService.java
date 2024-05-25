@@ -2,7 +2,6 @@ package com.rahim.accountservice.service.account;
 
 import com.rahim.accountservice.exception.DuplicateAccountException;
 import com.rahim.accountservice.model.UserRequest;
-import org.springframework.http.ResponseEntity;
 
 /**
  * @author Rahim Ahmed
@@ -17,5 +16,5 @@ public interface IAccountCreationService {
      * @return
      * @throws DuplicateAccountException if an account with the same email or username already exists
      */
-    void createAccount(UserRequest userRequest);
+    UserRequest createAccount(UserRequest userRequest);
 }

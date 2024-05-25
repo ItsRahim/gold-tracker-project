@@ -12,6 +12,8 @@ import java.lang.reflect.Field;
  */
 public class InputValidator {
 
+    private InputValidator() {}
+
     private static final Logger LOG = LoggerFactory.getLogger(InputValidator.class);
 
     public static boolean validateFields(Object object, String... requiredFields) {
@@ -22,14 +24,14 @@ public class InputValidator {
 
                 if (value == null || (value instanceof String string && StringUtils.isBlank(string))) {
                     LOG.warn("Null or blank value found for required field: {}", fieldName);
-                    return false;
+                    return true;
                 }
 
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 LOG.error("Error accessing field: {}", fieldName, e);
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }

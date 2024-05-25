@@ -15,13 +15,9 @@ import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
 import com.rahim.common.util.InputValidator;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +44,7 @@ public class AccountCreationService implements IAccountCreationService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createAccount(UserRequest userRequest) {
+    public UserRequest createAccount(UserRequest userRequest) {
         Account account = ModelMapper.INSTANCE.toAccountEntity(userRequest.getAccount());
         Profile profile = ModelMapper.INSTANCE.toProfileEntity(userRequest.getProfile());
 
@@ -67,7 +63,8 @@ public class AccountCreationService implements IAccountCreationService {
             profileCreation.createProfile(account, profile);
             addToHazelcastSet(account.getId());
 
-            LOG.debug("Successfully created Account and Account Profile for: {}", profile.getUsername());
+            LOG.debug("Successfully created Account and Profile for: {}", profile.getUsername());
+            return userRequest;
         } catch (DataAccessException e) {
             LOG.error("Unexpected error creating Account and Account Profile: {}", e.getMessage());
             throw new DatabaseException("Unexpected error creating Account and Account Profile.");
@@ -85,12 +82,12 @@ public class AccountCreationService implements IAccountCreationService {
             throw new ValidationException("Account or profile is null");
         }
 
-        if (!InputValidator.validateFields(account, ACCOUNT_EMAIL, ACCOUNT_PASSWORD_HASH)) {
+        if (InputValidator.validateFields(account, ACCOUNT_EMAIL, ACCOUNT_PASSWORD_HASH)) {
             LOG.warn("Email and/or password hash is null for account: {}", account);
             throw new ValidationException("Email and/or password hash is null for account: " + account);
         }
 
-        if (!InputValidator.validateFields(profile, PROFILE_USERNAME, PROFILE_FIRST_NAME, PROFILE_LAST_NAME, PROFILE_CONTACT_NUMBER, PROFILE_ADDRESS)) {
+        if (InputValidator.validateFields(profile, PROFILE_USERNAME, PROFILE_FIRST_NAME, PROFILE_LAST_NAME, PROFILE_CONTACT_NUMBER, PROFILE_ADDRESS)) {
             LOG.warn("Some fields are null or blank for profile: {}", profile);
             throw new ValidationException("Some fields are null or blank for profile: " + profile);
         }
