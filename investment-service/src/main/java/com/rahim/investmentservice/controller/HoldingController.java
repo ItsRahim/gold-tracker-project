@@ -46,7 +46,7 @@ public class HoldingController {
             if (!failedHoldingIds.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Holdings could not be sold for account with ID " + accountId + ". Some holdings do not exist for this account: " + failedHoldingIds);
             }
-            return ResponseEntity.status(HttpStatus.OK).body("Holdings sold successfully");
+            return ResponseEntity.status(HttpStatus.OK).body("All holdings sold successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }
