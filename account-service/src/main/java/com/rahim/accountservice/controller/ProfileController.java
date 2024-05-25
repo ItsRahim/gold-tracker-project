@@ -2,7 +2,7 @@ package com.rahim.accountservice.controller;
 
 import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
-import com.rahim.accountservice.service.profile.ProfileControllerService;
+import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,10 +13,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.rahim.accountservice.constant.ProfileControllerEndpoint.*;
@@ -32,8 +34,8 @@ import static com.rahim.accountservice.constant.ProfileControllerEndpoint.*;
 public class ProfileController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProfileController.class);
-    private final ProfileControllerService profileControllerService;
     private final IProfileUpdateService profileUpdateService;
+    private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Operation(summary = "Get all accounts")
     @ApiResponses(value = {
@@ -42,7 +44,8 @@ public class ProfileController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllProfiles() {
-        return profileControllerService.getAllProfiles();
+        List<Profile> profiles = profileRepositoryHandler.getAllProfiles();
+        return ResponseEntity.status(HttpStatus.OK).body(profiles);
     }
 
     @Operation(summary = "Update an existing profile")
@@ -51,10 +54,11 @@ public class ProfileController {
             @ApiResponse(responseCode = "404", description = "Profile not found", content = @Content(mediaType = "text/plain"))
     })
     @PutMapping(value = PROFILE_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<Object> updateUserProfile(
+    public ResponseEntity<Profile> updateUserProfile(
             @Parameter(description = "ID of the profile to be updated", required = true) @PathVariable int profileId,
             @Parameter(description = "Map of updated profile data", required = true) @RequestBody Map<String, String> updatedData) {
-        return profileUpdateService.updateProfile(profileId, updatedData);
+        Profile profile = profileUpdateService.updateProfile(profileId, updatedData);
+        return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
 
     @Operation(summary = "Find profile by username")
@@ -65,6 +69,7 @@ public class ProfileController {
     })
     @GetMapping(value = USERNAME, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findProfileByUsername(@Parameter(description = "Username of the profile to be found", required = true) @PathVariable String username) {
-        return profileControllerService.getProfileByUsername(username);
+        Profile profile = profileRepositoryHandler.getProfileByUsername(username);
+        return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
 }

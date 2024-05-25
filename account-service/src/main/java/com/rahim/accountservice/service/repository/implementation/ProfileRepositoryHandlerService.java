@@ -11,7 +11,7 @@ import com.rahim.accountservice.json.ProfileJson;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenRowMapper;
 import com.rahim.common.constant.EmailTemplate;
-import jakarta.persistence.EntityNotFoundException;
+import com.rahim.common.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +131,8 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     @Override
     @Transactional(readOnly = true)
     public Profile getProfileByUsername(String username) {
-        return profileRepository.findByUsername(username).orElse(new Profile());
+        return profileRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Profile not found with username: " + username));
     }
 
     @Override

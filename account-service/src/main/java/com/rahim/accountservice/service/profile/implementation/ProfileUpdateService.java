@@ -4,9 +4,12 @@ import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.json.ProfileJson;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,22 +31,22 @@ public class ProfileUpdateService implements IProfileUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Object> updateProfile(int profileId, Map<String, String> updatedData) {
+    public Profile updateProfile(int profileId, Map<String, String> updatedData) {
         Profile profile = profileRepositoryHandler.findById(profileId);
 
         if (profile.getId() == null) {
             LOG.warn("Profile with ID {} not found.", profileId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profile does not exist. Unable to update");
+            throw new EntityNotFoundException("Profile does not exist. Unable to update");
         }
 
         try {
             updateProfileData(profile, updatedData);
             profileRepositoryHandler.updateProfile(profile);
-            LOG.info("Profile with ID {} updated successfully", profileId);
-            return ResponseEntity.status(HttpStatus.OK).body(profile);
-        } catch (Exception e) {
-            LOG.error("Error updating profile with ID {}: {}", profileId, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: Unable to update profile");
+
+            return profile;
+        } catch (DataAccessException e) {
+            LOG.error("Error updating profile: {}", e.getMessage());
+            throw new DatabaseException("An unexpected error occurred whilst updating profile");
         }
     }
 
