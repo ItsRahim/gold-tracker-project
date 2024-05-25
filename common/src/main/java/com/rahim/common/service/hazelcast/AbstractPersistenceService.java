@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Rahim Ahmed
@@ -18,7 +17,6 @@ public abstract class AbstractPersistenceService implements HzPersistenceService
     protected final JdbcTemplate jdbcTemplate;
 
     @Override
-    @Transactional
     public void persistToDB(HzPersistenceModel persistenceModel) {
         LOG.debug("Persisting to database: {}", persistenceModel);
         try {

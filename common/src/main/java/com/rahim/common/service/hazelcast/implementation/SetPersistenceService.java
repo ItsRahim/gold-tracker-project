@@ -1,12 +1,16 @@
 package com.rahim.common.service.hazelcast.implementation;
 
 import com.rahim.common.dao.HzSetDataAccess;
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.DuplicateEntityException;
+import com.rahim.common.exception.ValidationException;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.model.HzSetData;
 import com.rahim.common.service.hazelcast.AbstractPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -50,15 +54,15 @@ public class SetPersistenceService extends AbstractPersistenceService {
 
             int rowsAffected = jdbcTemplate.update(query, params);
             if (rowsAffected == 0) {
-                LOG.warn("No rows found for deletion with set name: {} and set value: {}", setData.getSetName(), setData.getSetValue());
+                LOG.debug("No rows found for deletion with set name: {} and set value: {}", setData.getSetName(), setData.getSetValue());
             } else if (rowsAffected != 1) {
-                throw new IllegalStateException("Unexpected number of rows removed: " + rowsAffected);
+                throw new DataIntegrityViolationException("Unexpected number of rows removed: " + rowsAffected);
             }
 
             LOG.debug("Successfully removed {} rows from the database for persistence model: {}", rowsAffected, persistenceModel);
         } catch (Exception e) {
             LOG.error("Error deleting data from database: {}", e.getMessage());
-            throw new RuntimeException("Error deleting data from database", e);
+            throw new DatabaseException("Error deleting data from database");
         }
     }
 
@@ -70,7 +74,7 @@ public class SetPersistenceService extends AbstractPersistenceService {
 
             if (doesSetExist(setData.getSetName(), setData.getSetValue())) {
                 LOG.error("Set with name {} and value {} already exists", setData.getSetName(), setData.getSetValue());
-                throw new IllegalArgumentException("Set with name " + setData.getSetName() + " and value " + setData.getSetValue() + " already exists");
+                throw new DuplicateEntityException("Set with name " + setData.getSetName() + " and value " + setData.getSetValue() + " already exists");
             }
 
             return "INSERT INTO " + HzSetDataAccess.TABLE_NAME +
@@ -88,7 +92,7 @@ public class SetPersistenceService extends AbstractPersistenceService {
     private void validateSetData(HzSetData setData) {
         if (setData == null || setData.getSetName() == null || setData.getSetValue() == null) {
             LOG.error("Invalid set data: {}", setData);
-            throw new IllegalArgumentException("Invalid set data: " + setData);
+            throw new ValidationException("Invalid set data");
         }
     }
 
@@ -137,8 +141,8 @@ public class SetPersistenceService extends AbstractPersistenceService {
 
             LOG.debug("Cleared data associated with set name '{}' from the database. Rows affected: {}", setData.getSetName(), rowsAffected);
         } catch (Exception e) {
-            LOG.error("Error clearing data from database: {}", e.getMessage());
-            throw new RuntimeException("Error clearing data from database", e);
+            LOG.error("Error clearing data from database: {}", e.getMessage(), e);
+            throw new DatabaseException("Error clearing data from database");
         }
     }
 
