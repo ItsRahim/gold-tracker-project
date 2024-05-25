@@ -38,17 +38,12 @@ public class InvestmentController {
     public ResponseEntity<Object> addNewInvestment(
             @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
             @Parameter(description = "The new investment details", required = true) @RequestBody List<InvestmentRequestDto> investmentRequestDtos) {
-        try {
-            for (InvestmentRequestDto investmentRequestDto : investmentRequestDtos) {
-                investmentCreationService.addNewInvestment(accountId, investmentRequestDto);
-            }
-
-            LOG.info("Investment created successfully for account ID: {}", accountId);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Investment created successfully");
-        } catch (IllegalStateException e) {
-            LOG.error("An error occurred processing new transaction");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        for (InvestmentRequestDto investmentRequestDto : investmentRequestDtos) {
+            investmentCreationService.addNewInvestment(accountId, investmentRequestDto);
         }
+
+        LOG.info("Investment created successfully for account ID: {}", accountId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Investment created successfully");
     }
 
 }

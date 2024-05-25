@@ -1,6 +1,9 @@
 package com.rahim.investmentservice.service.holding.implementation;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.JsonServiceException;
+import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.http.HttpService;
 import com.rahim.investmentservice.feign.PricingServiceClient;
 import com.rahim.investmentservice.model.Holding;
@@ -33,27 +36,33 @@ public class HoldingCreationImpl implements HoldingCreationService {
 
     @Override
     public void processNewHolding(Holding holding, int goldTypeId, BigDecimal purchasePrice, int quantity) {
-        BigDecimal currentValue = getCurrentValue(goldTypeId);
-        BigDecimal purchaseAmount = calculateIndividualAmount(purchasePrice, quantity);
-        BigDecimal profileLoss = calculateProfitLossPercentage(purchaseAmount, currentValue);
+        try {
+            BigDecimal currentValue = getCurrentValue(goldTypeId);
+            BigDecimal purchaseAmount = calculateIndividualAmount(purchasePrice, quantity);
+            BigDecimal profileLoss = calculateProfitLossPercentage(purchaseAmount, currentValue);
 
-        holding.setPurchaseAmount(purchaseAmount);
-        holding.setCurrentValue(currentValue);
-        holding.setProfitLoss(profileLoss);
+            holding.setPurchaseAmount(purchaseAmount);
+            holding.setCurrentValue(currentValue);
+            holding.setProfitLoss(profileLoss);
 
-        List<Holding> holdings = new ArrayList<>();
-        for (int i = 0; i < quantity; i++) {
-            holdings.add(new Holding(holding));
+            List<Holding> holdings = new ArrayList<>();
+            for (int i = 0; i < quantity; i++) {
+                holdings.add(new Holding(holding));
+            }
+
+            holdingRepositoryHandler.saveAllHoldings(holdings);
+
+            LOG.info("New holding processed successfully: {}", holding);
+        } catch (Exception e) {
+            LOG.error("Error processing new holding: {}", e.getMessage(), e);
+            throw new DatabaseException("An error occurred attempting to process and save new holding");
         }
 
-        holdingRepositoryHandler.saveAllHoldings(holdings);
-
-        LOG.info("New holding processed successfully: {}", holding);
     }
 
     private BigDecimal calculateIndividualAmount(BigDecimal purchasePrice, int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be a positive integer");
+            throw new ValidationException("Quantity must be a positive integer");
         }
 
         return purchasePrice.divide(BigDecimal.valueOf(quantity), 4, RoundingMode.HALF_UP);
@@ -61,7 +70,7 @@ public class HoldingCreationImpl implements HoldingCreationService {
 
     private BigDecimal calculateProfitLossPercentage(BigDecimal totalPurchaseAmount, BigDecimal currentValue) {
         if (totalPurchaseAmount == null || currentValue == null || totalPurchaseAmount.compareTo(BigDecimal.ZERO) == 0) {
-            throw new IllegalArgumentException("Total purchase amount must not be null or zero, and current value must not be null");
+            throw new ValidationException("Total purchase amount must not be null or zero, and current value must not be null");
         }
 
         BigDecimal difference = currentValue.subtract(totalPurchaseAmount);
@@ -75,17 +84,18 @@ public class HoldingCreationImpl implements HoldingCreationService {
 
     public BigDecimal getCurrentValue(int goldTypeId) {
         LOG.debug("Fetching current value for gold type ID: {}", goldTypeId);
+
         Supplier<ResponseEntity<String>> pricingServiceCall = () -> pricingServiceClient.getGoldPrice(goldTypeId);
 
-        return httpService.fetchValueFromService(pricingServiceCall,
-                jsonResponse -> {
-                    JsonNode currentPriceNode = jsonResponse.get("currentPrice");
-                    if (currentPriceNode != null && currentPriceNode.isNumber()) {
-                        BigDecimal currentValue = currentPriceNode.decimalValue();
-                        LOG.debug("Current value for gold type ID {}: {}", goldTypeId, currentValue);
-                        return currentValue;
-                    }
-                    throw new RuntimeException("Error parsing current price from response");
-                });
+        return httpService.fetchValueFromService(pricingServiceCall, jsonResponse -> {
+            JsonNode currentPriceNode = jsonResponse.get("currentPrice");
+            if (currentPriceNode != null && currentPriceNode.isNumber()) {
+                BigDecimal currentValue = currentPriceNode.decimalValue();
+                LOG.debug("Current value for gold type ID {}: {}", goldTypeId, currentValue);
+                return currentValue;
+            }
+            throw new JsonServiceException("Error parsing current price from response");
+        });
     }
+
 }

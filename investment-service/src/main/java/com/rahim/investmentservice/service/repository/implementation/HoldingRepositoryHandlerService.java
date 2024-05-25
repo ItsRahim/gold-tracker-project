@@ -1,5 +1,8 @@
 package com.rahim.investmentservice.service.repository.implementation;
 
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.EntityNotFoundException;
+import com.rahim.common.exception.ValidationException;
 import com.rahim.investmentservice.model.Holding;
 import com.rahim.investmentservice.repository.HoldingRepository;
 import com.rahim.investmentservice.service.repository.HoldingRepositoryHandler;
@@ -27,34 +30,32 @@ public class HoldingRepositoryHandlerService implements HoldingRepositoryHandler
 
     @Override
     public void saveHolding(Holding holding) {
-        if (holding != null) {
-            try {
-                LOG.debug("Attempting to save investment: {}", holding);
-                holdingRepository.save(holding);
-            } catch (DataAccessException e) {
-                LOG.error("Failed to save holding: {} due to database error", holding, e);
-                throw new RuntimeException("Failing to save holding with account id: " + holding.getAccountId());
-            }
-        } else {
+        if (holding == null) {
             LOG.error("Holding information provided is null or contains null properties. Unable to save");
-            throw new IllegalArgumentException("Holding information provided is null or contains null properties. Unable to save");
+            throw new ValidationException("Holding information provided is null or contains null properties. Unable to save");
+        }
+
+        try {
+            LOG.debug("Attempting to save investment: {}", holding);
+            holdingRepository.save(holding);
+        } catch (DataAccessException e) {
+            LOG.error("Failed to save holding due to database error: {}", e.getMessage(), e);
+            throw new DatabaseException("Failing to save holding with account id: " + holding.getAccountId());
         }
     }
 
     @Override
     public void saveAllHoldings(List<Holding> holdings) {
-        if (holdings != null && !holdings.isEmpty()) {
-            try {
-                LOG.debug("Attempting to save holdings: {}", holdings);
-                holdingRepository.saveAll(holdings);
-                LOG.debug("Successfully saved all holdings");
-            } catch (DataAccessException e) {
-                LOG.error("Failed to save holdings due to database error", e);
-                throw new RuntimeException("Failing to save holdings");
-            }
-        } else {
+        if (holdings == null || holdings.isEmpty()) {
             LOG.error("Holding list provided is null or empty. Unable to save");
-            throw new IllegalArgumentException("Holding list provided is null or empty. Unable to save");
+            throw new ValidationException("Holding list provided is null or empty. Unable to save");
+        }
+        try {
+            holdingRepository.saveAll(holdings);
+            LOG.debug("Successfully saved all holdings");
+        } catch (DataAccessException e) {
+            LOG.error("Failed to save holdings due to database error", e);
+            throw new DatabaseException("Failing to save holdings");
         }
     }
 
@@ -72,14 +73,14 @@ public class HoldingRepositoryHandlerService implements HoldingRepositoryHandler
     @Override
     @Transactional(readOnly = true)
     public Holding getHoldingByIdAndAccountId(int holdingId, int accountId) {
-        Optional<Holding> holdingOptional = holdingRepository.getHoldingByIdAndAccountId(holdingId, accountId);
-        return holdingOptional.orElseGet(Holding::new);
+        return holdingRepository.getHoldingByIdAndAccountId(holdingId, accountId)
+                .orElseThrow(() -> new EntityNotFoundException("Holding for given holding/account id does not exist"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Holding getHoldingById(int holdingId) {
-        Optional<Holding> holdingOptional = holdingRepository.findById(holdingId);
-        return holdingOptional.orElseGet(Holding::new);
+        return holdingRepository.findById(holdingId)
+                .orElseThrow(() -> new EntityNotFoundException("Holding for given holding id does not exist"));
     }
 }
