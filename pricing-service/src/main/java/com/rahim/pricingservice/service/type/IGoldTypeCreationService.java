@@ -8,5 +8,5 @@ import com.rahim.pricingservice.model.GoldType;
  */
 public interface IGoldTypeCreationService {
 
-    void addGoldType(GoldType goldType);
+    GoldType addGoldType(GoldType goldType);
 }
