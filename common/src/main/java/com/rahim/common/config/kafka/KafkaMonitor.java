@@ -2,6 +2,7 @@ package com.rahim.common.config.kafka;
 
 import com.rahim.common.config.health.HealthStatus;
 import com.rahim.common.dao.KafkaDataAccess;
+import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.model.KafkaUnsentMessage;
 import com.rahim.common.service.kafka.IKafkaService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class KafkaMonitor {
     private final IKafkaService kafkaService;
     private final JdbcTemplate jdbcTemplate;
 
-    private volatile boolean previousKafkaHealth = false;
+    private volatile boolean previousKafkaHealth = true;
     private static final long INITIAL_DELAY = 60000;
     private static final long HEARTBEAT_INTERVAL = 10000;
 
@@ -108,7 +109,7 @@ public class KafkaMonitor {
 
             for (KafkaUnsentMessage unsentMessage : unsentMessageList) {
                 kafkaService.sendMessage(unsentMessage.getTopic(), unsentMessage.getMessageData());
-                deleteMessageFromTable(unsentMessage.getId());
+                purgeUnsentKafkaMessages(unsentMessage.getId());
             }
 
         } catch (Exception e) {
@@ -116,7 +117,7 @@ public class KafkaMonitor {
         }
     }
 
-    private void deleteMessageFromTable(int messageId) {
+    private void purgeUnsentKafkaMessages(int messageId) {
         try {
             String deleteQuery = "DELETE FROM "
                     + KafkaDataAccess.TABLE_NAME
@@ -127,6 +128,7 @@ public class KafkaMonitor {
             LOG.debug("Successfully deleted message with ID {} from the table.", messageId);
         } catch (Exception e) {
             LOG.error("Failed to delete message with ID {} from the table: {}", messageId, e.getMessage(), e);
+            throw new DatabaseException("Failed to delete unsent Kafka message from table");
         }
     }
 

@@ -57,6 +57,7 @@ Linked hashmap maintains the order in which keys are inserted
 -create different user with roles and permissions for each microservice
 -Use @NotBlank when doing checks for creating new objects
 -Convert all offset datetime to use instant for better control
+-Change log.error LOG.error("Some message", e.getMessage(), e);
 Performance Testing:
 - VisualVM
 - Apache JMeter

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Rahim Ahmed
@@ -46,6 +47,7 @@ public class HazelcastCacheManager implements CacheManager {
     }
 
     @HealthCheck(type = "hazelcast")
+    @Transactional(rollbackFor = Exception.class)
     public void addToSet(String setName, Object value) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.CREATE);
         setResilienceService.persistToDB(persistenceModel);
@@ -56,6 +58,7 @@ public class HazelcastCacheManager implements CacheManager {
 
     @Override
     @HealthCheck(type = "hazelcast")
+    @Transactional(rollbackFor = Exception.class)
     public void removeFromSet(String setName, Object value) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, value, HzPersistenceModel.ObjectOperation.DELETE);
         setResilienceService.removeFromDB(persistenceModel);
@@ -66,6 +69,7 @@ public class HazelcastCacheManager implements CacheManager {
 
     @Override
     @HealthCheck(type = "hazelcast")
+    @Transactional(rollbackFor = Exception.class)
     public void clearSet(String setName) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createSetPersistenceModel(setName, null, HzPersistenceModel.ObjectOperation.DELETE);
         setResilienceService.clearFromDB(persistenceModel);
@@ -82,6 +86,7 @@ public class HazelcastCacheManager implements CacheManager {
 
     @Override
     @HealthCheck(type = "hazelcast")
+    @Transactional(rollbackFor = Exception.class)
     public void addToMap(String mapName, String key, Object value) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, value, HzPersistenceModel.ObjectOperation.CREATE);
         mapResilienceService.persistToDB(persistenceModel);
@@ -92,7 +97,10 @@ public class HazelcastCacheManager implements CacheManager {
 
     @Override
     @HealthCheck(type = "hazelcast")
+    @Transactional(rollbackFor = Exception.class)
     public void removeFromMap(String mapName, String key) {
+        HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, key, null, HzPersistenceModel.ObjectOperation.DELETE);
+        mapResilienceService.removeFromDB(persistenceModel);
         IMap<Object, Object> map = getMap(mapName);
         map.remove(key);
         LOG.debug("Removed key: {} from map: {}", key, mapName);
@@ -100,6 +108,7 @@ public class HazelcastCacheManager implements CacheManager {
 
     @Override
     @HealthCheck(type = "hazelcast")
+    @Transactional(rollbackFor = Exception.class)
     public void clearMap(String mapName) {
         HzPersistenceModel persistenceModel = HzPersistenceModel.createMapPersistenceModel(mapName, null, null, HzPersistenceModel.ObjectOperation.DELETE);
         mapResilienceService.clearFromDB(persistenceModel);

@@ -7,6 +7,7 @@ import com.rahim.common.config.hazelcast.HazelcastInstanceFactory;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.dao.HzMapDataAccess;
 import com.rahim.common.dao.HzSetDataAccess;
+import com.rahim.common.exception.HazelcastDataLoadException;
 import com.rahim.common.model.HzMapData;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.model.HzSetData;
@@ -36,7 +37,6 @@ public class HazelcastFailover {
     private final HazelcastInstance hazelcastInstance;
     private final JdbcTemplate jdbcTemplate;
 
-    private static final AtomicBoolean isInitialised = new AtomicBoolean(false);
     private static final String INITIALISED_FLAG_KEY = "initialisedFlag";
 
     @Autowired
@@ -59,9 +59,7 @@ public class HazelcastFailover {
             hazelcastInstanceFactory.fallbackHazelcastInstance();
         }
 
-        if (isInitialised.compareAndSet(false, true)) {
-            initialiseHazelcastData();
-        }
+        initialiseHazelcastData();
     }
 
     /**
@@ -72,15 +70,16 @@ public class HazelcastFailover {
         IMap<String, Boolean> initialiserMap = hazelcastInstance.getMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP);
         Boolean isDataLoaded = initialiserMap.putIfAbsent(INITIALISED_FLAG_KEY, false);
 
-        if (isDataLoaded == null || !isDataLoaded) {
-            LOG.debug("Loading maps and sets into Hazelcast from the database...");
-            loadMaps();
-            loadSets();
-            initialiserMap.set(INITIALISED_FLAG_KEY, true);
-            LOG.info("Maps and sets loaded into Hazelcast.");
-        } else {
+        if (isDataLoaded != null && isDataLoaded) {
             LOG.debug("Fallback Hazelcast has already been initialised, skipping data loading.");
+            return;
         }
+
+        LOG.debug("Loading maps and sets into Hazelcast from the database...");
+        loadMaps();
+        loadSets();
+        initialiserMap.set(INITIALISED_FLAG_KEY, true);
+        LOG.info("Maps and sets loaded into Hazelcast.");
     }
 
     /**
@@ -96,12 +95,11 @@ public class HazelcastFailover {
                 + " FROM " + HzMapDataAccess.TABLE_NAME;
 
         try {
-            List<HzMapData> mapDataList = jdbcTemplate.query(
-                    query,
+            List<HzMapData> mapDataList = jdbcTemplate.query(query,
                     (resultSet, i) -> new HzMapData(
                             resultSet.getString(HzMapDataAccess.COL_MAP_NAME),
                             resultSet.getString(HzMapDataAccess.COL_MAP_KEY),
-                            resultSet.getString(HzMapDataAccess.COL_MAP_VALUE) // Retrieve as String
+                            resultSet.getString(HzMapDataAccess.COL_MAP_VALUE)
                     )
             );
 
@@ -117,6 +115,7 @@ public class HazelcastFailover {
 
         } catch (DataAccessException e) {
             LOG.error("An error occurred while accessing the database: {}", e.getMessage(), e);
+            throw new HazelcastDataLoadException("An error occurred loading map data into hazelcast");
         }
     }
 
@@ -171,6 +170,7 @@ public class HazelcastFailover {
 
         } catch (DataAccessException e) {
             LOG.error("An error occurred while accessing the database", e);
+            throw new HazelcastDataLoadException("An error occurred loading set data into hazelcast");
         }
     }
 

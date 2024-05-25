@@ -1,12 +1,16 @@
 package com.rahim.common.service.hazelcast.implementation;
 
 import com.rahim.common.dao.HzMapDataAccess;
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.DuplicateEntityException;
+import com.rahim.common.exception.ValidationException;
 import com.rahim.common.model.HzMapData;
 import com.rahim.common.model.HzPersistenceModel;
 import com.rahim.common.service.hazelcast.AbstractPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -54,15 +58,15 @@ public class MapPersistenceService extends AbstractPersistenceService {
 
             int rowsAffected = jdbcTemplate.update(query, params);
             if (rowsAffected == 0) {
-                LOG.warn("No rows found for deletion with map name: {} and key value: {}", mapName, mapKey);
+                LOG.debug("No rows found for deletion with map name: {} and key value: {}", mapName, mapKey);
             } else if (rowsAffected != 1) {
-                throw new IllegalStateException("Unexpected number of rows removed: " + rowsAffected);
+                throw new DataIntegrityViolationException("Unexpected number of rows removed: " + rowsAffected);
             }
 
             LOG.debug("Successfully removed {} rows from the database for persistence model: {}", rowsAffected, persistenceModel);
         } catch (Exception e) {
-            LOG.error("Error deleting data from database: {}", e.getMessage());
-            throw new RuntimeException("Error deleting data from database", e);
+            LOG.error("Error deleting data from database: {}", e.getMessage(), e);
+            throw new DatabaseException("Error deleting data from database");
         }
     }
 
@@ -74,7 +78,7 @@ public class MapPersistenceService extends AbstractPersistenceService {
         String mapKey = mapData.getMapKey();
         if (mapKeyExists(mapName, mapKey)) {
             LOG.warn("Map with name {} and key {} already exists", mapName, mapKey);
-            throw new IllegalArgumentException("Set with name " + mapName + " and value " + mapKey + " already exists");
+            throw new DuplicateEntityException("Set with name " + mapName + " and value " + mapKey + " already exists");
         }
 
         return "INSERT INTO " + HzMapDataAccess.TABLE_NAME +
@@ -103,7 +107,7 @@ public class MapPersistenceService extends AbstractPersistenceService {
     private void validateMapData(HzMapData mapData) {
         if (mapData == null || mapData.getMapName() == null || mapData.getMapKey() == null || mapData.getMapValue() == null) {
             LOG.error("Invalid map data: {}", mapData);
-            throw new IllegalArgumentException("Invalid map data: " + mapData);
+            throw new ValidationException("Invalid map data: " + mapData);
         }
     }
 
@@ -127,7 +131,7 @@ public class MapPersistenceService extends AbstractPersistenceService {
             String mapName = mapData.getMapName().trim();
             if (mapName.isBlank() || mapName.isEmpty()) {
                 LOG.error("Invalid map name: {}", (Object) null);
-                throw new IllegalArgumentException("Map name cannot be null or blank");
+                throw new ValidationException("Map name cannot be null or blank");
             }
 
             String query = "DELETE FROM "
@@ -139,8 +143,8 @@ public class MapPersistenceService extends AbstractPersistenceService {
 
             LOG.debug("Cleared data associated with map name '{}' from the database. Rows affected: {}", mapName, rowsAffected);
         } catch (Exception e) {
-            LOG.error("Error clearing data from database: {}", e.getMessage());
-            throw new RuntimeException("Error clearing data from database", e);
+            LOG.error("Error clearing data from database: {}", e.getMessage(), e);
+            throw new DatabaseException("Error clearing data from database");
         }
     }
 

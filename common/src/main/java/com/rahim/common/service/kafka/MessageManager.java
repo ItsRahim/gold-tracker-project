@@ -21,21 +21,22 @@ public class MessageManager {
 
     public boolean isProcessed(String message) {
         ISet<String> processedMessages = hazelcastCacheManager.getSet(HazelcastConstant.PROCESSED_KAFKA_MESSAGES);
-        if (processedMessages != null) {
-            return processedMessages.contains(message);
-        } else {
+        if (processedMessages == null) {
             LOG.warn("Failed to check if message '{}' is processed. Hazelcast set '{}' is not available.", message, HazelcastConstant.PROCESSED_KAFKA_MESSAGES);
             return false;
         }
+
+        return true;
     }
 
     public void markAsProcessed(String message) {
         ISet<String> processedMessages = hazelcastCacheManager.getSet(HazelcastConstant.PROCESSED_KAFKA_MESSAGES);
-        if (processedMessages != null) {
-            hazelcastCacheManager.addToSet(HazelcastConstant.PROCESSED_KAFKA_MESSAGES, message);
-            LOG.debug("Message marked as processed: '{}'", message);
-        } else {
+        if (processedMessages == null) {
             LOG.warn("Failed to mark message as processed. Hazelcast set '{}' is not available.", HazelcastConstant.PROCESSED_KAFKA_MESSAGES);
+            return;
         }
+
+        hazelcastCacheManager.addToSet(HazelcastConstant.PROCESSED_KAFKA_MESSAGES, message);
+        LOG.debug("Message marked as processed: '{}'", message);
     }
 }
