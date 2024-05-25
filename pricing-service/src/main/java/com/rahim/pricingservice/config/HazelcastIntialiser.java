@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 @RequiredArgsConstructor
@@ -21,7 +20,6 @@ public class HazelcastIntialiser {
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
     private final CacheManager hazelcastCacheManager;
 
-    private static final AtomicBoolean hasInitialised = new AtomicBoolean(false);
     private static final String GOLD_TYPE_ID_INITIALISED = "goldTypesInitialised";
     private IMap<String, Object> initialiserMap;
 
@@ -36,11 +34,6 @@ public class HazelcastIntialiser {
         boolean isInitialised = (boolean) initialiserMap.get(GOLD_TYPE_ID_INITIALISED);
         if (isInitialised) {
             LOG.debug("Hazelcast map has already been initialised for gold types by another instance, skipping...");
-            return;
-        }
-
-        if (hasInitialised.compareAndSet(true, false)) {
-            LOG.debug("Hazelcast map has already been initialised by another thread for gold types, skipping...");
             return;
         }
         
