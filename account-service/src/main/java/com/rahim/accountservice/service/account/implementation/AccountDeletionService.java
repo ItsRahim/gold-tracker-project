@@ -8,6 +8,7 @@ import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class AccountDeletionService implements IAccountDeletionService {
 
         if (account.getId() == null) {
             LOG.warn("Account with ID {} not found.", accountId);
-            return false;
+            throw new EntityNotFoundException("Account with ID " + accountId + " not found");
         }
 
         if (!isAccountEligibleForDeletion(account)) {

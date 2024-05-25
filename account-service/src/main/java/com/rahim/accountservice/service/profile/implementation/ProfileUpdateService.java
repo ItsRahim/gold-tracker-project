@@ -1,6 +1,5 @@
 package com.rahim.accountservice.service.profile.implementation;
 
-import com.rahim.accountservice.exception.UserNotFoundException;
 import com.rahim.accountservice.model.Profile;
 import com.rahim.accountservice.json.ProfileJson;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
