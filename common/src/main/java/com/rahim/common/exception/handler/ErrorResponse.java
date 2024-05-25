@@ -1,6 +1,5 @@
 package com.rahim.common.exception.handler;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -11,11 +10,14 @@ import org.springframework.http.HttpStatus;
  */
 @Getter
 @Setter
-@Builder
 public class ErrorResponse {
     private String message;
     private HttpStatus status;
-    @Builder.Default
-    private long timestamp = System.currentTimeMillis();
+    private long timestamp;
 
+    public ErrorResponse(String message, HttpStatus status) {
+        this.message = message;
+        this.status = status;
+        this.timestamp = System.currentTimeMillis();
+    }
 }

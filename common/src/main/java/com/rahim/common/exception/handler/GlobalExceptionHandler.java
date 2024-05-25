@@ -16,10 +16,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ErrorResponse> handleBaseException(BaseException ex) {
         HttpStatus httpStatus = ex.getHttpStatus();
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message(ex.getMessage())
-                .status(httpStatus)
-                .build();
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), httpStatus);
 
         return ResponseEntity.status(httpStatus).body(errorResponse);
     }
@@ -27,10 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message(ex.getMessage())
-                .status(httpStatus)
-                .build();
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), httpStatus);
 
         return ResponseEntity.status(httpStatus).body(errorResponse);
     }
