@@ -1,8 +1,14 @@
 package com.rahim.common.exception.handler;
 
+import com.rahim.common.util.DateTimeGenerator;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 /**
  * @author Rahim Ahmed
@@ -13,11 +19,11 @@ import org.springframework.http.HttpStatus;
 public class ErrorResponse {
     private String message;
     private HttpStatus status;
-    private long timestamp;
+    private Instant timestamp;
 
     public ErrorResponse(String message, HttpStatus status) {
         this.message = message;
         this.status = status;
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = DateTimeGenerator.generateInstant();
     }
 }

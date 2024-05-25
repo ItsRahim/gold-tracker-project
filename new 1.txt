@@ -38,3 +38,5 @@ WHERE
     t.account_id = 1
 ORDER BY
     t.account_id, t.transaction_date;
+	
+	mvn install:install-file -Dfile=target/common-0.0.1-SNAPSHOT.jar -DgroupId=com.rahim -DartifactId=common -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar
