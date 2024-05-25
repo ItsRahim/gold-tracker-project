@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
  */
 public class EntityNotFoundException extends BaseException{
 
-    protected EntityNotFoundException(String message) {
+    public EntityNotFoundException(String message) {
         super(message, HttpStatus.NOT_FOUND);
     }
 }

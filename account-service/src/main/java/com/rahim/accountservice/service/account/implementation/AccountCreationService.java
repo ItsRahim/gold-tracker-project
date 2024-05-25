@@ -9,7 +9,11 @@ import com.rahim.accountservice.service.profile.IProfileCreationService;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.DuplicateEntityException;
+import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.common.util.InputValidator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +24,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.rahim.accountservice.json.AccountJson.ACCOUNT_EMAIL;
+import static com.rahim.accountservice.json.AccountJson.ACCOUNT_PASSWORD_HASH;
+import static com.rahim.accountservice.json.ProfileJson.*;
 
 /**
  * This service class is responsible for creating new accounts.
@@ -40,7 +48,7 @@ public class AccountCreationService implements IAccountCreationService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<String> createAccount(UserRequest userRequest) {
+    public void createAccount(UserRequest userRequest) {
         Account account = ModelMapper.INSTANCE.toAccountEntity(userRequest.getAccount());
         Profile profile = ModelMapper.INSTANCE.toProfileEntity(userRequest.getProfile());
 
@@ -51,7 +59,7 @@ public class AccountCreationService implements IAccountCreationService {
 
         if (accountRepositoryHandler.existsByEmail(email) || profileRepositoryHandler.existsByUsername(username)) {
             LOG.warn("Account with email and/or username already exists. Not creating duplicate.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account with email and/or username already exists. Not creating duplicate.");
+            throw new DuplicateEntityException("Account with email and/or username already exists. Not creating duplicate.");
         }
 
         try {
@@ -60,10 +68,9 @@ public class AccountCreationService implements IAccountCreationService {
             addToHazelcastSet(account.getId());
 
             LOG.debug("Successfully created Account and Account Profile for: {}", profile.getUsername());
-            return ResponseEntity.status(HttpStatus.CREATED).body("Account created successfully");
         } catch (DataAccessException e) {
             LOG.error("Unexpected error creating Account and Account Profile: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error creating Account and Account Profile.");
+            throw new DatabaseException("Unexpected error creating Account and Account Profile.");
         }
     }
 
@@ -72,24 +79,20 @@ public class AccountCreationService implements IAccountCreationService {
         LOG.debug("Added new account id to hazelcast set");
     }
 
-    /**
-     * This method is used to check if all required fields to save an account and profile are not null
-     *
-     * @param account the Account object to be validated
-     * @param profile the Profile object to be validated
-     * @throws IllegalArgumentException if null values are found in the Account or Profile objects, or if null or blank values are found in the fields of these objects
-     */
     private void validateInput(Account account, Profile profile) {
-        if (ObjectUtils.anyNull(account, profile)) {
-            LOG.warn("Null values found. Not creating account.");
-            throw new IllegalArgumentException("Null values found in Account or Profile.");
+        if (account == null || profile == null) {
+            LOG.warn("Account or profile is null");
+            throw new ValidationException("Account or profile is null");
         }
 
-        if (StringUtils.isAnyBlank(account.getEmail(), account.getPasswordHash()) ||
-            StringUtils.isAnyBlank(profile.getUsername(), profile.getFirstName(),
-                                   profile.getLastName(), profile.getContactNumber(), profile.getAddress())) {
-            LOG.warn("Null or blank values found in Account or Profile fields. Not creating account.");
-            throw new IllegalArgumentException("Null or blank values found in Account or Profile fields.");
+        if (!InputValidator.validateFields(account, ACCOUNT_EMAIL, ACCOUNT_PASSWORD_HASH)) {
+            LOG.warn("Email and/or password hash is null for account: {}", account);
+            throw new ValidationException("Email and/or password hash is null for account: " + account);
+        }
+
+        if (!InputValidator.validateFields(profile, PROFILE_USERNAME, PROFILE_FIRST_NAME, PROFILE_LAST_NAME, PROFILE_CONTACT_NUMBER, PROFILE_ADDRESS)) {
+            LOG.warn("Some fields are null or blank for profile: {}", profile);
+            throw new ValidationException("Some fields are null or blank for profile: " + profile);
         }
     }
 

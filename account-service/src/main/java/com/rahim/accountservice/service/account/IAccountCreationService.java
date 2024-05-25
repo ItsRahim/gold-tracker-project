@@ -17,5 +17,5 @@ public interface IAccountCreationService {
      * @return
      * @throws DuplicateAccountException if an account with the same email or username already exists
      */
-    ResponseEntity<String> createAccount(UserRequest userRequest);
+    void createAccount(UserRequest userRequest);
 }

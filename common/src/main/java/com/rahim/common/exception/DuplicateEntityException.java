@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
  */
 public class DuplicateEntityException extends BaseException {
 
-    protected DuplicateEntityException(String message) {
+    public DuplicateEntityException(String message) {
         super(message, HttpStatus.BAD_REQUEST);
     }
 }
