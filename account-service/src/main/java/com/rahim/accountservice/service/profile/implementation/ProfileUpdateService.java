@@ -45,7 +45,7 @@ public class ProfileUpdateService implements IProfileUpdateService {
 
             return profile;
         } catch (DataAccessException e) {
-            LOG.error("Error updating profile: {}", e.getMessage());
+            LOG.error("Error updating profile: {}", e.getMessage(), e);
             throw new DatabaseException("An unexpected error occurred whilst updating profile");
         }
     }

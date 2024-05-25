@@ -63,7 +63,7 @@ public class InternalAccountService implements IInternalAccountService {
 
             LOG.debug("Account with ID {} deleted successfully.", accountId);
         } catch (DataAccessException e) {
-            LOG.error("An error occurred deleting user: {}", e.getMessage());
+            LOG.error("An error occurred deleting user: {}", e.getMessage(), e);
         }
     }
 

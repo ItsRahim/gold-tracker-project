@@ -2,6 +2,7 @@ package com.rahim.pricingservice.util;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.rahim.common.exception.JsonServiceException;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import lombok.Getter;
@@ -29,8 +30,8 @@ public class ApiDataProcessor {
             GoldPriceCalculator.calculatePricePerGram(processedData.getPrice());
             goldPriceUpdateService.updateGoldTickerPrice(processedData);
         } catch (JsonParseException | JsonMappingException e) {
-            LOG.error("Error processing API data: {}", e.getMessage());
-            throw new RuntimeException("Error processing API data", e);
+            LOG.error("Error processing API data: {}", e.getMessage(), e);
+            throw new JsonServiceException("Error processing API data", e);
         } catch (Exception e) {
             LOG.error("Unexpected error processing API data: {}", e.getMessage(), e);
             throw new RuntimeException("Unexpected error processing API data", e);

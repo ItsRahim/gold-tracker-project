@@ -40,7 +40,7 @@ public class ProcessedFilesTasklet implements Tasklet {
             LOG.error("Error processing file and inserting data into the database. File: {}", file.getFilename(), e);
             throw new RuntimeException("Error processing file and inserting data into the database", e);
         } catch (Exception e) {
-            LOG.error("Unexpected error occurred", e);
+            LOG.error("Unexpected error occurred {}", e.getMessage(), e);
             throw new RuntimeException("Unexpected error occurred", e);
         }
         return RepeatStatus.FINISHED;

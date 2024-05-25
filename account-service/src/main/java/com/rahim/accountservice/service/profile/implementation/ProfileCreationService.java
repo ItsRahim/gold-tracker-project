@@ -28,7 +28,7 @@ public class ProfileCreationService implements IProfileCreationService {
             profile.setAccount(account);
             profileRepositoryHandler.createNewProfile(profile);
         } catch (Exception e) {
-            LOG.error("An error occurred while creating a profile.", e);
+            LOG.error("An error occurred while creating a profile.", e.getMessage(), e);
         }
     }
 }

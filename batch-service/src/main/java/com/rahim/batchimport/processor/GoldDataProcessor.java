@@ -40,7 +40,7 @@ public class GoldDataProcessor implements ItemProcessor<GoldData, GoldPriceHisto
 
             return new GoldPriceHistory(priceOunce, pricePerGram, effectiveDate);
         } catch (NumberFormatException | DateTimeParseException e) {
-            LOG.error("Error processing GoldData: {}", goldData, e);
+            LOG.error("Error processing GoldData {}. {}", goldData, e.getMessage(), e);
             return null;
         }
     }

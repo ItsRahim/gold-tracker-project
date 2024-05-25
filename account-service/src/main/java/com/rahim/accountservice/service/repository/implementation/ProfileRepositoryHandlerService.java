@@ -46,7 +46,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
             profileRepository.save(profile);
             LOG.debug("New profile created: {}", profile.getId());
         } catch (DataIntegrityViolationException e) {
-            LOG.error("Error saving profile to the database: {}", e.getMessage());
+            LOG.error("Error saving profile to the database: {}", e.getMessage(), e);
             throw new RuntimeException("Error saving profile to database", e);
         }
     }

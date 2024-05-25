@@ -50,7 +50,7 @@ public class AccountUpdateService implements IAccountUpdateService {
             generateEmailTokens(accountId, oldEmail);
             return account;
         } catch (Exception e) {
-            LOG.error("An unexpected error occurred while updating account: {}", e.getMessage());
+            LOG.error("An unexpected error occurred while updating account: {}", e.getMessage(), e);
             throw new DatabaseException("An unexpected error occurred while updating account");
         }
     }
