@@ -52,7 +52,6 @@ public class HazelcastFailover {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @PostConstruct
     public void init() {
         if (!hazelcastInstance.getLifecycleService().isRunning()) {
             LOG.error("Fallback Hazelcast instance is not running!");

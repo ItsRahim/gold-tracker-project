@@ -8,5 +8,5 @@ import com.rahim.notificationservice.model.ThresholdAlert;
  */
 public interface IThresholdCreationService {
 
-    boolean createNotification(ThresholdAlert thresholdAlert);
+    void createNotification(ThresholdAlert thresholdAlert);
 }

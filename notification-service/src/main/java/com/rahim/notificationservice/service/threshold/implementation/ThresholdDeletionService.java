@@ -1,6 +1,5 @@
 package com.rahim.notificationservice.service.threshold.implementation;
 
-import com.rahim.notificationservice.model.ThresholdAlert;
 import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
 import com.rahim.notificationservice.service.threshold.IThresholdDeletionService;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -25,20 +22,13 @@ public class ThresholdDeletionService implements IThresholdDeletionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteNotification(int alertId) {
-        Optional<ThresholdAlert> optionalAlert = thresholdAlertRepositoryHandler.findById(alertId);
-        if (optionalAlert.isPresent()) {
-            try {
-                thresholdAlertRepositoryHandler.deleteThresholdAlert(alertId);
-                LOG.info("Successfully deleted threshold alert with ID: {}", alertId);
-                return true;
-            } catch (Exception e) {
-                LOG.error("An error has occurred attempting to delete threshold alert with ID: {}", alertId, e);
-                return false;
-            }
-        } else {
-            LOG.warn("Threshold alert with ID {} not found", alertId);
+        try {
+            thresholdAlertRepositoryHandler.deleteThresholdAlert(alertId);
+            LOG.info("Successfully deleted threshold alert with ID: {}", alertId);
+            return true;
+        } catch (Exception e) {
+            LOG.error("An error has occurred attempting to delete threshold alert with ID: {}", alertId, e);
             return false;
         }
     }
-
 }

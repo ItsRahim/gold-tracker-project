@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -28,13 +27,8 @@ public class ThresholdUpdateService implements IThresholdUpdateService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateNotification(int thresholdId, Map<String, String> updatedData) {
-        Optional<ThresholdAlert> optionalAlert = thresholdAlertRepositoryHandler.findById(thresholdId);
-        if (optionalAlert.isEmpty()) {
-            LOG.warn("Alert with ID {} not found.", thresholdId);
-            return false;
-        }
+        ThresholdAlert thresholdAlert = thresholdAlertRepositoryHandler.findById(thresholdId);
 
-        ThresholdAlert thresholdAlert = optionalAlert.get();
         if (!updateThresholdPrice(thresholdAlert, updatedData)) {
             LOG.info("Threshold alert with ID: {} was not updated.", thresholdId);
             return false;
@@ -51,20 +45,19 @@ public class ThresholdUpdateService implements IThresholdUpdateService {
     }
 
     private boolean updateThresholdPrice(ThresholdAlert thresholdAlert, Map<String, String> updatedData) {
-        if (updatedData.containsKey(THRESHOLD_PRICE)) {
-            BigDecimal originalPrice = thresholdAlert.getThresholdPrice();
-            BigDecimal updatedPrice = new BigDecimal(updatedData.get(THRESHOLD_PRICE));
-            if (!originalPrice.equals(updatedPrice)) {
-                thresholdAlert.setThresholdPrice(updatedPrice);
-                return true;
-            } else {
-                LOG.debug("Threshold alert already has the updated price: {}", updatedPrice);
-                return false;
-            }
-        } else {
+        if (!updatedData.containsKey(THRESHOLD_PRICE)) {
             LOG.warn("Updated data does not contain threshold price.");
             return false;
         }
-    }
 
+        BigDecimal originalPrice = thresholdAlert.getThresholdPrice();
+        BigDecimal updatedPrice = new BigDecimal(updatedData.get(THRESHOLD_PRICE));
+        if (originalPrice.equals(updatedPrice)) {
+            LOG.debug("Threshold alert already has the updated price: {}", updatedPrice);
+            return false;
+        }
+
+        thresholdAlert.setThresholdPrice(updatedPrice);
+        return true;
+    }
 }

@@ -31,8 +31,8 @@ public class ThresholdAlert {
     @JsonProperty("thresholdPrice")
     private BigDecimal thresholdPrice;
 
-    @Column(name = "is_active")
     @JsonIgnore
+    @Column(name = "is_active")
     @JsonProperty("isNotificationEnabled")
     private Boolean isActive;
 

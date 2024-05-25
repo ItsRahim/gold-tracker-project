@@ -14,4 +14,10 @@ public class DateTimeGenerator {
     public static Instant generateInstant() {
         return Instant.now().truncatedTo(ChronoUnit.SECONDS);
     }
+
+    public static String getFormattedTime() {
+        return generateInstant()
+                .toString()
+                .replace("T", " ");
+    }
 }

@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.rahim.notificationservice.constants.ThresholdControllerEndpoint.*;
 
@@ -50,15 +49,8 @@ public class ThresholdController {
     @GetMapping(value = THRESHOLD_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ThresholdAlert> getAlertById(
             @Parameter(description = "ID of the alert to fetch", required = true) @PathVariable int thresholdId) {
-        LOG.info("Fetching alert by ID: {}", thresholdId);
-        Optional<ThresholdAlert> thresholdAlert = thresholdAlertRepositoryHandler.findById(thresholdId);
-        if (thresholdAlert.isPresent()) {
-            ThresholdAlert alert = thresholdAlert.get();
-            return ResponseEntity.status(HttpStatus.OK).body(alert);
-        } else {
-            LOG.warn("Alert with ID {} not found", thresholdId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ThresholdAlert());
-        }
+        ThresholdAlert thresholdAlert = thresholdAlertRepositoryHandler.findById(thresholdId);
+        return ResponseEntity.status(HttpStatus.OK).body(thresholdAlert);
     }
 
     @Operation(summary = "Get all alerts")
@@ -68,14 +60,8 @@ public class ThresholdController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ThresholdAlert>> getAlerts() {
-        try {
-            LOG.info("Fetching all alerts");
-            List<ThresholdAlert> thresholdAlerts = thresholdAlertRepositoryHandler.getAllActiveAlerts();
-            return ResponseEntity.status(HttpStatus.OK).body(thresholdAlerts);
-        } catch (Exception e) {
-            LOG.error("Error retrieving all alerts", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<ThresholdAlert> thresholdAlerts = thresholdAlertRepositoryHandler.getAllActiveAlerts();
+        return ResponseEntity.status(HttpStatus.OK).body(thresholdAlerts);
     }
 
     @Operation(summary = "Get alert by Account ID")
@@ -87,15 +73,8 @@ public class ThresholdController {
     @GetMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ThresholdAlert> getAlertByAccountId(
             @Parameter(description = "ID of the account to fetch the alert for", required = true) @PathVariable int accountId) {
-        LOG.info("Fetching alert by Account ID: {}", accountId);
-        Optional<ThresholdAlert> thresholdAlertOptional = thresholdAlertRepositoryHandler.getAlertByAccountId(accountId);
-        if (thresholdAlertOptional.isPresent()) {
-            LOG.info("Alert found for Account ID: {}", accountId);
-            return ResponseEntity.status(HttpStatus.OK).body(thresholdAlertOptional.get());
-        } else {
-            LOG.warn("Alert not found for Account ID: {}", accountId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ThresholdAlert());
-        }
+        ThresholdAlert thresholdAlert = thresholdAlertRepositoryHandler.getAlertByAccountId(accountId);
+        return ResponseEntity.status(HttpStatus.OK).body(thresholdAlert);
     }
 
     @Operation(summary = "Create a new threshold alert")
@@ -107,18 +86,8 @@ public class ThresholdController {
     @PostMapping
     public ResponseEntity<String> createThreshold(
             @Parameter(description = "Threshold alert details", required = true) @RequestBody ThresholdAlert request) {
-        try {
-            if (thresholdCreationService.createNotification(request)) {
-                LOG.info("Threshold created successfully for account ID: {}", request.getAccountId());
-                return ResponseEntity.status(HttpStatus.CREATED).body("Threshold created successfully");
-            } else {
-                LOG.warn("Notification not created for account ID: {}. Account invalid/notifications not enabled on account", request.getAccountId());
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Notification not created. Account invalid/notifications not enabled on account");
-            }
-        } catch (Exception e) {
-            LOG.error("Error creating threshold: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating threshold: " + e.getMessage());
-        }
+        thresholdCreationService.createNotification(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Threshold created successfully");
     }
 
     @Operation(summary = "Update an existing threshold alert")
@@ -131,18 +100,8 @@ public class ThresholdController {
     public ResponseEntity<String> updateThreshold(
             @Parameter(description = "ID of the threshold to update", required = true) @PathVariable int thresholdId,
             @Parameter(description = "Updated data for the threshold", required = true) @RequestBody Map<String, String> updatedData) {
-        try {
-            if (thresholdUpdateService.updateNotification(thresholdId, updatedData)) {
-                LOG.info("Threshold successfully updated for ID: {}", thresholdId);
-                return ResponseEntity.status(HttpStatus.OK).body("Threshold successfully updated");
-            } else {
-                LOG.warn("Failed to update threshold for ID: {}. Threshold not found or update unsuccessful", thresholdId);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Threshold not found or update unsuccessful");
-            }
-        } catch (Exception e) {
-            LOG.error("Error updating threshold for ID {}: {}", thresholdId, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating threshold: " + e.getMessage());
-        }
+        thresholdUpdateService.updateNotification(thresholdId, updatedData);
+        return ResponseEntity.status(HttpStatus.OK).body("Threshold successfully updated");
     }
 
     @Operation(summary = "Delete an existing threshold alert")
@@ -154,17 +113,7 @@ public class ThresholdController {
     @DeleteMapping(value = THRESHOLD_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteThreshold(
             @Parameter(description = "ID of the threshold to delete", required = true) @PathVariable int thresholdId) {
-        try {
-            if (thresholdDeletionService.deleteNotification(thresholdId)) {
-                LOG.info("Threshold successfully deleted for ID: {}", thresholdId);
-                return ResponseEntity.status(HttpStatus.OK).body("Threshold successfully deleted");
-            } else {
-                LOG.warn("Failed to delete threshold for ID: {}. Threshold not found or deletion unsuccessful", thresholdId);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Threshold not found or deletion unsuccessful");
-            }
-        } catch (Exception e) {
-            LOG.error("Error deleting threshold for ID {}: {}", thresholdId, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting threshold: " + e.getMessage());
-        }
+        thresholdDeletionService.deleteNotification(thresholdId);
+        return ResponseEntity.status(HttpStatus.OK).body("Threshold successfully deleted");
     }
 }

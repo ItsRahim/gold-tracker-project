@@ -2,6 +2,7 @@ package com.rahim.notificationservice.service.threshold.implementation;
 
 import com.hazelcast.collection.ISet;
 import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
 import com.rahim.notificationservice.model.ThresholdAlert;
 import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
@@ -26,16 +27,15 @@ public class ThresholdCreationService implements IThresholdCreationService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean createNotification(ThresholdAlert thresholdAlert) {
+    public void createNotification(ThresholdAlert thresholdAlert) {
         int accountId = thresholdAlert.getAccountId();
-        if (accountExists(accountId)) {
-            thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
-            LOG.debug("Successfully added threshold alert for user with ID: {}", accountId);
-            return true;
-        } else {
+        if (!accountExists(accountId)) {
             LOG.warn("Failed to create new threshold alert for user with ID: {}. Account invalid/notifications not enabled on account", accountId);
-            return false;
+            throw new ValidationException("Account invalid/notifications not enabled on account");
         }
+
+        thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
+        LOG.debug("Successfully added threshold alert for user with ID: {}", accountId);
     }
 
     private boolean accountExists(int accountId) {

@@ -50,6 +50,7 @@ public class HealthCheckAspect {
 
             if (HAZELCAST_TYPE.equals(type) && !HealthStatus.isHzHealthy) {
                 hazelcastInstanceFactory.fallbackHazelcastInstance();
+                hazelcastFailover.init();
                 return handleHazelcastFallback(args, method, returnType);
             } else if (KAFKA_TYPE.equals(type) && !HealthStatus.isKafkaHealthy) {
                 return handleKafkaFallback(args, returnType);
