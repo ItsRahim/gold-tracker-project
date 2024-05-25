@@ -1,5 +1,6 @@
-package com.rahim.common.exception;
+package com.rahim.common.exception.handler;
 
+import com.rahim.common.exception.BaseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

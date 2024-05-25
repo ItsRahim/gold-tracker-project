@@ -1,4 +1,4 @@
-package com.rahim.common.exception;
+package com.rahim.common.exception.handler;
 
 import lombok.Builder;
 import lombok.Getter;
