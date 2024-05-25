@@ -35,11 +35,6 @@ public class AccountUpdateService implements IAccountUpdateService {
     public Object updateAccount(int accountId, Map<String, String> updatedData) {
         Account account = accountRepositoryHandler.findById(accountId);
 
-        if (account.getId() == null) {
-            LOG.warn("Could not find account with ID {}", accountId);
-            throw new EntityNotFoundException("Account with ID: " + accountId + " not found");
-        }
-
         try {
             String oldEmail = account.getEmail();
             OffsetDateTime beforeUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);

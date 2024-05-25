@@ -36,11 +36,6 @@ public class AccountDeletionService implements IAccountDeletionService {
     public boolean requestAccountDelete(int accountId) {
         Account account = accountRepositoryHandler.findById(accountId);
 
-        if (account.getId() == null) {
-            LOG.warn("Account with ID {} not found.", accountId);
-            throw new EntityNotFoundException("Account with ID " + accountId + " not found");
-        }
-
         if (!isAccountEligibleForDeletion(account)) {
             LOG.debug("Account with ID {} is not eligible for deletion", accountId);
             return false;
