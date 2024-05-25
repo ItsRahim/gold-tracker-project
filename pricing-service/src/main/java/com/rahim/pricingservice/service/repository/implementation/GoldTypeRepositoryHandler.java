@@ -1,11 +1,12 @@
 package com.rahim.pricingservice.service.repository.implementation;
 
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
-import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -14,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -38,22 +37,17 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
                     .stream()
                     .map(GoldType::getId)
                     .toList();
-        } catch (Exception e) {
-            LOG.error("Error getting all GoldType IDs", e);
-            throw new RuntimeException("Error getting all GoldType IDs", e);
+        } catch (DataAccessException e) {
+            LOG.error("Error getting all Gold Type IDs: {}", e.getMessage());
+            throw new DatabaseException("Error getting all Gold Type IDs");
         }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<GoldType> findById(Integer goldTypeId) {
-        try {
-            Objects.requireNonNull(goldTypeId, "Gold Type ID must not be null");
-            return goldTypeRepository.findById(goldTypeId);
-        } catch (DataAccessException e) {
-            LOG.error("An error occurred while retrieving Gold Type with ID: {}", goldTypeId, e);
-        }
-        return Optional.empty();
+    public GoldType findById(Integer goldTypeId) {
+        return goldTypeRepository.findById(goldTypeId)
+                .orElseThrow(() -> new EntityNotFoundException("Gold type not found with ID " + goldTypeId));
     }
 
     @Override
@@ -71,7 +65,7 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
 
         try {
             goldTypeRepository.save(goldType);
-        } catch (DataException e) {
+        } catch (DataAccessException e) {
             LOG.error("Error saving gold type to the database", e);
             throw new DataIntegrityViolationException("Error saving gold type to the database", e);
         }
@@ -86,9 +80,9 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
 
         try {
             goldTypeRepository.save(goldType);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataAccessException e) {
             LOG.error("Error updating profile to the database: {}", e.getMessage());
-            throw new RuntimeException("Error saving profile to database", e);
+            throw new DatabaseException("Error saving profile to database");
         }
     }
 
@@ -96,12 +90,6 @@ public class GoldTypeRepositoryHandler implements IGoldTypeRepositoryHandler {
     @Transactional(readOnly = true)
     public boolean existsByName(String name) {
         return goldTypeRepository.existsByName(name);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean existsById(int goldId) {
-        return goldTypeRepository.existsById(goldId);
     }
 
     @Override

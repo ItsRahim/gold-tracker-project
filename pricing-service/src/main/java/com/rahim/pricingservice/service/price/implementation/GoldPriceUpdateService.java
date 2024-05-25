@@ -49,16 +49,18 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
                 LOG.error("API data is null. Unable to update gold ticker price");
                 return;
             }
-            Optional<GoldPrice> goldPriceOptional = goldPriceRepository.findById(GOLD_TICKER_ID);
-            goldPriceOptional.ifPresent(goldTicker -> {
-                BigDecimal newPrice = processedData.getPrice().setScale(2, RoundingMode.HALF_UP);
-                updateTickerPrice(goldTicker, newPrice);
-                String priceData = KafkaKeyUtil.generateKeyWithUUID(String.valueOf(newPrice));
-                kafkaService.sendMessage(KafkaTopic.THRESHOLD_PRICE_UPDATE, priceData);
 
-                LOG.info("Gold ticker price updated successfully. New price: {}, Updated time: {}", newPrice, goldTicker.getUpdatedAt());
-                updateGoldPrices();
-            });
+            GoldPrice goldPrice = goldPriceRepository.findById(GOLD_TICKER_ID);
+            BigDecimal newPrice = processedData.getPrice().setScale(2, RoundingMode.HALF_UP);
+
+            updateTickerPrice(goldPrice, newPrice);
+
+            String priceData = KafkaKeyUtil.generateKeyWithUUID(String.valueOf(newPrice));
+            kafkaService.sendMessage(KafkaTopic.THRESHOLD_PRICE_UPDATE, priceData);
+
+            LOG.info("Gold ticker price updated successfully. New price: {}, Updated time: {}", newPrice, goldPrice.getUpdatedAt());
+            updateGoldPrices();
+
         } catch (Exception e) {
             LOG.error("Error updating gold ticker price: {}", e.getMessage(), e);
         }
@@ -66,7 +68,6 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
 
     private void updateTickerPrice(GoldPrice goldPrice, BigDecimal newPrice) {
         goldPrice.setCurrentPrice(newPrice);
-        goldPrice.setUpdatedAt(OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         goldPriceRepository.saveGoldPrice(goldPrice);
     }
 
@@ -90,7 +91,6 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
 
         BigDecimal newPrice = calculateNewGoldPrice(goldType.getNetWeight(), goldType.getCarat());
         goldPrice.setCurrentPrice(newPrice);
-        goldPrice.setUpdatedAt(OffsetDateTime.now());
         goldPriceRepository.saveGoldPrice(goldPrice);
     }
 

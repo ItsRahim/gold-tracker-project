@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.rahim.pricingservice.constant.GoldPriceURLConstant.*;
 
@@ -47,16 +46,8 @@ public class GoldPriceController {
     @GetMapping(value = GOLD_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GoldPriceDTO> getGoldPrice(
             @Parameter(description = "ID of gold price to be fetched") @PathVariable int goldPriceId) {
-        try {
-            Optional<GoldPriceDTO> goldPriceDTOOptional = goldPriceRepositoryHandler.getGoldPrice(goldPriceId);
-
-            return goldPriceDTOOptional
-                    .map(goldPriceDTO -> ResponseEntity.status(HttpStatus.OK).body(goldPriceDTO))
-                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GoldPriceDTO()));
-        } catch (RuntimeException e) {
-            LOG.error("Error retrieving gold price with ID {}: {}", goldPriceId, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        GoldPriceDTO goldPriceDto = goldPriceRepositoryHandler.getGoldPrice(goldPriceId);
+        return ResponseEntity.status(HttpStatus.OK).body(goldPriceDto);
     }
 
     @Operation(summary = "Get all gold prices")
@@ -67,7 +58,6 @@ public class GoldPriceController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GoldPriceDTO>> getAllGoldPrices() {
         List<GoldPriceDTO> goldPrices = goldPriceRepositoryHandler.getAllGoldPrices();
-
         return ResponseEntity.status(HttpStatus.OK).body(goldPrices);
     }
 

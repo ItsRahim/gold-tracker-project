@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -26,33 +25,31 @@ public class GoldTypeUpdateService implements IGoldTypeUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateGoldType(int goldId, Map<String, String> updatedData) {
-        Optional<GoldType> optionalGoldType = goldTypeRepositoryHandler.findById(goldId);
+    public GoldType updateGoldType(int goldId, Map<String, String> updatedData) {
+        GoldType existingGoldType = goldTypeRepositoryHandler.findById(goldId);
 
-        if (optionalGoldType.isPresent()) {
-            GoldType existingGoldType = optionalGoldType.get();
-            updatedData.forEach((key, value) -> {
-                switch (key) {
-                    case "name":
-                        existingGoldType.setName(value);
-                        break;
-                    case "netWeight":
-                        existingGoldType.setNetWeight(new BigDecimal(value));
-                        break;
-                    case "carat":
-                        existingGoldType.setCarat(value);
-                        break;
-                    case "description":
-                        existingGoldType.setDescription(value);
-                        break;
-                    default:
-                        LOG.warn("Ignoring unknown field: {}", key);
-                }
-            });
-            goldTypeRepositoryHandler.updateGoldType(existingGoldType);
-            LOG.debug("Successfully updated gold type with ID {}", goldId);
-        } else {
-            LOG.warn("GoldType with ID {} not found", goldId);
-        }
+        updatedData.forEach((key, value) -> {
+            switch (key) {
+                case "name":
+                    existingGoldType.setName(value);
+                    break;
+                case "netWeight":
+                    existingGoldType.setNetWeight(new BigDecimal(value));
+                    break;
+                case "carat":
+                    existingGoldType.setCarat(value);
+                    break;
+                case "description":
+                    existingGoldType.setDescription(value);
+                    break;
+                default:
+                    LOG.warn("Ignoring unknown field: {}", key);
+            }
+        });
+
+        goldTypeRepositoryHandler.updateGoldType(existingGoldType);
+        LOG.debug("Successfully updated gold type with ID {}", goldId);
+
+        return existingGoldType;
     }
 }

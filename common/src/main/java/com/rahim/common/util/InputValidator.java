@@ -16,7 +16,7 @@ public class InputValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(InputValidator.class);
 
-    public static boolean validateFields(Object object, String... requiredFields) {
+    public static boolean validateObjectFields(Object object, String... requiredFields) {
         for (String fieldName : requiredFields) {
             try {
                 Field field = object.getClass().getDeclaredField(fieldName);
@@ -29,6 +29,16 @@ public class InputValidator {
 
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 LOG.error("Error accessing field: {}", fieldName, e);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean validateStringFields(String... fields) {
+        for (String field : fields) {
+            if (StringUtils.isBlank(field)) {
+                LOG.warn("Null or blank value found for field: {}", field);
                 return true;
             }
         }

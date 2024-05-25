@@ -1,5 +1,8 @@
 package com.rahim.pricingservice.service.repository.implementation;
 
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.EntityNotFoundException;
+import com.rahim.common.exception.ValidationException;
 import com.rahim.pricingservice.dto.GoldPriceDTO;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
@@ -8,17 +11,13 @@ import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
-import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -35,29 +34,24 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
 
     @Override
     public void saveGoldPrice(GoldPrice goldPrice) {
-        if (!ObjectUtils.allNotNull(goldPrice, goldPrice.getCurrentPrice(), goldPrice.getGoldType(), goldPrice.getUpdatedAt())) {
+        if (!ObjectUtils.allNotNull(goldPrice, goldPrice.getCurrentPrice(), goldPrice.getGoldType())) {
             LOG.error("GoldPrice object is null or contains null properties. Unable to save.");
-            throw new IllegalArgumentException("GoldPrice object is null or contains null properties. Unable to save.");
+            throw new ValidationException("GoldPrice object is null or contains null properties. Unable to save.");
         }
 
         try {
             goldPriceRepository.save(goldPrice);
-        } catch (DataException e) {
+        } catch (DataAccessException e) {
             LOG.error("Error saving gold price to the database", e);
-            throw new DataIntegrityViolationException("Error saving gold price to the database", e);
+            throw new DatabaseException("Error saving gold price to the database");
         }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<GoldPrice> findById(int goldId) {
-        try {
-            return goldPriceRepository.findById(goldId);
-        } catch (DataAccessException e) {
-            String errorMessage = "An error occurred while retrieving GoldPrice with ID: " + goldId;
-            LOG.error(errorMessage, e);
-            throw new RuntimeException(errorMessage, e);
-        }
+    public GoldPrice findById(int goldId) {
+        return goldPriceRepository.findById(goldId)
+                .orElseThrow(() -> new EntityNotFoundException("Gold price not found with ID " + goldId));
     }
 
     @Override
@@ -68,30 +62,32 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<GoldPriceDTO> getGoldPrice(int goldId) {
-        try {
-            Optional<GoldPrice> goldPriceOptional = findById(goldId);
-            return goldPriceOptional.map(this::mapToGoldPriceDTO);
-        } catch (DataAccessException e) {
-            String errorMessage = "An error occurred while retrieving GoldPrice with ID: " + goldId;
-            LOG.error(errorMessage, e);
-            throw new RuntimeException(errorMessage, e);
-        }
+    public GoldPriceDTO getGoldPrice(int goldId) {
+        GoldPrice goldPrice = this.findById(goldId);
+        GoldType goldType = goldTypeRepositoryHandler.findById(goldPrice.getGoldType().getId());
+
+        return new GoldPriceDTO(goldPrice.getId(), goldType.getName(), goldPrice.getCurrentPrice(), goldPrice.getUpdatedAt());
     }
+
 
     @Override
     @Transactional(readOnly = true)
     public List<GoldPriceDTO> getAllGoldPrices() {
         try {
-            return goldPriceRepository
+            List<Integer> goldPriceIds = goldPriceRepository
                     .findAll()
                     .stream()
-                    .map(this::mapToGoldPriceDTO)
+                    .map(GoldPrice::getId)
                     .toList();
+
+            return goldPriceIds.stream()
+                    .map(this::getGoldPrice)
+                    .toList();
+
         } catch (DataAccessException e) {
             String errorMessage = "Error getting all gold prices: " + e.getMessage();
             LOG.error(errorMessage, e);
-            throw new RuntimeException(errorMessage, e);
+            throw new DatabaseException(errorMessage);
         }
     }
 
@@ -99,34 +95,17 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
     public void deleteGoldPrice(int goldTypeId) {
         try {
             Integer priceId = goldPriceRepository.getPriceIdByTypeId(goldTypeId);
-            if (priceId != null) {
-                goldPriceRepository.deleteById(priceId);
-                LOG.debug("Gold type with ID {} and associated price deleted successfully.", goldTypeId);
-            } else {
+            if (priceId == null) {
                 LOG.warn("Gold type with ID {} not found. Unable to delete associated price.", goldTypeId);
+                throw new EntityNotFoundException("Gold type not found for ID: " + goldTypeId);
             }
+
+            goldPriceRepository.deleteById(priceId);
+            LOG.debug("Gold type with ID {} and associated price deleted successfully.", goldTypeId);
         } catch (DataAccessException  e) {
             LOG.error("Error deleting gold type with ID {}: {}", goldTypeId, e.getMessage());
-            throw new RuntimeException("Error deleting gold type", e);
+            throw new DatabaseException("Error deleting gold type");
         }
-    }
-
-    /**
-     * Maps a GoldPrice entity to a GoldPriceDTO.
-     *
-     * @param goldPrice The GoldPrice entity to map.
-     * @return The corresponding GoldPriceDTO object.
-     * @throws NoSuchElementException if the corresponding GoldType is not found.
-     */
-    private GoldPriceDTO mapToGoldPriceDTO(GoldPrice goldPrice) {
-        GoldType goldType = goldTypeRepositoryHandler.findById(goldPrice.getGoldType().getId())
-                .orElseThrow(() -> new NoSuchElementException("Gold Type not found"));
-        return new GoldPriceDTO(
-                goldPrice.getId(),
-                goldType.getName(),
-                goldPrice.getCurrentPrice(),
-                goldPrice.getUpdatedAt()
-        );
     }
 
 }

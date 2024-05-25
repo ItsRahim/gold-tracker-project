@@ -82,12 +82,12 @@ public class AccountCreationService implements IAccountCreationService {
             throw new ValidationException("Account or profile is null");
         }
 
-        if (InputValidator.validateFields(account, ACCOUNT_EMAIL, ACCOUNT_PASSWORD_HASH)) {
+        if (InputValidator.validateObjectFields(account, ACCOUNT_EMAIL, ACCOUNT_PASSWORD_HASH)) {
             LOG.warn("Email and/or password hash is null for account: {}", account);
             throw new ValidationException("Email and/or password hash is null for account: " + account);
         }
 
-        if (InputValidator.validateFields(profile, PROFILE_USERNAME, PROFILE_FIRST_NAME, PROFILE_LAST_NAME, PROFILE_CONTACT_NUMBER, PROFILE_ADDRESS)) {
+        if (InputValidator.validateObjectFields(profile, PROFILE_USERNAME, PROFILE_FIRST_NAME, PROFILE_LAST_NAME, PROFILE_CONTACT_NUMBER, PROFILE_ADDRESS)) {
             LOG.warn("Some fields are null or blank for profile: {}", profile);
             throw new ValidationException("Some fields are null or blank for profile: " + profile);
         }

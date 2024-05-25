@@ -1,5 +1,6 @@
 package com.rahim.pricingservice.util;
 
+import com.rahim.common.exception.ValidationException;
 import com.rahim.pricingservice.enums.GoldPurity;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class GoldPriceCalculator {
             LOG.debug("Conversion successful: £{} per ounce is £{} per gram", ouncesBigDecimal, pricePerGram);
         } catch (ArithmeticException ex) {
             LOG.error("Error converting price per ounce to per gram: {}", ex.getMessage());
-            throw new RuntimeException("Error converting price per ounce to per gram", ex);
+            throw new ArithmeticException("Error converting price per ounce to per gram");
         }
     }
 
@@ -51,11 +52,10 @@ public class GoldPriceCalculator {
     private BigDecimal calculateGoldPriceByCarat(String carat) {
         try {
             BigDecimal caratPurity = BigDecimal.valueOf(GoldPurity.getPurityByCarat(carat));
-
             return caratPurity.multiply(pricePerGram).setScale(SCALE, RoundingMode.HALF_UP);
         } catch (IllegalArgumentException e) {
             LOG.error("Error calculating gold price for carat {}: {}", carat, e.getMessage());
-            throw new RuntimeException("Error calculating gold price", e);
+            throw new IllegalArgumentException("Error calculating gold price");
         }
     }
 
@@ -82,8 +82,8 @@ public class GoldPriceCalculator {
             totalGoldPrice = totalGoldPrice.setScale(SCALE, RoundingMode.HALF_UP);
             return totalGoldPrice;
         } catch (IllegalArgumentException e) {
-            LOG.error("Error calculating gold price: {}", e.getMessage(), e);
-            throw e;
+            LOG.error("Error calculating gold price: {}", e.getMessage());
+            throw new IllegalArgumentException("Error calculating gold price");
         }
     }
 
@@ -97,7 +97,7 @@ public class GoldPriceCalculator {
     private void validateInput(String caratPurity, BigDecimal netWeight) {
         if (caratPurity.isEmpty() || (netWeight != null && netWeight.compareTo(BigDecimal.ZERO) < 0) || pricePerGram.compareTo(BigDecimal.ZERO) < 0) {
             LOG.error("Invalid input values. Carat purity: {}, Net weight: {}, Price per gram: {}", caratPurity, netWeight, pricePerGram);
-            throw new IllegalArgumentException("Invalid input values. Carat purity, net weight (if provided), and price per gram must be non-negative.");
+            throw new ValidationException("Invalid input values. Carat purity, net weight (if provided), and price per gram must be non-negative.");
         }
     }
 

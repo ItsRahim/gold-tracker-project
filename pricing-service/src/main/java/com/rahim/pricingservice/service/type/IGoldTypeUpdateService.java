@@ -1,5 +1,7 @@
 package com.rahim.pricingservice.service.type;
 
+import com.rahim.pricingservice.model.GoldType;
+
 import java.util.Map;
 
 /**
@@ -8,5 +10,5 @@ import java.util.Map;
  */
 public interface IGoldTypeUpdateService {
 
-    void updateGoldType(int goldId, Map<String, String> updatedData);
+    GoldType updateGoldType(int goldId, Map<String, String> updatedData);
 }

@@ -4,7 +4,6 @@ import com.rahim.pricingservice.dto.GoldPriceDTO;
 import com.rahim.pricingservice.model.GoldPrice;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -14,11 +13,11 @@ public interface IGoldPriceRepositoryHandler {
 
     void saveGoldPrice(GoldPrice goldPrice);
 
-    Optional<GoldPrice> findById(int goldId);
+    GoldPrice findById(int goldId);
 
     List<GoldPrice> findByTypeId (int goldTypeId);
 
-    Optional<GoldPriceDTO> getGoldPrice(int goldId);
+    GoldPriceDTO getGoldPrice(int goldId);
 
     List<GoldPriceDTO> getAllGoldPrices();
 

@@ -28,18 +28,17 @@ public class GoldTypeDeletionService implements IGoldTypeDeletionService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteGoldType(int goldId) {
         try {
-            removeFromHazelcast(goldId);
             goldPriceRepositoryHandler.deleteGoldPrice(goldId);
             goldTypeRepositoryHandler.deleteById(goldId);
+            removeFromHazelcast(goldId);
             LOG.debug("Gold type with ID {} deleted successfully.", goldId);
         } catch (Exception e) {
             LOG.error("An error has occurred whilst attempting to delete gold type with ID: {}", goldId);
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error deleting gold type");
         }
     }
 
     private void removeFromHazelcast(int goldId) {
-        LOG.debug("Deleting gold type with ID: {} from hazelcast map",goldId);
         String goldTypeName = goldTypeRepositoryHandler.getGoldTypeNameById(goldId);
         hazelcastCacheManager.removeFromMap(HazelcastConstant.GOLD_TYPE_MAP, goldTypeName);
     }

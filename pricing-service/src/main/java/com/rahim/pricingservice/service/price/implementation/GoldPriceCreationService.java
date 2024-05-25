@@ -37,9 +37,10 @@ public class GoldPriceCreationService implements IGoldPriceCreationService {
             GoldPrice goldPriceModel = new GoldPrice(goldType, goldPrice);
             goldPriceRepository.save(goldPriceModel);
         } catch (Exception e) {
-            LOG.error("Error processing new gold type with ID {}: {}", goldType.getId(), e.getMessage());
-            throw new RuntimeException("Error processing new gold type", e);
+            LOG.error("An unexpected error occurred processing new gold type: {}", e.getMessage());
+            throw new RuntimeException("An unexpected error occurred processing new gold type");
         }
+
     }
 
     private BigDecimal calculatePrice(String carat, BigDecimal weight) {
