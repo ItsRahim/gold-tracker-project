@@ -3,12 +3,13 @@ package com.rahim.accountservice.service.repository.implementation;
 import com.rahim.accountservice.model.Account;
 import com.rahim.accountservice.repository.AccountRepository;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
-import jakarta.persistence.EntityNotFoundException;
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.EntityNotFoundException;
+import com.rahim.common.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,32 +31,28 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     public Account findById(int accountId) {
-        return accountRepository.findById(accountId).orElse(new Account());
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("Account not found with ID: " + accountId));
     }
 
     @Override
     public void saveAccount(Account account) {
-        if(account != null) {
-            try {
-                accountRepository.save(account);
-            } catch (DataException e) {
-                LOG.error("Error saving account to the database", e);
-                throw new DataIntegrityViolationException("Error saving account to database", e);
-            }
-        } else {
+        if (account == null) {
             LOG.error("Account information provided is null or contains null properties. Unable to save");
-            throw new IllegalArgumentException("Account information provided is null or contains null properties. Unable to save");
+            throw new ValidationException("Account information provided is null or contains null properties. Unable to save");
+        }
+
+        try {
+            accountRepository.save(account);
+        } catch (DataAccessException e) {
+            LOG.error("Error saving account to the database:", e);
+            throw new DatabaseException("Error saving account to the database");
         }
     }
 
     @Override
     public void deleteAccount(int accountId) {
-        Account account = findById(accountId);
-
-        if (account.getId() == null) {
-            LOG.warn("Attempted to delete non-existing account with ID: {}", accountId);
-            throw new EntityNotFoundException("Account with ID " + accountId + " not found");
-        }
+        findById(accountId);
 
         accountRepository.deleteById(accountId);
         LOG.debug("Account with ID {} deleted successfully", accountId);

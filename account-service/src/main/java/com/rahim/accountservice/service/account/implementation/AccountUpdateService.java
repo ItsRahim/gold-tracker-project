@@ -8,12 +8,13 @@ import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.exception.DatabaseException;
+import com.rahim.common.exception.EntityNotFoundException;
+import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,12 +32,8 @@ public class AccountUpdateService implements IAccountUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Object> updateAccount(int accountId, Map<String, String> updatedData) {
+    public Object updateAccount(int accountId, Map<String, String> updatedData) {
         Account account = accountRepositoryHandler.findById(accountId);
-
-        if (account.getId() == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account was not found");
-        }
 
         try {
             String oldEmail = account.getEmail();
@@ -47,16 +44,17 @@ public class AccountUpdateService implements IAccountUpdateService {
 
             if (beforeUpdate.equals(afterUpdate)) {
                 LOG.debug("No updates were applied to the account");
-                return ResponseEntity.status(HttpStatus.OK).body("No updates were applied to the account.");
+                return "No updates were applied to the account.";
             }
 
             generateEmailTokens(accountId, oldEmail);
-            return ResponseEntity.status(HttpStatus.OK).body(account);
+            return account;
         } catch (Exception e) {
             LOG.error("An unexpected error occurred while updating account: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred while updating account");
+            throw new DatabaseException("An unexpected error occurred while updating account");
         }
     }
+
 
     private void generateEmailTokens(int accountId, String oldEmail) {
         EmailProperty emailProperty = EmailProperty.builder()
@@ -127,7 +125,7 @@ public class AccountUpdateService implements IAccountUpdateService {
         } else if (value.equalsIgnoreCase("false")) {
             return false;
         } else {
-            throw new IllegalArgumentException("Invalid value for notificationSetting: " + value);
+            throw new ValidationException("Invalid value for notificationSetting: " + value);
         }
     }
 
