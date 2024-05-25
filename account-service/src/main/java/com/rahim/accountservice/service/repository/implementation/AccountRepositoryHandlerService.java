@@ -52,12 +52,7 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     public void deleteAccount(int accountId) {
-        Account account = findById(accountId);
-
-        if (account.getId() == null) {
-            LOG.warn("Attempted to delete non-existing account with ID: {}", accountId);
-            throw new EntityNotFoundException("Account with ID " + accountId + " not found");
-        }
+        findById(accountId);
 
         accountRepository.deleteById(accountId);
         LOG.debug("Account with ID {} deleted successfully", accountId);
