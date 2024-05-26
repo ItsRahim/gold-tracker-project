@@ -45,12 +45,12 @@ Linked hashmap maintains the order in which keys are inserted
 -Fix issue of fallback hazelcast instance being created when main cluster is up and switching - BUG
 -Fix issue of kafka health monitor getting wrong status - BUG
 -Add rollback upon an error in code, do this when upgrading exception handling - DONE
--Enhancement/Improvements to gold creation methods needed
--Bug in calling http endpoints
+-Enhancement/Improvements to gold creation methods needed - DONE
+-Bug in calling http endpoints - DONE
 -Need to improve endpoint names - DONE
--Simplify investment creation logic once code is working and complete
+-Simplify investment creation logic once code is working and complete - DONE
 -Update gateway service to refer to eureka service names instead of hard coded host in feign calls by services
--Improve exception handling, in classes with transaction to return info, controller advice and no generic exceptions
+-Improve exception handling, in classes with transaction to return info, controller advice and no generic exceptions - DONE
 -create a reporting service to generate holding performance, transaction reports, can also allow users to export gold type price information and generate report graphs too using python?
 - as types price update, send id and price via kafka to update it in real time in investment service
 - create a graph of investment over time or something, create a new python program to consume and generate graphs and render it to someplace
