@@ -15,16 +15,12 @@ import com.rahim.pricingservice.util.GoldPriceCalculator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -40,7 +36,6 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private final IGoldTypeRepositoryHandler goldTypeRepository;
     private final GoldPriceCalculator goldPriceCalculator;
     private final IKafkaService kafkaService;
-    private final StreamBridge streamBridge;
 
     private static final String GOLD_TICKER = "XAUGBP";
     private static final int GOLD_TICKER_ID = 1;
@@ -108,7 +103,8 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private void sendInvestmentUpdate(Integer id, BigDecimal currentPrice) {
         PriceUpdate update = new PriceUpdate(id, currentPrice);
         String json = JsonUtil.convertObjectToJson(update);
-        streamBridge.send("processGoldPrice-in-0", json);
+        json = KafkaKeyUtil.generateKeyWithUUID(json);
+        kafkaService.sendMessage("UPDATE-TOPIC", json);
     }
 }
 
