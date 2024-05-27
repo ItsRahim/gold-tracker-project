@@ -2,10 +2,12 @@ package com.rahim.pricingservice.service.price.implementation;
 
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
+import com.rahim.common.util.JsonUtil;
 import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.model.PriceUpdate;
 import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
@@ -13,6 +15,7 @@ import com.rahim.pricingservice.util.GoldPriceCalculator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private final IGoldTypeRepositoryHandler goldTypeRepository;
     private final GoldPriceCalculator goldPriceCalculator;
     private final IKafkaService kafkaService;
+    private final StreamBridge streamBridge;
 
     private static final String GOLD_TICKER = "XAUGBP";
     private static final int GOLD_TICKER_ID = 1;
@@ -78,6 +82,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
                 List<GoldPrice> pricesToUpdate = goldPriceRepository.findByTypeId(goldTypeId);
                 pricesToUpdate.forEach(this::updateGoldPrice);
             }
+            LOG.info("Gold prices updated successfully");
         } catch (Exception e) {
             LOG.error("Error updating gold prices: {}", e.getMessage(), e);
         }
@@ -86,16 +91,24 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private void updateGoldPrice(GoldPrice goldPrice) {
         GoldType goldType = goldPrice.getGoldType();
         if (goldType.getName().equals(GOLD_TICKER)) {
+            LOG.debug("Skipping update for gold ticker: {}", goldPrice);
             return;
         }
 
         BigDecimal newPrice = calculateNewGoldPrice(goldType.getNetWeight(), goldType.getCarat());
         goldPrice.setCurrentPrice(newPrice);
         goldPriceRepository.saveGoldPrice(goldPrice);
+        sendInvestmentUpdate(goldPrice.getId(), goldPrice.getCurrentPrice());
     }
 
     private BigDecimal calculateNewGoldPrice(BigDecimal netWeight, String carat) {
         return goldPriceCalculator.calculateGoldPrice(carat, netWeight);
+    }
+
+    private void sendInvestmentUpdate(Integer id, BigDecimal currentPrice) {
+        PriceUpdate update = new PriceUpdate(id, currentPrice);
+        String json = JsonUtil.convertObjectToJson(update);
+        streamBridge.send("processGoldPrice-in-0", json);
     }
 }
 

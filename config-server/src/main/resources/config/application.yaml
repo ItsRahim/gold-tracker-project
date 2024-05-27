@@ -26,6 +26,17 @@ springdoc:
     path: /swagger-ui.html
 
 spring:
+  cloud:
+    function:
+      definition: processGoldPrice
+    stream:
+      bindings:
+        processGoldPrice-in-0:
+          destination: gold-prices
+        processGoldPrice-out-0:
+          destination: process-gold-prices
+      kafka:
+        binder: ${spring.kafka.bootstrap-servers}
   datasource:
     url: jdbc:postgresql://localhost:5432/gold
     username: ENC(hRyjggT0Jxn9g0FeRmcmfgTSGVgsc+p1L6R5hzCbsCSkqq1UpqBK1Xkw7GXg9/Vr)

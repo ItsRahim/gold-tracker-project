@@ -3,6 +3,7 @@ package com.rahim.pricingservice.service.repository.implementation;
 import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
+import com.rahim.common.util.DateTimeGenerator;
 import com.rahim.pricingservice.dto.GoldPriceDTO;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
@@ -11,6 +12,7 @@ import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.hibernate.type.descriptor.DateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -40,6 +42,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
         }
 
         try {
+            goldPrice.setUpdatedAt(DateTimeGenerator.generateInstant());
             goldPriceRepository.save(goldPrice);
         } catch (DataAccessException e) {
             LOG.error("Error saving gold price to the database", e);

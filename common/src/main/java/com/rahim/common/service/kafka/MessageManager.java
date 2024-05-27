@@ -26,7 +26,7 @@ public class MessageManager {
             return false;
         }
 
-        return true;
+        return processedMessages.contains(message);
     }
 
     public void markAsProcessed(String message) {
