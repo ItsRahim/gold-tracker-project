@@ -1,17 +1,17 @@
--- Update updated_at trigger function
-CREATE OR REPLACE FUNCTION rgts.update_updated_at()
-    RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = (NOW() AT TIME ZONE 'UTC');
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Trigger for update_updated_at function
-CREATE TRIGGER update_updated_at_trigger
-    BEFORE INSERT OR UPDATE ON rgts.user_accounts
-    FOR EACH ROW
-EXECUTE FUNCTION rgts.update_updated_at();
+-- -- Update updated_at trigger function
+-- CREATE OR REPLACE FUNCTION rgts.update_updated_at()
+--     RETURNS TRIGGER AS $$
+-- BEGIN
+--     NEW.updated_at = (NOW() AT TIME ZONE 'UTC');
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+--
+-- -- Trigger for update_updated_at function
+-- CREATE TRIGGER update_updated_at_trigger
+--     BEFORE INSERT OR UPDATE ON rgts.user_accounts
+--     FOR EACH ROW
+-- EXECUTE FUNCTION rgts.update_updated_at();
 
 ----------------------------------------
 

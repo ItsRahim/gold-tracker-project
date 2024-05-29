@@ -48,7 +48,7 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Validation Error", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
     })
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserRequest> createAccounts(@Parameter(description = "User account details", required = true) @RequestBody UserRequest userRequest) {
         UserRequest account = accountCreationService.createAccount(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(account);

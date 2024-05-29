@@ -94,4 +94,9 @@ public class Account {
         this.loginAttempts = account.getLoginAttempts();
         this.deleteDate = account.getDeleteDate();
     }
+
+    public boolean isValid() {
+        return !(email == null || email.isEmpty() ||
+                passwordHash == null || passwordHash.isEmpty());
+    }
 }

@@ -4,7 +4,6 @@ import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.DuplicateEntityException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
-import com.rahim.common.util.InputValidator;
 import com.rahim.pricingservice.model.GoldType;
 import com.rahim.pricingservice.service.price.IGoldPriceCreationService;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
@@ -31,7 +30,7 @@ public class GoldTypeCreationService implements IGoldTypeCreationService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public GoldType addGoldType(GoldType goldType) {
-        if (InputValidator.validateObjectFields(goldType, "name", "netWeight", "carat", "description")) {
+        if (!goldType.isValid()) {
             LOG.warn("Invalid gold type object: {}", goldType);
             throw new ValidationException("Invalid gold type object");
         }

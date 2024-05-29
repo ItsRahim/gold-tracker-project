@@ -13,17 +13,12 @@ import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.DuplicateEntityException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
-import com.rahim.common.util.InputValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.rahim.accountservice.json.AccountJson.ACCOUNT_EMAIL;
-import static com.rahim.accountservice.json.AccountJson.ACCOUNT_PASSWORD_HASH;
-import static com.rahim.accountservice.json.ProfileJson.*;
 
 /**
  * This service class is responsible for creating new accounts.
@@ -82,12 +77,12 @@ public class AccountCreationService implements IAccountCreationService {
             throw new ValidationException("Account or profile is null");
         }
 
-        if (InputValidator.validateObjectFields(account, ACCOUNT_EMAIL, ACCOUNT_PASSWORD_HASH)) {
+        if (!account.isValid()) {
             LOG.warn("Email and/or password hash is null for account: {}", account);
             throw new ValidationException("Email and/or password hash is null for account: " + account);
         }
 
-        if (InputValidator.validateObjectFields(profile, PROFILE_USERNAME, PROFILE_FIRST_NAME, PROFILE_LAST_NAME, PROFILE_CONTACT_NUMBER, PROFILE_ADDRESS)) {
+        if (!profile.isValid()) {
             LOG.warn("Some fields are null or blank for profile: {}", profile);
             throw new ValidationException("Some fields are null or blank for profile: " + profile);
         }

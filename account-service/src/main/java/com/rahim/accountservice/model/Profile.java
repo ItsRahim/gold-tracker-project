@@ -60,4 +60,12 @@ public class Profile {
         this.contactNumber = contactNumber;
         this.address = address;
     }
+
+    public boolean isValid() {
+        return !(username == null || username.isEmpty() ||
+                firstName == null || firstName.isEmpty() ||
+                lastName == null || lastName.isEmpty() ||
+                contactNumber == null || contactNumber.isEmpty() ||
+                address == null || address.isEmpty());
+    }
 }

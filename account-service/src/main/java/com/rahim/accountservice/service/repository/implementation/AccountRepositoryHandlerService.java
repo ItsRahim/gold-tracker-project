@@ -6,6 +6,7 @@ import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
+import com.rahim.common.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
         }
 
         try {
+            account.setUpdatedAt(DateTimeUtil.generateInstant());
             accountRepository.save(account);
         } catch (DataAccessException e) {
             LOG.error("Error saving account to the database:", e);

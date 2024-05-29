@@ -37,4 +37,10 @@ public class GoldType {
     @JsonProperty("description")
     private String description;
 
+    public boolean isValid() {
+        return !(name == null || name.isEmpty() ||
+                netWeight == null ||
+                carat == null || carat.isEmpty() ||
+                description == null || description.isEmpty());
+    }
 }
