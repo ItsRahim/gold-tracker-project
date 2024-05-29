@@ -56,7 +56,7 @@ Linked hashmap maintains the order in which keys are inserted
 -create different user with roles and permissions for each microservice
 -Use @NotBlank when doing checks for creating new objects
 -Convert all offset datetime to use instant for better control - DONE
--Change log.error LOG.error("Some message", e.getMessage(), e);  - DONE
+-Change log.error LOG.error("Some message", e.getMessage(), e); - DONE
 Performance Testing:
 - VisualVM
 - Apache JMeter
@@ -67,7 +67,7 @@ Can be analysed after above is complete:
 - Kafka Configurations(with and without SSL)
 
 Refactor:
-pricing-service
+pricing-service - DONE
 
 @ServiceConnect - applies connection details to spring automatically
 @Container - restarts the container for each instance needed i.e. per test class
