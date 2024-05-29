@@ -31,7 +31,7 @@ public class HttpService {
             ResponseEntity<String> response = serviceCall.get();
             HttpStatusCode httpStatusCode = response.getStatusCode();
 
-            if (httpStatusCode.is2xxSuccessful()) {
+            if (!httpStatusCode.is2xxSuccessful()) {
                 LOG.error("Error retrieving data, status code: {}", response.getStatusCode());
                 throw new HttpServiceException("Error retrieving data, status code: " + httpStatusCode);
             }
