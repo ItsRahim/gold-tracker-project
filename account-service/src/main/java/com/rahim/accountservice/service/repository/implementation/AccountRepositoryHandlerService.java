@@ -13,8 +13,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
@@ -90,8 +90,8 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
 
     @Override
     @Transactional(readOnly = true)
-    public OffsetDateTime getUpdatedAtByUserId(Integer userId) {
-        return accountRepository.findUpdatedAtByUserId(userId).atOffset(ZoneOffset.UTC);
+    public Instant getUpdatedAtByUserId(Integer userId) {
+        return accountRepository.findUpdatedAtByUserId(userId);
     }
 
     @Override

@@ -8,7 +8,6 @@ import org.hibernate.annotations.DynamicInsert;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 /**
  *
@@ -62,11 +61,11 @@ public class Account {
 
     @Column(name = "created_at")
     @JsonProperty("createdAt")
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at")
     @JsonProperty("updatedAt")
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
 
     @Column(name = "login_attempts")
     @JsonProperty("loginAttempts")

@@ -9,7 +9,6 @@ import com.rahim.accountservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.DatabaseException;
-import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 @Service
@@ -37,10 +36,10 @@ public class AccountUpdateService implements IAccountUpdateService {
 
         try {
             String oldEmail = account.getEmail();
-            OffsetDateTime beforeUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
+            Instant beforeUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
             updateFields(account, updatedData);
             accountRepositoryHandler.saveAccount(account);
-            OffsetDateTime afterUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
+            Instant afterUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
 
             if (beforeUpdate.equals(afterUpdate)) {
                 LOG.debug("No updates were applied to the account");

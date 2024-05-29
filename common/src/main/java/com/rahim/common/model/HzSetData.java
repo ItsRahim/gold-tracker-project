@@ -4,10 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -28,7 +27,7 @@ public class HzSetData {
     private Object setValue;
 
     @Column(name = "hz_set_created")
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
     public HzSetData(String setName, Object setValue) {
         this.setName = setName;

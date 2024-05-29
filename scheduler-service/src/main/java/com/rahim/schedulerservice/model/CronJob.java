@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -34,7 +34,7 @@ public class CronJob {
     private Boolean isActive;
 
     @Column(name = "cj_last_update")
-    private OffsetDateTime lastUpdated;
+    private Instant lastUpdated;
 
     public CronJob(String name, String schedule) {
         this.name = name;

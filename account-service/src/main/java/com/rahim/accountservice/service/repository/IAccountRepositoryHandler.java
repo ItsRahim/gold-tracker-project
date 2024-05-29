@@ -1,12 +1,10 @@
 package com.rahim.accountservice.service.repository;
 
 import com.rahim.accountservice.model.Account;
-import jakarta.persistence.Tuple;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This interface class is responsible for CRUD operations on the Account table
@@ -25,7 +23,7 @@ public interface IAccountRepositoryHandler {
     List<Integer> getUsersToDelete(LocalDate cutoffDate);
     List<Integer> getUsersPendingDeletion(LocalDate deletionDate);
     List<Account> getAllAccounts();
-    OffsetDateTime getUpdatedAtByUserId(Integer userId);
+    Instant getUpdatedAtByUserId(Integer userId);
     List<Integer> getAccountActiveNotification();
     List<Integer> getAllAccountIds();
 
