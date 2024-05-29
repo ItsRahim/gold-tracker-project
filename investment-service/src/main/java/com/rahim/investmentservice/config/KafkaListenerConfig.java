@@ -1,5 +1,6 @@
 package com.rahim.investmentservice.config;
 
+import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.MessageManager;
 import com.rahim.common.util.JsonUtil;
 import com.rahim.common.util.KafkaKeyUtil;
@@ -24,7 +25,7 @@ public class KafkaListenerConfig {
     private final HoldingUpdateService holdingUpdateService;
     private final MessageManager messageManager;
 
-    @KafkaListener(topics = "UPDATE-TOPIC", groupId = "group2")
+    @KafkaListener(topics = KafkaTopic.HOLDING_PRICE_UPDATE, groupId = "group2")
     public void processUpdateTopicMessage(String message) {
         try {
             if (!messageManager.isProcessed(message)) {

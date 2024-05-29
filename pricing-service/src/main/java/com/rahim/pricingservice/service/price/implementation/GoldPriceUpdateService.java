@@ -104,7 +104,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
         PriceUpdate update = new PriceUpdate(id, currentPrice);
         String json = JsonUtil.convertObjectToJson(update);
         json = KafkaKeyUtil.generateKeyWithUUID(json);
-        kafkaService.sendMessage("UPDATE-TOPIC", json);
+        kafkaService.sendMessage(KafkaTopic.HOLDING_PRICE_UPDATE, json);
     }
 }
 
