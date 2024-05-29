@@ -20,13 +20,13 @@ public class KafkaListenerConfig {
 
     @KafkaListener(topics = KafkaTopic.THRESHOLD_PRICE_UPDATE, groupId = "group2")
     public void priceListener(String priceData) {
-        if (!messageManager.isProcessed(priceData)) {
-            String kafkaData = KafkaKeyUtil.extractDataFromKey(priceData);
-            kafkaDataProcessor.processKafkaData(kafkaData);
-            messageManager.markAsProcessed(priceData);
-        } else {
+        if (messageManager.isProcessed(priceData)) {
             LOG.debug("Message '{}' has already been processed. Skipping sending email notification event", priceData);
+            return;
         }
-    }
 
+        String kafkaData = KafkaKeyUtil.extractDataFromKey(priceData);
+        kafkaDataProcessor.processKafkaData(kafkaData);
+        messageManager.markAsProcessed(priceData);
+    }
 }

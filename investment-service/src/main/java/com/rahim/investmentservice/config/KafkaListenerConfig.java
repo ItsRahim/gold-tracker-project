@@ -27,16 +27,13 @@ public class KafkaListenerConfig {
 
     @KafkaListener(topics = KafkaTopic.HOLDING_PRICE_UPDATE, groupId = "group2")
     public void processUpdateTopicMessage(String message) {
-        try {
-            if (!messageManager.isProcessed(message)) {
-                handleNewMessage(message);
-                messageManager.markAsProcessed(message);
-            } else {
-                LOG.debug("Message '{}' has already been processed. Skipping.", message);
-            }
-        } catch (Exception e) {
-            LOG.error("Failed to process message '{}'. Error: {}", message, e.getMessage(), e);
+        if (messageManager.isProcessed(message)) {
+            LOG.debug("Message '{}' has already been processed. Skipping.", message);
+            return;
         }
+
+        handleNewMessage(message);
+        messageManager.markAsProcessed(message);
     }
 
     private void handleNewMessage(String message) {

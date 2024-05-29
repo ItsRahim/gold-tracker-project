@@ -28,33 +28,36 @@ public class KafkaListenerConfig {
 
     @KafkaListener(topics = KafkaTopic.PRICE_UPDATE, groupId = "group2")
     public void updateGoldPriceJob(String message) {
-        if (!messageManager.isProcessed(message)) {
-            goldPriceFeignClient.getGoldPrice();
-            messageManager.markAsProcessed(message);
-        } else {
+        if (messageManager.isProcessed(message)) {
             LOG.debug("Message '{}' has already been processed. Skipping update price job.", message);
+            return;
         }
+
+        goldPriceFeignClient.getGoldPrice();
+        messageManager.markAsProcessed(message);
     }
 
     @KafkaListener(topics = "${python-api.topic}", groupId = "group2")
     public void processPriceChange(String priceData) {
-        if (!messageManager.isProcessed(priceData)) {
-            String data = KafkaKeyUtil.extractDataFromKey(priceData) + "\"";
-            apiDataProcessor.processApiData(data);
-            messageManager.markAsProcessed(priceData);
-        } else {
+        if (messageManager.isProcessed(priceData)) {
             LOG.debug("Price data '{}' has already been processed", priceData);
+            return;
         }
+
+        String data = KafkaKeyUtil.extractDataFromKey(priceData) + "\"";
+        apiDataProcessor.processApiData(data);
+        messageManager.markAsProcessed(priceData);
     }
 
     @KafkaListener(topics = KafkaTopic.PRICE_HISTORY_UPDATE, groupId = "group2")
     public void updateHistoryTable(String message) {
-        if (!messageManager.isProcessed(message)) {
-            goldPriceFeignClient.getGoldPrice();
-            goldPriceHistoryService.updateHistoryTable();
-            messageManager.markAsProcessed(message);
-        } else {
+        if (messageManager.isProcessed(message)) {
             LOG.debug("Message '{}' has already been processed. Skipping update price history job.", message);
+            return;
         }
+
+        goldPriceFeignClient.getGoldPrice();
+        goldPriceHistoryService.updateHistoryTable();
+        messageManager.markAsProcessed(message);
     }
 }
