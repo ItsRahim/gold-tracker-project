@@ -22,7 +22,7 @@ public class KafkaListenerConfig {
     private final MessageManager messageManager;
 
     @KafkaListener(topics = KafkaTopic.ACCOUNT_CLEANUP, groupId = "group2")
-    public void cleanupUserAccounts(String message) {
+    void cleanupUserAccounts(String message) {
         if (messageManager.isProcessed(message)) {
             LOG.debug("Message '{}' has already been processed. Skipping cleanup job.", message);
             return;

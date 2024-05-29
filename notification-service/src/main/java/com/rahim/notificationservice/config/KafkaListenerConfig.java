@@ -19,7 +19,7 @@ public class KafkaListenerConfig {
     private final MessageManager messageManager;
 
     @KafkaListener(topics = KafkaTopic.THRESHOLD_PRICE_UPDATE, groupId = "group2")
-    public void priceListener(String priceData) {
+    void priceListener(String priceData) {
         if (messageManager.isProcessed(priceData)) {
             LOG.debug("Message '{}' has already been processed. Skipping sending email notification event", priceData);
             return;

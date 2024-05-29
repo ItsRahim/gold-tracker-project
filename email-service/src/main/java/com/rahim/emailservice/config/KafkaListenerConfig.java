@@ -20,7 +20,7 @@ public class KafkaListenerConfig {
     private final IKafkaDataProcessor kafkaDataProcessor;
 
     @KafkaListener(topics = KafkaTopic.SEND_EMAIL, groupId = "group2")
-    public void sendEmail(String emailData) {
+    void sendEmail(String emailData) {
         LOG.debug("Email data received. Attempting to process data and send email...");
         kafkaDataProcessor.processKafkaData(emailData);
     }

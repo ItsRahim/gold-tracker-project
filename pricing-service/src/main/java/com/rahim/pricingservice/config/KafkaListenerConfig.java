@@ -27,7 +27,7 @@ public class KafkaListenerConfig {
     private final MessageManager messageManager;
 
     @KafkaListener(topics = KafkaTopic.PRICE_UPDATE, groupId = "group2")
-    public void updateGoldPriceJob(String message) {
+    void updateGoldPriceJob(String message) {
         if (messageManager.isProcessed(message)) {
             LOG.debug("Message '{}' has already been processed. Skipping update price job.", message);
             return;
@@ -38,7 +38,7 @@ public class KafkaListenerConfig {
     }
 
     @KafkaListener(topics = "${python-api.topic}", groupId = "group2")
-    public void processPriceChange(String priceData) {
+    void processPriceChange(String priceData) {
         if (messageManager.isProcessed(priceData)) {
             LOG.debug("Price data '{}' has already been processed", priceData);
             return;
@@ -50,7 +50,7 @@ public class KafkaListenerConfig {
     }
 
     @KafkaListener(topics = KafkaTopic.PRICE_HISTORY_UPDATE, groupId = "group2")
-    public void updateHistoryTable(String message) {
+    void updateHistoryTable(String message) {
         if (messageManager.isProcessed(message)) {
             LOG.debug("Message '{}' has already been processed. Skipping update price history job.", message);
             return;

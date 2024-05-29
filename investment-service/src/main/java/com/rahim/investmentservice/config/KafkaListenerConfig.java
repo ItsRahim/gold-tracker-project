@@ -26,7 +26,7 @@ public class KafkaListenerConfig {
     private final MessageManager messageManager;
 
     @KafkaListener(topics = KafkaTopic.HOLDING_PRICE_UPDATE, groupId = "group2")
-    public void processUpdateTopicMessage(String message) {
+    void processUpdateTopicMessage(String message) {
         if (messageManager.isProcessed(message)) {
             LOG.debug("Message '{}' has already been processed. Skipping.", message);
             return;
