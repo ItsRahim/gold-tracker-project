@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class KafkaUnsentMessage {
     private Integer id;
 
     @Column(name = "failed_time")
-    private OffsetDateTime failedTime;
+    private Instant failedTime;
 
     @Column(name = "topic")
     private String topic;

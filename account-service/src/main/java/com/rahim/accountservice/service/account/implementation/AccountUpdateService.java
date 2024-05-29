@@ -9,7 +9,6 @@ import com.rahim.accountservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.DatabaseException;
-import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 @Service
@@ -37,12 +36,12 @@ public class AccountUpdateService implements IAccountUpdateService {
 
         try {
             String oldEmail = account.getEmail();
-            OffsetDateTime beforeUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
+            Account originalAccount = new Account(account);
+
             updateFields(account, updatedData);
             accountRepositoryHandler.saveAccount(account);
-            OffsetDateTime afterUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
 
-            if (beforeUpdate.equals(afterUpdate)) {
+            if (account.equals(originalAccount)) {
                 LOG.debug("No updates were applied to the account");
                 return "No updates were applied to the account.";
             }
@@ -54,7 +53,6 @@ public class AccountUpdateService implements IAccountUpdateService {
             throw new DatabaseException("An unexpected error occurred while updating account");
         }
     }
-
 
     private void generateEmailTokens(int accountId, String oldEmail) {
         EmailProperty emailProperty = EmailProperty.builder()
@@ -107,13 +105,14 @@ public class AccountUpdateService implements IAccountUpdateService {
     private void updateNotification(Account account, String value) {
         try {
             Boolean newNotificationSetting = parseNotificationSetting(value);
-            if (isValidChange(account.getNotificationSetting(), newNotificationSetting)) {
-                updateNotificationSet(account.getId(), newNotificationSetting);
-                account.setNotificationSetting(newNotificationSetting);
-                LOG.debug("Notification setting updated successfully for account with ID {}: {}", account.getId(), newNotificationSetting);
-            } else {
-                LOG.error("Invalid value passed or no change in notificationSetting. Not updating for account with ID {}", account.getId());
+            if (!isValidChange(account.getNotificationSetting(), newNotificationSetting)) {
+                LOG.debug("Invalid value passed or no change in notificationSetting. Not updating for account with ID {}", account.getId());
+                return;
             }
+
+            updateNotificationSet(account.getId(), newNotificationSetting);
+            account.setNotificationSetting(newNotificationSetting);
+            LOG.debug("Notification setting updated successfully for account with ID {}: {}", account.getId(), newNotificationSetting);
         } catch (IllegalArgumentException e) {
             LOG.error("Failed to update notificationSetting for account with ID {}: {}", account.getId(), e.getMessage());
         }

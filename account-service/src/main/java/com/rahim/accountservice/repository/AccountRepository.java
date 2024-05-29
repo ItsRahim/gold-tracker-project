@@ -81,21 +81,6 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
      */
     boolean existsAccountByEmail(String email);
 
-    /**
-     * Retrieves the timestamp when the account with the specified user ID was last updated.
-     *
-     * @param userId The unique identifier of the user account.
-     * @return Instant representing the last update timestamp.
-     */
-    @Query(value = "SELECT "
-            + AccountDataAccess.COL_ACCOUNT_UPDATED_AT
-            + " FROM "
-            + AccountDataAccess.TABLE_NAME
-            + " WHERE "
-            + AccountDataAccess.COL_ACCOUNT_ID
-            + " = :userId", nativeQuery = true)
-    Instant findUpdatedAtByUserId(@Param("userId") Integer userId);
-
     @Query(value = "SELECT "
             + AccountDataAccess.COL_ACCOUNT_ID
             + " FROM "

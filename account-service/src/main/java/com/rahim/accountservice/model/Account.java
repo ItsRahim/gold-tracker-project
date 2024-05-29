@@ -8,7 +8,6 @@ import org.hibernate.annotations.DynamicInsert;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 /**
  *
@@ -62,11 +61,11 @@ public class Account {
 
     @Column(name = "created_at")
     @JsonProperty("createdAt")
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at")
     @JsonProperty("updatedAt")
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
 
     @Column(name = "login_attempts")
     @JsonProperty("loginAttempts")
@@ -79,5 +78,20 @@ public class Account {
     public Account(String email, String passwordHash) {
         this.email = email;
         this.passwordHash = passwordHash;
+    }
+
+    public Account(Account account) {
+        this.id = account.getId();
+        this.email = account.getEmail();
+        this.passwordHash = account.getPasswordHash();
+        this.accountStatus = account.getAccountStatus();
+        this.accountLocked = account.getAccountLocked();
+        this.credentialsExpired = account.getCredentialsExpired();
+        this.lastLogin = account.getLastLogin();
+        this.notificationSetting = account.getNotificationSetting();
+        this.createdAt = account.getCreatedAt();
+        this.updatedAt = account.getUpdatedAt();
+        this.loginAttempts = account.getLoginAttempts();
+        this.deleteDate = account.getDeleteDate();
     }
 }

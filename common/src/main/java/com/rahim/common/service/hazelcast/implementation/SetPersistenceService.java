@@ -73,7 +73,7 @@ public class SetPersistenceService extends AbstractPersistenceService {
             validateSetData(setData);
 
             if (doesSetExist(setData.getSetName(), setData.getSetValue())) {
-                LOG.error("Set with name {} and value {} already exists", setData.getSetName(), setData.getSetValue());
+                LOG.warn("Set with name {} and value {} already exists", setData.getSetName(), setData.getSetValue());
                 throw new DuplicateEntityException("Set with name " + setData.getSetName() + " and value " + setData.getSetValue() + " already exists");
             }
 
@@ -84,7 +84,7 @@ public class SetPersistenceService extends AbstractPersistenceService {
                     HzSetDataAccess.COL_SET_VALUE +
                     ") VALUES (?, ?)";
         } catch (Exception ex) {
-            LOG.error("Error generating SQL query: {}", ex.getMessage());
+            LOG.warn("Error generating SQL query: {}", ex.getMessage());
             throw new RuntimeException("Error generating SQL query", ex);
         }
     }

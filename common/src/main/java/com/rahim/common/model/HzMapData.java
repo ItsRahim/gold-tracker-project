@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -30,7 +30,7 @@ public class HzMapData {
     private Object mapValue;
 
     @Column(name = "hz_map_updated_at")
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
 
     public HzMapData(String mapName, String mapKey, Object mapValue) {
         this.mapName = mapName;
