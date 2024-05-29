@@ -69,8 +69,6 @@ public class HoldingCreationImpl implements HoldingCreationService {
         return purchasePrice.divide(BigDecimal.valueOf(quantity), 4, RoundingMode.HALF_UP);
     }
 
-
-
     public BigDecimal getCurrentValue(int goldTypeId) {
         LOG.debug("Fetching current value for gold type ID: {}", goldTypeId);
 
