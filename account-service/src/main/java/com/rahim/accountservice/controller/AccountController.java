@@ -71,7 +71,7 @@ public class AccountController {
             @ApiResponse(responseCode = "200", description = "Account updated successfully", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Error updating account", content = @Content(mediaType = "text/plain"))
     })
-    @PutMapping(value = ACCOUNT_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @PutMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateAccount(
             @Parameter(description = "ID of the account to be updated", required = true) @PathVariable int accountId,
             @Parameter(description = "Map of updated account data", required = true) @RequestBody Map<String, String> updatedData) {

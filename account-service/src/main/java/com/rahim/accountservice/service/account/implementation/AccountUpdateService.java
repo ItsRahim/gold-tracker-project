@@ -106,13 +106,14 @@ public class AccountUpdateService implements IAccountUpdateService {
     private void updateNotification(Account account, String value) {
         try {
             Boolean newNotificationSetting = parseNotificationSetting(value);
-            if (isValidChange(account.getNotificationSetting(), newNotificationSetting)) {
-                updateNotificationSet(account.getId(), newNotificationSetting);
-                account.setNotificationSetting(newNotificationSetting);
-                LOG.debug("Notification setting updated successfully for account with ID {}: {}", account.getId(), newNotificationSetting);
-            } else {
-                LOG.error("Invalid value passed or no change in notificationSetting. Not updating for account with ID {}", account.getId());
+            if (!isValidChange(account.getNotificationSetting(), newNotificationSetting)) {
+                LOG.debug("Invalid value passed or no change in notificationSetting. Not updating for account with ID {}", account.getId());
+                return;
             }
+
+            updateNotificationSet(account.getId(), newNotificationSetting);
+            account.setNotificationSetting(newNotificationSetting);
+            LOG.debug("Notification setting updated successfully for account with ID {}: {}", account.getId(), newNotificationSetting);
         } catch (IllegalArgumentException e) {
             LOG.error("Failed to update notificationSetting for account with ID {}: {}", account.getId(), e.getMessage());
         }
