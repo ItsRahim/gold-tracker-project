@@ -23,7 +23,6 @@ public interface IAccountRepositoryHandler {
     List<Integer> getUsersToDelete(LocalDate cutoffDate);
     List<Integer> getUsersPendingDeletion(LocalDate deletionDate);
     List<Account> getAllAccounts();
-    Instant getUpdatedAtByUserId(Integer userId);
     List<Integer> getAccountActiveNotification();
     List<Integer> getAllAccountIds();
 

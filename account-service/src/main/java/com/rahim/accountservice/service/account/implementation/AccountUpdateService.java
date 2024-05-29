@@ -36,12 +36,12 @@ public class AccountUpdateService implements IAccountUpdateService {
 
         try {
             String oldEmail = account.getEmail();
-            Instant beforeUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
+            Account originalAccount = new Account(account);
+
             updateFields(account, updatedData);
             accountRepositoryHandler.saveAccount(account);
-            Instant afterUpdate = accountRepositoryHandler.getUpdatedAtByUserId(accountId);
 
-            if (beforeUpdate.equals(afterUpdate)) {
+            if (account.equals(originalAccount)) {
                 LOG.debug("No updates were applied to the account");
                 return "No updates were applied to the account.";
             }
@@ -53,7 +53,6 @@ public class AccountUpdateService implements IAccountUpdateService {
             throw new DatabaseException("An unexpected error occurred while updating account");
         }
     }
-
 
     private void generateEmailTokens(int accountId, String oldEmail) {
         EmailProperty emailProperty = EmailProperty.builder()

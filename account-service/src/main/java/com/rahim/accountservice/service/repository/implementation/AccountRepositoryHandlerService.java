@@ -13,9 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.List;
 
 /**
@@ -86,12 +84,6 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
     @Transactional(readOnly = true)
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Instant getUpdatedAtByUserId(Integer userId) {
-        return accountRepository.findUpdatedAtByUserId(userId);
     }
 
     @Override

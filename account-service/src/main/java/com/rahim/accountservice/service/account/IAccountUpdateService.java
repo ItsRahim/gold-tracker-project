@@ -1,7 +1,5 @@
 package com.rahim.accountservice.service.account;
 
-import org.springframework.http.ResponseEntity;
-
 import java.util.Map;
 
 /**
