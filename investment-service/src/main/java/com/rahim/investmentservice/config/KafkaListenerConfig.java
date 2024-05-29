@@ -25,17 +25,26 @@ public class KafkaListenerConfig {
     private final MessageManager messageManager;
 
     @KafkaListener(topics = "UPDATE-TOPIC", groupId = "group2")
-    public void someMethod(String message) {
-        if (!messageManager.isProcessed(message)) {
-            String priceData = KafkaKeyUtil.extractDataFromKey(message);
-            Map<String, Object> data = JsonUtil.convertJsonToMap(priceData);
-            Integer goldTypeId = (Integer) data.get("id");
-            Double price = (Double) data.get("price");
-            holdingUpdateService.updateCurrentValue(goldTypeId, price);
-            messageManager.markAsProcessed(message);
-        } else {
-            LOG.debug("Message '{}' has already been processed. Skipping cleanup job.", message);
+    public void processUpdateTopicMessage(String message) {
+        try {
+            if (!messageManager.isProcessed(message)) {
+                handleNewMessage(message);
+                messageManager.markAsProcessed(message);
+            } else {
+                LOG.debug("Message '{}' has already been processed. Skipping.", message);
+            }
+        } catch (Exception e) {
+            LOG.error("Failed to process message '{}'. Error: {}", message, e.getMessage(), e);
         }
+    }
+
+    private void handleNewMessage(String message) {
+        String priceData = KafkaKeyUtil.extractDataFromKey(message);
+        Map<String, Object> data = JsonUtil.convertJsonToMap(priceData);
+
+        Integer goldTypeId = (Integer) data.get("id");
+        Double price = (Double) data.get("price");
+        holdingUpdateService.updateCurrentValue(goldTypeId, price);
     }
 
 }
