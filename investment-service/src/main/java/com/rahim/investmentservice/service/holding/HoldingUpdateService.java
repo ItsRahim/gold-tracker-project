@@ -5,4 +5,6 @@ package com.rahim.investmentservice.service.holding;
  * @created 27/05/2024
  */
 public interface HoldingUpdateService {
+
+    void updateCurrentValue(Integer goldTypeId, Double updatedPrice);
 }

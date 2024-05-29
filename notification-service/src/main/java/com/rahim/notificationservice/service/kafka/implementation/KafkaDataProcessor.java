@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
-import com.rahim.common.util.DateTimeGenerator;
+import com.rahim.common.util.DateTimeUtil;
 import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.notificationservice.model.EmailData;
 import com.rahim.notificationservice.model.NotificationResult;
@@ -68,7 +68,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
                 .lastName(notificationResult.getLastName())
                 .email(notificationResult.getEmail())
                 .thresholdPrice(String.valueOf(notificationResult.getThresholdPrice()))
-                .alertDateTime(DateTimeGenerator.getFormattedTime())
+                .alertDateTime(DateTimeUtil.getFormattedTime())
                 .emailTemplate(EmailTemplate.PRICE_ALERT_TEMPLATE)
                 .build();
     }

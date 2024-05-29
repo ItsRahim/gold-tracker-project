@@ -16,4 +16,5 @@ public interface HoldingRepositoryHandler {
     boolean holdingExistsById(int holdingId);
     Holding getHoldingByIdAndAccountId(int holdingId, int accountId);
     Holding getHoldingById(int holdingId);
+    List<Holding> getAllHoldings();
 }
