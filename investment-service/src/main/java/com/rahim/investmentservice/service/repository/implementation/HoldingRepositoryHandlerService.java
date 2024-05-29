@@ -83,4 +83,9 @@ public class HoldingRepositoryHandlerService implements HoldingRepositoryHandler
         return holdingRepository.findById(holdingId)
                 .orElseThrow(() -> new EntityNotFoundException("Holding for given holding id does not exist"));
     }
+
+    @Override
+    public List<Holding> getAllHoldings() {
+        return holdingRepository.findAll();
+    }
 }

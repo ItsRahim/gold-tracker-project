@@ -2,10 +2,12 @@ package com.rahim.pricingservice.service.price.implementation;
 
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
+import com.rahim.common.util.JsonUtil;
 import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.model.PriceUpdate;
 import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
@@ -18,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
@@ -78,6 +77,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
                 List<GoldPrice> pricesToUpdate = goldPriceRepository.findByTypeId(goldTypeId);
                 pricesToUpdate.forEach(this::updateGoldPrice);
             }
+            LOG.info("Gold prices updated successfully");
         } catch (Exception e) {
             LOG.error("Error updating gold prices: {}", e.getMessage(), e);
         }
@@ -86,16 +86,25 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private void updateGoldPrice(GoldPrice goldPrice) {
         GoldType goldType = goldPrice.getGoldType();
         if (goldType.getName().equals(GOLD_TICKER)) {
+            LOG.debug("Skipping update for gold ticker: {}", goldPrice);
             return;
         }
 
         BigDecimal newPrice = calculateNewGoldPrice(goldType.getNetWeight(), goldType.getCarat());
         goldPrice.setCurrentPrice(newPrice);
         goldPriceRepository.saveGoldPrice(goldPrice);
+        sendInvestmentUpdate(goldPrice.getId(), goldPrice.getCurrentPrice());
     }
 
     private BigDecimal calculateNewGoldPrice(BigDecimal netWeight, String carat) {
         return goldPriceCalculator.calculateGoldPrice(carat, netWeight);
+    }
+
+    private void sendInvestmentUpdate(Integer id, BigDecimal currentPrice) {
+        PriceUpdate update = new PriceUpdate(id, currentPrice);
+        String json = JsonUtil.convertObjectToJson(update);
+        json = KafkaKeyUtil.generateKeyWithUUID(json);
+        kafkaService.sendMessage(KafkaTopic.HOLDING_PRICE_UPDATE, json);
     }
 }
 

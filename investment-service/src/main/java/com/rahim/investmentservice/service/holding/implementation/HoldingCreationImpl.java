@@ -9,6 +9,7 @@ import com.rahim.investmentservice.feign.PricingServiceClient;
 import com.rahim.investmentservice.model.Holding;
 import com.rahim.investmentservice.service.holding.HoldingCreationService;
 import com.rahim.investmentservice.service.repository.HoldingRepositoryHandler;
+import com.rahim.investmentservice.util.ProfitLossUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class HoldingCreationImpl implements HoldingCreationService {
         try {
             BigDecimal currentValue = getCurrentValue(goldTypeId);
             BigDecimal purchaseAmount = calculateIndividualAmount(purchasePrice, quantity);
-            BigDecimal profileLoss = calculateProfitLossPercentage(purchaseAmount, currentValue);
+            BigDecimal profileLoss = ProfitLossUtil.calculateProfitLossPercentage(purchaseAmount, currentValue);
 
             holding.setPurchaseAmount(purchaseAmount);
             holding.setCurrentValue(currentValue);
@@ -68,19 +69,7 @@ public class HoldingCreationImpl implements HoldingCreationService {
         return purchasePrice.divide(BigDecimal.valueOf(quantity), 4, RoundingMode.HALF_UP);
     }
 
-    private BigDecimal calculateProfitLossPercentage(BigDecimal totalPurchaseAmount, BigDecimal currentValue) {
-        if (totalPurchaseAmount == null || currentValue == null || totalPurchaseAmount.compareTo(BigDecimal.ZERO) == 0) {
-            throw new ValidationException("Total purchase amount must not be null or zero, and current value must not be null");
-        }
 
-        BigDecimal difference = currentValue.subtract(totalPurchaseAmount);
-
-        BigDecimal percentage = difference
-                .divide(totalPurchaseAmount, 4, RoundingMode.HALF_UP)
-                .multiply(BigDecimal.valueOf(100));
-
-        return percentage.setScale(2, RoundingMode.HALF_UP);
-    }
 
     public BigDecimal getCurrentValue(int goldTypeId) {
         LOG.debug("Fetching current value for gold type ID: {}", goldTypeId);

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 
 /**
@@ -20,6 +21,6 @@ public class GoldPriceDTO {
     private Integer id;
     private String goldTypeName;
     private BigDecimal currentPrice;
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
 }
 

@@ -27,7 +27,6 @@ services:
       - zookeeper
     networks:
       - my-network
-
 networks:
   my-network:
     driver: bridge

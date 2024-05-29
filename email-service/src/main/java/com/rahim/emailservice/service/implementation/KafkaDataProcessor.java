@@ -34,6 +34,9 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
     private final IEmailService emailService;
     private final IEmailSender emailSender;
 
+    private static final String EMAIL_TEMPLATE = "emailTemplate";
+    private static final String EMAIL = "email";
+
     @Override
     public void processKafkaData(String emailData) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -41,11 +44,11 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
         try {
             Map<String, Object> kafkaData = objectMapper.readValue(emailData, new TypeReference<>() {});
 
-            String templateName = (String) kafkaData.get("emailTemplate");
-            String email = (String) kafkaData.get("email");
+            String templateName = (String) kafkaData.get(EMAIL_TEMPLATE);
+            String email = (String) kafkaData.get(EMAIL);
 
-            kafkaData.remove("emailTemplate");
-            kafkaData.remove("email");
+            kafkaData.remove(EMAIL_TEMPLATE);
+            kafkaData.remove(EMAIL);
 
             List<String> emailTokens = new ArrayList<>();
             for (Map.Entry<String, Object> entry : kafkaData.entrySet()) {

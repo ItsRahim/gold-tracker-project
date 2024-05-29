@@ -22,4 +22,7 @@ public class KafkaTopic {
 
     /*Topic produced by pricing-service & consumed by notification-service to check if price notifications have been met*/
     public static final String THRESHOLD_PRICE_UPDATE = "threshold-price-update";
+
+    /*Topic produced by pricing-service and consumed by investment-service to update current value and profit loss for holdings*/
+    public static final String HOLDING_PRICE_UPDATE = "holding-price-update";
 }

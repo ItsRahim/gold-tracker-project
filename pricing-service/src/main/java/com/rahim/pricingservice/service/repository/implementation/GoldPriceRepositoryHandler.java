@@ -3,6 +3,7 @@ package com.rahim.pricingservice.service.repository.implementation;
 import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
+import com.rahim.common.util.DateTimeUtil;
 import com.rahim.pricingservice.dto.GoldPriceDTO;
 import com.rahim.pricingservice.model.GoldPrice;
 import com.rahim.pricingservice.model.GoldType;
@@ -40,6 +41,7 @@ public class GoldPriceRepositoryHandler implements IGoldPriceRepositoryHandler {
         }
 
         try {
+            goldPrice.setUpdatedAt(DateTimeUtil.generateInstant());
             goldPriceRepository.save(goldPrice);
         } catch (DataAccessException e) {
             LOG.error("Error saving gold price to the database", e);

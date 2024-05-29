@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -39,11 +40,10 @@ public class GoldPrice {
 
     @Column(name = "updated_at")
     @JsonProperty("updatedAt")
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
 
     public GoldPrice(GoldType goldType, BigDecimal currentPrice) {
         this.goldType = goldType;
         this.currentPrice = currentPrice;
-        this.updatedAt = OffsetDateTime.now(ZoneId.of("UTC")).truncatedTo(ChronoUnit.SECONDS);
     }
 }
