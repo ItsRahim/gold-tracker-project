@@ -1,19 +1,12 @@
 CREATE TABLE rgts.user_profiles (
     profile_id SERIAL PRIMARY KEY,
-    account_id INT REFERENCES rgts.user_accounts(account_id),
+    account_id INT REFERENCES rgts.user_accounts(account_id) ON DELETE CASCADE,
     username VARCHAR(255),
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     contact_number VARCHAR(20),
     address TEXT
 );
-
-ALTER TABLE rgts.user_profiles
-    ADD CONSTRAINT fk_user_profiles_user_id
-        FOREIGN KEY (account_id)
-            REFERENCES rgts.user_accounts(account_id)
-            ON DELETE CASCADE;
-
 
 COMMENT ON TABLE rgts.user_profiles IS 'The account profile table';
 COMMENT ON COLUMN rgts.user_profiles.profile_id IS 'The profile ID';

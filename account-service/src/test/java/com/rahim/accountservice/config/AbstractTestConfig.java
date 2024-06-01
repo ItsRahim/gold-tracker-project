@@ -1,4 +1,4 @@
-package com.rahim.accountservice;
+package com.rahim.accountservice.config;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -17,7 +18,6 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @SpringBootTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -27,9 +27,11 @@ public abstract class AbstractTestConfig {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @MockBean
+    HazelcastIntialiser hazelcastIntialiser;
+
     @ServiceConnection
     static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(ContainerImage.POSTGRES.getDockerImageName());
-
     static final KafkaContainer kafkaContainer = new KafkaContainer(ContainerImage.KAFKA.getDockerImageName());
 
     static {
@@ -38,11 +40,10 @@ public abstract class AbstractTestConfig {
 
         String bootstrapServer = kafkaContainer.getBootstrapServers();
         System.setProperty("spring.kafka.bootstrap-servers", bootstrapServer);
-
     }
 
     @BeforeAll
-    static void beforeAll() {
+    static void setup() {
         Flyway flyway = Flyway.configure()
                 .dataSource(postgresContainer.getJdbcUrl(), postgresContainer.getUsername(), postgresContainer.getPassword())
                 .locations("classpath:tables")
@@ -76,5 +77,4 @@ public abstract class AbstractTestConfig {
 
         return mockProfileDetails;
     }
-
 }

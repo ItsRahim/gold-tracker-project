@@ -1,7 +1,5 @@
 spring:
+  hazelcast:
+    config: null
   kafka:
     bootstrap-servers:
-
-topics:
-  send-email-topic: email-service-send-email
-  scheduler-user-cleanup : user-service-cleanup-accounts
