@@ -57,6 +57,7 @@ Linked hashmap maintains the order in which keys are inserted
 -Use @NotBlank when doing checks for creating new objects
 -Convert all offset datetime to use instant for better control - DONE
 -Change log.error LOG.error("Some message", e.getMessage(), e); - DONE
+-Write unit and integration tests for all services before moving on - WIP
 Performance Testing:
 - VisualVM
 - Apache JMeter
