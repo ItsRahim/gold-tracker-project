@@ -54,4 +54,11 @@ public class TestDataGenerator {
         return userRequests;
     }
 
+    public UserRequest generateSingleUserRequest() {
+        AccountRequestDto account = Instancio.create(AccountRequestDto.class);
+        ProfileRequestDto profile = Instancio.create(ProfileRequestDto.class);
+
+        return new UserRequest(account, profile);
+    }
+
 }
