@@ -2,6 +2,7 @@ package com.rahim.accountservice.controller;
 
 import com.rahim.accountservice.entity.Account;
 import com.rahim.accountservice.model.UserRequest;
+import com.rahim.accountservice.request.account.AccountUpdateRequest;
 import com.rahim.accountservice.service.account.IAccountCreationService;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
@@ -22,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.rahim.accountservice.constant.AccountControllerEndpoint.*;
 
@@ -74,7 +74,7 @@ public class AccountController {
     @PutMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateAccount(
             @Parameter(description = "ID of the account to be updated", required = true) @PathVariable int accountId,
-            @Parameter(description = "Map of updated account data", required = true) @RequestBody Map<String, String> updatedData) {
+            @Parameter(description = "Map of updated account data", required = true) @RequestBody AccountUpdateRequest updatedData) {
         Object response = accountUpdateService.updateAccount(accountId, updatedData);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

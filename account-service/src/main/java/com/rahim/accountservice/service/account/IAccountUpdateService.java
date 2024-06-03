@@ -1,6 +1,6 @@
 package com.rahim.accountservice.service.account;
 
-import java.util.Map;
+import com.rahim.accountservice.request.account.AccountUpdateRequest;
 
 /**
  * @author Rahim Ahmed
@@ -15,5 +15,5 @@ public interface IAccountUpdateService {
      * @param updatedData The map containing the updated data.
      * @throws RuntimeException If an error occurs while updating the account.
      */
-    Object updateAccount(int accountId, Map<String, String> updatedData);
+    Object updateAccount(int accountId, AccountUpdateRequest updatedData);
 }
