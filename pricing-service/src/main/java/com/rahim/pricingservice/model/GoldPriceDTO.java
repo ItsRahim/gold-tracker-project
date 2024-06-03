@@ -1,4 +1,4 @@
-package com.rahim.pricingservice.dto;
+package com.rahim.pricingservice.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.service.repository;
 
-import com.rahim.investmentservice.model.Holding;
+import com.rahim.investmentservice.entity.Holding;
 
 import java.util.List;
 

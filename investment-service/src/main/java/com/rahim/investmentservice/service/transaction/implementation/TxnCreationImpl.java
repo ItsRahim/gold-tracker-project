@@ -1,8 +1,7 @@
 package com.rahim.investmentservice.service.transaction.implementation;
 
-import com.rahim.investmentservice.model.Transaction;
+import com.rahim.investmentservice.entity.Transaction;
 import com.rahim.investmentservice.repository.TxnRepository;
-import com.rahim.investmentservice.service.repository.TxnRepositoryHandler;
 import com.rahim.investmentservice.service.transaction.TxnCreationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

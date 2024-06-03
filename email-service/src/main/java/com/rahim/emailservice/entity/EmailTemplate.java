@@ -1,4 +1,4 @@
-package com.rahim.emailservice.model;
+package com.rahim.emailservice.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

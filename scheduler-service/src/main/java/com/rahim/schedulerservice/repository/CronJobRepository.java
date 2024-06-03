@@ -1,7 +1,7 @@
 package com.rahim.schedulerservice.repository;
 
 import com.rahim.schedulerservice.dao.CronJobDataAccess;
-import com.rahim.schedulerservice.model.CronJob;
+import com.rahim.schedulerservice.entity.CronJob;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

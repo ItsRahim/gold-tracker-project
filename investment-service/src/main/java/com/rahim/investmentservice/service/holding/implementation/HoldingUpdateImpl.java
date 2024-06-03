@@ -2,7 +2,7 @@ package com.rahim.investmentservice.service.holding.implementation;
 
 import com.rahim.investmentservice.dao.HoldingDataAccess;
 import com.rahim.investmentservice.dao.InvestmentsDataAccess;
-import com.rahim.investmentservice.model.Holding;
+import com.rahim.investmentservice.entity.Holding;
 import com.rahim.investmentservice.model.PriceUpdate;
 import com.rahim.investmentservice.service.holding.HoldingUpdateService;
 import com.rahim.investmentservice.service.repository.HoldingRepositoryHandler;

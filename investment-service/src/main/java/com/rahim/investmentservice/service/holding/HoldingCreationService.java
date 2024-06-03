@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.service.holding;
 
-import com.rahim.investmentservice.model.Holding;
+import com.rahim.investmentservice.entity.Holding;
 
 import java.math.BigDecimal;
 

@@ -1,7 +1,7 @@
 package com.rahim.emailservice.repository;
 
 import com.rahim.emailservice.dao.EmailTemplateDataAccess;
-import com.rahim.emailservice.model.EmailTemplate;
+import com.rahim.emailservice.entity.EmailTemplate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

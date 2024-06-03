@@ -1,6 +1,6 @@
 package com.rahim.pricingservice.controller;
 
-import com.rahim.pricingservice.dto.GoldPriceDTO;
+import com.rahim.pricingservice.model.GoldPriceDTO;
 import com.rahim.pricingservice.service.repository.implementation.GoldPriceRepositoryHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

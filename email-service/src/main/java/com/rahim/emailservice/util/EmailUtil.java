@@ -1,7 +1,7 @@
 package com.rahim.emailservice.util;
 
 import com.rahim.emailservice.exception.EmailTemplateException;
-import com.rahim.emailservice.model.EmailTemplate;
+import com.rahim.emailservice.entity.EmailTemplate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

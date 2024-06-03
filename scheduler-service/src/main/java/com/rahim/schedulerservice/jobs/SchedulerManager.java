@@ -4,7 +4,7 @@ import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.schedulerservice.constant.CronJobName;
-import com.rahim.schedulerservice.model.CronJob;
+import com.rahim.schedulerservice.entity.CronJob;
 import com.rahim.schedulerservice.repository.CronJobRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

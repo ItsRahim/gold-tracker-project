@@ -1,6 +1,6 @@
 package com.rahim.emailservice.service.implementation;
 
-import com.rahim.emailservice.model.EmailTemplate;
+import com.rahim.emailservice.entity.EmailTemplate;
 import com.rahim.emailservice.service.IEmailSender;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

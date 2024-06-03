@@ -4,7 +4,7 @@ import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.util.DateTimeUtil;
-import com.rahim.pricingservice.dto.GoldPriceDTO;
+import com.rahim.pricingservice.model.GoldPriceDTO;
 import com.rahim.pricingservice.entity.GoldPrice;
 import com.rahim.pricingservice.entity.GoldType;
 import com.rahim.pricingservice.repository.GoldPriceRepository;

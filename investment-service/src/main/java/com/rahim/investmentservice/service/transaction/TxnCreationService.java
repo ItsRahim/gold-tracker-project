@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.service.transaction;
 
-import com.rahim.investmentservice.model.Transaction;
+import com.rahim.investmentservice.entity.Transaction;
 
 /**
  * @author Rahim Ahmed

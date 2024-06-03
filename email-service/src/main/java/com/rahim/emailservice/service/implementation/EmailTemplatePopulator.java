@@ -1,7 +1,7 @@
 package com.rahim.emailservice.service.implementation;
 
 import com.rahim.emailservice.exception.EmailTemplateNotFoundException;
-import com.rahim.emailservice.model.EmailTemplate;
+import com.rahim.emailservice.entity.EmailTemplate;
 import com.rahim.emailservice.repository.EmailTemplateRepository;
 import com.rahim.emailservice.service.IEmailTemplatePopulator;
 import com.rahim.emailservice.util.EmailUtil;

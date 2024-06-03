@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.repository;
 
-import com.rahim.investmentservice.model.Transaction;
+import com.rahim.investmentservice.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

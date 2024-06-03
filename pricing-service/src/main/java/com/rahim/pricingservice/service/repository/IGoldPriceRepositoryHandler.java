@@ -1,6 +1,6 @@
 package com.rahim.pricingservice.service.repository;
 
-import com.rahim.pricingservice.dto.GoldPriceDTO;
+import com.rahim.pricingservice.model.GoldPriceDTO;
 import com.rahim.pricingservice.entity.GoldPrice;
 
 import java.util.List;

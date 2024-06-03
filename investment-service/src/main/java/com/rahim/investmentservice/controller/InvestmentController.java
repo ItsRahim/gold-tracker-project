@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.controller;
 
-import com.rahim.investmentservice.dto.InvestmentRequestDto;
+import com.rahim.investmentservice.request.InvestmentRequest;
 import com.rahim.investmentservice.service.investment.InvestmentCreationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,9 +37,9 @@ public class InvestmentController {
     @PostMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addNewInvestment(
             @Parameter(description = "The ID of the account", required = true) @PathVariable Integer accountId,
-            @Parameter(description = "The new investment details", required = true) @RequestBody List<InvestmentRequestDto> investmentRequestDtos) {
-        for (InvestmentRequestDto investmentRequestDto : investmentRequestDtos) {
-            investmentCreationService.addNewInvestment(accountId, investmentRequestDto);
+            @Parameter(description = "The new investment details", required = true) @RequestBody List<InvestmentRequest> investmentRequests) {
+        for (InvestmentRequest investmentRequest : investmentRequests) {
+            investmentCreationService.addNewInvestment(accountId, investmentRequest);
         }
 
         LOG.info("Investment created successfully for account ID: {}", accountId);

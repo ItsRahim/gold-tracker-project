@@ -1,4 +1,4 @@
-package com.rahim.investmentservice.dto;
+package com.rahim.investmentservice.request;
 
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ import java.time.LocalDate;
  * @created 19/05/2024
  */
 @Getter
-public class InvestmentRequestDto {
+public class InvestmentRequest {
     private String goldTypeName;
     private Integer quantity;
     private BigDecimal totalPurchasePrice;

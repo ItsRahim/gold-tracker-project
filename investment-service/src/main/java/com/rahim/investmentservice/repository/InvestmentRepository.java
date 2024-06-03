@@ -1,7 +1,7 @@
 package com.rahim.investmentservice.repository;
 
 import com.rahim.investmentservice.dao.InvestmentsDataAccess;
-import com.rahim.investmentservice.model.Investment;
+import com.rahim.investmentservice.entity.Investment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

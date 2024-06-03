@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.service.holding.implementation;
 
-import com.rahim.investmentservice.model.Holding;
+import com.rahim.investmentservice.entity.Holding;
 import com.rahim.investmentservice.service.holding.HoldingDeletionService;
 import com.rahim.investmentservice.service.investment.InvestmentDeletionService;
 import com.rahim.investmentservice.service.repository.HoldingRepositoryHandler;

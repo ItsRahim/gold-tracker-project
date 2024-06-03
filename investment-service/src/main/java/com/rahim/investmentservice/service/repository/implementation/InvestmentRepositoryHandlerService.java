@@ -3,7 +3,7 @@ package com.rahim.investmentservice.service.repository.implementation;
 import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
-import com.rahim.investmentservice.model.Investment;
+import com.rahim.investmentservice.entity.Investment;
 import com.rahim.investmentservice.repository.InvestmentRepository;
 import com.rahim.investmentservice.service.repository.InvestmentRepositoryHandler;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed
