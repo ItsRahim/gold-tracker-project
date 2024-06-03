@@ -1,6 +1,6 @@
 package com.rahim.accountservice.service.repository.implementation;
 
-import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.entity.Account;
 import com.rahim.accountservice.repository.AccountRepository;
 import com.rahim.accountservice.service.repository.IAccountRepositoryHandler;
 import com.rahim.common.exception.DatabaseException;

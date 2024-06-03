@@ -6,7 +6,7 @@ import com.rahim.common.exception.JsonServiceException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.http.HttpService;
 import com.rahim.investmentservice.feign.PricingServiceClient;
-import com.rahim.investmentservice.model.Holding;
+import com.rahim.investmentservice.entity.Holding;
 import com.rahim.investmentservice.service.holding.HoldingCreationService;
 import com.rahim.investmentservice.service.repository.HoldingRepositoryHandler;
 import com.rahim.investmentservice.util.ProfitLossUtil;

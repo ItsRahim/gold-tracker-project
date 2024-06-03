@@ -1,7 +1,7 @@
 package com.rahim.accountservice.service.profile.implementation;
 
-import com.rahim.accountservice.model.Account;
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.entity.Account;
+import com.rahim.accountservice.entity.Profile;
 import com.rahim.accountservice.service.profile.IProfileCreationService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ProfileCreationService implements IProfileCreationService {
             profile.setAccount(account);
             profileRepositoryHandler.createNewProfile(profile);
         } catch (Exception e) {
-            LOG.error("An error occurred while creating a profile.", e.getMessage(), e);
+            LOG.error("An error occurred while creating a profile: {}", e.getMessage(), e);
         }
     }
 }

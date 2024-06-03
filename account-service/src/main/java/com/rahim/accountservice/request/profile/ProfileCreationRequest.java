@@ -1,6 +1,7 @@
-package com.rahim.accountservice.dto;
+package com.rahim.accountservice.request.profile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rahim.accountservice.model.Address;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProfileRequestDto {
+public class ProfileCreationRequest {
 
     @JsonProperty("username")
     private String username;
@@ -27,5 +28,5 @@ public class ProfileRequestDto {
     private String contactNumber;
 
     @JsonProperty("address")
-    private String address;
+    private Address address;
 }

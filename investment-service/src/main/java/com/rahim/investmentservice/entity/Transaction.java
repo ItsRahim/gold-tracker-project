@@ -1,4 +1,4 @@
-package com.rahim.investmentservice.model;
+package com.rahim.investmentservice.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;

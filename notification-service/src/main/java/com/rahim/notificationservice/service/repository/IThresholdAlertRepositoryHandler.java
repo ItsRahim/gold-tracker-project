@@ -1,6 +1,6 @@
 package com.rahim.notificationservice.service.repository;
 
-import com.rahim.notificationservice.model.ThresholdAlert;
+import com.rahim.notificationservice.entity.ThresholdAlert;
 
 import java.util.List;
 

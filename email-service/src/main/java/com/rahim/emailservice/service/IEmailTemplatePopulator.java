@@ -1,6 +1,6 @@
 package com.rahim.emailservice.service;
 
-import com.rahim.emailservice.model.EmailTemplate;
+import com.rahim.emailservice.entity.EmailTemplate;
 
 import java.util.List;
 

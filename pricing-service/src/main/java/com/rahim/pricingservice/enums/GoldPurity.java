@@ -48,4 +48,13 @@ public enum GoldPurity {
 
         throw new IllegalArgumentException("Invalid gold purity label: " + carat);
     }
+
+    public static boolean existsByCarat(String carat) {
+        for (GoldPurity goldPurity : GoldPurity.values()) {
+            if (goldPurity.getCarat().equalsIgnoreCase(carat)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

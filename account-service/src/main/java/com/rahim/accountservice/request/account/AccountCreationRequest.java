@@ -1,4 +1,4 @@
-package com.rahim.accountservice.dto;
+package com.rahim.accountservice.request.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AccountRequestDto {
+public class AccountCreationRequest {
 
     @JsonProperty("email")
     private String email;

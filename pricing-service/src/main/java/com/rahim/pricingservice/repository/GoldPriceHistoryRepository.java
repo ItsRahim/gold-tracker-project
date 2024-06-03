@@ -1,6 +1,6 @@
 package com.rahim.pricingservice.repository;
 
-import com.rahim.pricingservice.model.GoldPriceHistory;
+import com.rahim.pricingservice.entity.GoldPriceHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

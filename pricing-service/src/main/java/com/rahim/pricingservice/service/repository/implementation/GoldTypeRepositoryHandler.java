@@ -2,7 +2,7 @@ package com.rahim.pricingservice.service.repository.implementation;
 
 import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
-import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.entity.GoldType;
 import com.rahim.pricingservice.repository.GoldTypeRepository;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import lombok.RequiredArgsConstructor;

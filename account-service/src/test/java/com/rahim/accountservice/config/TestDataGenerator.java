@@ -1,7 +1,7 @@
 package com.rahim.accountservice.config;
 
-import com.rahim.accountservice.dto.AccountRequestDto;
-import com.rahim.accountservice.dto.ProfileRequestDto;
+import com.rahim.accountservice.request.account.AccountCreationRequest;
+import com.rahim.accountservice.request.profile.ProfileCreationRequest;
 import com.rahim.accountservice.model.UserRequest;
 import org.instancio.Instancio;
 
@@ -22,29 +22,29 @@ public class TestDataGenerator {
         return testDataGenerator;
     }
 
-    public List<AccountRequestDto> generateAccountData(int numOfData) {
+    public List<AccountCreationRequest> generateAccountData(int numOfData) {
         return Instancio
-                .ofList(AccountRequestDto.class)
+                .ofList(AccountCreationRequest.class)
                 .size(numOfData)
                 .create();
     }
 
-    public List<ProfileRequestDto> generateProfileData(int numOfData) {
+    public List<ProfileCreationRequest> generateProfileData(int numOfData) {
         return Instancio
-                .ofList(ProfileRequestDto.class)
+                .ofList(ProfileCreationRequest.class)
                 .size(numOfData)
                 .create();
     }
 
     public List<UserRequest> generateUserRequestData(int numOfData) {
-        List<AccountRequestDto> accountData = generateAccountData(numOfData);
-        List<ProfileRequestDto> profileData = generateProfileData(numOfData);
+        List<AccountCreationRequest> accountData = generateAccountData(numOfData);
+        List<ProfileCreationRequest> profileData = generateProfileData(numOfData);
 
         List<UserRequest> userRequests = new ArrayList<>();
 
         for (int i = 0; i < numOfData; i++) {
-            AccountRequestDto account = accountData.get(i);
-            ProfileRequestDto profile = profileData.get(i);
+            AccountCreationRequest account = accountData.get(i);
+            ProfileCreationRequest profile = profileData.get(i);
 
             UserRequest userRequest = new UserRequest(account, profile);
 
@@ -55,8 +55,8 @@ public class TestDataGenerator {
     }
 
     public UserRequest generateSingleUserRequest() {
-        AccountRequestDto account = Instancio.create(AccountRequestDto.class);
-        ProfileRequestDto profile = Instancio.create(ProfileRequestDto.class);
+        AccountCreationRequest account = Instancio.create(AccountCreationRequest.class);
+        ProfileCreationRequest profile = Instancio.create(ProfileCreationRequest.class);
 
         return new UserRequest(account, profile);
     }

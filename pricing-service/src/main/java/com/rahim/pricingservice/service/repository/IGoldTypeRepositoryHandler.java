@@ -1,6 +1,6 @@
 package com.rahim.pricingservice.service.repository;
 
-import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.entity.GoldType;
 
 import java.util.List;
 

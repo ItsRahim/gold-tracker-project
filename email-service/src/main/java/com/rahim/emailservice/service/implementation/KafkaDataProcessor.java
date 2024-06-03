@@ -3,7 +3,7 @@ package com.rahim.emailservice.service.implementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rahim.emailservice.model.EmailTemplate;
+import com.rahim.emailservice.entity.EmailTemplate;
 import com.rahim.emailservice.service.IEmailSender;
 import com.rahim.emailservice.service.IEmailService;
 import com.rahim.emailservice.service.IEmailTemplatePopulator;

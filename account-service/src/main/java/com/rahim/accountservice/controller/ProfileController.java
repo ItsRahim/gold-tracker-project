@@ -1,6 +1,7 @@
 package com.rahim.accountservice.controller;
 
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.entity.Profile;
+import com.rahim.accountservice.request.profile.ProfileUpdateRequest;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.rahim.accountservice.constant.ProfileControllerEndpoint.*;
 
@@ -50,16 +50,17 @@ public class ProfileController {
 
     @Operation(summary = "Update an existing profile")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Profile updated successfully", content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "404", description = "Profile not found", content = @Content(mediaType = "text/plain"))
+            @ApiResponse(responseCode = "200", description = "Profile updated successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "404", description = "Profile not found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE))
     })
-    @PutMapping(value = PROFILE_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @PutMapping(value = PROFILE_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Profile> updateUserProfile(
             @Parameter(description = "ID of the profile to be updated", required = true) @PathVariable int profileId,
-            @Parameter(description = "Map of updated profile data", required = true) @RequestBody Map<String, String> updatedData) {
+            @Parameter(description = "Map of updated profile data", required = true) @RequestBody ProfileUpdateRequest updatedData) {
         Profile profile = profileUpdateService.updateProfile(profileId, updatedData);
         return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
+
 
     @Operation(summary = "Find profile by username")
     @ApiResponses(value = {

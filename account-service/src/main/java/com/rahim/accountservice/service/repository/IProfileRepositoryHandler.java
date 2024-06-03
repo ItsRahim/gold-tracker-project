@@ -2,11 +2,9 @@ package com.rahim.accountservice.service.repository;
 
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.model.EmailToken;
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.entity.Profile;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author Rahim Ahmed

@@ -1,8 +1,7 @@
 package com.rahim.pricingservice.service.type;
 
-import com.rahim.pricingservice.model.GoldType;
-
-import java.util.Map;
+import com.rahim.pricingservice.entity.GoldType;
+import com.rahim.pricingservice.request.GoldTypeUpdateRequest;
 
 /**
  * @author Rahim Ahmed
@@ -10,5 +9,5 @@ import java.util.Map;
  */
 public interface IGoldTypeUpdateService {
 
-    GoldType updateGoldType(int goldId, Map<String, String> updatedData);
+    GoldType updateGoldType(int goldId, GoldTypeUpdateRequest updatedData);
 }

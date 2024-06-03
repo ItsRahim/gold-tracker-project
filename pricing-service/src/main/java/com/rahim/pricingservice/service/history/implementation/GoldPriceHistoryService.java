@@ -1,7 +1,7 @@
 package com.rahim.pricingservice.service.history.implementation;
 
 import com.rahim.pricingservice.model.GoldData;
-import com.rahim.pricingservice.model.GoldPriceHistory;
+import com.rahim.pricingservice.entity.GoldPriceHistory;
 import com.rahim.pricingservice.repository.GoldPriceHistoryRepository;
 import com.rahim.pricingservice.service.history.IGoldPriceHistoryService;
 import com.rahim.pricingservice.util.ApiDataProcessor;

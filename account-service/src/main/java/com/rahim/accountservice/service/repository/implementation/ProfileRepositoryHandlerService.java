@@ -4,7 +4,7 @@ import com.rahim.accountservice.dao.AccountDataAccess;
 import com.rahim.accountservice.dao.ProfileDataAccess;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.model.EmailToken;
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.entity.Profile;
 import com.rahim.accountservice.repository.ProfileRepository;
 import com.rahim.accountservice.json.AccountJson;
 import com.rahim.accountservice.json.ProfileJson;

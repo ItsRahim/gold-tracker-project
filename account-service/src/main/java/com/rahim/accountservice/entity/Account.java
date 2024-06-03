@@ -1,4 +1,4 @@
-package com.rahim.accountservice.model;
+package com.rahim.accountservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

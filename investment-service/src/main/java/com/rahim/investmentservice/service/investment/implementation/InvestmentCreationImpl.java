@@ -4,11 +4,11 @@ import com.hazelcast.collection.ISet;
 import com.hazelcast.map.IMap;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.service.hazelcast.CacheManager;
-import com.rahim.investmentservice.dto.InvestmentRequestDto;
+import com.rahim.investmentservice.request.InvestmentRequest;
 import com.rahim.investmentservice.enums.TransactionType;
-import com.rahim.investmentservice.model.Holding;
-import com.rahim.investmentservice.model.Investment;
-import com.rahim.investmentservice.model.Transaction;
+import com.rahim.investmentservice.entity.Holding;
+import com.rahim.investmentservice.entity.Investment;
+import com.rahim.investmentservice.entity.Transaction;
 import com.rahim.investmentservice.service.holding.HoldingCreationService;
 import com.rahim.investmentservice.service.investment.InvestmentCreationService;
 import com.rahim.investmentservice.service.repository.InvestmentRepositoryHandler;
@@ -39,13 +39,13 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addNewInvestment(int accountId, InvestmentRequestDto investmentRequestDto) {
-        validateRequest(investmentRequestDto);
+    public void addNewInvestment(int accountId, InvestmentRequest investmentRequest) {
+        validateRequest(investmentRequest);
 
-        final String goldType = investmentRequestDto.getGoldTypeName();
-        final Integer quantity = investmentRequestDto.getQuantity();
-        final BigDecimal totalPurchasePrice = investmentRequestDto.getTotalPurchasePrice();
-        LocalDate purchaseDate = investmentRequestDto.getPurchaseDate();
+        final String goldType = investmentRequest.getGoldTypeName();
+        final Integer quantity = investmentRequest.getQuantity();
+        final BigDecimal totalPurchasePrice = investmentRequest.getTotalPurchasePrice();
+        LocalDate purchaseDate = investmentRequest.getPurchaseDate();
 
         if (!accountExists(accountId)) {
             LOG.warn("Unable to add transaction for account id: {}. Account does not exist", accountId);
@@ -80,11 +80,11 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
         txnCreationService.addNewTransaction(transaction);
     }
 
-    private void validateRequest(InvestmentRequestDto investmentRequestDto) {
-        if (investmentRequestDto == null) {
+    private void validateRequest(InvestmentRequest investmentRequest) {
+        if (investmentRequest == null) {
             throw new IllegalArgumentException("Investment request cannot be null");
         }
-        if (investmentRequestDto.getTotalPurchasePrice() == null || investmentRequestDto.getTotalPurchasePrice().compareTo(BigDecimal.ZERO) <= 0) {
+        if (investmentRequest.getTotalPurchasePrice() == null || investmentRequest.getTotalPurchasePrice().compareTo(BigDecimal.ZERO) <= 0) {
             LOG.warn("Unable to process transaction. Transaction price is null or non-positive");
             throw new IllegalStateException("Invalid purchase price provided");
         }

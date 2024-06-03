@@ -1,8 +1,8 @@
 package com.rahim.investmentservice.service.investment.implementation;
 
 import com.rahim.investmentservice.enums.TransactionType;
-import com.rahim.investmentservice.model.Investment;
-import com.rahim.investmentservice.model.Transaction;
+import com.rahim.investmentservice.entity.Investment;
+import com.rahim.investmentservice.entity.Transaction;
 import com.rahim.investmentservice.service.investment.InvestmentDeletionService;
 import com.rahim.investmentservice.service.repository.InvestmentRepositoryHandler;
 import com.rahim.investmentservice.service.transaction.TxnCreationService;

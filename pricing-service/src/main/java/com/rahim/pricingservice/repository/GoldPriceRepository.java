@@ -1,7 +1,7 @@
 package com.rahim.pricingservice.repository;
 
 import com.rahim.pricingservice.dao.GoldPriceDataAccess;
-import com.rahim.pricingservice.model.GoldPrice;
+import com.rahim.pricingservice.entity.GoldPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

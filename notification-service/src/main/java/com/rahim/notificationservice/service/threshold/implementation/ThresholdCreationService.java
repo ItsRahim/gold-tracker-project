@@ -4,7 +4,7 @@ import com.hazelcast.collection.ISet;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
-import com.rahim.notificationservice.model.ThresholdAlert;
+import com.rahim.notificationservice.entity.ThresholdAlert;
 import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
 import com.rahim.notificationservice.service.threshold.IThresholdCreationService;
 import lombok.RequiredArgsConstructor;

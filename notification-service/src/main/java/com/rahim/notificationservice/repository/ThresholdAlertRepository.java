@@ -2,7 +2,7 @@ package com.rahim.notificationservice.repository;
 
 import com.rahim.notificationservice.dao.NotificationDataAccess;
 import com.rahim.notificationservice.model.NotificationResult;
-import com.rahim.notificationservice.model.ThresholdAlert;
+import com.rahim.notificationservice.entity.ThresholdAlert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

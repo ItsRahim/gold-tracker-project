@@ -4,7 +4,7 @@ import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.DuplicateEntityException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
-import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.entity.GoldType;
 import com.rahim.pricingservice.service.price.IGoldPriceCreationService;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import com.rahim.pricingservice.service.type.IGoldTypeCreationService;

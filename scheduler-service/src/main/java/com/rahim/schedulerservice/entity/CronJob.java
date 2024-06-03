@@ -1,4 +1,4 @@
-package com.rahim.schedulerservice.model;
+package com.rahim.schedulerservice.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

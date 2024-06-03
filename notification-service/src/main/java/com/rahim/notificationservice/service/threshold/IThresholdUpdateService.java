@@ -8,5 +8,5 @@ import java.util.Map;
  */
 public interface IThresholdUpdateService {
 
-    boolean updateNotification(int thresholdId, Map<String, String> updatedData);
+    void updateNotification(int thresholdId, Map<String, String> updatedData);
 }

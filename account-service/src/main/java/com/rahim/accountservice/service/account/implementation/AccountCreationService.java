@@ -1,8 +1,8 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.rahim.accountservice.dto.ModelMapper;
-import com.rahim.accountservice.model.Account;
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.request.ModelMapper;
+import com.rahim.accountservice.entity.Account;
+import com.rahim.accountservice.entity.Profile;
 import com.rahim.accountservice.model.UserRequest;
 import com.rahim.accountservice.service.account.IAccountCreationService;
 import com.rahim.accountservice.service.profile.IProfileCreationService;

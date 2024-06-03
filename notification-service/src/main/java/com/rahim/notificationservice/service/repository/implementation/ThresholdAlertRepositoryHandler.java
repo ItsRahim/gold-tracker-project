@@ -1,7 +1,7 @@
 package com.rahim.notificationservice.service.repository.implementation;
 
 import com.rahim.common.exception.EntityNotFoundException;
-import com.rahim.notificationservice.model.ThresholdAlert;
+import com.rahim.notificationservice.entity.ThresholdAlert;
 import com.rahim.notificationservice.repository.ThresholdAlertRepository;
 import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
 import lombok.RequiredArgsConstructor;

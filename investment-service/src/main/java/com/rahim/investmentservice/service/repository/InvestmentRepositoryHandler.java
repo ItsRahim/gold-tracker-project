@@ -1,6 +1,6 @@
 package com.rahim.investmentservice.service.repository;
 
-import com.rahim.investmentservice.model.Investment;
+import com.rahim.investmentservice.entity.Investment;
 
 /**
  * @author Rahim Ahmed
