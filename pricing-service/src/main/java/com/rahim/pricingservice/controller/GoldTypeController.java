@@ -86,7 +86,7 @@ public class GoldTypeController {
             @ApiResponse(responseCode = "404", description = "Gold type not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error updating gold type", content = @Content(mediaType = "application/json"))
     })
-    @PutMapping(value = GOLD_TYPE_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @PutMapping(value = GOLD_TYPE_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GoldType> updateGoldType(
             @Parameter(description = "ID of the gold type to be updated", required = true) @PathVariable int goldTypeId,
             @Parameter(description = "Map of updated gold type data", required = true) @RequestBody GoldTypeUpdateRequest updatedData) {
