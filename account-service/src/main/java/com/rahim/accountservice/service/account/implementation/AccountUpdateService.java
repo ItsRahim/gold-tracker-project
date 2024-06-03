@@ -11,16 +11,15 @@ import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountUpdateService implements IAccountUpdateService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccountUpdateService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
     private final CacheManager hazelcastCacheManager;
@@ -33,7 +32,7 @@ public class AccountUpdateService implements IAccountUpdateService {
 
         updateFields(account, updateRequest);
         if (account.equals(originalAccount)) {
-            LOG.debug("No updates were applied to the account");
+            log.debug("No updates were applied to the account");
             return "No updates were applied to the account.";
         }
 
@@ -60,7 +59,7 @@ public class AccountUpdateService implements IAccountUpdateService {
         }
         if (updateRequest.getPasswordHash() != null && !updateRequest.getPasswordHash().isEmpty()) {
             account.setPasswordHash(updateRequest.getPasswordHash());
-            LOG.debug("Password updated successfully");
+            log.debug("Password updated successfully");
         }
         if (updateRequest.getNotificationSetting() != null && !updateRequest.getNotificationSetting().isEmpty()) {
             updateNotification(account, updateRequest.getNotificationSetting());
@@ -70,7 +69,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     private void updateEmail(Account account, String newEmail) {
         if (!accountRepositoryHandler.existsByEmail(newEmail)) {
             account.setEmail(newEmail);
-            LOG.debug("Email updated successfully");
+            log.debug("Email updated successfully");
         }
     }
 
@@ -80,12 +79,12 @@ public class AccountUpdateService implements IAccountUpdateService {
             if (isValidChange(account.getNotificationSetting(), newNotificationSetting)) {
                 account.setNotificationSetting(newNotificationSetting);
                 updateNotificationSet(account.getId(), newNotificationSetting);
-                LOG.debug("Notification setting updated successfully for account with ID {}: {}", account.getId(), newNotificationSetting);
+                log.debug("Notification setting updated successfully for account with ID {}: {}", account.getId(), newNotificationSetting);
             } else {
-                LOG.debug("Invalid value passed or no change in notificationSetting. Not updating for account with ID {}", account.getId());
+                log.debug("Invalid value passed or no change in notificationSetting. Not updating for account with ID {}", account.getId());
             }
         } catch (IllegalArgumentException e) {
-            LOG.error("Failed to update notificationSetting for account with ID {}: {}", account.getId(), e.getMessage());
+            log.error("Failed to update notificationSetting for account with ID {}: {}", account.getId(), e.getMessage());
         }
     }
 

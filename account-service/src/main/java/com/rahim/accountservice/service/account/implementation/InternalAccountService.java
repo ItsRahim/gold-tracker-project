@@ -12,8 +12,7 @@ import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +25,11 @@ import java.util.List;
  * @author Rahim Ahmed
  * @created 15/11/2023
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InternalAccountService implements IInternalAccountService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InternalAccountService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IAccountDeletionService accountDeletionService;
     private final IProfileDeletionService profileDeletionService;
@@ -61,9 +60,9 @@ public class InternalAccountService implements IInternalAccountService {
             accountRepositoryHandler.deleteAccount(accountId);
             hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_SET, accountId);
 
-            LOG.debug("Account with ID {} deleted successfully.", accountId);
+            log.debug("Account with ID {} deleted successfully.", accountId);
         } catch (DataAccessException e) {
-            LOG.error("An error occurred deleting user: {}", e.getMessage(), e);
+            log.error("An error occurred deleting user: {}", e.getMessage(), e);
         }
     }
 
@@ -78,7 +77,7 @@ public class InternalAccountService implements IInternalAccountService {
         List<Account> inactiveAccounts = accountRepositoryHandler.getInactiveUsers(cutoffDate);
 
         if (inactiveAccounts.isEmpty()) {
-            LOG.debug("No inactive users found for deletion");
+            log.debug("No inactive users found for deletion");
             return;
         }
 
@@ -89,7 +88,7 @@ public class InternalAccountService implements IInternalAccountService {
             sendEmail(account.getId(), EmailTemplate.ACCOUNT_INACTIVITY_TEMPLATE, false, false);
         });
 
-        LOG.debug("Inactive users found. Account status successfully updated");
+        log.debug("Inactive users found. Account status successfully updated");
     }
 
     /**
@@ -104,17 +103,17 @@ public class InternalAccountService implements IInternalAccountService {
             List<Integer> accountIdsToDelete = accountRepositoryHandler.getUsersPendingDeletion(currentDate);
 
             if (accountIdsToDelete.isEmpty()) {
-                LOG.info("No users found for deletion.");
+                log.info("No users found for deletion.");
                 return;
             }
 
-            LOG.info("Found {} users pending deletion.", accountIdsToDelete.size());
+            log.info("Found {} users pending deletion.", accountIdsToDelete.size());
             for (Integer accountId : accountIdsToDelete) {
                 deleteUserAccount(accountId);
             }
 
         } catch (Exception e) {
-            LOG.error("Error processing pending delete users: {}", e.getMessage(), e);
+            log.error("Error processing pending delete users: {}", e.getMessage(), e);
         }
     }
 
@@ -130,7 +129,7 @@ public class InternalAccountService implements IInternalAccountService {
             List<Integer> accountIdsToDelete = accountRepositoryHandler.getUsersToDelete(cutoffDate);
 
             if (accountIdsToDelete.isEmpty()) {
-                LOG.info("No users found for deletion requests");
+                log.info("No users found for deletion requests");
                 return;
             }
 
@@ -138,9 +137,9 @@ public class InternalAccountService implements IInternalAccountService {
                 accountDeletionService.requestAccountDelete(accountId);
             }
 
-            LOG.info("Deletion requests sent for {} inactive users.", accountIdsToDelete.size());
+            log.info("Deletion requests sent for {} inactive users.", accountIdsToDelete.size());
         } catch (DataAccessException e) {
-            LOG.error("An error occurred processing inactive users: {}", e.getMessage());
+            log.error("An error occurred processing inactive users: {}", e.getMessage());
         }
     }
 
