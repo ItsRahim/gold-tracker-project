@@ -26,9 +26,9 @@ Issues/Enhancements:
 - batch service, maybe use JPA instead of JDBCTemplate?
 - If processed file exists in table, do not run batch import until the table is cleared - add new column for table affected default null
 - have url constants in own class - for each controller - DONE
-- add swagger docs for endpoints
+- add swagger docs for endpoints - DONE
 - When notification service checks if user id exists to add a notification. No check to see if account is active/has push notifications enabled - DONE
-- Different profiles, testing, dev and prod
+- Different profiles, dev(local), prod(cloud)
 - Update docker to expose specific ports
 - Remove hardcoded data references in custom-api, move to database - DONE
 - Add active flag to data sources, depending which is active is the one open feign will use, if all inactive/more than one active, default to uk investing - DONE
@@ -36,9 +36,8 @@ Issues/Enhancements:
 - Implement Hazelcast to share information required for other services - DONE
 - Remove hardcoded reference for cron jobs - DONE
 - Add UUID to all kafka messages being send, check in hazelcast map, create new method to generate message+id and another to remove it if it hasnt been processed - DONE
-Linked hashmap maintains the order in which keys are inserted
 -Add failover mechanism upon failed retries to read from db if hazelcast is down. Same for kafka - DONE for kafka, WIP for hazelcast
--Fix issue with wrong UTC being inserted, its one hour behind
+-Fix issue with wrong UTC being inserted, its one hour behind - DONE
 -Create db users for each microservice, control operations on tables and which can be seen
 -Handle user adding investment on purchase date older than gold data available - ENHANCEMENT
 -Fix issue of fallback hazelcast instance being created when main cluster is up and switching - BUG
@@ -48,7 +47,7 @@ Linked hashmap maintains the order in which keys are inserted
 -Bug in calling http endpoints - DONE
 -Need to improve endpoint names - DONE
 -Simplify investment creation logic once code is working and complete - DONE
--Update gateway service to refer to eureka service names instead of hard coded host in feign calls by services
+-Update gateway service to refer to eureka service names instead of hard coded host in feign calls by services - DONE
 -Improve exception handling, in classes with transaction to return info, controller advice and no generic exceptions - DONE
 -create a reporting service to generate holding performance, transaction reports, can also allow users to export gold type price information and generate report graphs too using python?
 -as types price update, send id and price via kafka to update it in real time in investment service - DONE
@@ -58,6 +57,7 @@ Linked hashmap maintains the order in which keys are inserted
 -Convert all offset datetime to use instant for better control - DONE
 -Change log.error LOG.error("Some message", e.getMessage(), e); - DONE
 -Write unit and integration tests for all services before moving on - WIP
+-Update notification service to send emails using thymeleaf template
 Performance Testing:
 - VisualVM
 - Apache JMeter
@@ -66,9 +66,3 @@ Can be analysed after above is complete:
 - DB Indexes
 - Caching
 - Kafka Configurations(with and without SSL)
-
-Refactor:
-pricing-service - DONE
-
-@ServiceConnect - applies connection details to spring automatically
-@Container - restarts the container for each instance needed i.e. per test class
