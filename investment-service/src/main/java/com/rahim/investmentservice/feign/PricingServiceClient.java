@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author Rahim Ahmed
  * @created 22/05/2024
  */
-@FeignClient(name = "PRICING-SERVICE")
+@FeignClient(name = "GATEWAY-SERVICE")
 public interface PricingServiceClient {
 
-    @GetMapping("/api/v1/gold/price/{goldTypeId}")
+    @GetMapping("price/{goldTypeId}")
     ResponseEntity<String> getGoldPrice(@PathVariable("goldTypeId") int goldTypeId);
 
 }
