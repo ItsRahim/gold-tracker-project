@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: service-registry
+
 eureka:
   instance:
     hostname: localhost
