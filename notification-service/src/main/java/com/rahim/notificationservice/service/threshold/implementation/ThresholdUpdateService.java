@@ -26,21 +26,19 @@ public class ThresholdUpdateService implements IThresholdUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateNotification(int thresholdId, Map<String, String> updatedData) {
+    public void updateNotification(int thresholdId, Map<String, String> updatedData) {
         ThresholdAlert thresholdAlert = thresholdAlertRepositoryHandler.findById(thresholdId);
 
         if (!updateThresholdPrice(thresholdAlert, updatedData)) {
             LOG.info("Threshold alert with ID: {} was not updated.", thresholdId);
-            return false;
+            return;
         }
 
         try {
             thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
             LOG.info("Successfully updated threshold alert with ID: {}", thresholdId);
-            return true;
         } catch (Exception e) {
             LOG.error("An error occurred while updating threshold alert with ID: {}", thresholdId, e);
-            return false;
         }
     }
 
