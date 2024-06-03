@@ -1,6 +1,6 @@
 package com.rahim.notificationservice.service.threshold.implementation;
 
-import com.rahim.notificationservice.model.ThresholdAlert;
+import com.rahim.notificationservice.entity.ThresholdAlert;
 import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
 import com.rahim.notificationservice.service.threshold.IThresholdUpdateService;
 import lombok.RequiredArgsConstructor;

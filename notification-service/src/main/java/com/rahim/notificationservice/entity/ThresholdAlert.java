@@ -1,4 +1,4 @@
-package com.rahim.notificationservice.model;
+package com.rahim.notificationservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
