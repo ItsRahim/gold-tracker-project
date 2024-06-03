@@ -10,7 +10,8 @@ import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.service.hazelcast.CacheManager;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +21,11 @@ import java.time.LocalDate;
  * @author Rahim Ahmed
  * @created 30/12/2023
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountDeletionService implements IAccountDeletionService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AccountDeletionService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
     private final CacheManager hazelcastCacheManager;
@@ -35,7 +36,7 @@ public class AccountDeletionService implements IAccountDeletionService {
         Account account = accountRepositoryHandler.findById(accountId);
 
         if (!isAccountEligibleForDeletion(account)) {
-            log.debug("Account with ID {} is not eligible for deletion", accountId);
+            LOG.debug("Account with ID {} is not eligible for deletion", accountId);
             return false;
         }
 

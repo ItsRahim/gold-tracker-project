@@ -12,14 +12,15 @@ import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.common.util.KafkaKeyUtil;
 import io.micrometer.core.instrument.config.validate.ValidationException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailTokenGenerator {
 
+    private static final Logger LOG = LoggerFactory.getLogger(EmailTokenGenerator.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IKafkaService kafkaService;
 
@@ -27,7 +28,7 @@ public class EmailTokenGenerator {
         try {
             EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);
             String jsonEmailData = KafkaKeyUtil.generateKeyWithUUID(convertToJson(emailToken));
-            log.debug("Generated tokens: {}", jsonEmailData);
+            LOG.debug("Generated tokens: {}", jsonEmailData);
             kafkaService.sendMessage(KafkaTopic.SEND_EMAIL, jsonEmailData);
         } catch (JsonProcessingException e) {
             handleException("Error converting tokens to JSON", e);
@@ -46,7 +47,7 @@ public class EmailTokenGenerator {
     }
 
     private void handleException(String message, Exception e) {
-        log.error("{}: {}", message, e.getMessage(), e);
+        LOG.error("{}: {}", message, e.getMessage(), e);
         throw new RuntimeException(message, e);
     }
 }

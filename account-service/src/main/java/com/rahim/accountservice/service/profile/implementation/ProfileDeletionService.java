@@ -3,7 +3,8 @@ package com.rahim.accountservice.service.profile.implementation;
 import com.rahim.accountservice.service.profile.IProfileDeletionService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Rahim Ahmed
  * @created 31/12/2023
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProfileDeletionService implements IProfileDeletionService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileDeletionService.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Override
@@ -27,7 +28,7 @@ public class ProfileDeletionService implements IProfileDeletionService {
             int profileId = profileRepositoryHandler.getProfileIdByAccountId(accountId);
             profileRepositoryHandler.deleteProfile(profileId);
         } catch (Exception e) {
-            log.error("Error deleting user profile for user ID {}: {}", accountId, e.getMessage(), e);
+            LOG.error("Error deleting user profile for user ID {}: {}", accountId, e.getMessage(), e);
         }
     }
 }

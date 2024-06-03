@@ -11,11 +11,10 @@ import com.rahim.accountservice.json.ProfileJson;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenRowMapper;
 import com.rahim.common.constant.EmailTemplate;
-import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
-import com.rahim.common.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -27,27 +26,27 @@ import java.util.List;
  * @author Rahim Ahmed
  * @created 30/12/2023
  */
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ProfileRepositoryHandlerService implements IProfileRepositoryHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileRepositoryHandlerService.class);
     private final ProfileRepository profileRepository;
     private final JdbcTemplate jdbcTemplate;
 
     @Override
     public void createNewProfile(Profile profile) {
         if (profile == null) {
-            log.error("Invalid profile. Unable to save.");
+            LOG.error("Invalid profile. Unable to save.");
             throw new IllegalArgumentException("Invalid profile. Unable to save.");
         }
 
         try {
             profileRepository.save(profile);
-            log.debug("New profile created: {}", profile.getId());
+            LOG.debug("New profile created: {}", profile.getId());
         } catch (DataIntegrityViolationException e) {
-            log.error("Error saving profile to the database: {}", e.getMessage(), e);
+            LOG.error("Error saving profile to the database: {}", e.getMessage(), e);
             throw new RuntimeException("Error saving profile to database", e);
         }
     }
@@ -55,16 +54,16 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     @Override
     public void updateProfile(Profile profile) {
         if (profile == null || profile.getId() == null) {
-            log.error("Invalid profile or profile ID is null. Unable to save.");
-            throw new ValidationException("Invalid profile or profile ID is null. Unable to save.");
+            LOG.error("Invalid profile or profile ID is null. Unable to save.");
+            throw new IllegalArgumentException("Invalid profile or profile ID is null. Unable to save.");
         }
 
         try {
             profileRepository.save(profile);
-            log.debug("Profile updated: {}", profile.getId());
-        } catch (Exception e) {
-            log.error("Error updating profile to the database: {}", e.getMessage());
-            throw new DatabaseException("Error saving profile to database");
+            LOG.debug("Profile updated: {}", profile.getId());
+        } catch (DataIntegrityViolationException e) {
+            LOG.error("Error updating profile to the database: {}", e.getMessage());
+            throw new RuntimeException("Error saving profile to database", e);
         }
     }
 
@@ -73,12 +72,12 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
         Profile profile = findById(profileId);
 
         if (profile.getId() == null) {
-            log.warn("Attempted to delete non-existing profile with ID: {}", profileId);
+            LOG.warn("Attempted to delete non-existing profile with ID: {}", profileId);
             throw new EntityNotFoundException("Profile with ID " + profileId + " not found");
         }
 
         profileRepository.deleteById(profileId);
-        log.debug("Profile with ID {} deleted successfully", profileId);
+        LOG.debug("Profile with ID {} deleted successfully", profileId);
     }
 
     @Override

@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ import static com.rahim.accountservice.constant.ProfileControllerEndpoint.*;
 @Tag(name = "Profile Management", description = "Endpoints for managing user profiles")
 public class ProfileController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileController.class);
     private final IProfileUpdateService profileUpdateService;
     private final IProfileRepositoryHandler profileRepositoryHandler;
 

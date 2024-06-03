@@ -8,7 +8,8 @@ import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Rahim Ahmed
  * @created 31/12/2023
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProfileUpdateService implements IProfileUpdateService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileUpdateService.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Override
@@ -30,7 +31,7 @@ public class ProfileUpdateService implements IProfileUpdateService {
         Profile profile = profileRepositoryHandler.findById(profileId);
 
         if (profile == null) {
-            log.warn("Profile with ID {} not found.", profileId);
+            LOG.warn("Profile with ID {} not found.", profileId);
             throw new EntityNotFoundException("Profile does not exist. Unable to update");
         }
 
@@ -40,7 +41,7 @@ public class ProfileUpdateService implements IProfileUpdateService {
 
             return profile;
         } catch (Exception e) {
-            log.error("Error updating profile: {}", e.getMessage(), e);
+            LOG.error("Error updating profile: {}", e.getMessage(), e);
             throw new DatabaseException("An unexpected error occurred whilst updating profile");
         }
     }
