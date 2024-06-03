@@ -3,6 +3,7 @@ package com.rahim.accountservice.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rahim.accountservice.model.Address;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,11 +49,17 @@ public class Profile {
     @JsonProperty("contactNumber")
     private String contactNumber;
 
-    @Column(name = "address")
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "street", column = @Column(name = "street")),
+            @AttributeOverride(name = "city", column = @Column(name = "city")),
+            @AttributeOverride(name = "postCode", column = @Column(name = "post_code")),
+            @AttributeOverride(name = "country", column = @Column(name = "country"))
+    })
     @JsonProperty("address")
-    private String address;
+    private Address address;
 
-    public Profile(Account account, String username, String firstName, String lastName, String contactNumber, String address) {
+    public Profile(Account account, String username, String firstName, String lastName, String contactNumber, Address address) {
         this.account = account;
         this.username = username;
         this.firstName = firstName;
@@ -66,6 +73,6 @@ public class Profile {
                 firstName == null || firstName.isEmpty() ||
                 lastName == null || lastName.isEmpty() ||
                 contactNumber == null || contactNumber.isEmpty() ||
-                address == null || address.isEmpty());
+                address == null);
     }
 }

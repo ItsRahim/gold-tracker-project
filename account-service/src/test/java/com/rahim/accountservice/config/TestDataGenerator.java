@@ -1,7 +1,7 @@
 package com.rahim.accountservice.config;
 
-import com.rahim.accountservice.request.AccountCreationRequest;
-import com.rahim.accountservice.request.ProfileCreationRequest;
+import com.rahim.accountservice.request.account.AccountCreationRequest;
+import com.rahim.accountservice.request.profile.ProfileCreationRequest;
 import com.rahim.accountservice.model.UserRequest;
 import org.instancio.Instancio;
 

@@ -1,8 +1,7 @@
 package com.rahim.accountservice.service.profile;
 
 import com.rahim.accountservice.entity.Profile;
-
-import java.util.Map;
+import com.rahim.accountservice.request.profile.ProfileUpdateRequest;
 
 /**
  * @author Rahim Ahmed
@@ -16,5 +15,5 @@ public interface IProfileUpdateService {
      * @param profileId The ID of the profile to update.
      * @param updatedData The new data for the profile.
      */
-    Profile updateProfile(int profileId, Map<String, String> updatedData);
+    Profile updateProfile(int profileId, ProfileUpdateRequest updatedData);
 }

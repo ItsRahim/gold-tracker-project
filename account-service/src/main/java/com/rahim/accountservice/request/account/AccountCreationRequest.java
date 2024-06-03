@@ -1,4 +1,4 @@
-package com.rahim.accountservice.request;
+package com.rahim.accountservice.request.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

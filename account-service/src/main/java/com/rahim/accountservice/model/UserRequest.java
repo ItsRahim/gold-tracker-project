@@ -1,7 +1,7 @@
 package com.rahim.accountservice.model;
 
-import com.rahim.accountservice.request.AccountCreationRequest;
-import com.rahim.accountservice.request.ProfileCreationRequest;
+import com.rahim.accountservice.request.account.AccountCreationRequest;
+import com.rahim.accountservice.request.profile.ProfileCreationRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

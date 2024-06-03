@@ -1,7 +1,8 @@
 package com.rahim.accountservice.service.profile.implementation;
 
 import com.rahim.accountservice.entity.Profile;
-import com.rahim.accountservice.json.ProfileJson;
+import com.rahim.accountservice.model.Address;
+import com.rahim.accountservice.request.profile.ProfileUpdateRequest;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.common.exception.DatabaseException;
@@ -9,11 +10,8 @@ import com.rahim.common.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 
 /**
@@ -29,10 +27,10 @@ public class ProfileUpdateService implements IProfileUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Profile updateProfile(int profileId, Map<String, String> updatedData) {
+    public Profile updateProfile(int profileId, ProfileUpdateRequest updatedData) {
         Profile profile = profileRepositoryHandler.findById(profileId);
 
-        if (profile.getId() == null) {
+        if (profile == null) {
             LOG.warn("Profile with ID {} not found.", profileId);
             throw new EntityNotFoundException("Profile does not exist. Unable to update");
         }
@@ -42,37 +40,40 @@ public class ProfileUpdateService implements IProfileUpdateService {
             profileRepositoryHandler.updateProfile(profile);
 
             return profile;
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             LOG.error("Error updating profile: {}", e.getMessage(), e);
             throw new DatabaseException("An unexpected error occurred whilst updating profile");
         }
     }
 
-    /**
-     * Updates the data of a profile.
-     *
-     * @param profile     The profile to update.
-     * @param updatedData The new data for the profile.
-     */
-    private void updateProfileData(Profile profile, Map<String, String> updatedData) {
-        updatedData.forEach((key, value) -> {
-            switch (key) {
-                case ProfileJson.PROFILE_FIRST_NAME:
-                    profile.setFirstName(value);
-                    break;
-                case ProfileJson.PROFILE_LAST_NAME:
-                    profile.setLastName(value);
-                    break;
-                case ProfileJson.PROFILE_CONTACT_NUMBER:
-                    profile.setContactNumber(value);
-                    break;
-                case ProfileJson.PROFILE_ADDRESS:
-                    profile.setAddress(value);
-                    break;
-                default:
-                    LOG.warn("Ignoring unknown key '{}' in updated data for profile with ID {}", key, profile.getId());
-            }
-        });
+    private void updateProfileData(Profile profile, ProfileUpdateRequest updatedData) {
+        if (updatedData.getFirstName() != null) {
+            profile.setFirstName(updatedData.getFirstName());
+        }
+        if (updatedData.getLastName() != null) {
+            profile.setLastName(updatedData.getLastName());
+        }
+        if (updatedData.getContactNumber() != null) {
+            profile.setContactNumber(updatedData.getContactNumber());
+        }
+        if (updatedData.getAddress() != null) {
+            updateAddress(profile, updatedData.getAddress());
+        }
     }
 
+    private void updateAddress(Profile profile, Address address) {
+        Address currentAddress = profile.getAddress();
+        if (address.getStreet() != null) {
+            currentAddress.setStreet(address.getStreet());
+        }
+        if (address.getCity() != null) {
+            currentAddress.setCity(address.getCity());
+        }
+        if (address.getPostCode() != null) {
+            currentAddress.setPostCode(address.getPostCode());
+        }
+        if (address.getCountry() != null) {
+            currentAddress.setCountry(address.getCountry());
+        }
+    }
 }

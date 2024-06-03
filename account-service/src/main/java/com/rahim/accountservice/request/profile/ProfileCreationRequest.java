@@ -1,6 +1,7 @@
-package com.rahim.accountservice.request;
+package com.rahim.accountservice.request.profile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rahim.accountservice.model.Address;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,5 +28,5 @@ public class ProfileCreationRequest {
     private String contactNumber;
 
     @JsonProperty("address")
-    private String address;
+    private Address address;
 }
