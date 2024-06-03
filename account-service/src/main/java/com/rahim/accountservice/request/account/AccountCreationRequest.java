@@ -1,6 +1,7 @@
 package com.rahim.accountservice.request.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AccountCreationRequest {
 
+    @Email
     @JsonProperty("email")
     private String email;
 
