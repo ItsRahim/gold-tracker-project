@@ -1,9 +1,54 @@
 spring:
   application:
     name: gateway-service
+  config:
+    import: configserver:http://localhost:8888
   cloud:
     config:
       enabled: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: account-base-route
+          uri: ${account-service.uri}
+          predicates:
+            - Path=/account
+          filters:
+            - RewritePath=/account, ${account-service.account.path}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: account-segment-route
+          uri: ${account-service.uri}
+          predicates:
+            - Path=/account/**
+          filters:
+            - RewritePath=/account/(?<segment>.*), ${account-service.account.path}/${segment}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: profile-base-route
+          uri: ${account-service.uri}
+          predicates:
+            - Path=/profile
+          filters:
+            - RewritePath=/profile, ${account-service.profile.path}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: profile-segment-route
+          uri: ${account-service.uri}
+          predicates:
+            - Path=/profile/**
+          filters:
+            - RewritePath=/profile/(?<segment>.*), ${account-service.profile.path}/${segment}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
 
-  config:
-    import: configserver:http://localhost:8888
+# Header Response Configuration
+header-response:
+  name: X-Powered-By
+  value: Rahim Gateway Service
+
+# Account Microservice Configurations
+account-service:
+  uri: lb://ACCOUNT-SERVICE
+  account:
+    path: /api/v1/account
+  profile:
+    path: /api/v1/profile
