@@ -1,4 +1,4 @@
-package com.rahim.accountservice.dto;
+package com.rahim.accountservice.request;
 
 import com.rahim.accountservice.entity.Account;
 import com.rahim.accountservice.entity.Profile;
@@ -13,8 +13,6 @@ import org.mapstruct.factory.Mappers;
 public interface ModelMapper {
 
     ModelMapper INSTANCE = Mappers.getMapper(ModelMapper.class);
-
-    Account toAccountEntity(AccountRequestDto accountDto);
-
-    Profile toProfileEntity(ProfileRequestDto profileDto);
+    Account toAccountEntity(AccountCreationRequest accountDto);
+    Profile toProfileEntity(ProfileCreationRequest profileDto);
 }
