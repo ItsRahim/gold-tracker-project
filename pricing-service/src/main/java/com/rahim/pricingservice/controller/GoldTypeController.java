@@ -1,6 +1,7 @@
 package com.rahim.pricingservice.controller;
 
-import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.entity.GoldType;
+import com.rahim.pricingservice.request.GoldTypeUpdateRequest;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import com.rahim.pricingservice.service.type.IGoldTypeCreationService;
 import com.rahim.pricingservice.service.type.IGoldTypeDeletionService;
@@ -88,7 +89,7 @@ public class GoldTypeController {
     @PutMapping(value = GOLD_TYPE_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<GoldType> updateGoldType(
             @Parameter(description = "ID of the gold type to be updated", required = true) @PathVariable int goldTypeId,
-            @Parameter(description = "Map of updated gold type data", required = true) @RequestBody Map<String, String> updatedData) {
+            @Parameter(description = "Map of updated gold type data", required = true) @RequestBody GoldTypeUpdateRequest updatedData) {
         GoldType goldtype = goldTypeUpdateService.updateGoldType(goldTypeId, updatedData);
         return ResponseEntity.status(HttpStatus.OK).body(goldtype);
     }

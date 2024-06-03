@@ -1,6 +1,8 @@
 package com.rahim.pricingservice.service.type.implementation;
 
-import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.entity.GoldType;
+import com.rahim.pricingservice.enums.GoldPurity;
+import com.rahim.pricingservice.request.GoldTypeUpdateRequest;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
 import com.rahim.pricingservice.service.type.IGoldTypeUpdateService;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  * @author Rahim Ahmed
@@ -23,33 +22,38 @@ public class GoldTypeUpdateService implements IGoldTypeUpdateService {
     private static final Logger LOG = LoggerFactory.getLogger(GoldTypeUpdateService.class);
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public GoldType updateGoldType(int goldId, Map<String, String> updatedData) {
+    public GoldType updateGoldType(int goldId, GoldTypeUpdateRequest updateRequest) {
         GoldType existingGoldType = goldTypeRepositoryHandler.findById(goldId);
 
-        updatedData.forEach((key, value) -> {
-            switch (key) {
-                case "name":
-                    existingGoldType.setName(value);
-                    break;
-                case "netWeight":
-                    existingGoldType.setNetWeight(new BigDecimal(value));
-                    break;
-                case "carat":
-                    existingGoldType.setCarat(value);
-                    break;
-                case "description":
-                    existingGoldType.setDescription(value);
-                    break;
-                default:
-                    LOG.warn("Ignoring unknown field: {}", key);
+        if (updateRequest.getName() != null) {
+            existingGoldType.setName(updateRequest.getName());
+        }
+
+        if (updateRequest.getNetWeight() != null) {
+            existingGoldType.setNetWeight(updateRequest.getNetWeight());
+        }
+
+        if (updateRequest.getCarat() != null) {
+            if (!caratExists(updateRequest.getCarat())) {
+                throw new IllegalArgumentException("Invalid carat label: " + updateRequest.getCarat());
             }
-        });
+            existingGoldType.setCarat(updateRequest.getCarat());
+        }
+
+        if (updateRequest.getDescription() != null) {
+            existingGoldType.setDescription(updateRequest.getDescription());
+        }
 
         goldTypeRepositoryHandler.updateGoldType(existingGoldType);
         LOG.debug("Successfully updated gold type with ID {}", goldId);
 
         return existingGoldType;
+    }
+
+    private boolean caratExists(String carat) {
+        return GoldPurity.existsByCarat(carat);
     }
 }

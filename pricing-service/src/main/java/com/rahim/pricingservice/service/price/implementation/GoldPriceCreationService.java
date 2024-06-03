@@ -1,7 +1,7 @@
 package com.rahim.pricingservice.service.price.implementation;
 
-import com.rahim.pricingservice.model.GoldPrice;
-import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.entity.GoldPrice;
+import com.rahim.pricingservice.entity.GoldType;
 import com.rahim.pricingservice.repository.GoldPriceRepository;
 import com.rahim.pricingservice.service.price.IGoldPriceCreationService;
 import com.rahim.pricingservice.util.GoldPriceCalculator;

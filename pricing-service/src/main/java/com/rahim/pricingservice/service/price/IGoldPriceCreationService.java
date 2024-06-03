@@ -1,6 +1,6 @@
 package com.rahim.pricingservice.service.price;
 
-import com.rahim.pricingservice.model.GoldType;
+import com.rahim.pricingservice.entity.GoldType;
 
 /**
  * @author Rahim Ahmed

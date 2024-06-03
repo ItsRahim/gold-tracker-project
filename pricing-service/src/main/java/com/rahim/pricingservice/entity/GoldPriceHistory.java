@@ -1,4 +1,4 @@
-package com.rahim.pricingservice.model;
+package com.rahim.pricingservice.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
