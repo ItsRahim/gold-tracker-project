@@ -1,7 +1,7 @@
 package com.rahim.accountservice.service.account.implementation;
 
 import com.rahim.accountservice.constant.AccountState;
-import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.entity.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
 import com.rahim.accountservice.service.account.IInternalAccountService;

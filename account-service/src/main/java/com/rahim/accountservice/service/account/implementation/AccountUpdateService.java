@@ -1,6 +1,6 @@
 package com.rahim.accountservice.service.account.implementation;
 
-import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.entity.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.json.AccountJson;
 import com.rahim.accountservice.service.account.IAccountUpdateService;
@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Map;
 
 @Service

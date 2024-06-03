@@ -2,7 +2,7 @@ package com.rahim.accountservice.repository;
 
 import com.rahim.accountservice.dao.AccountDataAccess;
 import com.rahim.accountservice.dao.ProfileDataAccess;
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.entity.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

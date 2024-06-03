@@ -1,6 +1,6 @@
 package com.rahim.accountservice.service.profile;
 
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.entity.Profile;
 
 import java.util.Map;
 

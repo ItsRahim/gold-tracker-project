@@ -1,7 +1,7 @@
 package com.rahim.accountservice.repository;
 
 import com.rahim.accountservice.config.AbstractTestConfig;
-import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.entity.Account;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

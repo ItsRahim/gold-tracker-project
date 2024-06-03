@@ -1,6 +1,6 @@
 package com.rahim.accountservice.controller;
 
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.entity.Profile;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import io.swagger.v3.oas.annotations.Operation;

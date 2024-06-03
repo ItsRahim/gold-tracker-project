@@ -2,13 +2,12 @@ package com.rahim.accountservice.repository;
 
 import com.rahim.accountservice.constant.AccountState;
 import com.rahim.accountservice.dao.AccountDataAccess;
-import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 

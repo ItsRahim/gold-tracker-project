@@ -1,8 +1,7 @@
 package com.rahim.accountservice.service.repository;
 
-import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.entity.Account;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 

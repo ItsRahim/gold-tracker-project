@@ -1,7 +1,7 @@
 package com.rahim.accountservice.dto;
 
-import com.rahim.accountservice.model.Account;
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.entity.Account;
+import com.rahim.accountservice.entity.Profile;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

@@ -1,6 +1,6 @@
 package com.rahim.accountservice.service.profile.implementation;
 
-import com.rahim.accountservice.model.Profile;
+import com.rahim.accountservice.entity.Profile;
 import com.rahim.accountservice.json.ProfileJson;
 import com.rahim.accountservice.service.profile.IProfileUpdateService;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

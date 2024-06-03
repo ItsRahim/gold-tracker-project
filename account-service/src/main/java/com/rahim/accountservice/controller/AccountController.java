@@ -1,6 +1,6 @@
 package com.rahim.accountservice.controller;
 
-import com.rahim.accountservice.model.Account;
+import com.rahim.accountservice.entity.Account;
 import com.rahim.accountservice.model.UserRequest;
 import com.rahim.accountservice.service.account.IAccountCreationService;
 import com.rahim.accountservice.service.account.IAccountDeletionService;
