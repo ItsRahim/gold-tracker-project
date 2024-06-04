@@ -11,7 +11,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "cron_jobs")
+@Table(name = "cron_jobs", schema = "rgts")
 public class CronJob {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
