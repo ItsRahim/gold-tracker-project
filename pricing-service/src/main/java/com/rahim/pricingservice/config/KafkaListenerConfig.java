@@ -44,7 +44,7 @@ public class KafkaListenerConfig {
             return;
         }
 
-        String data = KafkaKeyUtil.extractDataFromKey(priceData) + "\"";
+        String data = KafkaKeyUtil.extractDataFromKey(priceData);
         apiDataProcessor.processApiData(data);
         messageManager.markAsProcessed(priceData);
     }

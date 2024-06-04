@@ -1,4 +1,4 @@
-package com.rahim.pricingservice.model;
+package com.rahim.common.model.kafka;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

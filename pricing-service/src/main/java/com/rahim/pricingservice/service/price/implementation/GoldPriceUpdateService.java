@@ -3,11 +3,10 @@ package com.rahim.pricingservice.service.price.implementation;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.common.util.JsonUtil;
-import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.entity.GoldPrice;
 import com.rahim.pricingservice.entity.GoldType;
-import com.rahim.pricingservice.model.PriceUpdate;
+import com.rahim.common.model.kafka.PriceUpdate;
 import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
@@ -54,7 +53,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
 
             updateTickerPrice(goldPrice, newPrice);
 
-            String priceData = KafkaKeyUtil.generateKeyWithUUID(String.valueOf(newPrice));
+            String priceData = String.valueOf(newPrice);
             kafkaService.sendMessage(KafkaTopic.THRESHOLD_PRICE_UPDATE, priceData);
 
             LOG.info("Gold ticker price updated successfully. New price: {}, Updated time: {}", newPrice, goldPrice.getUpdatedAt());
@@ -103,7 +102,6 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private void sendInvestmentUpdate(Integer id, BigDecimal currentPrice) {
         PriceUpdate update = new PriceUpdate(id, currentPrice);
         String json = JsonUtil.convertObjectToJson(update);
-        json = KafkaKeyUtil.generateKeyWithUUID(json);
         kafkaService.sendMessage(KafkaTopic.HOLDING_PRICE_UPDATE, json);
     }
 }

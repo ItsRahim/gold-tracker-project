@@ -1,8 +1,7 @@
 import json
 import uuid
 
-from kafka import KafkaProducer, KafkaAdminClient
-from kafka.admin import NewTopic
+from kafka import KafkaProducer
 from app.config.logging import log
 
 from app.config.load_config import load_config
@@ -22,26 +21,11 @@ class KafkaHandler:
                 value_serializer=lambda v: json.dumps(v).encode('utf-8')
             )
 
-            self.create_kafka_topic()
-
             KafkaHandler._init_has_run = True
-
-    def create_kafka_topic(self):
-        NUM_PARTITIONS = 3
-        REPLICATION_FACTOR = 1
-
-        admin_client = KafkaAdminClient(bootstrap_servers=self.KAFKA_SERVER)
-        if self.TOPIC_NAME not in admin_client.list_topics():
-            log.info(f"Kafka Topic {self.TOPIC_NAME} does not exist. Creating...")
-
-            new_topic = NewTopic(self.TOPIC_NAME, num_partitions=NUM_PARTITIONS, replication_factor=REPLICATION_FACTOR)
-            admin_client.create_topics([new_topic])
-            
-            log.info(f"Kafka topic '{self.TOPIC_NAME}' created successfully")
 
     def send_price(self, data):
         random_uuid = str(uuid.uuid4())
-        message = json.dumps(data.to_dict()) + "_" + random_uuid
+        message = random_uuid + "," + json.dumps(data.to_dict())
         try:
             self.kafka_producer.send(self.TOPIC_NAME, message)
             log.info(f"Sent message to Kafka topic: {self.TOPIC_NAME}")

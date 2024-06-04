@@ -9,7 +9,6 @@ import com.rahim.accountservice.model.EmailToken;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
-import com.rahim.common.util.KafkaKeyUtil;
 import io.micrometer.core.instrument.config.validate.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ public class EmailTokenGenerator {
     public void generateEmailTokens(EmailProperty emailProperty) {
         try {
             EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);
-            String jsonEmailData = KafkaKeyUtil.generateKeyWithUUID(convertToJson(emailToken));
+            String jsonEmailData = convertToJson(emailToken);
             LOG.debug("Generated tokens: {}", jsonEmailData);
             kafkaService.sendMessage(KafkaTopic.SEND_EMAIL, jsonEmailData);
         } catch (JsonProcessingException e) {

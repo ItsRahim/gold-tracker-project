@@ -2,7 +2,6 @@ package com.rahim.schedulerservice.jobs;
 
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
-import com.rahim.common.util.KafkaKeyUtil;
 import com.rahim.schedulerservice.constant.CronJobName;
 import com.rahim.schedulerservice.entity.CronJob;
 import com.rahim.schedulerservice.repository.CronJobRepository;
@@ -107,37 +106,34 @@ public class SchedulerManager implements SchedulingConfigurer {
      * --------------------------------------------------------
      */
     private void accountCleanupJob() {
-        String cronJobMessage = KafkaKeyUtil.generateKeyWithUUID(CRON_MESSAGE);
         if (jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).compareAndSet(true, false)) {
             LOG.warn(CronJobName.USER_CLEANUP_JOB + " is already running. Skipping job execution");
             return;
         }
 
         LOG.info("Running " + CronJobName.USER_CLEANUP_JOB);
-        kafkaService.sendMessage(KafkaTopic.ACCOUNT_CLEANUP, cronJobMessage);
+        kafkaService.sendMessage(KafkaTopic.ACCOUNT_CLEANUP, CRON_MESSAGE);
         jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).set(false);
     }
 
     private void updateGoldPriceJob() {
-        String cronJobMessage = KafkaKeyUtil.generateKeyWithUUID(CRON_MESSAGE);
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_JOB).compareAndSet(true, false)) {
             LOG.warn(CronJobName.UPDATE_GOLD_PRICE_JOB + " is already running. Skipping job execution");
             return;
         }
 
         LOG.info("Running " + CronJobName.UPDATE_GOLD_PRICE_JOB);
-        kafkaService.sendMessage(KafkaTopic.PRICE_UPDATE, cronJobMessage);
+        kafkaService.sendMessage(KafkaTopic.PRICE_UPDATE, CRON_MESSAGE);
         jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).set(false);
     }
 
     private void updateGoldPriceHistoryJob() {
-        String cronJobMessage = KafkaKeyUtil.generateKeyWithUUID(CRON_MESSAGE);
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).compareAndSet(true, false)) {
             LOG.warn(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB + " is already running. Skipping job execution");
             return;
         }
         LOG.info("Running " + CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB);
-        kafkaService.sendMessage(KafkaTopic.PRICE_HISTORY_UPDATE, cronJobMessage);
+        kafkaService.sendMessage(KafkaTopic.PRICE_HISTORY_UPDATE, CRON_MESSAGE);
         jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).set(false);
     }
 

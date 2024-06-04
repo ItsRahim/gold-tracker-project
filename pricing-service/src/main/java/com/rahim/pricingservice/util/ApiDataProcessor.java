@@ -24,6 +24,10 @@ public class ApiDataProcessor {
 
     public void processApiData(String kafkaData) {
         try {
+            kafkaData = kafkaData.substring(0, kafkaData.length() - 1)
+                    .trim()
+                    .replaceAll("\\\\", "");
+
             processedData = JsonUtil.convertJsonToObject(kafkaData, GoldData.class);
 
             if (processedData == null || processedData.getPrice() == null){
