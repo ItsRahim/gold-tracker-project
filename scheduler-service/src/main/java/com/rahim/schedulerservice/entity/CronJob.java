@@ -33,11 +33,6 @@ public class CronJob {
     @Column(name = "cj_is_active")
     private Boolean isActive;
 
-    @Column(name = "cj_last_update")
+    @Column(name = "cj_last_updated")
     private Instant lastUpdated;
-
-    public CronJob(String name, String schedule) {
-        this.name = name;
-        this.schedule = schedule;
-    }
 }
