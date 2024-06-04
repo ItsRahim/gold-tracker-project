@@ -23,6 +23,172 @@ server:
 spring:
   application:
     name: gateway-service
-  output:
-    ansi:
-      enabled: always
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        # ACCOUNT SERVICE ROUTES
+        # Account routes
+        - id: account-base-route
+          uri: ${account-service.uri}
+          predicates:
+            - Path=/account
+          filters:
+            - RewritePath=/account, ${account-service.account.path}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: account-segment-route
+          uri: ${account-service.uri}
+          predicates:
+            - Path=/account/**
+          filters:
+            - RewritePath=/account/(?<segment>.*), ${account-service.account.path}/${segment}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+          # Profile routes
+        - id: profile-base-route
+          uri: ${account-service.uri}
+          predicates:
+            - Path=/profile
+          filters:
+            - RewritePath=/profile, ${account-service.profile.path}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: profile-segment-route
+          uri: ${account-service.uri}
+          predicates:
+            - Path=/profile/**
+          filters:
+            - RewritePath=/profile/(?<segment>.*), ${account-service.profile.path}/${segment}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        # CONFIG SERVER ROUTES
+        - id: java-encryption-route
+          uri: ${config-server.uri}
+          predicates:
+            - Path=/encrypt/java
+          filters:
+            - RewritePath=/encrypt/java, ${config-server.path}/encrypt/java
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: python-encryption-route
+          uri: ${config-server.uri}
+          predicates:
+            - Path=/encrypt/python
+          filters:
+            - RewritePath=/encrypt/python, ${config-server.path}/encrypt/python
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+          # INVESTMENT SERVICE ROUTES
+          # Invest routes
+        - id: investment-base-route
+          uri: ${investment-service.uri}
+          predicates:
+            - Path=/invest
+          filters:
+            - RewritePath=/invest, ${investment-service.investment.path}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: investment-route
+          uri: ${investment-service.uri}
+          predicates:
+            - Path=/invest/**
+          filters:
+            - RewritePath=/invest/(?<segment>.*), ${investment-service.investment.path}/${segment}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+          # Holding routes
+        - id: holding-base-route
+          uri: ${investment-service.uri}
+          predicates:
+            - Path=/holding
+          filters:
+            - RewritePath=/holding, ${investment-service.holding.path}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: holding-route
+          uri: ${investment-service.uri}
+          predicates:
+            - Path=/holding/**
+          filters:
+            - RewritePath=/holding/(?<segment>.*), ${investment-service.holding.path}/${segment}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        # NOTIFICATION SERVICE ROUTES
+        - id: notification-base-route
+          uri: ${notification-service.uri}
+          predicates:
+            - Path=/notification
+          filters:
+            - RewritePath=/notification, ${notification-service.path}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: notification-segment-route
+          uri: ${notification-service.uri}
+          predicates:
+            - Path=/notification/**
+          filters:
+            - RewritePath=/notification/(?<segment>.*), ${notification-service.path}/${segment}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        # PRICING SERVICE ROUTES
+        # Account routes
+        - id: price-base-route
+          uri: ${pricing-service.uri}
+          predicates:
+            - Path=/price
+          filters:
+            - RewritePath=/price, ${pricing-service.price.path}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: price-segment-route
+          uri: ${pricing-service.uri}
+          predicates:
+            - Path=/price/**
+          filters:
+            - RewritePath=/price/(?<segment>.*), ${pricing-service.price.path}/${segment}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+          # Profile routes
+        - id: type-base-route
+          uri: ${pricing-service.uri}
+          predicates:
+            - Path=/type
+          filters:
+            - RewritePath=/type, ${pricing-service.type.path}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+        - id: type-segment-route
+          uri: ${pricing-service.uri}
+          predicates:
+            - Path=/type/**
+          filters:
+            - RewritePath=/type/(?<segment>.*), ${pricing-service.type.path}/${segment}
+            - AddResponseHeader=${header-response.name}, ${header-response.value}
+
+
+# Header Response Configuration
+header-response:
+  name: X-Powered-By
+  value: Rahim Gateway Service
+
+# Account Microservice Configurations
+account-service:
+  uri: lb://ACCOUNT-SERVICE
+  account:
+    path: /api/v1/account
+  profile:
+    path: /api/v1/profile
+
+# Config Server Configurations
+config-server:
+  uri: lb://CONFIG-SERVER
+  path: /api/v1/config-server
+
+# Investment Microservice Configuration
+investment-service:
+  uri: lb://INVESTMENT-SERVICE
+  investment:
+    path: /api/v1/invest
+  holding:
+    path: /api/v1/holding
+
+# Notification Microservice Configurations
+notification-service:
+  uri: lb://NOTIFICATION-SERVICE
+  path: /api/v1/notification
+
+# Pricing Microservice Configurations
+pricing-service:
+  uri: lb://PRICING-SERVICE
+  price:
+    path: /api/v1/price
+  type:
+    path: /api/v1/type
