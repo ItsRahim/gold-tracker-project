@@ -15,11 +15,7 @@ import java.util.List;
 @Repository
 public interface CronJobRepository extends JpaRepository<CronJob, Integer> {
 
-    @Query(value = "SELECT "
-            + CronJobDataAccess.COL_CRON_JOB_NAME
-            + ","
-            + CronJobDataAccess.COL_CRON_JOB_SCHEDULE
-            + " FROM "
+    @Query(value = "SELECT * FROM "
             + CronJobDataAccess.TABLE_NAME
             + " WHERE "
             + CronJobDataAccess.COL_CRON_JOB_IS_ACTIVE
