@@ -35,7 +35,7 @@ public class JsonUtil {
         try {
             return objectMapper.readValue(json, clazz);
         } catch (JsonProcessingException e) {
-            LOG.error("An error occurred de-serialising {} to {}: {}", json, clazz, e.getMessage());
+            LOG.error("An error occurred de-serialising {} to {}", json, clazz, e);
             throw new JsonServiceException("Error occurred de-serialising data");
         }
     }

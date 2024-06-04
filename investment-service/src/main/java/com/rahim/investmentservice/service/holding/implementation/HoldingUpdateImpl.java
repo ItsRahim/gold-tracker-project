@@ -32,14 +32,13 @@ public class HoldingUpdateImpl implements HoldingUpdateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateCurrentValue(Integer goldTypeId, Double updatedPrice) {
+    public void updateCurrentValue(Integer goldTypeId, BigDecimal updatedPrice) {
         if (goldTypeId == null || updatedPrice == null) {
             LOG.error("Unable to update user holdings. Gold type ID and/or updated price is null.");
             return;
         }
 
         try {
-            BigDecimal newPrice = BigDecimal.valueOf(updatedPrice);
             List<PriceUpdate> holdingsData = getHoldingInformation(goldTypeId);
 
             for (PriceUpdate priceUpdate : holdingsData) {
@@ -51,14 +50,14 @@ public class HoldingUpdateImpl implements HoldingUpdateService {
                 }
 
                 BigDecimal originalPurchaseAmount = holding.getPurchaseAmount();
-                BigDecimal profitLoss = ProfitLossUtil.calculateProfitLossPercentage(originalPurchaseAmount, newPrice);
+                BigDecimal profitLoss = ProfitLossUtil.calculateProfitLossPercentage(originalPurchaseAmount, updatedPrice);
 
-                holding.setCurrentValue(newPrice);
+                holding.setCurrentValue(updatedPrice);
                 holding.setProfitLoss(profitLoss);
 
                 holdingRepositoryHandler.saveHolding(holding);
                 LOG.info("Updated holding ID: {} with new current value: {} and profit/loss: {}",
-                        holding.getId(), newPrice, profitLoss);
+                        holding.getId(), updatedPrice, profitLoss);
             }
         } catch (Exception e) {
             LOG.error("Error updating current value for gold type ID: {}", goldTypeId, e);

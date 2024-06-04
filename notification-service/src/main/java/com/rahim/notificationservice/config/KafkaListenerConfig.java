@@ -2,7 +2,7 @@ package com.rahim.notificationservice.config;
 
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.MessageManager;
-import com.rahim.common.util.KafkaKeyUtil;
+import com.rahim.common.util.KafkaUtil;
 import com.rahim.notificationservice.service.kafka.IKafkaDataProcessor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class KafkaListenerConfig {
             return;
         }
 
-        String kafkaData = KafkaKeyUtil.extractDataFromKey(priceData);
+        String kafkaData = KafkaUtil.extractDataFromKey(priceData);
         kafkaDataProcessor.processKafkaData(kafkaData);
         messageManager.markAsProcessed(priceData);
     }

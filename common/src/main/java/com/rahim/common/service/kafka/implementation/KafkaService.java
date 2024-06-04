@@ -4,11 +4,13 @@ import com.rahim.common.config.health.HealthCheck;
 import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.common.service.kafka.KafkaFailover;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -31,10 +33,9 @@ public class KafkaService implements IKafkaService {
     @HealthCheck(type = "kafka")
     public void sendMessage(String topic, String data) {
         try {
-            String uuid = UUID.randomUUID().toString();
-            ProducerRecord<String, String> record = new ProducerRecord<>(topic, uuid, data);
-            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record);
+            Message<String> message = generateMessage(topic, data);
 
+            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(message);
             future.whenComplete((result, ex) -> {
                 if (ex != null) {
                     LOG.error("Error sending message to topic '{}': {}", topic, ex.getMessage(), ex);
@@ -49,8 +50,18 @@ public class KafkaService implements IKafkaService {
         } catch (InterruptedException | ExecutionException e) {
             LOG.error("Error occurred in sending message: {}", e.getMessage(), e);
             throw new RuntimeException(e);
-        } finally {
-            kafkaTemplate.destroy();
         }
     }
+
+    private Message<String> generateMessage(String topic, String data) {
+        String key = UUID.randomUUID().toString();
+
+        return MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, topic)
+                .setHeader(KafkaHeaders.KEY, key)
+                .setHeader(KafkaHeaders.TIMESTAMP, System.currentTimeMillis())
+                .build();
+    }
+
 }

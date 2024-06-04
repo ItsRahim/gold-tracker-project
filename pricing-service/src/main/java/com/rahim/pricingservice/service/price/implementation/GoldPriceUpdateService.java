@@ -6,7 +6,7 @@ import com.rahim.common.util.JsonUtil;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.entity.GoldPrice;
 import com.rahim.pricingservice.entity.GoldType;
-import com.rahim.common.model.kafka.PriceUpdate;
+import com.rahim.common.model.kafka.GoldTypePrice;
 import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import com.rahim.pricingservice.service.repository.IGoldPriceRepositoryHandler;
 import com.rahim.pricingservice.service.repository.IGoldTypeRepositoryHandler;
@@ -100,7 +100,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     }
 
     private void sendInvestmentUpdate(Integer id, BigDecimal currentPrice) {
-        PriceUpdate update = new PriceUpdate(id, currentPrice);
+        GoldTypePrice update = new GoldTypePrice(id.toString(), currentPrice);
         String json = JsonUtil.convertObjectToJson(update);
         kafkaService.sendMessage(KafkaTopic.HOLDING_PRICE_UPDATE, json);
     }

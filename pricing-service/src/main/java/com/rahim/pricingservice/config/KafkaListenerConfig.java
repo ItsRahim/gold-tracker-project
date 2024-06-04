@@ -2,7 +2,7 @@ package com.rahim.pricingservice.config;
 
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.MessageManager;
-import com.rahim.common.util.KafkaKeyUtil;
+import com.rahim.common.util.KafkaUtil;
 import com.rahim.pricingservice.service.history.IGoldPriceHistoryService;
 import com.rahim.pricingservice.api.GoldPriceApiClient;
 import com.rahim.pricingservice.util.ApiDataProcessor;
@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 
 /**
  * @author Rahim Ahmed
@@ -38,13 +39,19 @@ public class KafkaListenerConfig {
     }
 
     @KafkaListener(topics = "${python-api.topic}", groupId = "group2")
-    void processPriceChange(String priceData) {
+    void processPriceChange(@Payload String priceData) {
         if (messageManager.isProcessed(priceData)) {
             LOG.debug("Price data '{}' has already been processed", priceData);
             return;
         }
 
-        String data = KafkaKeyUtil.extractDataFromKey(priceData);
+        String data = KafkaUtil.extractPriceData(priceData);
+
+        if (data == null) {
+            LOG.error("Data format incorrect/null. Unable to process price data");
+            return;
+        }
+
         apiDataProcessor.processApiData(data);
         messageManager.markAsProcessed(priceData);
     }

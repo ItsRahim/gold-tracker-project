@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PriceUpdate {
-    private Integer id;
+public class GoldTypePrice {
+    private String id;
     private BigDecimal price;
 }
