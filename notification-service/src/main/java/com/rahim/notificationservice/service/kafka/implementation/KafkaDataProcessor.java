@@ -59,7 +59,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
         LOG.info("Deactivated alert for user: {}", notificationResult.getEmail());
 
         EmailData emailData = createEmailData(notificationResult);
-        sendEmail(jsonEmailData(emailData));
+        sendEmail(emailData);
     }
 
     private EmailData createEmailData(NotificationResult notificationResult) {
@@ -73,19 +73,8 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
                 .build();
     }
 
-    private String jsonEmailData(EmailData emailData) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-            return JsonUtil.convertObjectToJson(emailData);
-        } catch (JsonProcessingException e) {
-            LOG.error("Error converting EmailData to JSON", e);
-            return null;
-        }
-    }
-
-    private void sendEmail(String jsonEmailData) {
-        if (jsonEmailData != null) {
-            kafkaService.sendMessage(KafkaTopic.SEND_EMAIL, jsonEmailData);
-        }
+    private void sendEmail(EmailData emailData) {
+        String jsonEmailData = JsonUtil.convertObjectToJson(emailData);
+        kafkaService.sendMessage(KafkaTopic.SEND_EMAIL, jsonEmailData);
     }
 }
