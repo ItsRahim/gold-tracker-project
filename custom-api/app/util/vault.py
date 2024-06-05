@@ -24,10 +24,10 @@ class Hvac:
         try:
             response = self.client.read(f"{self.path}")
             if response is None or 'data' not in response:
-                log.error(f"Key '{key}' not found in Vault")
+                log.error(f"No data found in Vault at path '{self.path}'")
                 return None
             else:
-                data = response['data']['data']
+                data = response['data']
                 if key in data:
                     return data[key]
                 else:
