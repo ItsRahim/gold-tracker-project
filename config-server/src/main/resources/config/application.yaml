@@ -2,9 +2,11 @@ eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
+
 jasypt:
   encryptor:
     password: ${jasypt.encryptor.password}
+
 logging:
   level:
     com.rahim.common: DEBUG
@@ -37,24 +39,3 @@ spring:
     show-sql: false
   kafka:
     bootstrap-servers: localhost:9092
-    producer:
-      retries: 5
-      properties:
-        retry.backoff.ms: 60000  # Retry once every minute
-        request.timeout.ms: 35000
-    consumer:
-      properties:
-        max.poll.retries: 5           # Maximum number of retries
-        max.poll.records: 500         # Maximum number of records returned in a poll
-        session.timeout.ms: 10000     # The timeout used to detect consumer failures
-        max.partition.fetch.bytes: 1048576  # Maximum amount of data per partition the server will return
-        auto.offset.reset: latest     # Reset offset to latest on offset out-of-range and group reset
-        enable.auto.commit: false     # Disable automatic offset committing to have more control
-        isolation.level: read_committed  # Set the isolation level for read-committed semantics
-        retry.backoff.ms: 60000       # Retry once every minute
-        request.timeout.ms: 35000     # Maximum time to wait for responses
-        max.poll.interval.ms: 300000  # Maximum time between poll invocations
-      enable-auto-commit: false
-    listener:
-      ack-mode: manual
-

@@ -31,4 +31,4 @@ spring:
       port: 8200
       scheme: http
       authentication: TOKEN
-      token: hvs.zLyPID1klP2OFLBsk5hwhFUg
+      token: dev_token

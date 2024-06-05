@@ -14,5 +14,5 @@ kafka:
   topic: gold-price-stream
 vault:
   url: http://localhost:8200
-  token: hvs.zLyPID1klP2OFLBsk5hwhFUg
+  token: dev_token
   backend-path: kv/data/my-app
