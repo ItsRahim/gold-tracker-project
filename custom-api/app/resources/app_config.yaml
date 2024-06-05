@@ -3,16 +3,22 @@ app:
   port: 8000
 database:
   name: gold
-  host: localhost
+  host: postgres
+  # Local
+#  host: localhost
   port: 5432
   username: Vny+H/dXlFBwKCRbGCAyP/b7ZqM8SAWb+sGhLftCbw4=
   password: cdmak3vJcvdu8c5OdldjBabaNgpnHqfL4HLCXbyHSj0=
 kafka:
-  bootstrap_servers: localhost:9092
+  bootstrap_servers: kafka:9092
+  #Local
+#  bootstrap_servers: localhost:9092
   group_id: gold-price-api
   auto_offset_reset: earliest
   topic: gold-price-stream
 vault:
-  url: http://localhost:8200
+  url: http://vault:8200
+  # Local
+#  url: http://localhost:8200
   token: dev_token
   backend-path: kv/my-app
