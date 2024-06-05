@@ -272,6 +272,6 @@ pyrightconfig.json
 
 /logs/*
 /vault/*
-TODO.txt
 /extra-code/*
 /certs/*
+/keys.txt
