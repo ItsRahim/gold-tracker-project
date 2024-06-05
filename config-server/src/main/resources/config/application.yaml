@@ -56,9 +56,6 @@ spring:
         retry.backoff.ms: 60000       # Retry once every minute
         request.timeout.ms: 35000     # Maximum time to wait for responses
         max.poll.interval.ms: 300000  # Maximum time between poll invocations
+      enable-auto-commit: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      enable-auto-commit: false
-    listener:
-      ack-mode: manual
-

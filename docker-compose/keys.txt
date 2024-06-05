@@ -1,0 +1,6 @@
+{
+  "gold-api-encryption-key": "b67a5e0887d90c3b6749b486f5586e54",
+  "jasypt.encryptor.password": "XpTTc9vf1goUo4G9h44a7ciSnln0fFdqck5vxl5iM8g="
+}
+
+secrets/kv/my-app
