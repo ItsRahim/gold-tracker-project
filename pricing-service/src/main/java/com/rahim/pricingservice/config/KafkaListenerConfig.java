@@ -7,10 +7,14 @@ import com.rahim.pricingservice.service.history.IGoldPriceHistoryService;
 import com.rahim.pricingservice.api.GoldPriceApiClient;
 import com.rahim.pricingservice.util.ApiDataProcessor;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 
 /**
@@ -28,14 +32,23 @@ public class KafkaListenerConfig {
     private final MessageManager messageManager;
 
     @KafkaListener(topics = KafkaTopic.PRICE_UPDATE, groupId = "group2")
-    void updateGoldPriceJob(String message) {
-        if (messageManager.isProcessed(message)) {
+    void updateGoldPriceJob(@Payload String message,
+                            @Header(KafkaHeaders.RECEIVED_KEY) String key,
+                            @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long ts,
+                            ConsumerRecord<String, String> consumerRecord,
+                            Acknowledgment acknowledgment) {
+
+        KafkaUtil.logReceivedMessage(message, key, consumerRecord, ts);
+
+        if (messageManager.isProcessed(key)) {
             LOG.debug("Message '{}' has already been processed. Skipping update price job.", message);
+            acknowledgment.acknowledge();
             return;
         }
 
         goldPriceFeignClient.getGoldPrice();
-        messageManager.markAsProcessed(message);
+        messageManager.markAsProcessed(key);
+        acknowledgment.acknowledge();
     }
 
     @KafkaListener(topics = "${python-api.topic}", groupId = "group2")
@@ -57,14 +70,23 @@ public class KafkaListenerConfig {
     }
 
     @KafkaListener(topics = KafkaTopic.PRICE_HISTORY_UPDATE, groupId = "group2")
-    void updateHistoryTable(String message) {
-        if (messageManager.isProcessed(message)) {
+    void updateHistoryTable(@Payload String message,
+                            @Header(KafkaHeaders.RECEIVED_KEY) String key,
+                            @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long ts,
+                            ConsumerRecord<String, String> consumerRecord,
+                            Acknowledgment acknowledgment) {
+
+        KafkaUtil.logReceivedMessage(message, key, consumerRecord, ts);
+
+        if (messageManager.isProcessed(key)) {
             LOG.debug("Message '{}' has already been processed. Skipping update price history job.", message);
+            acknowledgment.acknowledge();
             return;
         }
 
         goldPriceFeignClient.getGoldPrice();
         goldPriceHistoryService.updateHistoryTable();
-        messageManager.markAsProcessed(message);
+        messageManager.markAsProcessed(key);
+        acknowledgment.acknowledge();
     }
 }
