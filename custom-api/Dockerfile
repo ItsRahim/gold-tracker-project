@@ -7,7 +7,11 @@ WORKDIR /app
 # Copy the Pipfile and Pipfile.lock into the container
 COPY Pipfile Pipfile.lock ./
 
-RUN apt-get update && apt-get install -y libpq-dev && apt-get clean
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y libpq-dev build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Pipenv
 RUN pip install pipenv

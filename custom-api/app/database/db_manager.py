@@ -13,8 +13,8 @@ config = load_config('database')
 encryption_handler = EncryptionHandler()
 
 
-def get_credentials(encryprted_value:  str) -> str:
-    return encryption_handler.decrypt_value(encryprted_value)
+def get_credentials(encrypted_value:  str) -> str:
+    return encryption_handler.decrypt_value(encrypted_value)
 
 
 class DatabaseManager:
