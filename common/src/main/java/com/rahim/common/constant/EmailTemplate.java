@@ -10,13 +10,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum EmailTemplate {
-    ACCOUNT_DELETED("account-deleted.html", "Account Deleted", "Account Deletion Confirmation"),
-    ACCOUNT_DELETION("account-deletion.html", "Account Pending Deletion", "Account Deletion Confirmation Required"),
-    ACCOUNT_INACTIVITY("account-inactivity.html", "Account Inactivity", "Action Required: Reactivate Your Account"),
-    ACCOUNT_UPDATE("account-update.html", "Account Updated", "Account Information Updated Successfully"),
-    PRICE_ALERT("price-alert.html", "Price Alert", "Price Alert Notification");
+    ACCOUNT_DELETED("Account Deleted", "account-deleted.html", "Account Deletion Confirmation"),
+    ACCOUNT_DELETION("Account Pending Deletion", "account-deletion.html", "Account Deletion Confirmation Required"),
+    ACCOUNT_INACTIVITY("Account Inactivity", "account-inactivity.html", "Action Required: Reactivate Your Account"),
+    ACCOUNT_UPDATE("Account Updated", "account-update.html", "Account Information Updated Successfully"),
+    PRICE_ALERT("Price Alert", "price-alert.html", "Price Alert Notification");
 
-    private final String templateFileName;
     private final String templateDisplayName;
+    private final String templateFileName;
     private final String subject;
 }
