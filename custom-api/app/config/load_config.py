@@ -38,6 +38,10 @@ class Config:
         return os.getenv('KAFKA_BOOTSTRAP_SERVERS')
 
     @staticmethod
+    def get_kafka_topic():
+        return os.getenv('KAFKA_TOPIC')
+
+    @staticmethod
     def get_vault_url():
         return os.getenv('VAULT_URL')
 

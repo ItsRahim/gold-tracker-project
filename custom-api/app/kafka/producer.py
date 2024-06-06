@@ -14,7 +14,7 @@ class KafkaHandler:
     def __init__(self):
         if not KafkaHandler._init_has_run:
             self.server = Config.get_kafka_bootstrap_servers()
-            self.topic = 'gold-price-stream'
+            self.topic = Config.get_kafka_topic()
 
             try:
                 self.kafka_producer = KafkaProducer(
