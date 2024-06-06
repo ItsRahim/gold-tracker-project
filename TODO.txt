@@ -60,7 +60,7 @@ Issues/Enhancements:
 -Update notification service to send emails using thymeleaf template
 -Implement prometheus - DONE
 -Create grafana dashboard
--Externalise python config to env
+-Externalise python config to env - DONE
 Performance Testing:
 - VisualVM
 - Apache JMeter
