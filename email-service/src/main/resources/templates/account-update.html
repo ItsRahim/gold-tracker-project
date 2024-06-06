@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Update</title>
+</head>
+<body>
+<h2>Email Data:</h2>
+<ul>
+    <li>Email: <span th:text="${emailData.email}"></span></li>
+    <li>First Name: <span th:text="${emailData.firstName}"></span></li>
+    <li>Last Name: <span th:text="${emailData.lastName}"></span></li>
+    <li>Username: <span th:text="${emailData.username}"></span></li>
+    <li>Updated At: <span th:text="${emailData.updatedAt}"></span></li>
+</ul>
+</body>
+</html>

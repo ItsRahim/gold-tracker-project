@@ -55,7 +55,7 @@ public class InternalAccountService implements IInternalAccountService {
      */
     private void deleteUserAccount(int accountId) {
         try {
-            sendEmail(accountId, EmailTemplate.ACCOUNT_DELETED_TEMPLATE, true, false);
+            sendEmail(accountId, EmailTemplate.ACCOUNT_DELETED, true, false);
             profileDeletionService.deleteProfile(accountId);
             accountRepositoryHandler.deleteAccount(accountId);
             hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_SET, accountId);
@@ -85,7 +85,7 @@ public class InternalAccountService implements IInternalAccountService {
             account.setAccountStatus(AccountState.INACTIVE);
             account.setCredentialsExpired(true);
             accountRepositoryHandler.saveAccount(account);
-            sendEmail(account.getId(), EmailTemplate.ACCOUNT_INACTIVITY_TEMPLATE, false, false);
+            sendEmail(account.getId(), EmailTemplate.ACCOUNT_INACTIVITY, false, false);
         });
 
         log.debug("Inactive users found. Account status successfully updated");
@@ -143,7 +143,7 @@ public class InternalAccountService implements IInternalAccountService {
         }
     }
 
-    private void sendEmail(Integer accountId, String emailTemplate, boolean includeUsername, boolean includeDate) {
+    private void sendEmail(Integer accountId, EmailTemplate emailTemplate, boolean includeUsername, boolean includeDate) {
         EmailProperty emailProperty = EmailProperty.builder()
                 .accountId(accountId)
                 .templateName(emailTemplate)

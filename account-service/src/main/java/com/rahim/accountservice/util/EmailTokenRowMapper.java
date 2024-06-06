@@ -1,10 +1,10 @@
 package com.rahim.accountservice.util;
 
 import com.rahim.accountservice.model.EmailProperty;
+import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.model.kafka.AccountEmailData;
 import com.rahim.accountservice.json.AccountJson;
 import com.rahim.accountservice.json.ProfileJson;
-import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.util.DateTimeUtil;
 import lombok.Setter;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,12 +37,12 @@ public class EmailTokenRowMapper implements RowMapper<AccountEmailData> {
         accountEmailData.setEmailTemplate(emailProperty.getTemplateName());
 
         if (emailProperty.isIncludeDate()) {
-            String templateName = emailProperty.getTemplateName();
-            if (templateName.equals(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)) {
+            EmailTemplate templateName = emailProperty.getTemplateName();
+            if (templateName.equals(EmailTemplate.ACCOUNT_DELETION)) {
                 LocalDate deleteDate = rs.getDate(AccountJson.ACCOUNT_DELETE_DATE).toLocalDate();
                 String date = DateTimeUtil.formatDate(deleteDate);
                 accountEmailData.setDeleteDate(date);
-            } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)) {
+            } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE)) {
                 Instant updateAt = rs.getTimestamp(AccountJson.ACCOUNT_UPDATED_AT).toInstant();
                 String date = DateTimeUtil.formatInstantDate(updateAt);
                 accountEmailData.setUpdatedAt(date);

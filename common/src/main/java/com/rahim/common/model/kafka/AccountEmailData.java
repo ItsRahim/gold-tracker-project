@@ -1,6 +1,7 @@
 package com.rahim.common.model.kafka;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rahim.common.constant.EmailTemplate;
 import lombok.*;
 
 /**
@@ -20,5 +21,5 @@ public class AccountEmailData {
     private String email;
     private String deleteDate;
     private String updatedAt;
-    private String emailTemplate;
+    private EmailTemplate emailTemplate;
 }

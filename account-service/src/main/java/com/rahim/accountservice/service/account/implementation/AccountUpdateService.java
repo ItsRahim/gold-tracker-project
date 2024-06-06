@@ -46,7 +46,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     private void generateEmailTokens(int accountId, String oldEmail) {
         EmailProperty emailProperty = EmailProperty.builder()
                 .accountId(accountId)
-                .templateName(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)
+                .templateName(EmailTemplate.ACCOUNT_UPDATE)
                 .includeUsername(true)
                 .includeDate(true)
                 .oldEmail(oldEmail)

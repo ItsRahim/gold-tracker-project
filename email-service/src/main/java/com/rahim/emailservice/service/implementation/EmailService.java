@@ -1,11 +1,16 @@
 package com.rahim.emailservice.service.implementation;
 
-import com.rahim.emailservice.repository.EmailTemplateRepository;
+import com.rahim.common.constant.EmailTemplate;
+import com.rahim.common.model.kafka.AccountEmailData;
+import com.rahim.common.model.kafka.PriceAlertEmailData;
+import com.rahim.emailservice.service.IEmailSender;
 import com.rahim.emailservice.service.IEmailService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 /**
  * @author Rahim Ahmed
@@ -16,16 +21,26 @@ import org.springframework.stereotype.Service;
 public class EmailService implements IEmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
-    private final EmailTemplateRepository emailTemplateRepository;
+    private final IEmailSender emailSender;
+    private final SpringTemplateEngine templateEngine;
 
     @Override
-    public Integer findIdByName(String templateName) {
-        try {
-            log.debug("Attempting to find ID for template name: {}", templateName);
-            return emailTemplateRepository.findIdByTemplateName(templateName);
-        } catch (Exception e) {
-            log.error("Error finding ID for template name {}: {}", templateName, e.getMessage(), e);
-            throw new RuntimeException("Error finding ID for template name", e);
-        }
+    public void sendAccountAlert(AccountEmailData accountData) {
+        log.debug("Processing account alert email data");
+        sendEmail(accountData.getEmail(), accountData.getEmailTemplate(), accountData);
+    }
+
+    @Override
+    public void sendPriceAlert(PriceAlertEmailData priceAlert) {
+        log.debug("Processing price alert email data");
+        sendEmail(priceAlert.getEmail(), priceAlert.getEmailTemplate(), priceAlert);
+    }
+
+    private void sendEmail(String recipientEmail, EmailTemplate template, Object emailData) {
+        String subject = template.getSubject();
+        Context context = new Context();
+        context.setVariable("emailData", emailData);
+        String emailContent = templateEngine.process(template.getTemplateFileName(), context);
+        emailSender.sendEmail(recipientEmail, emailContent, subject);
     }
 }

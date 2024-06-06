@@ -1,7 +1,5 @@
 package com.rahim.emailservice.service;
 
-import com.rahim.emailservice.entity.EmailTemplate;
-
 /**
  * @author Rahim Ahmed
  * @created 18/12/2023
@@ -16,5 +14,5 @@ public interface IEmailSender {
      * @param recipientEmail the email address of the recipient
      * @param emailContent the content of the email
      */
-    void sendEmail(String recipientEmail, EmailTemplate emailContent);
+    void sendEmail(String recipientEmail, String emailContent, String subject);
 }

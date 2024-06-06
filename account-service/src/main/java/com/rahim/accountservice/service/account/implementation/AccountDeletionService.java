@@ -64,7 +64,7 @@ public class AccountDeletionService implements IAccountDeletionService {
     private void sendAccountDeletionEmail(int accountId) {
         EmailProperty emailProperty = EmailProperty.builder()
                 .accountId(accountId)
-                .templateName(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)
+                .templateName(EmailTemplate.ACCOUNT_DELETION)
                 .includeUsername(true)
                 .includeDate(true)
                 .build();
