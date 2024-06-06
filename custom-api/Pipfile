@@ -16,6 +16,7 @@ sqlalchemy = "*"
 psycopg2 = "*"
 hvac = "*"
 pycryptodome = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

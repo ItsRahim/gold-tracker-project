@@ -1,10 +1,11 @@
 import json
 import uuid
+
 from kafka import KafkaProducer, KafkaAdminClient
 from kafka.admin import NewTopic
 
+from app.config.load_config import Config
 from app.config.logging import log
-from app.config.load_config import load_config
 
 
 class KafkaHandler:
@@ -12,9 +13,8 @@ class KafkaHandler:
 
     def __init__(self):
         if not KafkaHandler._init_has_run:
-            self.config = load_config('kafka')
-            self.server = self.config['bootstrap_servers']
-            self.topic = self.config['topic']
+            self.server = Config.get_kafka_bootstrap_servers()
+            self.topic = Config.get_kafka_topic()
 
             try:
                 self.kafka_producer = KafkaProducer(

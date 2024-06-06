@@ -1,17 +1,15 @@
 import hvac
 from hvac.exceptions import Unauthorized, InvalidPath
 
-from app.config.load_config import load_config
+from app.config.load_config import Config
 from app.config.logging import log
-
-config = load_config('vault')
 
 
 class Hvac:
     def __init__(self):
-        self.url = config['url']
-        self.token = config['token']
-        self.path = config['backend-path']
+        self.url = Config.get_vault_url()
+        self.token = Config.get_vault_token()
+        self.path = Config.get_vault_backend_path()
         self.client = hvac.Client(url=self.url, token=self.token)
 
         if not self.client.is_authenticated():
@@ -36,4 +34,3 @@ class Hvac:
         except InvalidPath as e:
             log.error(f"Invalid path: {e}")
             return None
-
