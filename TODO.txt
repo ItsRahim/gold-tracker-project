@@ -58,6 +58,9 @@ Issues/Enhancements:
 -Change log.error LOG.error("Some message", e.getMessage(), e); - DONE
 -Write unit and integration tests for all services before moving on - WIP
 -Update notification service to send emails using thymeleaf template
+-Implement prometheus - DONE
+-Create grafana dashboard
+-Externalise python config to env
 Performance Testing:
 - VisualVM
 - Apache JMeter
