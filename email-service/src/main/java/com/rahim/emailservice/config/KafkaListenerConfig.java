@@ -6,7 +6,7 @@ import com.rahim.common.model.kafka.PriceAlertEmailData;
 import com.rahim.common.service.kafka.MessageManager;
 import com.rahim.common.util.JsonUtil;
 import com.rahim.common.util.KafkaUtil;
-import com.rahim.emailservice.service.IEmailService;
+import com.rahim.emailservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 public class KafkaListenerConfig {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaListenerConfig.class);
-    private final IEmailService emailService;
+    private final EmailService emailService;
     private final MessageManager messageManager;
 
     @KafkaListener(topics = KafkaTopic.SEND_ACCOUNT_ALERT, groupId = "group2")

@@ -1,6 +1,5 @@
-package com.rahim.emailservice.service.implementation;
+package com.rahim.emailservice.service;
 
-import com.rahim.emailservice.service.IEmailSender;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,7 +23,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Service
 @RefreshScope
 @RequiredArgsConstructor
-public class EmailSender implements IEmailSender {
+public class EmailSender {
 
     private static final Logger log = LoggerFactory.getLogger(EmailSender.class);
     private final JavaMailSender javaMailSender;
