@@ -10,10 +10,17 @@ logging:
     com.rahim.common: DEBUG
 
 management:
+  endpoint:
+    health:
+      show-details: always
   endpoints:
     web:
       exposure:
-        include: env, health
+        include: '*'
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 
 python-api:
   encrypt: encrypt

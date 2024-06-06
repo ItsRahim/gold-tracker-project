@@ -12,8 +12,6 @@ services:
       VAULT_ADDR: "http://0.0.0.0:8200"
       VAULT_DISABLE_MLOCK: "true"
       VAULT_TLS_DISABLE: "true"
-    volumes:
-      - vault_data:/vault/data
     restart: unless-stopped
     networks:
       - my-network
@@ -85,6 +83,8 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
     networks:
       - my-network
 
@@ -96,6 +96,20 @@ services:
     networks:
       - my-network
 
+# Microservices
+
+# Python Pricing Service
+  pricing-api:
+    image: rahim/priceapi
+    build: .
+    container_name: pricing-service
+    ports:
+      - "8000:8000"
+    depends_on:
+      - vault
+      - postgres
+    networks:
+      - my-network
 networks:
   my-network:
     driver: bridge
