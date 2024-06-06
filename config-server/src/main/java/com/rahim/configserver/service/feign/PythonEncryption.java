@@ -17,7 +17,7 @@ public interface PythonEncryption {
      * Sends a POST request to get the gold price.
      *
      * @param requestBody The request body to be sent with the request.
-     * @return The response from the server.
+     * @return The response from the server with encrypted data
      */
     @PostMapping("/${python-api.encrypt}")
     Map<String, String> encryptPlainText(@RequestBody Map<String, String> requestBody);

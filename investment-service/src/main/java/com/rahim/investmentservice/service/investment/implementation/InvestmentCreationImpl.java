@@ -3,7 +3,9 @@ package com.rahim.investmentservice.service.investment.implementation;
 import com.hazelcast.collection.ISet;
 import com.hazelcast.map.IMap;
 import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.common.util.DateTimeUtil;
 import com.rahim.investmentservice.request.InvestmentRequest;
 import com.rahim.investmentservice.enums.TransactionType;
 import com.rahim.investmentservice.entity.Holding;
@@ -21,17 +23,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneId;
 
 /**
- * @author Rahim Ahmed
- * @created 20/05/2024
+ * Author: Rahim Ahmed
+ * Created: 20/05/2024
  */
 @Service
 @RequiredArgsConstructor
 public class InvestmentCreationImpl implements InvestmentCreationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InvestmentCreationImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(InvestmentCreationImpl.class);
     private final InvestmentRepositoryHandler investmentRepositoryHandler;
     private final HoldingCreationService holdingCreationService;
     private final TxnCreationService txnCreationService;
@@ -40,63 +41,82 @@ public class InvestmentCreationImpl implements InvestmentCreationService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addNewInvestment(int accountId, InvestmentRequest investmentRequest) {
-        validateRequest(investmentRequest);
+        validateInvestmentRequest(accountId, investmentRequest);
 
         final String goldType = investmentRequest.getGoldTypeName();
-        final Integer quantity = investmentRequest.getQuantity();
+        final Integer quantity = getValidQuantity(investmentRequest.getQuantity());
         final BigDecimal totalPurchasePrice = investmentRequest.getTotalPurchasePrice();
-        LocalDate purchaseDate = investmentRequest.getPurchaseDate();
-
-        if (!accountExists(accountId)) {
-            LOG.warn("Unable to add transaction for account id: {}. Account does not exist", accountId);
-            throw new IllegalStateException("Account for ID: " + accountId + " does not exist");
-        }
+        LocalDate purchaseDate = getValidPurchaseDate(investmentRequest.getPurchaseDate());
 
         final Integer goldTypeId = getGoldTypeId(goldType);
-        if (goldTypeId == null) {
-            LOG.warn("Unable to add transaction for gold type: {}. Gold type does not exist", goldType);
-            throw new IllegalStateException("Gold type: " + goldType + " does not exist");
-        }
 
-        final int quantityValue = (quantity == null || quantity == 0) ? 1 : quantity;
+        log.debug("Adding new investment for account ID: {}, gold type ID: {}, quantity: {}, purchase price: {}, purchase date: {}",
+                accountId, goldTypeId, quantity, totalPurchasePrice, purchaseDate);
 
-        if (purchaseDate == null) {
-            LOG.warn("No purchase date provided. Assuming purchase was made today");
-            purchaseDate = LocalDate.now(ZoneId.of("UTC"));
-        }
-
-        LOG.debug("Adding new investment for account ID: {}, gold type ID: {}, quantity: {}, purchase price: {}, purchase date: {}",
-                accountId, goldTypeId, quantityValue, totalPurchasePrice, purchaseDate);
-
-        Investment investment = new Investment(accountId, goldTypeId, quantityValue, totalPurchasePrice, purchaseDate);
+        Investment investment = new Investment(accountId, goldTypeId, quantity, totalPurchasePrice, purchaseDate);
         investmentRepositoryHandler.saveInvestment(investment);
 
-        LOG.debug("Investment saved successfully for account ID: {}", accountId);
+        log.debug("Investment saved successfully for account ID: {}", accountId);
 
         Holding holding = new Holding(accountId, investment.getId());
-        holdingCreationService.processNewHolding(holding, goldTypeId, totalPurchasePrice, quantityValue);
+        holdingCreationService.processNewHolding(holding, goldTypeId, totalPurchasePrice, quantity);
 
-        Transaction transaction = new Transaction(accountId, goldTypeId, quantityValue, TransactionType.BUY.getValue(), totalPurchasePrice, purchaseDate);
+        Transaction transaction = new Transaction(accountId, goldTypeId, quantity, TransactionType.BUY.getValue(), totalPurchasePrice, purchaseDate);
         txnCreationService.addNewTransaction(transaction);
+
+        log.debug("Transaction created successfully for account ID: {}", accountId);
     }
 
-    private void validateRequest(InvestmentRequest investmentRequest) {
+    private void validateInvestmentRequest(int accountId, InvestmentRequest investmentRequest) {
         if (investmentRequest == null) {
-            throw new IllegalArgumentException("Investment request cannot be null");
+            log.error("Investment request is null");
+            throw new ValidationException("Investment request cannot be null");
         }
+
         if (investmentRequest.getTotalPurchasePrice() == null || investmentRequest.getTotalPurchasePrice().compareTo(BigDecimal.ZERO) <= 0) {
-            LOG.warn("Unable to process transaction. Transaction price is null or non-positive");
-            throw new IllegalStateException("Invalid purchase price provided");
+            log.warn("Invalid purchase price: {}", investmentRequest.getTotalPurchasePrice());
+            throw new ValidationException("Invalid purchase price provided");
+        }
+
+        if (!accountExists(accountId)) {
+            log.warn("Account does not exist for ID: {}", accountId);
+            throw new ValidationException("Account for ID: " + accountId + " does not exist");
+        }
+
+        final String goldType = investmentRequest.getGoldTypeName();
+        if (getGoldTypeId(goldType) == null) {
+            log.warn("Gold type does not exist: {}", goldType);
+            throw new ValidationException("Gold type: " + goldType + " does not exist");
         }
     }
 
     private boolean accountExists(int accountId) {
         ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_SET);
-        return accountIds.contains(accountId);
+        boolean exists = accountIds.contains(accountId);
+        log.debug("Account existence check for ID: {}. Exists: {}", accountId, exists);
+        return exists;
     }
 
     private Integer getGoldTypeId(String goldType) {
         IMap<String, Integer> goldTypeMap = hazelcastCacheManager.getMap(HazelcastConstant.GOLD_TYPE_MAP);
-        return goldTypeMap.get(goldType);
+        Integer goldTypeId = goldTypeMap.get(goldType);
+        log.debug("Gold type ID lookup for type: {}. Found ID: {}", goldType, goldTypeId);
+        return goldTypeId;
+    }
+
+    private int getValidQuantity(Integer quantity) {
+        if (quantity == null || quantity == 0) {
+            log.warn("Quantity is null or zero, defaulting to 1");
+            return 1;
+        }
+        return quantity;
+    }
+
+    private LocalDate getValidPurchaseDate(LocalDate purchaseDate) {
+        if (purchaseDate == null) {
+            log.warn("No purchase date provided. Assuming purchase was made today");
+            return DateTimeUtil.getLocalDate();
+        }
+        return purchaseDate;
     }
 }

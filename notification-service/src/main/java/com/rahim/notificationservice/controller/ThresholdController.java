@@ -35,7 +35,7 @@ import static com.rahim.notificationservice.constants.ThresholdControllerEndpoin
 @Tag(name = "Threshold Notification Management", description = "Endpoints for managing user gold price notifications")
 public class ThresholdController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThresholdController.class);
+    private static final Logger log = LoggerFactory.getLogger(ThresholdController.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
     private final IThresholdCreationService thresholdCreationService;
     private final IThresholdDeletionService thresholdDeletionService;

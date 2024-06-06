@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ThresholdCreationService implements IThresholdCreationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThresholdCreationService.class);
+    private static final Logger log = LoggerFactory.getLogger(ThresholdCreationService.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
     private final CacheManager hazelcastCacheManager;
 
@@ -30,16 +30,16 @@ public class ThresholdCreationService implements IThresholdCreationService {
     public void createNotification(ThresholdAlert thresholdAlert) {
         int accountId = thresholdAlert.getAccountId();
         if (!accountExists(accountId)) {
-            LOG.warn("Failed to create new threshold alert for user with ID: {}. Account invalid/notifications not enabled on account", accountId);
+            log.warn("Failed to create new threshold alert for user with ID: {}. Account invalid/notifications not enabled on account", accountId);
             throw new ValidationException("Account invalid/notifications not enabled on account");
         }
 
         thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
-        LOG.debug("Successfully added threshold alert for user with ID: {}", accountId);
+        log.debug("Successfully added threshold alert for user with ID: {}", accountId);
     }
 
     private boolean accountExists(int accountId) {
-        LOG.debug("Searching Hazelcast set for account id");
+        log.debug("Searching Hazelcast set for account id");
         ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET);
         return accountIds.contains(accountId);
     }

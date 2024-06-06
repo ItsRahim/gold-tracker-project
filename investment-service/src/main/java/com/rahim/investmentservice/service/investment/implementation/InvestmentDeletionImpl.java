@@ -25,7 +25,7 @@ import java.time.ZoneId;
 @RequiredArgsConstructor
 public class InvestmentDeletionImpl implements InvestmentDeletionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InvestmentDeletionImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(InvestmentDeletionImpl.class);
     private final InvestmentRepositoryHandler investmentRepositoryHandler;
     private final TxnCreationService txnCreationService;
 
@@ -33,7 +33,7 @@ public class InvestmentDeletionImpl implements InvestmentDeletionService {
     @Transactional(rollbackFor = Exception.class)
     public void sellInvestment(int investmentId, int accountId, BigDecimal transactionAmount, BigDecimal purchaseAmount) {
         if (!investmentExists(investmentId, accountId)) {
-            LOG.warn("Investment with ID {} does not exist for account with ID {}. Unable to sell.", investmentId, accountId);
+            log.warn("Investment with ID {} does not exist for account with ID {}. Unable to sell.", investmentId, accountId);
             throw new EntityNotFoundException("Investment does not exist with ID: " + investmentId);
         }
 
@@ -48,10 +48,16 @@ public class InvestmentDeletionImpl implements InvestmentDeletionService {
                 .build();
 
         txnCreationService.addNewTransaction(txn);
+        updateInvestmentPortfolio(investment, purchaseAmount);
+
+    }
+
+    private void updateInvestmentPortfolio(Investment investment, BigDecimal purchaseAmount) {
+        int investmentId = investment.getId();
 
         if (investment.getQuantity() == 1) {
             investmentRepositoryHandler.deleteInvestment(investmentId);
-            LOG.debug("Investment with ID {} deleted successfully after selling all units.", investmentId);
+            log.debug("Investment with ID {} deleted successfully after selling all units.", investmentId);
         } else {
             BigDecimal remainingPurchaseAmount = investment.getPurchasePrice().subtract(purchaseAmount);
             int remainingQuantity = investment.getQuantity() - 1;
@@ -60,7 +66,7 @@ public class InvestmentDeletionImpl implements InvestmentDeletionService {
             investment.setQuantity(remainingQuantity);
             investmentRepositoryHandler.saveInvestment(investment);
 
-            LOG.debug("Remaining purchase amount for investment with ID {}: {}. Quantity decreased to {} after selling one unit.",
+            log.debug("Remaining purchase amount for investment with ID {}: {}. Quantity decreased to {} after selling one unit.",
                     investmentId, remainingPurchaseAmount, remainingQuantity);
         }
     }

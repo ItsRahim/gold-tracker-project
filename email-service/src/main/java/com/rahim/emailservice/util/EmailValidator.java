@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmailValidator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmailValidator.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailValidator.class);
 
     /**
      * This method validates an email template.
@@ -36,7 +36,7 @@ public class EmailValidator {
         long uniqueTokens = tokens.stream().distinct().count();
 
         if (ObjectUtils.anyNull(emailBody, placeholders, tokens) || placeholders.size() != uniqueTokens) {
-            LOG.error("Invalid Email Format: emailBody, placeholders, tokens cannot be null, and/or tokens do not match the number of placeholders");
+            log.error("Invalid Email Format: emailBody, placeholders, tokens cannot be null, and/or tokens do not match the number of placeholders");
             return false;
         }
 

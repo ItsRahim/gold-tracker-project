@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailSender implements IEmailSender {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmailSender.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailSender.class);
     private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
@@ -32,7 +32,7 @@ public class EmailSender implements IEmailSender {
 
     @Override
     public void sendEmail(String recipientEmail, EmailTemplate emailContent) {
-        LOG.debug("Attempting to send email...");
+        log.debug("Attempting to send email...");
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);
@@ -41,5 +41,6 @@ public class EmailSender implements IEmailSender {
         message.setText(emailContent.getBody());
 
         javaMailSender.send(message);
+        log.info("Email sent successfully");
     }
 }

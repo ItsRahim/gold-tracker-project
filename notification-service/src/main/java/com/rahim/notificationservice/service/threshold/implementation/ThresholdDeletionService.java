@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ThresholdDeletionService implements IThresholdDeletionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThresholdDeletionService.class);
+    private static final Logger log = LoggerFactory.getLogger(ThresholdDeletionService.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
 
     @Override
@@ -24,10 +24,10 @@ public class ThresholdDeletionService implements IThresholdDeletionService {
     public boolean deleteNotification(int alertId) {
         try {
             thresholdAlertRepositoryHandler.deleteThresholdAlert(alertId);
-            LOG.info("Successfully deleted threshold alert with ID: {}", alertId);
+            log.info("Successfully deleted threshold alert with ID: {}", alertId);
             return true;
         } catch (Exception e) {
-            LOG.error("An error has occurred attempting to delete threshold alert with ID: {}", alertId, e);
+            log.error("An error has occurred attempting to delete threshold alert with ID: {}", alertId, e);
             return false;
         }
     }

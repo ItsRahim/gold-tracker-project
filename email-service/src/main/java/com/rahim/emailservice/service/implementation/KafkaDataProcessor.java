@@ -29,7 +29,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KafkaDataProcessor implements IKafkaDataProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaDataProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaDataProcessor.class);
     private final IEmailTemplatePopulator emailTemplatePopulator;
     private final IEmailService emailService;
     private final IEmailSender emailSender;
@@ -60,7 +60,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
             emailSender.sendEmail(email, emailTemplate);
 
         } catch (JsonProcessingException e) {
-            LOG.error("Error processing Kafka data: {}", e.getMessage(), e);
+            log.error("Error processing Kafka data: {}", e.getMessage(), e);
             throw new RuntimeException("Error processing Kafka data", e);
         }
     }

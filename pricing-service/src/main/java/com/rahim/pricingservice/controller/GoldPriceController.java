@@ -34,7 +34,7 @@ import static com.rahim.pricingservice.constant.GoldPriceURLConstant.*;
 @Tag(name = "Gold Price Management", description = "Endpoints for managing gold prices")
 public class GoldPriceController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GoldPriceController.class);
+    private static final Logger log = LoggerFactory.getLogger(GoldPriceController.class);
     private final GoldPriceRepositoryHandler goldPriceRepositoryHandler;
 
     @Operation(summary = "Get gold price by ID")

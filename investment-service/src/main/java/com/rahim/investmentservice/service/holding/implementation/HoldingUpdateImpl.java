@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HoldingUpdateImpl implements HoldingUpdateService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HoldingCreationImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(HoldingCreationImpl.class);
     private final HoldingRepositoryHandler holdingRepositoryHandler;
     private final JdbcTemplate jdbcTemplate;
 
@@ -34,7 +34,7 @@ public class HoldingUpdateImpl implements HoldingUpdateService {
     @Transactional(rollbackFor = Exception.class)
     public void updateCurrentValue(Integer goldTypeId, BigDecimal updatedPrice) {
         if (goldTypeId == null || updatedPrice == null) {
-            LOG.error("Unable to update user holdings. Gold type ID and/or updated price is null.");
+            log.error("Unable to update user holdings. Gold type ID and/or updated price is null.");
             return;
         }
 
@@ -45,7 +45,7 @@ public class HoldingUpdateImpl implements HoldingUpdateService {
                 Holding holding = holdingRepositoryHandler.getHoldingById(priceUpdate.getHoldingId());
 
                 if (holding == null) {
-                    LOG.warn("Holding not found for ID: {}", priceUpdate.getHoldingId());
+                    log.warn("Holding not found for ID: {}", priceUpdate.getHoldingId());
                     continue;
                 }
 
@@ -56,11 +56,11 @@ public class HoldingUpdateImpl implements HoldingUpdateService {
                 holding.setProfitLoss(profitLoss);
 
                 holdingRepositoryHandler.saveHolding(holding);
-                LOG.info("Updated holding ID: {} with new current value: {} and profit/loss: {}",
+                log.info("Updated holding ID: {} with new current value: {} and profit/loss: {}",
                         holding.getId(), updatedPrice, profitLoss);
             }
         } catch (Exception e) {
-            LOG.error("Error updating current value for gold type ID: {}", goldTypeId, e);
+            log.error("Error updating current value for gold type ID: {}", goldTypeId, e);
             throw e;
         }
     }

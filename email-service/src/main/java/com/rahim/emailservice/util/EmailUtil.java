@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class EmailUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmailUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailUtil.class);
     private final EmailValidator emailValidator;
     private final ITokenMapPopulator tokenMapPopulator;
 
@@ -64,20 +64,20 @@ public class EmailUtil {
      */
     public EmailTemplate populateTemplate(EmailTemplate emailTemplate, List<String> placeholders, List<String> tokens) {
         if (emailTemplate == null) {
-            LOG.warn("Email template is null");
+            log.warn("Email template is null");
             throw new EmailTemplateException("Email template is null");
         }
 
-        LOG.debug("Populating email template with ID: {} - {}", emailTemplate.getId(), emailTemplate.getTemplateName());
+        log.debug("Populating email template with ID: {} - {}", emailTemplate.getId(), emailTemplate.getTemplateName());
 
         boolean isValidEmail = emailValidator.isValid(emailTemplate.getBody(), placeholders, tokens);
 
         if (!isValidEmail) {
-            LOG.warn("Invalid information provided to populate email");
+            log.warn("Invalid information provided to populate email");
             throw new EmailTemplateException("Invalid information provided to populate email");
         }
 
-        LOG.debug("Information provided is sufficient to populate email");
+        log.debug("Information provided is sufficient to populate email");
 
         tokenMapPopulator.populateTokenMap(placeholders, tokens);
 

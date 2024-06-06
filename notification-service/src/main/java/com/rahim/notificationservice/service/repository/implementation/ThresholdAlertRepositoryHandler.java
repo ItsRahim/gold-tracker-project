@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositoryHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThresholdAlertRepositoryHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ThresholdAlertRepositoryHandler.class);
     private final ThresholdAlertRepository thresholdAlertRepository;
 
     @Override
@@ -34,22 +34,22 @@ public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositor
             ThresholdAlert thresholdAlert = findById(alertId);
             thresholdAlert.deactivate();
             thresholdAlertRepository.save(thresholdAlert);
-            LOG.info("Deactivated alert with ID: {}", alertId);
+            log.info("Deactivated alert with ID: {}", alertId);
         } catch (Exception e) {
-            LOG.error("An error occurred while deactivating alert with ID: {}", alertId, e);
+            log.error("An error occurred while deactivating alert with ID: {}", alertId, e);
         }
     }
 
     @Override
     public void saveThresholdAlert(ThresholdAlert thresholdAlert) {
         if (ObjectUtils.isEmpty(thresholdAlert)) {
-            LOG.error("ThresholdAlert is null or contains null properties. Unable to save.");
+            log.error("ThresholdAlert is null or contains null properties. Unable to save.");
             throw new IllegalArgumentException("ThresholdAlert is null or contains null properties. Unable to save.");
         }
         try {
             thresholdAlertRepository.save(thresholdAlert);
         } catch (DataAccessException e) {
-            LOG.error("Error saving ThresholdAlert to the database: {}", e.getMessage(), e);
+            log.error("Error saving ThresholdAlert to the database: {}", e.getMessage(), e);
             throw new DataIntegrityViolationException("Error saving Threshold Alert to the database");
         }
     }
@@ -58,9 +58,9 @@ public class ThresholdAlertRepositoryHandler implements IThresholdAlertRepositor
     public void deleteThresholdAlert(int alertId) {
         try {
             thresholdAlertRepository.deleteById(alertId);
-            LOG.debug("ThresholdAlert with ID {} deleted successfully", alertId);
+            log.debug("ThresholdAlert with ID {} deleted successfully", alertId);
         } catch (Exception e) {
-            LOG.error("An error occurred while deleting alert with ID: {}", alertId, e);
+            log.error("An error occurred while deleting alert with ID: {}", alertId, e);
         }
     }
 

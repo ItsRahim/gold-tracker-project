@@ -26,8 +26,7 @@ import static com.rahim.configserver.constant.EncryptionControllerURLConstant.*;
 @Tag(name = "Encryption Management", description = "Endpoint for encrypting information for Java and Python")
 public class EncryptorController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EncryptorController.class);
-
+    private static final Logger log = LoggerFactory.getLogger(EncryptorController.class);
     private final PythonEncryption pythonEncryption;
     private final IEncryptionService encryptionService;
 
@@ -41,10 +40,10 @@ public class EncryptorController {
     public ResponseEntity<Map<String, String>> javaEncrypt(@RequestBody Map<String, String> plainTextMap) {
         Map<String, String> encryptedDataMap = encryptionService.encrypt(plainTextMap);
         if (!encryptedDataMap.isEmpty()) {
-            LOG.info("Data encrypted successfully");
+            log.info("Data encrypted successfully");
             return ResponseEntity.status(HttpStatus.OK).body(encryptedDataMap);
         } else {
-            LOG.error("Encryption failed");
+            log.error("Encryption failed");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -57,15 +56,14 @@ public class EncryptorController {
     })
     @PostMapping(value = PYTHON_ENCRYPT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> pythonEncrypt(@RequestBody Map<String, String> encryptionBody) {
-        if (encryptionBody != null) {
-            try {
-                Map<String, String> encryptedData = pythonEncryption.encryptPlainText(encryptionBody);
-                return ResponseEntity.status(HttpStatus.OK).body(encryptedData);
-            } catch (Exception e) {
-                return ResponseEntityFormatter.jsonFormatter(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to encrypt data");
-            }
-        } else {
-            return ResponseEntityFormatter.jsonFormatter(HttpStatus.BAD_REQUEST, "Request must contain exactly one key-value pair");
+        if (encryptionBody == null) {
+            return ResponseEntityFormatter.jsonFormatter(HttpStatus.BAD_REQUEST, "Request must contain at least one key-value pair");
+        }
+        try {
+            Map<String, String> encryptedData = pythonEncryption.encryptPlainText(encryptionBody);
+            return ResponseEntity.status(HttpStatus.OK).body(encryptedData);
+        } catch (Exception e) {
+            return ResponseEntityFormatter.jsonFormatter(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to encrypt data");
         }
     }
 

@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class HoldingCreationImpl implements HoldingCreationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HoldingCreationImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(HoldingCreationImpl.class);
     private final HoldingRepositoryHandler holdingRepositoryHandler;
     private final PricingServiceClient pricingServiceClient;
     private final HttpService httpService;
@@ -53,9 +53,9 @@ public class HoldingCreationImpl implements HoldingCreationService {
 
             holdingRepositoryHandler.saveAllHoldings(holdings);
 
-            LOG.info("New holding processed successfully: {}", holding);
+            log.info("New holding processed successfully: {}", holding);
         } catch (Exception e) {
-            LOG.error("Error processing new holding: {}", e.getMessage(), e);
+            log.error("Error processing new holding: {}", e.getMessage(), e);
             throw new DatabaseException("An error occurred attempting to process and save new holding");
         }
 
@@ -70,7 +70,7 @@ public class HoldingCreationImpl implements HoldingCreationService {
     }
 
     public BigDecimal getCurrentValue(int goldTypeId) {
-        LOG.debug("Fetching current value for gold type ID: {}", goldTypeId);
+        log.debug("Fetching current value for gold type ID: {}", goldTypeId);
 
         Supplier<ResponseEntity<String>> pricingServiceCall = () -> pricingServiceClient.getGoldPrice(goldTypeId);
 
@@ -78,7 +78,7 @@ public class HoldingCreationImpl implements HoldingCreationService {
             JsonNode currentPriceNode = jsonResponse.get("currentPrice");
             if (currentPriceNode != null && currentPriceNode.isNumber()) {
                 BigDecimal currentValue = currentPriceNode.decimalValue();
-                LOG.debug("Current value for gold type ID {}: {}", goldTypeId, currentValue);
+                log.debug("Current value for gold type ID {}: {}", goldTypeId, currentValue);
                 return currentValue;
             }
             throw new JsonServiceException("Error parsing current price from response");

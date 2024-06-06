@@ -25,7 +25,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final IGoldPriceHistoryService goldPriceHistoryService;
     private final GoldPriceApiClient goldPriceFeignClient;
     private final ApiDataProcessor apiDataProcessor;
@@ -41,7 +41,7 @@ public class KafkaListenerConfig {
         KafkaUtil.logReceivedMessage(message, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
-            LOG.debug("Message '{}' has already been processed. Skipping update price job.", message);
+            log.debug("Message '{}' has already been processed. Skipping update price job.", message);
             acknowledgment.acknowledge();
             return;
         }
@@ -54,14 +54,14 @@ public class KafkaListenerConfig {
     @KafkaListener(topics = "${python-api.topic}", groupId = "group2")
     void processPriceChange(@Payload String priceData) {
         if (messageManager.isProcessed(priceData)) {
-            LOG.debug("Price data '{}' has already been processed", priceData);
+            log.debug("Price data '{}' has already been processed", priceData);
             return;
         }
 
         String data = KafkaUtil.extractPriceData(priceData);
 
         if (data == null) {
-            LOG.error("Data format incorrect/null. Unable to process price data");
+            log.error("Data format incorrect/null. Unable to process price data");
             return;
         }
 
@@ -79,7 +79,7 @@ public class KafkaListenerConfig {
         KafkaUtil.logReceivedMessage(message, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
-            LOG.debug("Message '{}' has already been processed. Skipping update price history job.", message);
+            log.debug("Message '{}' has already been processed. Skipping update price history job.", message);
             acknowledgment.acknowledge();
             return;
         }
