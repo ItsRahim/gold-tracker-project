@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProfileDeletionService implements IProfileDeletionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProfileDeletionService.class);
+    private static final Logger log = LoggerFactory.getLogger(ProfileDeletionService.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Override
@@ -28,7 +28,7 @@ public class ProfileDeletionService implements IProfileDeletionService {
             int profileId = profileRepositoryHandler.getProfileIdByAccountId(accountId);
             profileRepositoryHandler.deleteProfile(profileId);
         } catch (Exception e) {
-            LOG.error("Error deleting user profile for user ID {}: {}", accountId, e.getMessage(), e);
+            log.error("Error deleting user profile for user ID {}: {}", accountId, e.getMessage(), e);
         }
     }
 }

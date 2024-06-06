@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ApiDataProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ApiDataProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(ApiDataProcessor.class);
     private final IGoldPriceUpdateService goldPriceUpdateService;
     private GoldData processedData;
 
@@ -31,14 +31,14 @@ public class ApiDataProcessor {
             processedData = JsonUtil.convertJsonToObject(kafkaData, GoldData.class);
 
             if (processedData == null || processedData.getPrice() == null){
-                LOG.error("Price data is null. Unable to process");
+                log.error("Price data is null. Unable to process");
                 return;
             }
 
             GoldPriceCalculator.calculatePricePerGram(processedData.getPrice());
             goldPriceUpdateService.updateGoldTickerPrice(processedData);
         } catch (Exception e) {
-            LOG.error("Unexpected error processing API data: {}", e.getMessage(), e);
+            log.error("Unexpected error processing API data: {}", e.getMessage(), e);
             throw new RuntimeException("Unexpected error processing API data", e);
         }
     }

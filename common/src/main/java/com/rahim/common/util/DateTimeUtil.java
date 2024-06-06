@@ -2,6 +2,7 @@ package com.rahim.common.util;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -42,5 +43,9 @@ public class DateTimeUtil {
         return generateInstant()
                 .toString()
                 .replace("T", " ");
+    }
+
+    public static LocalDate getLocalDate() {
+        return LocalDate.now(ZoneId.of("UTC"));
     }
 }

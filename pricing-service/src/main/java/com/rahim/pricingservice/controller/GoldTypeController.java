@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.rahim.pricingservice.constant.GoldTypeURLConstant.GOLD_TYPE_ID;
 import static com.rahim.pricingservice.constant.GoldTypeURLConstant.TYPE_BASE_URL;
@@ -37,7 +36,7 @@ import static com.rahim.pricingservice.constant.GoldTypeURLConstant.TYPE_BASE_UR
 @Tag(name = "Gold Type Management", description = "Endpoints for managing gold types")
 public class GoldTypeController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GoldTypeController.class);
+    private static final Logger log = LoggerFactory.getLogger(GoldTypeController.class);
     private final IGoldTypeRepositoryHandler goldTypeRepositoryHandler;
     private final IGoldTypeCreationService goldTypeCreationService;
     private final IGoldTypeUpdateService goldTypeUpdateService;

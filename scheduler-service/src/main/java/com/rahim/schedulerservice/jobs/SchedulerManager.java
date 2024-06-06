@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @RequiredArgsConstructor
 public class SchedulerManager implements SchedulingConfigurer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SchedulerManager.class);
+    private static final Logger log = LoggerFactory.getLogger(SchedulerManager.class);
     private final CronJobRepository cronJobRepository;
     private final IKafkaService kafkaService;
     private final Map<String, String> cronJobSchedules = new ConcurrentHashMap<>();
@@ -59,18 +59,18 @@ public class SchedulerManager implements SchedulingConfigurer {
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         cronJobSchedules.forEach((jobName, cronExpression) -> {
             if (cronExpression.isEmpty()) {
-                LOG.warn("Cron expression is empty for job '{}'. Task not scheduled.", jobName);
+                log.warn("Cron expression is empty for job '{}'. Task not scheduled.", jobName);
                 return;
             }
 
             Runnable task = getTaskByJobName(jobName);
             if (task == null) {
-                LOG.warn("No task found for job '{}'. Task not scheduled.", jobName);
+                log.warn("No task found for job '{}'. Task not scheduled.", jobName);
                 return;
             }
 
             taskRegistrar.addCronTask(task, cronExpression);
-            LOG.info("Scheduled task '{}' with cron expression '{}'", jobName, cronExpression);
+            log.info("Scheduled task '{}' with cron expression '{}'", jobName, cronExpression);
         });
     }
 
@@ -80,7 +80,7 @@ public class SchedulerManager implements SchedulingConfigurer {
      */
     @Scheduled(fixedDelayString = "#{@dbRefreshInterval}")
     private void updateCronJobSchedule() {
-        LOG.debug("Checking database for cron job property updates...");
+        log.debug("Checking database for cron job property updates...");
         initialiseCronJobSchedules();
         configureTasks(new ScheduledTaskRegistrar());
     }
@@ -107,32 +107,32 @@ public class SchedulerManager implements SchedulingConfigurer {
      */
     private void accountCleanupJob() {
         if (jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).compareAndSet(true, false)) {
-            LOG.warn(CronJobName.USER_CLEANUP_JOB + " is already running. Skipping job execution");
+            log.warn(CronJobName.USER_CLEANUP_JOB + " is already running. Skipping job execution");
             return;
         }
 
-        LOG.info("Running " + CronJobName.USER_CLEANUP_JOB);
+        log.info("Running " + CronJobName.USER_CLEANUP_JOB);
         kafkaService.sendMessage(KafkaTopic.ACCOUNT_CLEANUP, CRON_MESSAGE);
         jobExecutionStatus.get(CronJobName.USER_CLEANUP_JOB).set(false);
     }
 
     private void updateGoldPriceJob() {
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_JOB).compareAndSet(true, false)) {
-            LOG.warn(CronJobName.UPDATE_GOLD_PRICE_JOB + " is already running. Skipping job execution");
+            log.warn(CronJobName.UPDATE_GOLD_PRICE_JOB + " is already running. Skipping job execution");
             return;
         }
 
-        LOG.info("Running " + CronJobName.UPDATE_GOLD_PRICE_JOB);
+        log.info("Running " + CronJobName.UPDATE_GOLD_PRICE_JOB);
         kafkaService.sendMessage(KafkaTopic.PRICE_UPDATE, CRON_MESSAGE);
         jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).set(false);
     }
 
     private void updateGoldPriceHistoryJob() {
         if (jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).compareAndSet(true, false)) {
-            LOG.warn(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB + " is already running. Skipping job execution");
+            log.warn(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB + " is already running. Skipping job execution");
             return;
         }
-        LOG.info("Running " + CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB);
+        log.info("Running " + CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB);
         kafkaService.sendMessage(KafkaTopic.PRICE_HISTORY_UPDATE, CRON_MESSAGE);
         jobExecutionStatus.get(CronJobName.UPDATE_GOLD_PRICE_HISTORY_JOB).set(false);
     }

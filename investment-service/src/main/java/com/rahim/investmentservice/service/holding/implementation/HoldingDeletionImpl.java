@@ -22,26 +22,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HoldingDeletionImpl implements HoldingDeletionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HoldingDeletionImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(HoldingDeletionImpl.class);
     private final HoldingRepositoryHandler holdingRepositoryHandler;
     private final InvestmentDeletionService investmentDeletionService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Integer> sellHolding(List<Integer> holdingIds, int accountId) {
-        LOG.debug("Initiating bulk sale of holdings for account with ID {}", accountId);
+        log.debug("Initiating bulk sale of holdings for account with ID {}", accountId);
 
         List<Integer> failedHoldingIds = new ArrayList<>();
         for (int holdingId : holdingIds) {
             Holding holding = holdingRepositoryHandler.getHoldingByIdAndAccountId(holdingId, accountId);
 
             if (holding.getId() == null) {
-                LOG.warn("Holding with ID {} does not exist for account with ID {}. Skipping.", holdingId, accountId);
+                log.warn("Holding with ID {} does not exist for account with ID {}. Skipping.", holdingId, accountId);
                 failedHoldingIds.add(holdingId);
                 continue;
             }
 
-            LOG.debug("Holding with ID {} found for account with ID {}. Proceeding with sale.", holdingId, accountId);
+            log.debug("Holding with ID {} found for account with ID {}. Proceeding with sale.", holdingId, accountId);
 
             int investmentId = holding.getInvestmentId();
             BigDecimal transactionAmount = holding.getCurrentValue().negate();
@@ -50,13 +50,13 @@ public class HoldingDeletionImpl implements HoldingDeletionService {
             deleteHolding(holdingId);
             investmentDeletionService.sellInvestment(investmentId, accountId, transactionAmount, purchaseAmount);
 
-            LOG.info("Holding with ID {} for account with ID {} sold successfully.", holdingId, accountId);
+            log.info("Holding with ID {} for account with ID {} sold successfully.", holdingId, accountId);
         }
         return failedHoldingIds;
     }
 
     private void deleteHolding(int holdingId) {
-        LOG.debug("Attempting to delete holding with ID: {}", holdingId);
+        log.debug("Attempting to delete holding with ID: {}", holdingId);
         holdingRepositoryHandler.deleteHolding(holdingId);
     }
 }

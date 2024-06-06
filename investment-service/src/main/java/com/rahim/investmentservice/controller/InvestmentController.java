@@ -26,7 +26,7 @@ import static com.rahim.investmentservice.constants.InvestmentControllerEndpoint
 @Tag(name = "Endpoint to manage user investments")
 public class InvestmentController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InvestmentController.class);
+    private static final Logger log = LoggerFactory.getLogger(InvestmentController.class);
     private final InvestmentCreationService investmentCreationService;
 
     @Operation(summary = "Add a new investment")
@@ -42,7 +42,7 @@ public class InvestmentController {
             investmentCreationService.addNewInvestment(accountId, investmentRequest);
         }
 
-        LOG.info("Investment created successfully for account ID: {}", accountId);
+        log.info("Investment created successfully for account ID: {}", accountId);
         return ResponseEntity.status(HttpStatus.CREATED).body("Investment created successfully");
     }
 

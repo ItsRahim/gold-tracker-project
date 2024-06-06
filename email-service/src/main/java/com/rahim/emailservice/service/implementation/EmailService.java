@@ -15,17 +15,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailService implements IEmailService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmailService.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
     private final EmailTemplateRepository emailTemplateRepository;
 
     @Override
     public Integer findIdByName(String templateName) {
         try {
-            LOG.debug("Attempting to find ID for template name: {}", templateName);
-
+            log.debug("Attempting to find ID for template name: {}", templateName);
             return emailTemplateRepository.findIdByTemplateName(templateName);
         } catch (Exception e) {
-            LOG.error("Error finding ID for template name {}: {}", templateName, e.getMessage(), e);
+            log.error("Error finding ID for template name {}: {}", templateName, e.getMessage(), e);
             throw new RuntimeException("Error finding ID for template name", e);
         }
     }

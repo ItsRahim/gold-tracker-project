@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class AccountDeletionService implements IAccountDeletionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccountDeletionService.class);
+    private static final Logger log = LoggerFactory.getLogger(AccountDeletionService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
     private final CacheManager hazelcastCacheManager;
@@ -36,14 +36,15 @@ public class AccountDeletionService implements IAccountDeletionService {
         Account account = accountRepositoryHandler.findById(accountId);
 
         if (!isAccountEligibleForDeletion(account)) {
-            LOG.debug("Account with ID {} is not eligible for deletion", accountId);
+            log.debug("Account with ID {} is not eligible for deletion", accountId);
             return false;
         }
 
         LocalDate deletionDate = LocalDate.now().plusDays(30);
         updateAccountForDeletion(account, deletionDate);
         sendAccountDeletionEmail(accountId);
-
+        log.info("Successfully updated account with id: {}", accountId);
+        
         return true;
     }
 

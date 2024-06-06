@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProfileCreationService implements IProfileCreationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProfileCreationService.class);
+    private static final Logger log = LoggerFactory.getLogger(ProfileCreationService.class);
     private final IProfileRepositoryHandler profileRepositoryHandler;
 
     @Override
@@ -28,7 +28,7 @@ public class ProfileCreationService implements IProfileCreationService {
             profile.setAccount(account);
             profileRepositoryHandler.createNewProfile(profile);
         } catch (Exception e) {
-            LOG.error("An error occurred while creating a profile: {}", e.getMessage(), e);
+            log.error("An error occurred while creating a profile: {}", e.getMessage(), e);
         }
     }
 }

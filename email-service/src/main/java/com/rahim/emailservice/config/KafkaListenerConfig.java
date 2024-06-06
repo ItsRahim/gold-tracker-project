@@ -16,12 +16,12 @@ import org.springframework.kafka.annotation.KafkaListener;
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final IKafkaDataProcessor kafkaDataProcessor;
 
     @KafkaListener(topics = KafkaTopic.SEND_EMAIL, groupId = "group2")
     void sendEmail(String emailData) {
-        LOG.debug("Email data received. Attempting to process data and send email...");
+        log.debug("Email data received. Attempting to process data and send email...");
         kafkaDataProcessor.processKafkaData(emailData);
     }
 

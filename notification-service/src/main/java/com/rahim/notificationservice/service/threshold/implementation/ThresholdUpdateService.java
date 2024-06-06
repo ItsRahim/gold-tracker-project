@@ -20,7 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ThresholdUpdateService implements IThresholdUpdateService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThresholdUpdateService.class);
+    private static final Logger log = LoggerFactory.getLogger(ThresholdUpdateService.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
     private static final String THRESHOLD_PRICE = "thresholdPrice";
 
@@ -30,28 +30,28 @@ public class ThresholdUpdateService implements IThresholdUpdateService {
         ThresholdAlert thresholdAlert = thresholdAlertRepositoryHandler.findById(thresholdId);
 
         if (!updateThresholdPrice(thresholdAlert, updatedData)) {
-            LOG.info("Threshold alert with ID: {} was not updated.", thresholdId);
+            log.info("Threshold alert with ID: {} was not updated.", thresholdId);
             return;
         }
 
         try {
             thresholdAlertRepositoryHandler.saveThresholdAlert(thresholdAlert);
-            LOG.info("Successfully updated threshold alert with ID: {}", thresholdId);
+            log.info("Successfully updated threshold alert with ID: {}", thresholdId);
         } catch (Exception e) {
-            LOG.error("An error occurred while updating threshold alert with ID: {}", thresholdId, e);
+            log.error("An error occurred while updating threshold alert with ID: {}", thresholdId, e);
         }
     }
 
     private boolean updateThresholdPrice(ThresholdAlert thresholdAlert, Map<String, String> updatedData) {
         if (!updatedData.containsKey(THRESHOLD_PRICE)) {
-            LOG.warn("Updated data does not contain threshold price.");
+            log.warn("Updated data does not contain threshold price.");
             return false;
         }
 
         BigDecimal originalPrice = thresholdAlert.getThresholdPrice();
         BigDecimal updatedPrice = new BigDecimal(updatedData.get(THRESHOLD_PRICE));
         if (originalPrice.equals(updatedPrice)) {
-            LOG.debug("Threshold alert already has the updated price: {}", updatedPrice);
+            log.debug("Threshold alert already has the updated price: {}", updatedPrice);
             return false;
         }
 

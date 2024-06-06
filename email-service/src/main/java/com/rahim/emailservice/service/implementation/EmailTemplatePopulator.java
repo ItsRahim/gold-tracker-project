@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmailTemplatePopulator implements IEmailTemplatePopulator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmailTemplatePopulator.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailTemplatePopulator.class);
     private final EmailTemplateRepository emailTemplateRepository;
     private final EmailUtil emailUtil;
 
@@ -39,7 +39,7 @@ public class EmailTemplatePopulator implements IEmailTemplatePopulator {
 
             return emailUtil.populateTemplate(emailTemplate, placeholders, tokens);
         } catch (Exception e) {
-            LOG.error("An error has occurred attempting to populate the email placeholder", e);
+            log.error("An error has occurred attempting to populate the email placeholder", e);
             throw new RuntimeException(e);
         }
     }

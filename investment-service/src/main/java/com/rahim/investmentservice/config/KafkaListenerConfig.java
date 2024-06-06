@@ -27,7 +27,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final HoldingUpdateService holdingUpdateService;
     private final MessageManager messageManager;
 
@@ -41,7 +41,7 @@ public class KafkaListenerConfig {
         KafkaUtil.logReceivedMessage(message, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
-            LOG.debug("Message '{}' has already been processed. Skipping.", message);
+            log.debug("Message '{}' has already been processed. Skipping.", message);
             acknowledgment.acknowledge();
             return;
         }

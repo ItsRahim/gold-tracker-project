@@ -29,7 +29,7 @@ import static com.rahim.investmentservice.constants.HoldingControllerEndpoint.*;
 @Tag(name = "Endpoint to manage user holdings")
 public class HoldingController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HoldingController.class);
+    private static final Logger log = LoggerFactory.getLogger(HoldingController.class);
     private final HoldingDeletionService holdingDeletionService;
 
     @Operation(summary = "Sell holdings")

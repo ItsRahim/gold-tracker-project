@@ -33,7 +33,7 @@ import static com.rahim.accountservice.constant.ProfileControllerEndpoint.*;
 @Tag(name = "Profile Management", description = "Endpoints for managing user profiles")
 public class ProfileController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProfileController.class);
+    private static final Logger log = LoggerFactory.getLogger(ProfileController.class);
     private final IProfileUpdateService profileUpdateService;
     private final IProfileRepositoryHandler profileRepositoryHandler;
 

@@ -10,7 +10,6 @@ import com.rahim.common.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountRepositoryHandlerService implements IAccountRepositoryHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccountRepositoryHandlerService.class);
+    private static final Logger log = LoggerFactory.getLogger(AccountRepositoryHandlerService.class);
     private final AccountRepository accountRepository;
 
     @Override
@@ -37,15 +36,15 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
     @Override
     public void saveAccount(Account account) {
         if (account == null) {
-            LOG.error("Account information provided is null or contains null properties. Unable to save");
+            log.error("Account information provided is null or contains null properties. Unable to save");
             throw new ValidationException("Account information provided is null or contains null properties. Unable to save");
         }
 
         try {
             account.setUpdatedAt(DateTimeUtil.generateInstant());
             accountRepository.save(account);
-        } catch (DataAccessException e) {
-            LOG.error("Error saving account to the database:", e);
+        } catch (Exception e) {
+            log.error("Error saving account to the database:", e);
             throw new DatabaseException("Error saving account to the database");
         }
     }
@@ -55,7 +54,7 @@ public class AccountRepositoryHandlerService implements IAccountRepositoryHandle
         findById(accountId);
 
         accountRepository.deleteById(accountId);
-        LOG.debug("Account with ID {} deleted successfully", accountId);
+        log.debug("Account with ID {} deleted successfully", accountId);
     }
 
     @Override

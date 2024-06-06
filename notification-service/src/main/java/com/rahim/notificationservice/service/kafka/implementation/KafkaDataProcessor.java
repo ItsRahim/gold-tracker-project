@@ -1,8 +1,5 @@
 package com.rahim.notificationservice.service.kafka.implementation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
@@ -27,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KafkaDataProcessor implements IKafkaDataProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaDataProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaDataProcessor.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
     private final ThresholdAlertRepository thresholdAlertRepository;
     private final IKafkaService kafkaService;
@@ -38,15 +35,15 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
         try {
             BigDecimal currentPrice = new BigDecimal(priceData);
             List<NotificationResult> notificationList = thresholdAlertRepository.generateEmailTokens(currentPrice);
-            LOG.debug("Retrieved {} notification records from the database for current price: {}", notificationList.size(), currentPrice);
+            log.debug("Retrieved {} notification records from the database for current price: {}", notificationList.size(), currentPrice);
 
             processNotifications(notificationList);
         } catch (NumberFormatException e) {
-            LOG.error("Error parsing price data. Invalid format: {}", priceData);
+            log.error("Error parsing price data. Invalid format: {}", priceData);
         } catch (DataAccessException e) {
-            LOG.error("Error accessing data from the database", e);
+            log.error("Error accessing data from the database", e);
         } catch (Exception e) {
-            LOG.error("An unexpected error occurred", e);
+            log.error("An unexpected error occurred", e);
         }
     }
 
@@ -56,7 +53,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
 
     private void processNotification(NotificationResult notificationResult) {
         thresholdAlertRepositoryHandler.deactivateAlert(notificationResult.getAlertId());
-        LOG.info("Deactivated alert for user: {}", notificationResult.getEmail());
+        log.info("Deactivated alert for user: {}", notificationResult.getEmail());
 
         EmailData emailData = createEmailData(notificationResult);
         sendEmail(emailData);
