@@ -36,7 +36,7 @@ import static com.rahim.accountservice.constant.AccountControllerEndpoint.*;
 @Tag(name = "Account Management", description = "Endpoints for managing user accounts")
 public class AccountController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
+    private static final Logger log = LoggerFactory.getLogger(AccountController.class);
     private final IAccountCreationService accountCreationService;
     private final IAccountUpdateService accountUpdateService;
     private final IAccountDeletionService accountDeletionService;

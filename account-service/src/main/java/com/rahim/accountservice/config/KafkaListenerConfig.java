@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaListenerConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaListenerConfig.class);
     private final IInternalAccountService internalUserService;
     private final MessageManager messageManager;
 
@@ -37,7 +37,7 @@ public class KafkaListenerConfig {
         KafkaUtil.logReceivedMessage(message, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
-            LOG.debug("Message '{}' has already been processed. Skipping cleanup job.", message);
+            log.debug("Message '{}' has already been processed. Skipping cleanup job.", message);
             acknowledgment.acknowledge();
             return;
         }

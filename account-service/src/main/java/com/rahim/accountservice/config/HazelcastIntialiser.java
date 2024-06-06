@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HazelcastIntialiser {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HazelcastIntialiser.class);
+    private static final Logger log = LoggerFactory.getLogger(HazelcastIntialiser.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final CacheManager hazelcastCacheManager;
 
@@ -31,7 +31,7 @@ public class HazelcastIntialiser {
 
     @PostConstruct
     public void initialise() {
-        LOG.debug("Initializing Account Service Hazelcast Storages...");
+        log.debug("Initializing Account Service Hazelcast Storages...");
         initialiserMap = hazelcastCacheManager.getMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP);
         initialiseActiveNotification();
         initialiseAccountIds();
@@ -40,11 +40,11 @@ public class HazelcastIntialiser {
     private void initialiseActiveNotification() {
         boolean isInitialised = initialiserMap.getOrDefault(ACTIVE_NOTIFICATION_ID_INITIALISED, false);
         if (isInitialised) {
-            LOG.debug("Active notification already initialized.");
+            log.debug("Active notification already initialized.");
             return;
         }
 
-        LOG.debug("Initializing active notifications...");
+        log.debug("Initialising active notifications...");
         List<Integer> activeNotifications = accountRepositoryHandler.getAccountActiveNotification();
         ISet<Integer> existingNotifications = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET);
 
@@ -52,36 +52,36 @@ public class HazelcastIntialiser {
                 .filter(accountId -> !existingNotifications.contains(accountId))
                 .forEach(accountId -> {
                     hazelcastCacheManager.addToSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, accountId);
-                    LOG.debug("Added account {} to active notifications", accountId);
+                    log.debug("Added account {} to active notifications", accountId);
                 });
 
         existingNotifications.stream()
                 .filter(accountId -> !activeNotifications.contains(accountId))
                 .forEach(accountId -> {
                     hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, accountId);
-                    LOG.debug("Removed account {} from active notifications", accountId);
+                    log.debug("Removed account {} from active notifications", accountId);
                 });
 
         hazelcastCacheManager.addToMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP, ACTIVE_NOTIFICATION_ID_INITIALISED, true);
-        LOG.debug("Active notification initialization complete.");
+        log.debug("Active notification initialization complete.");
     }
 
     private void initialiseAccountIds() {
         boolean isInitialised = initialiserMap.getOrDefault(ACCOUNT_ID_INITIALISED, false);
         if (isInitialised) {
-            LOG.debug("Account IDs already initialized.");
+            log.debug("Account IDs already initialized.");
             return;
         }
 
-        LOG.debug("Initializing account IDs...");
+        log.debug("Initializing account IDs...");
         List<Integer> accountIds = accountRepositoryHandler.getAllAccountIds();
 
         accountIds.forEach(accountId -> {
             hazelcastCacheManager.addToSet(HazelcastConstant.ACCOUNT_ID_SET, accountId);
-            LOG.debug("Added account {} to account ID set", accountId);
+            log.debug("Added account {} to account ID set", accountId);
         });
 
         hazelcastCacheManager.addToMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP, ACCOUNT_ID_INITIALISED, true);
-        LOG.debug("Account ID initialization complete.");
+        log.debug("Account ID initialization complete.");
     }
 }

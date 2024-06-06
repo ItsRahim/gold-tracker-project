@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AccountCreationService implements IAccountCreationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccountCreationService.class);
+    private static final Logger log = LoggerFactory.getLogger(AccountCreationService.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IProfileCreationService profileCreation;
@@ -49,7 +49,7 @@ public class AccountCreationService implements IAccountCreationService {
         String username = profile.getUsername();
 
         if (accountRepositoryHandler.existsByEmail(email) || profileRepositoryHandler.existsByUsername(username)) {
-            LOG.warn("Account with email and/or username already exists. Not creating duplicate.");
+            log.warn("Account with email and/or username already exists. Not creating duplicate.");
             throw new DuplicateEntityException("Account with email and/or username already exists. Not creating duplicate.");
         }
 
@@ -58,32 +58,32 @@ public class AccountCreationService implements IAccountCreationService {
             profileCreation.createProfile(account, profile);
             addToHazelcastSet(account.getId());
 
-            LOG.debug("Successfully created Account and Profile for: {}", profile.getUsername());
+            log.info("Successfully created Account and Profile for: {}", profile.getUsername());
             return userRequest;
         } catch (DataAccessException e) {
-            LOG.error("Unexpected error creating Account and Account Profile: {}", e.getMessage(), e);
+            log.error("Unexpected error creating Account and Account Profile: {}", e.getMessage(), e);
             throw new DatabaseException("Unexpected error creating Account and Account Profile.");
         }
     }
 
     private void addToHazelcastSet(Integer id) {
         hazelcastCacheManager.addToSet(HazelcastConstant.ACCOUNT_ID_SET, id);
-        LOG.debug("Added new account id to hazelcast set");
+        log.debug("Added new account id to hazelcast set");
     }
 
     private void validateInput(Account account, Profile profile) {
         if (account == null || profile == null) {
-            LOG.warn("Account or profile is null");
+            log.warn("Account or profile is null");
             throw new ValidationException("Account or profile is null");
         }
 
         if (!account.isValid()) {
-            LOG.warn("Email and/or password hash is null for account: {}", account);
+            log.warn("Email and/or password hash is null for account: {}", account);
             throw new ValidationException("Email and/or password hash is null for account: " + account);
         }
 
         if (!profile.isValid()) {
-            LOG.warn("Some fields are null or blank for profile: {}", profile);
+            log.warn("Some fields are null or blank for profile: {}", profile);
             throw new ValidationException("Some fields are null or blank for profile: " + profile);
         }
     }
