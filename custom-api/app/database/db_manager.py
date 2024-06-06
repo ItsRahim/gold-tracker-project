@@ -4,11 +4,9 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
-from app.config.load_config import load_config
+from app.config.load_config import Config
 from app.config.logging import log
 from app.util.encryptor import EncryptionHandler
-
-config = load_config('database')
 
 encryption_handler = EncryptionHandler()
 
@@ -20,15 +18,15 @@ def get_credentials(encrypted_value:  str) -> str:
 class DatabaseManager:
 
     def __init__(self):
-        dbname = config['name']
-        host = config['host']
-        port = config['port']
-        user = None
-        password = None
+        dbname = Config.get_db_name()
+        host = Config.get_db_host()
+        port = Config.get_db_port()
+        user = Config.get_db_user()
+        password = Config.get_db_password()
 
-        if 'username' in config and 'password' in config:
-            user = get_credentials(config['username'])
-            password = get_credentials(config['password'])
+        if user and password:
+            user = get_credentials(user)
+            password = get_credentials(password)
 
         connection_url = f'postgresql://{user}:{password}@{host}:{port}/{dbname}'
 

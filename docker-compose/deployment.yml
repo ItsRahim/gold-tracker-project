@@ -100,7 +100,7 @@ services:
 
 # Python Pricing Service
   pricing-api:
-    image: rahim/priceapi
+    image: rahim/pricingapi
     build: .
     container_name: pricing-service
     ports:
@@ -108,6 +108,16 @@ services:
     depends_on:
       - vault
       - postgres
+    environment:
+      - DB_NAME=gold
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=Vny+H/dXlFBwKCRbGCAyP/b7ZqM8SAWb+sGhLftCbw4=
+      - DB_PASSWORD=cdmak3vJcvdu8c5OdldjBabaNgpnHqfL4HLCXbyHSj0=
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - VAULT_URL=http://vault:8200
+      - VAULT_TOKEN=dev_token
+      - VAULT_BACKEND_PATH=kv/my-app
     networks:
       - my-network
 networks:

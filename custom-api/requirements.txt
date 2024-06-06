@@ -1,9 +1,9 @@
-requests~=2.31.0
+requests~=2.32.3
 beautifulsoup4~=4.12.3
-fastapi~=0.110.1
+fastapi~=0.111.0
 PyYAML~=6.0.1
-uvicorn~=0.29.0
+uvicorn~=0.30.1
 starlette~=0.37.2
-hvac~=2.1.0
+hvac~=2.2.0
 python-dotenv~=1.0.1
 SQLAlchemy~=2.0.29
