@@ -11,6 +11,7 @@ import com.rahim.accountservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.common.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -73,7 +73,7 @@ public class InternalAccountService implements IInternalAccountService {
      * @throws RuntimeException If an error occurs while finding inactive users or updating their status.
      */
     private void findAndUpdateInactiveUsers() {
-        LocalDate cutoffDate = generateDate().minusDays(30);
+        LocalDate cutoffDate = DateTimeUtil.getLocalDate().minusDays(30);
         List<Account> inactiveAccounts = accountRepositoryHandler.getInactiveUsers(cutoffDate);
 
         if (inactiveAccounts.isEmpty()) {
@@ -99,7 +99,7 @@ public class InternalAccountService implements IInternalAccountService {
      */
     private void processPendingDeleteUsers() {
         try {
-            LocalDate currentDate = generateDate();
+            LocalDate currentDate = DateTimeUtil.getLocalDate();
             List<Integer> accountIdsToDelete = accountRepositoryHandler.getUsersPendingDeletion(currentDate);
 
             if (accountIdsToDelete.isEmpty()) {
@@ -125,7 +125,7 @@ public class InternalAccountService implements IInternalAccountService {
      */
     private void processInactiveUsers() {
         try {
-            LocalDate cutoffDate = generateDate().minusDays(44);
+            LocalDate cutoffDate = DateTimeUtil.getLocalDate().minusDays(44);
             List<Integer> accountIdsToDelete = accountRepositoryHandler.getUsersToDelete(cutoffDate);
 
             if (accountIdsToDelete.isEmpty()) {
@@ -141,10 +141,6 @@ public class InternalAccountService implements IInternalAccountService {
         } catch (Exception e) {
             log.error("An error occurred processing inactive users: {}", e.getMessage());
         }
-    }
-
-    private LocalDate generateDate() {
-        return LocalDate.now(ZoneId.of("UTC"));
     }
 
     private void sendEmail(Integer accountId, String emailTemplate, boolean includeUsername, boolean includeDate) {
