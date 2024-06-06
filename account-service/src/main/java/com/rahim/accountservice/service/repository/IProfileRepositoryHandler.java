@@ -1,7 +1,7 @@
 package com.rahim.accountservice.service.repository;
 
 import com.rahim.accountservice.model.EmailProperty;
-import com.rahim.accountservice.model.EmailToken;
+import com.rahim.common.model.kafka.AccountEmailData;
 import com.rahim.accountservice.entity.Profile;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public interface IProfileRepositoryHandler {
     void deleteProfile(int profileId);
     Profile findById(int profileId);
     boolean existsByUsername(String username);
-    EmailToken generateEmailTokens(EmailProperty emailProperty);
+    AccountEmailData generateEmailTokens(EmailProperty emailProperty);
     Profile getProfileByUsername(String username);
     int getProfileIdByAccountId(int accountId);
     List<Profile> getAllProfiles();
