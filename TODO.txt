@@ -62,6 +62,7 @@ Issues/Enhancements:
 -Create grafana dashboard
 -Externalise python config to env - DONE
 -Analyse which methods may benefit from @Async calls
+-Enhance account update email to include changes made
 Performance Testing:
 - VisualVM
 - Apache JMeter
