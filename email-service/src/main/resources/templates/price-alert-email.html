@@ -42,7 +42,7 @@
                 We are pleased to inform you that the price of gold has reached your desired threshold.
             </p>
             <p>
-                The current gold price is <strong th:text="${emailData.thresholdPrice}"></strong>, as of <strong
+                The current gold price is <strong th:text="'£' + ${emailData.thresholdPrice}"></strong>, as of <strong
                     th:text="${emailData.alertDateTime}"></strong>.
             </p>
             <p>Thank you for using our gold price notification service.</p>
