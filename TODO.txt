@@ -18,7 +18,7 @@ authentication-service - TODO
 Issues/Enhancements:
 - User not able to update profile details, only user account details - DONE
 - If user email is updated, updated email is sent to new email not old - DONE
-- Emails sent should use an HTML template - Thymeleaf
+- Emails sent should use an HTML template - Thymeleaf - DONE
 - When catching exceptions, throw specific exceptions not general ones - WIP
 - Kafka producer to be able to send any object
 - Check all pom.xml and remove unused dependency and separate test and runtimes
@@ -57,7 +57,7 @@ Issues/Enhancements:
 -Convert all offset datetime to use instant for better control - DONE
 -Change log.error LOG.error("Some message", e.getMessage(), e); - DONE
 -Write unit and integration tests for all services before moving on - WIP
--Update notification service to send emails using thymeleaf template
+-Update notification service to send emails using thymeleaf template - DONE
 -Implement prometheus - DONE
 -Create grafana dashboard
 -Externalise python config to env - DONE
