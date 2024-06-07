@@ -8,41 +8,33 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 /**
+ * Utility class for handling date and time operations.
+ * This class cannot be instantiated.
+ *
  * @author Rahim Ahmed
  * @created 25/05/2024
  */
 public class DateTimeUtil {
 
+    // Prevent instantiation
     private DateTimeUtil() {}
+
+    private static final DateTimeFormatter INSTANT_FORMATTER = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd HH:mm:ss")
+            .withZone(ZoneOffset.UTC);
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static Instant generateInstant() {
         return Instant.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
-    public static String formatInstantDate(Instant instant) {
-        if (instant == null) {
-            return "";
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter
-                .ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .withZone(ZoneOffset.UTC);
-
-        return formatter
-                .format(instant)
-                .replace("T", " ")
-                .replace("Z", "");
+    public static String getFormattedDate(LocalDate localDate) {
+        return DATE_FORMATTER.format(localDate);
     }
 
-    public static String formatDate(LocalDate localDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return formatter.format(localDate);
-    }
-
-    public static String getFormattedTime() {
-        return generateInstant()
-                .toString()
-                .replace("T", " ");
+    public static String getFormattedInstant() {
+        return INSTANT_FORMATTER.format(generateInstant());
     }
 
     public static LocalDate getLocalDate() {

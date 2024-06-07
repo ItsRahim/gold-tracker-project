@@ -6,14 +6,16 @@ import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.common.util.DateTimeUtil;
 import com.rahim.common.util.JsonUtil;
 import com.rahim.common.model.kafka.PriceAlertEmailData;
+import com.rahim.notificationservice.dao.NotificationDataAccess;
 import com.rahim.notificationservice.model.NotificationResult;
-import com.rahim.notificationservice.repository.ThresholdAlertRepository;
 import com.rahim.notificationservice.service.kafka.IKafkaDataProcessor;
 import com.rahim.notificationservice.service.repository.IThresholdAlertRepositoryHandler;
+import com.rahim.notificationservice.util.NotificationResultRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +28,15 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaDataProcessor.class);
     private final IThresholdAlertRepositoryHandler thresholdAlertRepositoryHandler;
-    private final ThresholdAlertRepository thresholdAlertRepository;
     private final IKafkaService kafkaService;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void processKafkaData(String priceData) {
         try {
             BigDecimal currentPrice = new BigDecimal(priceData);
-            List<NotificationResult> notificationList = thresholdAlertRepository.generateEmailTokens(currentPrice);
+            List<NotificationResult> notificationList = generateEmailTokens(currentPrice);
             log.debug("Retrieved {} notification records from the database for current price: {}", notificationList.size(), currentPrice);
 
             processNotifications(notificationList);
@@ -45,6 +47,24 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
         } catch (Exception e) {
             log.error("An unexpected error occurred", e);
         }
+    }
+
+    private List<NotificationResult> generateEmailTokens(BigDecimal currentPrice) {
+        String query = "SELECT "
+                + "ta." + NotificationDataAccess.COL_ALERT_ID + ", "
+                + "up." + NotificationDataAccess.PROFILE_COL_FIRST_NAME + ", "
+                + "up." + NotificationDataAccess.PROFILE_COL_LAST_NAME + ", "
+                + "u." + NotificationDataAccess.ACCOUNT_COL_EMAIL + ", "
+                + "ta." + NotificationDataAccess.COL_THRESHOLD_PRICE
+                + " FROM "
+                + NotificationDataAccess.PROFILE_TABLE_NAME + " up"
+                + " JOIN " + NotificationDataAccess.TABLE_NAME + " ta ON up." + NotificationDataAccess.COL_ACCOUNT_ID + " = ta." + NotificationDataAccess.COL_ACCOUNT_ID
+                + " JOIN " + NotificationDataAccess.ACCOUNT_TABLE_NAME + " u ON up." + NotificationDataAccess.ACCOUNT_COL_ACCOUNT_ID + " = u." + NotificationDataAccess.ACCOUNT_COL_ACCOUNT_ID
+                + " WHERE "
+                + "ta." + NotificationDataAccess.COL_THRESHOLD_PRICE + " = ?"
+                + " AND ta." + NotificationDataAccess.COL_IS_ACTIVE + " = 'true'";
+
+        return jdbcTemplate.query(query, new NotificationResultRowMapper(), currentPrice);
     }
 
     private void processNotifications(List<NotificationResult> notificationList) {
@@ -65,7 +85,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
                 .lastName(notificationResult.getLastName())
                 .email(notificationResult.getEmail())
                 .thresholdPrice(String.valueOf(notificationResult.getThresholdPrice()))
-                .alertDateTime(DateTimeUtil.getFormattedTime())
+                .alertDateTime(DateTimeUtil.getFormattedInstant())
                 .emailTemplate(EmailTemplate.PRICE_ALERT)
                 .build();
     }

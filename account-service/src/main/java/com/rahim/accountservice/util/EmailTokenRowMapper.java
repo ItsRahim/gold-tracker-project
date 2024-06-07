@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDate;
 
 /**
@@ -69,7 +68,7 @@ public class EmailTokenRowMapper implements RowMapper<AccountEmailData> {
     private void setDeleteDate(ResultSet rs, AccountEmailData accountEmailData) throws SQLException {
         try {
             LocalDate deleteDate = rs.getDate(AccountJson.ACCOUNT_DELETE_DATE).toLocalDate();
-            String formattedDate = DateTimeUtil.formatDate(deleteDate);
+            String formattedDate = DateTimeUtil.getFormattedDate(deleteDate);
             accountEmailData.setDeleteDate(formattedDate);
         } catch (SQLException e) {
             throw new SQLException("Error setting delete date", e);
@@ -77,8 +76,7 @@ public class EmailTokenRowMapper implements RowMapper<AccountEmailData> {
     }
 
     private void setUpdateDateAndOldEmail(AccountEmailData accountEmailData) {
-        Instant updatedAt = DateTimeUtil.generateInstant();
-        String formattedDate = DateTimeUtil.formatInstantDate(updatedAt);
+        String formattedDate = DateTimeUtil.getFormattedInstant();
         accountEmailData.setUpdatedAt(formattedDate);
         accountEmailData.setEmail(emailProperty.getOldEmail());
     }

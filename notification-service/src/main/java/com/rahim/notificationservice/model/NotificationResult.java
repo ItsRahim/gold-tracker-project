@@ -1,6 +1,8 @@
 package com.rahim.notificationservice.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -9,6 +11,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class NotificationResult {
     private Integer alertId;
     private String firstName;
@@ -17,4 +21,11 @@ public class NotificationResult {
     private double thresholdPrice;
     private boolean isActive;
 
+    public NotificationResult(Integer alertId, String firstName, String lastName, String email, double thresholdPrice) {
+        this.alertId = alertId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.thresholdPrice = thresholdPrice;
+    }
 }
