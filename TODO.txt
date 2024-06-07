@@ -61,6 +61,7 @@ Issues/Enhancements:
 -Implement prometheus - DONE
 -Create grafana dashboard
 -Externalise python config to env - DONE
+-Analyse which methods may benefit from @Async calls
 Performance Testing:
 - VisualVM
 - Apache JMeter
