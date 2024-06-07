@@ -5,7 +5,7 @@ import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.common.util.DateTimeUtil;
 import com.rahim.common.util.JsonUtil;
-import com.rahim.notificationservice.model.EmailData;
+import com.rahim.common.model.kafka.PriceAlertEmailData;
 import com.rahim.notificationservice.model.NotificationResult;
 import com.rahim.notificationservice.repository.ThresholdAlertRepository;
 import com.rahim.notificationservice.service.kafka.IKafkaDataProcessor;
@@ -55,23 +55,23 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
         thresholdAlertRepositoryHandler.deactivateAlert(notificationResult.getAlertId());
         log.info("Deactivated alert for user: {}", notificationResult.getEmail());
 
-        EmailData emailData = createEmailData(notificationResult);
-        sendEmail(emailData);
+        PriceAlertEmailData priceAlertEmailData = createEmailData(notificationResult);
+        sendEmail(priceAlertEmailData);
     }
 
-    private EmailData createEmailData(NotificationResult notificationResult) {
-        return EmailData.builder()
+    private PriceAlertEmailData createEmailData(NotificationResult notificationResult) {
+        return PriceAlertEmailData.builder()
                 .firstName(notificationResult.getFirstName())
                 .lastName(notificationResult.getLastName())
                 .email(notificationResult.getEmail())
                 .thresholdPrice(String.valueOf(notificationResult.getThresholdPrice()))
                 .alertDateTime(DateTimeUtil.getFormattedTime())
-                .emailTemplate(EmailTemplate.PRICE_ALERT_TEMPLATE)
+                .emailTemplate(EmailTemplate.PRICE_ALERT)
                 .build();
     }
 
-    private void sendEmail(EmailData emailData) {
-        String jsonEmailData = JsonUtil.convertObjectToJson(emailData);
-        kafkaService.sendMessage(KafkaTopic.SEND_EMAIL, jsonEmailData);
+    private void sendEmail(PriceAlertEmailData priceAlertEmailData) {
+        String jsonEmailData = JsonUtil.convertObjectToJson(priceAlertEmailData);
+        kafkaService.sendMessage(KafkaTopic.SEND_PRICE_ALERT, jsonEmailData);
     }
 }

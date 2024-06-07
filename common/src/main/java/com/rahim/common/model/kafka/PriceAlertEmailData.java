@@ -1,5 +1,6 @@
-package com.rahim.notificationservice.model;
+package com.rahim.common.model.kafka;
 
+import com.rahim.common.constant.EmailTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,12 +14,12 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class EmailData {
+public class PriceAlertEmailData {
     private String firstName;
     private String lastName;
     private String email;
     private String thresholdPrice;
     private String alertDateTime;
-    private String emailTemplate;
+    private EmailTemplate emailTemplate;
 
 }

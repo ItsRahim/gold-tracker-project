@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account Deleted</title>
+    <style>
+        body {
+            font-family: 'Courier', monospace;
+        }
+
+        p {
+            font-family: 'Courier', monospace;
+        }
+
+        .section {
+            padding: 3rem 1.5rem;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.05);
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="section">
+    <div class="container">
+        <div class="content">
+            <h3 class="title is-4">Account Deleted</h3>
+            <p>
+                Dear <strong th:text="${emailData.firstName}"></strong>
+                <strong th:text="${emailData.lastName}"></strong>,
+            </p>
+            <p>
+                We wanted to inform you that your account with the username
+                <strong th:text="${emailData.username}"></strong>
+                has been deleted.
+            </p>
+            <p>
+                The account was deleted on
+                <strong th:text="${emailData.deleteDate}"></strong>
+            </p>
+            <p>If you authorised this deletion, there is no further action needed from your end.</p>
+            <p>However, if you did not authorise this deletion or suspect any unauthorised activity on your account,
+                please contact us immediately.</p>
+            <p>Thank you for your attention to this matter.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

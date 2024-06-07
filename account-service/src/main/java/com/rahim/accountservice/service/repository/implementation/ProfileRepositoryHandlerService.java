@@ -3,14 +3,14 @@ package com.rahim.accountservice.service.repository.implementation;
 import com.rahim.accountservice.dao.AccountDataAccess;
 import com.rahim.accountservice.dao.ProfileDataAccess;
 import com.rahim.accountservice.model.EmailProperty;
-import com.rahim.accountservice.model.EmailToken;
+import com.rahim.common.constant.EmailTemplate;
+import com.rahim.common.model.kafka.AccountEmailData;
 import com.rahim.accountservice.entity.Profile;
 import com.rahim.accountservice.repository.ProfileRepository;
 import com.rahim.accountservice.json.AccountJson;
 import com.rahim.accountservice.json.ProfileJson;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.util.EmailTokenRowMapper;
-import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -94,7 +94,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
 
     @Override
     @Transactional(readOnly = true)
-    public EmailToken generateEmailTokens(EmailProperty emailProperty) {
+    public AccountEmailData generateEmailTokens(EmailProperty emailProperty) {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("SELECT ");
         sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_FIRST_NAME).append(" AS ").append(ProfileJson.PROFILE_FIRST_NAME).append(", ");
@@ -106,10 +106,10 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
         }
 
         if (emailProperty.isIncludeDate()) {
-            String templateName = emailProperty.getTemplateName();
-            if (templateName.equals(EmailTemplate.ACCOUNT_DELETION_TEMPLATE)) {
+            EmailTemplate templateName = emailProperty.getTemplateName();
+            if (templateName.equals(EmailTemplate.ACCOUNT_DELETION)) {
                 sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_DELETE_DATE).append(" AS ").append(AccountJson.ACCOUNT_DELETE_DATE).append(", ");
-            } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE_TEMPLATE)) {
+            } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE)) {
                 sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_UPDATED_AT).append(" AS ").append(AccountJson.ACCOUNT_UPDATED_AT).append(", ");
             }
         }

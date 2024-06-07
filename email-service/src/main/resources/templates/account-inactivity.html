@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account Inactivity Email</title>
+    <style>
+        body {
+            font-family: 'Courier', monospace;
+        }
+
+        p {
+            font-family: 'Courier', monospace;
+        }
+
+        .section {
+            padding: 3rem 1.5rem;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.05);
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="section">
+    <div class="container">
+        <div class="content">
+            <h3 class="title is-4">Account Inactivity Alert</h3>
+            <p>
+                Dear <strong th:text="${emailData.firstName}"></strong>
+                <strong th:text="${emailData.lastName}"></strong>,
+            </p>
+            <p>
+                We hope you are well. This is a notice regarding your account on our platform.
+            </p>
+            <p>
+                Our records indicate that your account has been inactive for the past 30 days. To ensure the security of
+                our system, we kindly request you to log in within the next 14 days. Failure to do so will result in an
+                automatic request to delete your account.
+            </p>
+            <p>
+                If you have any concerns or questions, please reach out to our support team. We value your continued
+                presence and would like to assist you in any way we can.
+            </p>
+            <p>
+                Thank you for being a part of our community.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account Deletion Email</title>
+    <style>
+        body {
+            font-family: 'Courier', monospace;
+        }
+
+        p {
+            font-family: 'Courier', monospace;
+        }
+
+        .section {
+            padding: 3rem 1.5rem;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.05);
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="section">
+    <div class="container">
+        <div class="content">
+            <h3 class="title is-4">Account Deletion Warning</h3>
+            <p>
+                Dear <strong th:text="${emailData.firstName}"></strong>
+                <strong th:text="${emailData.lastName}"></strong>,
+            </p>
+            <p>
+                We hope this message finds you well. This is a notification regarding your account at our service.
+            </p>
+            <p>
+                We want to inform you that based on our records, your account, <strong
+                    th:text="${emailData.username}"></strong>, is scheduled for deletion in 30 days, on <strong
+                    th:text="${emailData.deletionDate}"></strong>. If you have any concerns or questions, please contact
+                our support team as soon as possible.
+            </p>
+            <p>
+                We value your presence with us, and we'd be happy to assist you with any issues you may have. To prevent
+                the deletion of your account, make sure to log in within the next 30 days, before <strong
+                    th:text="${emailData.deletionDate}"></strong>.
+            </p>
+            <p>Thank you for being a part of our community.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

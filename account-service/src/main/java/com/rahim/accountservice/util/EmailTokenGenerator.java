@@ -1,7 +1,7 @@
 package com.rahim.accountservice.util;
 
 import com.rahim.accountservice.model.EmailProperty;
-import com.rahim.accountservice.model.EmailToken;
+import com.rahim.common.model.kafka.AccountEmailData;
 import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
@@ -22,9 +22,9 @@ public class EmailTokenGenerator {
     public void generateEmailTokens(EmailProperty emailProperty) {
         try {
             log.debug("Generating email tokens");
-            EmailToken emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);
+            AccountEmailData emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);
             String emailData = JsonUtil.convertObjectToJson(emailToken);
-            kafkaService.sendMessage(KafkaTopic.SEND_EMAIL, emailData);
+            kafkaService.sendMessage(KafkaTopic.SEND_ACCOUNT_ALERT, emailData);
         } catch (Exception e) {
             log.error("An error occurred generating email tokens: {}", e.getMessage(), e);
             throw new RuntimeException("An error occurred generating email tokens", e);

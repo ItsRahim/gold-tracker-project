@@ -1,5 +1,6 @@
 package com.rahim.accountservice.model;
 
+import com.rahim.common.constant.EmailTemplate;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ import lombok.Getter;
 @Builder
 public class EmailProperty {
     private int accountId;
-    private String templateName;
+    private EmailTemplate templateName;
     private boolean includeUsername;
     private boolean includeDate;
     private String oldEmail;

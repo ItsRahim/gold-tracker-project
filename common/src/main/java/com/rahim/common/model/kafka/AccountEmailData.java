@@ -1,11 +1,8 @@
-package com.rahim.accountservice.model;
+package com.rahim.common.model.kafka;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rahim.common.constant.EmailTemplate;
 import lombok.*;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDate;
 
 /**
  * @author Rahim Ahmed
@@ -17,12 +14,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class EmailToken {
+public class AccountEmailData {
     private String username;
     private String firstName;
     private String lastName;
     private String email;
     private String deleteDate;
     private String updatedAt;
-    private String emailTemplate;
+    private EmailTemplate emailTemplate;
 }
