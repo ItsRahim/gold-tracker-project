@@ -31,7 +31,7 @@ public class HazelcastIntialiser {
 
     @PostConstruct
     public void initialise() {
-        log.debug("Initializing Account Service Hazelcast Storages...");
+        log.debug("Initialising Account Service Hazelcast Storages...");
         initialiserMap = hazelcastCacheManager.getMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP);
         initialiseActiveNotification();
         initialiseAccountIds();
@@ -40,7 +40,7 @@ public class HazelcastIntialiser {
     private void initialiseActiveNotification() {
         boolean isInitialised = initialiserMap.getOrDefault(ACTIVE_NOTIFICATION_ID_INITIALISED, false);
         if (isInitialised) {
-            log.debug("Active notification already initialized.");
+            log.debug("Active notification already initialised.");
             return;
         }
 
@@ -63,7 +63,7 @@ public class HazelcastIntialiser {
                 });
 
         hazelcastCacheManager.addToMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP, ACTIVE_NOTIFICATION_ID_INITIALISED, true);
-        log.debug("Active notification initialization complete.");
+        log.debug("Active notification initialisation complete.");
     }
 
     private void initialiseAccountIds() {
@@ -82,6 +82,6 @@ public class HazelcastIntialiser {
         });
 
         hazelcastCacheManager.addToMap(HazelcastConstant.HAZELCAST_INITIALISER_MAP, ACCOUNT_ID_INITIALISED, true);
-        log.debug("Account ID initialization complete.");
+        log.debug("Account ID initialisation complete.");
     }
 }
