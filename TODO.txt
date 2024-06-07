@@ -69,3 +69,7 @@ Can be analysed after above is complete:
 - DB Indexes
 - Caching
 - Kafka Configurations(with and without SSL)
+
+Async
+In a stack call all method being called occurs when previous one is complete
+If a method call is marked with @Async, it will run in its own thread, remaining methods are being executed whilst that is running on its own
