@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Price Alert Email</title>
+    <title>Account Inactivity Email</title>
     <style>
         body {
             font-family: 'Courier', monospace;
@@ -33,21 +33,27 @@
 <div class="section">
     <div class="container">
         <div class="content">
-            <h3 class="title is-4">Price Alert</h3>
+            <h3 class="title is-4">Account Inactivity Alert</h3>
             <p>
                 Dear <strong th:text="${emailData.firstName}"></strong>
                 <strong th:text="${emailData.lastName}"></strong>,
             </p>
             <p>
-                We are pleased to inform you that the price of gold has reached your desired threshold.
+                We hope you are well. This is a notice regarding your account on our platform.
             </p>
             <p>
-                The current gold price is <strong th:text="${emailData.thresholdPrice}"></strong>, as of <strong
-                    th:text="${emailData.alertDateTime}"></strong>.
+                Our records indicate that your account has been inactive for the past 30 days. To ensure the security of
+                our system, we kindly request you to log in within the next 14 days. Failure to do so will result in an
+                automatic request to delete your account.
             </p>
-            <p>Thank you for using our gold price notification service.</p>
+            <p>
+                If you have any concerns or questions, please reach out to our support team. We value your continued
+                presence and would like to assist you in any way we can.
+            </p>
+            <p>
+                Thank you for being a part of our community.
+            </p>
         </div>
     </div>
-</div>
 </body>
 </html>

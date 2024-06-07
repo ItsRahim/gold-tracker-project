@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Price Alert Email</title>
+    <title>Account Deleted</title>
     <style>
         body {
             font-family: 'Courier', monospace;
@@ -33,19 +33,24 @@
 <div class="section">
     <div class="container">
         <div class="content">
-            <h3 class="title is-4">Price Alert</h3>
+            <h3 class="title is-4">Account Deleted</h3>
             <p>
                 Dear <strong th:text="${emailData.firstName}"></strong>
                 <strong th:text="${emailData.lastName}"></strong>,
             </p>
             <p>
-                We are pleased to inform you that the price of gold has reached your desired threshold.
+                We wanted to inform you that your account with the username
+                <strong th:text="${emailData.username}"></strong>
+                has been deleted.
             </p>
             <p>
-                The current gold price is <strong th:text="${emailData.thresholdPrice}"></strong>, as of <strong
-                    th:text="${emailData.alertDateTime}"></strong>.
+                The account was deleted on
+                <strong th:text="${emailData.deleteDate}"></strong>
             </p>
-            <p>Thank you for using our gold price notification service.</p>
+            <p>If you authorised this deletion, there is no further action needed from your end.</p>
+            <p>However, if you did not authorise this deletion or suspect any unauthorised activity on your account,
+                please contact us immediately.</p>
+            <p>Thank you for your attention to this matter.</p>
         </div>
     </div>
 </div>
