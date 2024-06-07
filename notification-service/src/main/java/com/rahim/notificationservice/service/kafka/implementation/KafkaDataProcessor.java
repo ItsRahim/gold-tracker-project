@@ -85,7 +85,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
                 .lastName(notificationResult.getLastName())
                 .email(notificationResult.getEmail())
                 .thresholdPrice(String.valueOf(notificationResult.getThresholdPrice()))
-                .alertDateTime(DateTimeUtil.getFormattedTime())
+                .alertDateTime(DateTimeUtil.getFormattedInstant())
                 .emailTemplate(EmailTemplate.PRICE_ALERT)
                 .build();
     }

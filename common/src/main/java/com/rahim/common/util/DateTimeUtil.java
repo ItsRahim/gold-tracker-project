@@ -6,7 +6,6 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 
 /**
  * Utility class for handling date and time operations.
@@ -30,17 +29,11 @@ public class DateTimeUtil {
         return Instant.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
-    public static String formatInstantDate(Instant instant) {
-        return Optional.ofNullable(instant)
-                .map(INSTANT_FORMATTER::format)
-                .orElse("");
-    }
-
-    public static String formatDate(LocalDate localDate) {
+    public static String getFormattedDate(LocalDate localDate) {
         return DATE_FORMATTER.format(localDate);
     }
 
-    public static String getFormattedTime() {
+    public static String getFormattedInstant() {
         return INSTANT_FORMATTER.format(generateInstant());
     }
 
