@@ -43,7 +43,7 @@
             </p>
             <p>
                 The current gold price is <strong th:text="'£' + ${emailData.thresholdPrice}"></strong>, as of <strong
-                    th:text="${emailData.alertDateTime}"></strong>.
+                    th:text="${emailData.alertDateTime} + ' UTC'"></strong>.
             </p>
             <p>Thank you for using our gold price notification service.</p>
         </div>

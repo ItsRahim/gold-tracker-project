@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -31,6 +32,7 @@ public class EmailSender {
     @Value("${spring.mail.username}")
     private String senderEmail;
 
+    @Async
     public void sendEmail(String recipientEmail, String emailContent, String subject) {
         log.debug("Attempting to send email...");
 
