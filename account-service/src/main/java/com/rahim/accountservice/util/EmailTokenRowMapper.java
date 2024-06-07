@@ -27,29 +27,59 @@ public class EmailTokenRowMapper implements RowMapper<AccountEmailData> {
     public AccountEmailData mapRow(ResultSet rs, int rowNum) throws SQLException {
         AccountEmailData accountEmailData = new AccountEmailData();
 
-        if (emailProperty.isIncludeUsername()) {
-            accountEmailData.setUsername(rs.getString(ProfileJson.PROFILE_USERNAME));
-        }
-
-        accountEmailData.setFirstName(rs.getString(ProfileJson.PROFILE_FIRST_NAME));
-        accountEmailData.setLastName(rs.getString(ProfileJson.PROFILE_LAST_NAME));
-        accountEmailData.setEmail(rs.getString(AccountJson.ACCOUNT_EMAIL));
-        accountEmailData.setEmailTemplate(emailProperty.getTemplateName());
-
-        if (emailProperty.isIncludeDate()) {
-            EmailTemplate templateName = emailProperty.getTemplateName();
-            if (templateName.equals(EmailTemplate.ACCOUNT_DELETION)) {
-                LocalDate deleteDate = rs.getDate(AccountJson.ACCOUNT_DELETE_DATE).toLocalDate();
-                String date = DateTimeUtil.formatDate(deleteDate);
-                accountEmailData.setDeleteDate(date);
-            } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE)) {
-                Instant updateAt = rs.getTimestamp(AccountJson.ACCOUNT_UPDATED_AT).toInstant();
-                String date = DateTimeUtil.formatInstantDate(updateAt);
-                accountEmailData.setUpdatedAt(date);
-                accountEmailData.setEmail(emailProperty.getOldEmail());
+        try {
+            if (emailProperty.isIncludeUsername()) {
+                accountEmailData.setUsername(rs.getString(ProfileJson.PROFILE_USERNAME));
             }
+
+            accountEmailData.setFirstName(rs.getString(ProfileJson.PROFILE_FIRST_NAME));
+            accountEmailData.setLastName(rs.getString(ProfileJson.PROFILE_LAST_NAME));
+            accountEmailData.setEmail(rs.getString(AccountJson.ACCOUNT_EMAIL));
+            accountEmailData.setEmailTemplate(emailProperty.getTemplateName());
+
+            if (emailProperty.isIncludeDate()) {
+                handleDateInclusion(rs, accountEmailData);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error mapping row to AccountEmailData", e);
         }
 
         return accountEmailData;
+    }
+
+    private void handleDateInclusion(ResultSet rs, AccountEmailData accountEmailData) throws SQLException {
+        EmailTemplate templateName = emailProperty.getTemplateName();
+
+        try {
+            switch (templateName) {
+                case ACCOUNT_DELETION:
+                    setDeleteDate(rs, accountEmailData);
+                    break;
+                case ACCOUNT_UPDATE:
+                    setUpdateDateAndOldEmail(accountEmailData);
+                    break;
+                default:
+                    break;
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error handling date inclusion for template: " + templateName, e);
+        }
+    }
+
+    private void setDeleteDate(ResultSet rs, AccountEmailData accountEmailData) throws SQLException {
+        try {
+            LocalDate deleteDate = rs.getDate(AccountJson.ACCOUNT_DELETE_DATE).toLocalDate();
+            String formattedDate = DateTimeUtil.formatDate(deleteDate);
+            accountEmailData.setDeleteDate(formattedDate);
+        } catch (SQLException e) {
+            throw new SQLException("Error setting delete date", e);
+        }
+    }
+
+    private void setUpdateDateAndOldEmail(AccountEmailData accountEmailData) {
+        Instant updatedAt = DateTimeUtil.generateInstant();
+        String formattedDate = DateTimeUtil.formatInstantDate(updatedAt);
+        accountEmailData.setUpdatedAt(formattedDate);
+        accountEmailData.setEmail(emailProperty.getOldEmail());
     }
 }
