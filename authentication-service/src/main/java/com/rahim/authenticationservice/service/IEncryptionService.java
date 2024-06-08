@@ -1,4 +1,4 @@
-package com.rahim.configserver.service;
+package com.rahim.authenticationservice.service;
 
 import java.util.Map;
 

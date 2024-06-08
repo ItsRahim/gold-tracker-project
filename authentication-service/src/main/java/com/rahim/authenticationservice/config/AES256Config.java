@@ -1,15 +1,15 @@
-package com.rahim.configserver.config;
+package com.rahim.authenticationservice.config;
 
 import org.jasypt.util.text.AES256TextEncryptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Rahim Ahmed
  * @created 21/04/2024
  */
-@Component
+@Configuration
 public class AES256Config {
 
     @Value("${jasypt.encryptor.password}")

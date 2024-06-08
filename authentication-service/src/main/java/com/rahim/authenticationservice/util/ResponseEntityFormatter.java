@@ -1,4 +1,4 @@
-package com.rahim.configserver.util;
+package com.rahim.authenticationservice.util;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
