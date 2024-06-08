@@ -1,4 +1,4 @@
-package com.rahim.configserver.service.feign;
+package com.rahim.authenticationservice.service.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

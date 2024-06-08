@@ -1,6 +1,6 @@
-package com.rahim.configserver.service.implementation;
+package com.rahim.authenticationservice.service.implementation;
 
-import com.rahim.configserver.service.IEncryptionService;
+import com.rahim.authenticationservice.service.IEncryptionService;
 import lombok.RequiredArgsConstructor;
 import org.jasypt.util.text.AES256TextEncryptor;
 import org.slf4j.Logger;
