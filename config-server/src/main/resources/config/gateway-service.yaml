@@ -122,7 +122,7 @@ spring:
             - RewritePath=/notification/(?<segment>.*), ${notification-service.path}/${segment}
             - AddResponseHeader=${header-response.name}, ${header-response.value}
         # PRICING SERVICE ROUTES
-        # Account routes
+        # Pricing routes
         - id: price-base-route
           uri: ${pricing-service.uri}
           predicates:
