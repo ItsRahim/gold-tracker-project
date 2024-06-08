@@ -68,4 +68,10 @@ scrape_configs:
       - targets: ['host.docker.internal:8888']
         labels:
            application: "Config Server"
-           
+
+  - job_name: 'Authentication Service Input'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8090']
+        labels:
+           application: "Authentication Service"
