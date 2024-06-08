@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AES256Config {
 
-    //@Value("${jasypt.encryptor.password}")
-    private String encryptorPassword = "XpTTc9vf1goUo4G9h44a7ciSnln0fFdqck5vxl5iM8g=";
+    @Value("${jasypt.encryptor.password}")
+    private String encryptorPassword;
 
     @Bean
     public AES256TextEncryptor stringEncryptor() {
