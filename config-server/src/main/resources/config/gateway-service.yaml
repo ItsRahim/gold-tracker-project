@@ -66,14 +66,14 @@ spring:
           predicates:
             - Path=/encrypt/java
           filters:
-            - RewritePath=/encrypt/java, ${config-server.path}/encrypt/java
+            - RewritePath=/encrypt/java, ${authentication-service.path}/encrypt/java
             - AddResponseHeader=${header-response.name}, ${header-response.value}
         - id: python-encryption-route
-          uri: ${config-server.uri}
+          uri: ${authentication-service.uri}
           predicates:
             - Path=/encrypt/python
           filters:
-            - RewritePath=/encrypt/python, ${config-server.path}/encrypt/python
+            - RewritePath=/encrypt/python, ${authentication-service.path}/encrypt/python
             - AddResponseHeader=${header-response.name}, ${header-response.value}
           # INVESTMENT SERVICE ROUTES
           # Invest routes

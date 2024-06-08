@@ -7,7 +7,7 @@ logging:
   file:
     name: logs/${spring.application.name}.log
   level:
-    com.rahim.accountservice: DEBUG
+    com.rahim.authenticationservice: DEBUG
     org.springframework: ERROR
     root: WARN
   package: com.rahim.authenticationservice
