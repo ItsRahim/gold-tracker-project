@@ -1,4 +1,4 @@
-package com.rahim.authenticationservice.service.feign;
+package com.rahim.configserver.service;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * @author Rahim Ahmed
- * @created 22/04`/2024
+ * @created 22/04/2024
  */
 @FeignClient(name = "python-api", url = "${python-api.url}")
 public interface PythonEncryption {

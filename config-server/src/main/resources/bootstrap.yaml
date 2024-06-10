@@ -6,8 +6,18 @@ spring:
     name: config-server
   profiles:
     active: native
-  cloud:
-    config:
-      server:
-        native:
-          search-locations: classpath:/config
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 1
+    lease-expiration-duration-in-seconds: 2
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    healthcheck:
+      enabled: true
+
+encrypt:
+  rsa:
+    algorithm: oaep
+    strong: true

@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: account-service
+
+logging:
+  package: com.rahim.accountservice
+  level:
+    com.rahim.accountservice: DEBUG
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    root: WARN
+  file:
+    name: logs/${spring.application.name}.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n"

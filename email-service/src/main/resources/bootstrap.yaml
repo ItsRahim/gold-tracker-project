@@ -1,4 +1,11 @@
 spring:
-  config:
-    import:
-    - configserver:http://localhost:8888/vault-config
+  application:
+    name: email-service
+  profiles:
+    active: dev
+  cloud:
+    config:
+      name: dbConfig,appConfig,hazelcastConfig,email-service
+      discovery:
+        enabled: true
+        service-id: CONFIG-SERVER

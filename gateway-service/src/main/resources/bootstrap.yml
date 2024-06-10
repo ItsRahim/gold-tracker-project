@@ -1,9 +1,9 @@
 spring:
   application:
-    name: pricing-service
+    name: gateway-service
   cloud:
     config:
-      name: dbConfig,appConfig,pythonConfig,pricing-service
+      name: gateway-service,dbConfig
       discovery:
         enabled: true
         service-id: CONFIG-SERVER

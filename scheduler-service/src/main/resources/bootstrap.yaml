@@ -1,4 +1,9 @@
 spring:
-  config:
-    import:
-    - configserver:http://localhost:8888/vault-config
+  application:
+    name: scheduler-service
+  cloud:
+    config:
+      name: dbConfig,appConfig,scheduler-service
+      discovery:
+        enabled: true
+        service-id: CONFIG-SERVER

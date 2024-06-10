@@ -1,0 +1,28 @@
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/cloud
+    vault:
+      enabled: true
+      # Update value with Vault Pod's service host
+      uri: http://my-vault.vault:8200
+      kv:
+        enabled: true
+        application-name: config-server
+        backend: kv
+      authentication: kubernetes
+      kubernetes:
+        # Update with name of role created - bound to namespace which app is deployed
+        # Add policy to role created
+        role: rgts-vault
+#      ssl:
+#        key-store: file://{location}
+#        key-store-password: password
+#        trust-store: file://{location}
+#        trust-store-password: password
+encrypt:
+  key: ${CONFIG-SERVER-ENCRYPTION-KEY}
+  rsa:
+    salt: ${CONFIG-SERVER-SALT}

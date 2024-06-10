@@ -40,7 +40,6 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
     private static final int GOLD_TICKER_ID = 1;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void updateGoldTickerPrice(GoldData processedData) {
         try {
             if (processedData == null) {
