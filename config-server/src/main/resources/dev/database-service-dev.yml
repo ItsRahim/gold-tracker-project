@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  flyway:
+    enabled: true
+    clean-disabled: true
+    locations: classpath:db/base
+    schemas: rgts, batch_schema

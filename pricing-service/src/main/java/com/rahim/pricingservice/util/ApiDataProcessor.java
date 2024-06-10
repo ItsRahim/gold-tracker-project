@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Rahim Ahmed
@@ -22,6 +24,7 @@ public class ApiDataProcessor {
     private final IGoldPriceUpdateService goldPriceUpdateService;
     private GoldData processedData;
 
+    @Transactional(rollbackFor = Exception.class)
     public void processApiData(String kafkaData) {
         try {
             kafkaData = kafkaData.substring(0, kafkaData.length() - 1)

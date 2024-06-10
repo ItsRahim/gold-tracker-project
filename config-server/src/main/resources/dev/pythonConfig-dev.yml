@@ -1,4 +1,7 @@
 python-api:
+  # Current source of information for gold prices.
   source: uk-investing
+  # Endpoint hosting the API/Service
   url: http://localhost:8000/api/v1
+  # Kafka topic where the API writes data to.
   topic: gold-price-stream

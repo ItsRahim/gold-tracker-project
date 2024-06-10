@@ -5,7 +5,7 @@ spring:
     active: dev
   cloud:
     config:
-      name: dbConfig,account-service
+      name: dbConfig,appConfig,hazelcastConfig,account-service
       discovery:
         enabled: true
         service-id: CONFIG-SERVER

@@ -1,39 +1,29 @@
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
-logging:
-  file:
-    name: logs/${spring.application.name}.log
-  level:
-    com.rahim.emailservice: DEBUG
-    org.springframework: ERROR
-    root: WARN
-  package: com.rahim.emailservice
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-
 server:
   port: 8083
 
 spring:
   application:
     name: email-service
-  output:
-    ansi:
-      enabled: always
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ENC(oyWkyXN9/0TvP+Q34QlJOhjpqRzG6u+No+Eguyh5mlahJS12s0ApEeWjaaRUj+cbuUTGnVbon0i3hBeAbXWE6g==)
-    password: ENC(eLQ7/j7ZCkRazmtM1ULeoS2A3Sms9/KI1uKHAipXmf3Z4f1qmfAZ+pRus3/WylCNF9ca92hp+zFSR2TGzFB6ww==)
+    username: '{cipher}0ecb2bad82f5c5676209da1f514894185b82d7f119f817fbe92daf5b1913c54ed94bb9907251ef77a2086cfb861fd346'
+    password: '{cipher}0363f6b11cd611622f0b974cd2abca7e62d49ee9f6cd8ee43d3d22c90f47715fc30333a287b4357433ff547562793500'
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+
+logging:
+  package: com.rahim.emailservice
+  level:
+    com.rahim.emailservice: DEBUG
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    root: WARN
+  file:
+    name: logs/${spring.application.name}.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n"

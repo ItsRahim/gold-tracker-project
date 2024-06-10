@@ -1,28 +1,18 @@
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
-logging:
-  file:
-    name: logs/${spring.application.name}.log
-  level:
-    com.rahim.notificationservice: DEBUG
-    org.springframework: ERROR
-    root: WARN
-  package: com.rahim.notificationservice
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-
 server:
   port: 8085
 
 spring:
   application:
     name: notification-service
-  output:
-    ansi:
-      enabled: always
+
+logging:
+  package: com.rahim.notificationservice
+  level:
+    com.rahim.notificationservice: DEBUG
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    root: WARN
+  file:
+    name: logs/${spring.application.name}.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n"

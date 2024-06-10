@@ -1,25 +1,3 @@
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
-logging:
-  file:
-    name: logs/${spring.application.name}.log
-  level:
-    com.rahim.batchservice: DEBUG
-    org.springframework: ERROR
-    root: WARN
-  package: com.rahim.batchservice
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-
-processing:
-  chunk-size: 500
-
 server:
   port: 8086
 
@@ -28,6 +6,18 @@ spring:
     name: account-service
   datasource:
     default-schema: batch_schema
-  output:
-    ansi:
-      enabled: always
+
+processing:
+  chunk-size: 500
+
+logging:
+  package: com.rahim.batchservice
+  level:
+    com.rahim.batchservice: DEBUG
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    root: WARN
+  file:
+    name: logs/${spring.application.name}.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n"

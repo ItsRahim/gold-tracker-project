@@ -31,7 +31,7 @@ public class GoldPrice {
     @JsonProperty("name")
     private GoldType goldType;
 
-    @Column(name = "current_price", nullable = false, precision = 5, scale = 2)
+    @Column(name = "current_price", nullable = false, precision = 10, scale = 2)
     @JsonProperty("currentPrice")
     private BigDecimal currentPrice;
 
