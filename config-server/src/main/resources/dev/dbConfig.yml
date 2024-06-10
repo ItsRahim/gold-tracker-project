@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    username: '{cipher}4106ce9aa8b53d97d9556471b61ca447ba51c6f935ec68f01adcd22426ea20f1'
+    password: '{cipher}338fee0e2a8bef265729618e9775440031aab20f95691d8add08d278ac670bb4'
+    url: jdbc:postgresql://localhost:5432/gold
+    driver-class-name: org.postgresql.Driver
+    connection-timeout: 20000
+    minimum-idle: 2
+    maximum-pool-size: 5
+    idle-timeout: 10000
+    max-lifetime: 1000
+    auto-commit: true
+    poolName: rgts-hikari-cp
+  jpa:
+    hibernate.ddl-auto: update
+    database: postgresql
+    show-sql: false

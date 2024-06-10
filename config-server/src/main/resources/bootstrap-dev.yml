@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/dev
+    vault:
+      enabled: true
+      kv:
+        enabled: true
+        backend: kv
+        application-name: config-server
+      host: localhost
+      port: 8200
+      scheme: http
+      authentication: TOKEN
+      token: dev_token
+encrypt:
+  key: ${encryption.key:test}
+  rsa:
+    algorithm: oaep
+    salt: ${salt.key:salt}
+    strong: true
+
+python-api:
+  encrypt: encrypt
+  url: http://localhost:8000/api/v1

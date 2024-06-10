@@ -1,11 +1,9 @@
 spring:
   application:
-    name: account-service
-  profiles:
-    active: dev
+    name: gateway-service
   cloud:
     config:
-      name: dbConfig,account-service
+      name: gateway-service,dbConfig
       discovery:
         enabled: true
         service-id: CONFIG-SERVER

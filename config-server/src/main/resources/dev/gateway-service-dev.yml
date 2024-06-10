@@ -60,20 +60,20 @@ spring:
           filters:
             - RewritePath=/profile/(?<segment>.*), ${account-service.profile.path}/${segment}
             - AddResponseHeader=${header-response.name}, ${header-response.value}
-        # AUTHENTICATION SERVICE ROUTES
+        # CONFIG SERVER ROUTES
         - id: java-encryption-route
-          uri: ${authentication-service.uri}
+          uri: ${config-server.uri}
           predicates:
             - Path=/encrypt/java
           filters:
-            - RewritePath=/encrypt/java, ${authentication-service.path}/encrypt/java
+            - RewritePath=/encrypt/java, /encrypt
             - AddResponseHeader=${header-response.name}, ${header-response.value}
         - id: python-encryption-route
-          uri: ${authentication-service.uri}
+          uri: ${config-server.uri}
           predicates:
             - Path=/encrypt/python
           filters:
-            - RewritePath=/encrypt/python, ${authentication-service.path}/encrypt/python
+            - RewritePath=/encrypt/python, ${config-server.path}/encrypt/python
             - AddResponseHeader=${header-response.name}, ${header-response.value}
           # INVESTMENT SERVICE ROUTES
           # Invest routes
@@ -167,10 +167,10 @@ account-service:
   profile:
     path: /api/v1/profile
 
-# Authentication Service Configurations
-authentication-service:
-  uri: lb://AUTHENTICATION-SERVICE
-  path: /api/v1/authentication
+# Config Server Configurations
+config-server:
+  uri: lb://CONFIG-SERVER
+  path: /api/v1/config-server
 
 # Investment Microservice Configuration
 investment-service:
