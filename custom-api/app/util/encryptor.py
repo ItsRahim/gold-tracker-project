@@ -9,7 +9,7 @@ from app.util.vault import Hvac
 
 def load_key_from_vault():
     hvac_instance = Hvac()
-    key_name = "gold-api-encryption-key"
+    key_name = "gold.api.encryption.key"
     value = hvac_instance.read_secret(key_name)
     if value is None:
         log.error("Key not found in vault")

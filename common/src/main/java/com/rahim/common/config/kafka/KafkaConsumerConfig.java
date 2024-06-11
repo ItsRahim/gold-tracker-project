@@ -1,5 +1,6 @@
 package com.rahim.common.config.kafka;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,25 +18,32 @@ import java.util.Map;
  * @created 15/11/2023
  */
 @Configuration
-public class KafkaConsumerConfig {
-
-    @Value("${spring.kafka.bootstrap-servers}")
-    public String bootstrapServers;
+@RequiredArgsConstructor
+public class KafkaConsumerConfig implements KafkaConstants {
 
     private final KafkaConsumerProperties kafkaConsumerProperties;
-
-    public KafkaConsumerConfig(KafkaConsumerProperties kafkaConsumerProperties) {
-        this.kafkaConsumerProperties = kafkaConsumerProperties;
-    }
+    private final KafkaProperties kafkaProperties;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaConsumerProperties.getKeyDeserializer());
-        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaConsumerProperties.getValueDeserializer());
+        Map<String, Object> consumerProps = new HashMap<>();
+        consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
+        consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaConsumerProperties.getKeyDeserializer());
+        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaConsumerProperties.getValueDeserializer());
 
-        return new DefaultKafkaConsumerFactory<>(configProps);
+        if (SSL.equalsIgnoreCase(kafkaProperties.getSecurityProtocol())) {
+            configureSSL(consumerProps);
+        } else {
+            consumerProps.put(SECURITY_PROTOCOL, PLAINTEXT);
+        }
+
+        return new DefaultKafkaConsumerFactory<>(consumerProps);
+    }
+
+    private void configureSSL(Map<String, Object> consumerProps) {
+        consumerProps.put(SECURITY_PROTOCOL, SSL);
+        consumerProps.put(SSL_TRUSTSTORE_LOCATION, kafkaProperties.getDecodedTruststore());
+        consumerProps.put(SSL_TRUSTSTORE_PASSWORD, kafkaProperties.getKeystorePassword());
     }
 
     @Bean

@@ -2,9 +2,17 @@ spring:
   hazelcast:
     config: classpath:hazelcastConfig.yml
   kafka:
+    bootstrap-servers: ${KAFKA_BROKER_URL}
+    ssl:
+      # Update depending on vault name/location
+      key-store-location: ${kafka.keystore.file}
+      key-password: '{cipher}password'
+      # Update depending on vault name/location
+      trust-store-location: ${kafka.truststore.file}
+      trust-store-password: '{cipher}password'
+      protocol: TLSv1.2
     security:
-      protocol: PLAINTEXT
-    bootstrap-servers: localhost:9093
+      protocol: SSL
     producer:
       # Number of retries for sending a message
       retries: 5

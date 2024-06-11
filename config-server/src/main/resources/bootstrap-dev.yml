@@ -15,11 +15,17 @@ spring:
       scheme: http
       authentication: TOKEN
       token: dev_token
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
 encrypt:
-  key: ${encryption.key:test}
+  key: dev_key
   rsa:
     algorithm: oaep
-    salt: ${salt.key:salt}
+    salt: dev_salt
     strong: true
 
 python-api:
