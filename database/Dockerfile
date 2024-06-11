@@ -1,5 +1,15 @@
 FROM openjdk:17
-LABEL authors="rahim"
-VOLUME /tmp
-COPY /target/database-0.0.1-SNAPSHOT.jar /database.jar
-ENTRYPOINT ["java", "-jar", "/database.jar"]
+
+LABEL authors="Rahim Ahmed"
+
+ENV SPRING_PROFILES_ACTIVE=docker
+
+WORKDIR /app
+
+COPY src/main/resources/db/base/ /app/database
+
+COPY target/database-0.0.1-SNAPSHOT.jar /app/database.jar
+
+ENTRYPOINT ["java", "-jar", "/app/database.jar"]
+
+CMD ["-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

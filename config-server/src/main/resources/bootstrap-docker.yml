@@ -1,0 +1,31 @@
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:///app/opt/configs
+    vault:
+      enabled: true
+      kv:
+        enabled: true
+        backend: kv
+        application-name: config-server
+      host: ${VAULT_SVC:vault}
+      port: ${VAULT_PORT:8200}
+      authentication: TOKEN
+      token: ${VAULT_TOKEN:dev_token}
+      scheme: http
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${DISCOVERY_SVC}:${DISCOVERY_PORT}/eureka
+
+encrypt:
+  key: ${CONFIG_SERVER_ENCRYPTION_KEY}
+  rsa:
+    salt: ${CONFIG_SERVER_SALT}
+
+python-api:
+  encrypt: encrypt
+  url: ${PYTHON_API_SVC}/api/v1

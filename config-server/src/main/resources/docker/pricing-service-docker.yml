@@ -1,0 +1,18 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: pricing-service
+
+logging:
+  package: com.rahim.pricingservice
+  level:
+    com.rahim.pricingservice: DEBUG
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    root: WARN
+  file:
+    name: opt/logs/${spring.application.name}.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n"

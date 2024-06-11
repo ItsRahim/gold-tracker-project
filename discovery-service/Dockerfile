@@ -1,5 +1,13 @@
-FROM openjdk:17
-LABEL authors="rahim"
-VOLUME /tmp
-COPY /target/service-registry-0.0.1-SNAPSHOT.jar /service-registry.jar
-ENTRYPOINT ["java", "-jar", "/service-registry.jar"]
+FROM openjdk:17-jdk-alpine
+
+LABEL authors="Rahim Ahmed"
+
+ENV SPRING_PROFILES_ACTIVE=docker
+
+WORKDIR /app
+
+COPY target/discovery-service-0.0.1-SNAPSHOT.jar /discovery-service.jar
+
+EXPOSE 8761
+
+ENTRYPOINT ["java", "-jar", "/discovery-service.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

@@ -1,0 +1,47 @@
+spring:
+  hazelcast:
+    config: classpath:hazelcastConfig.yml
+  kafka:
+    security:
+      protocol: PLAINTEXT
+    bootstrap-servers: ${KAFKA_BROKER_URL}
+    producer:
+      # Number of retries for sending a message
+      retries: 5
+      properties:
+        # Time in milliseconds to wait before retrying
+        retry.backoff.ms: 60000  # Retry once every minute
+        # Maximum time to wait for a response
+        request.timeout.ms: 35000
+      # Serializer for the key
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # Serializer for the value
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      properties:
+        # Maximum number of retries for polling messages
+        max.poll.retries: 5
+        # Maximum number of records returned in a single poll
+        max.poll.records: 500
+        # Timeout in milliseconds to detect consumer failures
+        session.timeout.ms: 10000
+        # Maximum amount of data per partition the server will return
+        max.partition.fetch.bytes: 1048576
+        # Action to take when there is no initial offset or if the current offset does not exist
+        auto.offset.reset: latest
+        # Disable automatic offset committing to have more control
+        enable.auto.commit: false
+        # Set the isolation level for read-committed semantics
+        isolation.level: read_committed
+        # Time in milliseconds to wait before retrying
+        retry.backoff.ms: 60000
+        # Maximum time to wait for a response
+        request.timeout.ms: 35000
+        # Maximum time between poll invocations
+        max.poll.interval.ms: 300000
+      # Disable automatic offset committing
+      enable-auto-commit: false
+      # Deserializer for the key
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # Deserializer for the value
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
