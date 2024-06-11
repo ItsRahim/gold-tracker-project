@@ -52,3 +52,7 @@ class Config:
     @staticmethod
     def get_vault_backend_path():
         return os.getenv('VAULT_BACKEND_PATH')
+
+    @staticmethod
+    def get_encryption_key_name():
+        return os.getenv('VAULT_ENCRYPTION_KEY_NAME')
