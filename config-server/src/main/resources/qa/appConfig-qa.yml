@@ -2,9 +2,9 @@ spring:
   hazelcast:
     config: classpath:hazelcastConfig.yml
   kafka:
-    bootstrap-servers: ${KAFKA_BROKER_URL}
     security:
       protocol: PLAINTEXT
+    bootstrap-servers: ${KAFKA_BROKER_URL}
     producer:
       # Number of retries for sending a message
       retries: 5
@@ -45,4 +45,3 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       # Deserializer for the value
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-

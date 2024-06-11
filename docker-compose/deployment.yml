@@ -104,7 +104,6 @@ services:
 # Python Pricing Service
   pricing-api:
     image: rahim/pricingapi
-    build: .
     container_name: pricing-service
     ports:
       - "8000:8000"
@@ -125,6 +124,46 @@ services:
       - VAULT_ENCRYPTION_KEY_NAME=gold.api.encryption.key
     networks:
       - my-network
+
+  discovery-service:
+    image: rahim/discovery
+    container_name: discovery-service
+    ports:
+      - "8761:8761"
+    networks:
+      - my-network
+
+  config-server:
+    image: rahim/configserver
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    depends_on:
+      - discovery-service
+      - vault
+    environment:
+      - VAULT_SVC=vault
+      - VAULT_PORT=8200
+      - VAULT_TOKEN=dev_token
+      - DISCOVERY_SVC=discovery-service
+      - DISCOVERY_PORT=8761
+      - CONFIG_SERVER_ENCRYPTION_KEY=dev_key
+      - CONFIG_SERVER_SALT=dev_salt
+      - PYTHON_API_SVC=localhost:8000
+      - KAFKA_BROKER_URL=localhost:9093
+    networks:
+      - my-network
+    volumes:
+      - D:\Rahim Ahmed\Documents\gold-project\config-server\src\main\resources\qa:/app/opt/configs
+
+  database-service:
+    image: rahim/database
+    container_name: database-service
+    networks:
+      - my-network
+    depends_on:
+      - config-server
+
 networks:
   my-network:
     driver: bridge

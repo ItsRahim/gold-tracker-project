@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  flyway:
+    enabled: true
+    clean-disabled: true
+    locations: file:///app/database
+    schemas: rgts, batch_schema
+
+eureka:
+  client:
+    enabled: false

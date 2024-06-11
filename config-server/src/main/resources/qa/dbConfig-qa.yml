@@ -1,9 +1,9 @@
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: '{cipher}encryptedPostgresSvcUrl'
-    username: '{cipher}encryptedUsername'
-    password: '{cipher}encryptedPassword'
+    url: '{cipher}d0a95c96c8e42651ead330165b58208ff692fa3501cd54822478d29151c06581a706d489ac89b1ea7ebf72fb5d314a4c9a75e29e37a6e24ff2257a5451147684'
+    username: '{cipher}5f26beba013108aaadc840d622eecb6f619af434d698de9dda33206d4ed404f2'
+    password: '{cipher}4722805c87f2c14fa188d15f5183f3cdd8216fc7a31ffe74c8f89c925469faee'
     driver-class-name: org.postgresql.Driver
     # Maximum wait time (in milliseconds) for a connection from the pool
     connection-timeout: 20000
