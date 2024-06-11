@@ -2,7 +2,7 @@ FROM openjdk:17
 
 LABEL authors="Rahim Ahmed"
 
-ENV SPRING_PROFILES_ACTIVE=docker
+ENV SPRING_PROFILES_ACTIVE=qa
 
 WORKDIR /app
 

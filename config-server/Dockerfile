@@ -2,11 +2,11 @@ FROM openjdk:17-jdk-alpine
 
 LABEL authors="Rahim Ahmed"
 
-ENV SPRING_PROFILES_ACTIVE=native,docker
+ENV SPRING_PROFILES_ACTIVE=native,qa
 
 WORKDIR /app
 
-COPY src/main/resources/docker /app/opt/configs
+COPY src/main/resources/qa /app/opt/configs
 
 COPY target/config-server-0.0.1-SNAPSHOT.jar /app/config-server.jar
 
