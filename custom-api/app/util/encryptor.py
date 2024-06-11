@@ -3,13 +3,14 @@ import base64
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 
+from app.config.load_config import Config
 from app.config.logging import log
 from app.util.vault import Hvac
 
 
 def load_key_from_vault():
     hvac_instance = Hvac()
-    key_name = "gold-api-encryption-key"
+    key_name = Config.get_encryption_key_name()
     value = hvac_instance.read_secret(key_name)
     if value is None:
         log.error("Key not found in vault")

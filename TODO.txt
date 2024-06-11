@@ -65,6 +65,11 @@ Issues/Enhancements:
 -Enhance account update email to include changes made
 -Improve hazelcast to be able to create local instance on dev testing and have another configuration for cloud/prod profile
     maybe keep local instance only on dev env and remove all health checks - uneeded
+-Updated prod config of kafka to run in ssl based of yaml properties. maybe kafka if its PLAINTEXT dont setup ssl else set it up - something like that, updated depending on env
+-Keystore and Truststore of vault to be kept on local container with yml pointing to it
+-Keystore and Truststore for Kafka to be stored base64 on vault
+-All passwords to be stored using '{cipher}myPassword' with keys being stored on vault
+-Prod and Cloud configs will be similar, except cloud one is for testing - will not include ssl configs but will include env variable etc
 Performance Testing:
 - VisualVM
 - Apache JMeter

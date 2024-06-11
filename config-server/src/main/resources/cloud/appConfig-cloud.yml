@@ -2,9 +2,9 @@ spring:
   hazelcast:
     config: classpath:hazelcastConfig.yml
   kafka:
+    bootstrap-servers: ${KAFKA_BROKER_URL}
     security:
       protocol: PLAINTEXT
-    bootstrap-servers: localhost:9093
     producer:
       # Number of retries for sending a message
       retries: 5

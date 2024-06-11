@@ -3,12 +3,12 @@ spring:
     config:
       server:
         native:
-          search-locations: classpath:/cloud
+          search-locations: classpath:/prod
     vault:
       enabled: true
       # Update value with Vault Pod's service host
       uri: http://my-vault.vault:8200
-      scheme: http
+      scheme: https
       kv:
         enabled: true
         application-name: config-server
@@ -18,6 +18,13 @@ spring:
         # Update with name of role created - bound to namespace which app is deployed
         # Add policy to role created
         role: rgts-vault
+      ssl:
+        # Update with path to keystore in container
+        key-store: file://path/to/keystore
+        key-store-password: '{cipher}password'
+        # Update with path to truststore in container
+        trust-store: file://path/to/truststore
+        trust-store-password: '{cipher}password'
 
 eureka:
   client:
