@@ -63,6 +63,8 @@ Issues/Enhancements:
 -Externalise python config to env - DONE
 -Analyse which methods may benefit from @Async calls
 -Enhance account update email to include changes made
+-Improve hazelcast to be able to create local instance on dev testing and have another configuration for cloud/prod profile
+    maybe keep local instance only on dev env and remove all health checks - uneeded
 Performance Testing:
 - VisualVM
 - Apache JMeter
