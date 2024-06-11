@@ -1,5 +1,7 @@
 FROM openjdk:17-jdk-alpine
 
+RUN apk update && apk upgrade && apk add curl
+
 LABEL authors="Rahim Ahmed"
 
 ENV SPRING_PROFILES_ACTIVE=native,qa
