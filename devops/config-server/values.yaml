@@ -15,6 +15,9 @@ service:
 configMap:
   name: app-config
   keys:
+    - VAULT_ROLE
+    - VAULT_SVC
+    - VAULT_PORT
     - DISCOVERY_SVC
     - DISCOVERY_PORT
     - PYTHON_API_SVC
@@ -22,6 +25,5 @@ configMap:
 secrets:
   name: secrets
   keys:
-    - vault-token
     - config-server-encryption-key
     - config-server-salt
