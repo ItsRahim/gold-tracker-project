@@ -10,11 +10,8 @@ spring:
         enabled: true
         backend: kv
         application-name: config-server
-      host: ${VAULT_SVC:vault}
-      port: ${VAULT_PORT:8200}
-      authentication: TOKEN
-      token: ${VAULT_TOKEN:dev_token}
-      scheme: http
+      authentication: kubernetes
+      uri: http://${VAULT_SVC}:${VAULT_PORT}
 
 eureka:
   client:
