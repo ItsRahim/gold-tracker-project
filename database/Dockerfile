@@ -20,7 +20,7 @@ RUN yum update -y
 WORKDIR /app
 
 # Copy the JAR file from the build stage to the runtime stage
-COPY src/main/resources/db/base/ /app/database
+COPY ../database/src/main/resources/db/base/ /app/database
 COPY --from=build /build/target/database-service-*.jar /app/database-service.jar
 
 LABEL authors="Rahim Ahmed"

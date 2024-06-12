@@ -22,7 +22,7 @@ WORKDIR /app
 
 # Copy the JAR file from the build stage to the runtime stage
 COPY --from=build /build/target/config-server-*.jar /app/config-server.jar
-COPY src/main/resources/qa /app/opt/configs
+COPY ../config-server/src/main/resources/qa /app/opt/configs
 
 EXPOSE 8888
 
