@@ -5,7 +5,8 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy the Pipfile and Pipfile.lock into the container
-COPY Pipfile Pipfile.lock ./
+COPY custom-api/Pipfile ./
+COPY custom-api/Pipfile.lock ./
 
 # Install system dependencies
 RUN apt-get update \
