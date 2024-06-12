@@ -22,21 +22,32 @@ spec:
             - name: VAULT_ROLE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.configMap.name }}
+                  name: {{ .Values.configMaps.vault }}
+                  key: VAULT_ROLE
+            - name: VAULT_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMaps.vault }}
+                  key: VAULT_SVC
+            - name: VAULT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMaps.vault }}
+                  key: VAULT_PORT
             - name: DISCOVERY_SVC
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.configMap.name }}
+                  name: {{ .Values.configMaps.discovery }}
                   key: DISCOVERY_SVC
             - name: DISCOVERY_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.configMap.name }}
+                  name: {{ .Values.configMaps.discovery }}
                   key: DISCOVERY_PORT
             - name: PYTHON_API_SVC
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.configMap.name }}
+                  name: {{ .Values.configMaps.app }}
                   key: PYTHON_API_SVC
             - name: CONFIG_SERVER_ENCRYPTION_KEY
               valueFrom:
