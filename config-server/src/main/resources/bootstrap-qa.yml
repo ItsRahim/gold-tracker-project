@@ -7,6 +7,11 @@ spring:
   config:
     import: file:////app/opt/configs/vaultConfig-qa.yml
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${DISCOVERY_SVC}:${DISCOVERY_PORT}/eureka
+
 encrypt:
   key: ${CONFIG_SERVER_ENCRYPTION_KEY}
   rsa:
