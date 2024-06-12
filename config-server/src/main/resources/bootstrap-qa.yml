@@ -5,7 +5,7 @@ spring:
         native:
           search-locations: file:///app/opt/configs
   config:
-    import: file://app/opt/configs/vaultConfig-qa.yml
+    import: file:////app/opt/configs/vaultConfig-qa.yml
 
 encrypt:
   key: ${CONFIG_SERVER_ENCRYPTION_KEY}

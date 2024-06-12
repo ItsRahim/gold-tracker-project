@@ -19,21 +19,6 @@ spec:
           ports:
             - containerPort: {{ .Values.service.port }}
           env:
-            - name: VAULT_ROLE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configMaps.vault }}
-                  key: VAULT_ROLE
-            - name: VAULT_SVC
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configMaps.vault }}
-                  key: VAULT_SVC
-            - name: VAULT_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configMaps.vault }}
-                  key: VAULT_PORT
             - name: DISCOVERY_SVC
               valueFrom:
                 configMapKeyRef:
