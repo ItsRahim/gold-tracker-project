@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  KAFKA_BROKER_URL: "localhost:9092"
+  PYTHON_API_SVC: "SOME_SVC"
+  DISCOVERY_SVC: "your_discovery_service_name"
+  DISCOVERY_PORT: "your_discovery_service_port"
