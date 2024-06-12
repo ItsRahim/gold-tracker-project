@@ -1,25 +1,3 @@
-spring:
-  cloud:
-    vault:
-      enabled: true
-      kv:
-        enabled: true
-        backend: kv
-        application-name: config-server
-      authentication: kubernetes
-      kubernetes:
-        role: ${VAULT_ROLE}
-      uri: http://${VAULT_SVC}:${VAULT_PORT}
-
-encrypt:
-  key: ${CONFIG_SERVER_ENCRYPTION_KEY}
-  rsa:
-    salt: ${CONFIG_SERVER_SALT}
-
-python-api:
-  encrypt: encrypt
-  url: ${PYTHON_API_SVC}/api/v1
-
 eureka:
   client:
     service-url:
