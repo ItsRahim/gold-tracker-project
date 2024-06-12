@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        folder: [ "account-service", "config-server", "custom-api", "database", "discovery-service", "email-service", "gateway-service", "investment-service", "notification-service", "pricing-service", "scheduler-service" ]
+        folder: [ "account-service" ]
+        #folder: [ "account-service", "config-server", "custom-api", "database", "discovery-service", "email-service", "gateway-service", "investment-service", "notification-service", "pricing-service", "scheduler-service" ]
     steps:
       - uses: actions/checkout@v4
       - name: Log in to Docker Hub
