@@ -6,7 +6,9 @@ spring:
         enabled: true
         backend: kv
         application-name: config-server
+      host: vault.vault.svc.cluster.local
+      port: 8200
+      scheme: http
       authentication: kubernetes
       kubernetes:
         role: vault_k8
-      uri: http://vault.vault.svc.cluster.local:8200
