@@ -11,6 +11,8 @@ spring:
         backend: kv
         application-name: config-server
       authentication: kubernetes
+      kubernetes:
+        role: ${VAULT_ROLE}
       uri: http://${VAULT_SVC}:${VAULT_PORT}
 
 eureka:
