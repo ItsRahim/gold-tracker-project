@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: rahimahmed/config-server
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 container:
   name: config-server
@@ -12,18 +12,10 @@ service:
   name: config-server
   port: 8888
 
-configMap:
-  name: app-config
-  keys:
-    - VAULT_ROLE
-    - VAULT_SVC
-    - VAULT_PORT
-    - DISCOVERY_SVC
-    - DISCOVERY_PORT
-    - PYTHON_API_SVC
+configMaps:
+  vault: vault-config
+  discovery: discovery-config
+  app: app-config
 
 secrets:
-  name: secrets
-  keys:
-    - config-server-encryption-key
-    - config-server-salt
+  name: config-server-secrets
