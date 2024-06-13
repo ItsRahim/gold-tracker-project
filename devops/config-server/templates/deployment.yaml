@@ -22,25 +22,25 @@ spec:
             - name: DISCOVERY_SVC
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.configMaps.discovery }}
-                  key: DISCOVERY_SVC
+                  name: {{ .Values.configMap.discoveryService.name }}
+                  key: {{ .Values.configMap.discoveryService.data.svc }}
             - name: DISCOVERY_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.configMaps.discovery }}
-                  key: DISCOVERY_PORT
+                  name: {{ .Values.configMap.discoveryService.name }}
+                  key: {{ .Values.configMap.discoveryService.data.port }}
             - name: PYTHON_API_SVC
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.configMaps.app }}
-                  key: PYTHON_API_SVC
+                  name: {{ .Values.configMap.appConfig.name }}
+                  key: pythonApiSvc
             - name: CONFIG_SERVER_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.configServer }}
+                  name: {{ .Values.secret.configServer.name }}
                   key: encryptRsaKey
             - name: CONFIG_SERVER_SALT
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.configServer }}
+                  name: {{ .Values.secret.configServer.name }}
                   key: encryptRsaSalt
