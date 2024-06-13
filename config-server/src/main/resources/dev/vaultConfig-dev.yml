@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    vault:
+      enabled: true
+      kv:
+        enabled: true
+        backend: kv
+        application-name: config-server
+      host: localhost
+      port: 8200
+      scheme: http
+      authentication: TOKEN
+      token: dev_token

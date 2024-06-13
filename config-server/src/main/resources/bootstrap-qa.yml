@@ -1,7 +1,7 @@
 spring:
-  config:
-    import: file:/app/opt/configs/vaultConfig-qa.yml
   cloud:
+    vault:
+      enabled: false
     config:
       server:
         native:
