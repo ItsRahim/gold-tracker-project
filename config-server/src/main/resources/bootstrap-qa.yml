@@ -1,11 +1,11 @@
 spring:
+  config:
+    import: file:/app/opt/configs/vaultConfig-qa.yml
   cloud:
     config:
       server:
         native:
-          search-locations: file:///app/opt/configs
-  config:
-    import: file:////app/opt/configs/vaultConfig-qa.yml
+          search-locations: file:/app/opt/configs
 
 eureka:
   client:
