@@ -3,6 +3,18 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'account-service/**'
+      - 'config-server/**'
+      - 'custom-api/**'
+      - 'database/**'
+      - 'discovery-service/**'
+      - 'email-service/**'
+      - 'gateway-service/**'
+      - 'investment-service/**'
+      - 'notification-service/**'
+      - 'pricing-service/**'
+      - 'scheduler-service/**'
 
 jobs:
   build:
@@ -12,11 +24,24 @@ jobs:
         folder: [ "account-service", "config-server", "custom-api", "database", "discovery-service", "email-service", "gateway-service", "investment-service", "notification-service", "pricing-service", "scheduler-service" ]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Determine if folder has changes
+        id: check_changes
+        run: |
+          if git diff --name-only HEAD~1 HEAD | grep -q "${{ matrix.folder }}/"; then
+            echo "changes=true" >> $GITHUB_ENV
+          else
+            echo "changes=false" >> $GITHUB_ENV
+          fi
+
       - name: Log in to Docker Hub
+        if: env.changes == 'true'
         run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: Build the Docker image
+        if: env.changes == 'true'
         run: docker build -t rahimahmed/${{ matrix.folder }} -f ${{ matrix.folder }}/Dockerfile .
 
       - name: Push the Docker image
+        if: env.changes == 'true'
         run: docker push rahimahmed/${{ matrix.folder }}
