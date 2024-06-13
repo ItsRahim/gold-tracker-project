@@ -6,6 +6,10 @@
 #    config:
 #      uri: ${CONFIG_SVC_URI}
 #      name: dbConfig,database-service
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_SVC}/eureka
 
 spring:
   application:
