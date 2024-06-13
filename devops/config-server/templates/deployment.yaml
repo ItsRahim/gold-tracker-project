@@ -22,7 +22,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.springProfilesActive }}
-            - name: DISCOVERY_SVC_URI
+            - name: DISCOVERY_SVC
               valueFrom:
                 configMapKeyRef:
                   name: {{ .Values.configMap.appConfig.name }}
