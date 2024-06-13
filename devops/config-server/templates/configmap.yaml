@@ -8,4 +8,5 @@ metadata:
     description: Configuration for Discovery Service
 data:
   kafkaBroker: {{ .Values.configMap.appConfig.data.kafkaBroker | quote }}
-  pythonApiSvc: {{ .Values.configMap.appConfig.data.pythonApiSvc | quote }}
+  pythonApiSvcUri: {{ .Values.configMap.appConfig.data.pythonApiSvcUri | quote }}
+  configSvcUri: {{ .Values.configMap.appConfig.data.configSvcUri | quote }}
