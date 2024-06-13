@@ -1,9 +1,9 @@
 spring:
   cloud:
     vault:
-      enabled: true
+      enabled: false
       kv:
-        enabled: true
+        enabled: false
         backend: kv
         application-name: config-server
       host: vault.vault
