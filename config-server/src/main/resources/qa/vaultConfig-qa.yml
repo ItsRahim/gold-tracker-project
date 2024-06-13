@@ -1,9 +1,13 @@
 spring:
   cloud:
+    config:
+      server:
+        vault:
+          enabled: false
     vault:
       enabled: false
       kv:
-        enabled: true
+        enabled: false
         backend: kv
         application-name: config-server
       host: vault.vault.svc.cluster.local
