@@ -3,7 +3,7 @@ spring:
     vault:
       enabled: true
       kv:
-        enabled: false
+        enabled: true
         backend: kv
         application-name: config-server
       host: vault.vault
