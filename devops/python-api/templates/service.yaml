@@ -1,15 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "python-api.fullname" . }}
-  labels:
-    {{- include "python-api.labels" . | nindent 4 }}
+  name: {{ .Values.service.name }}
 spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
   selector:
-    {{- include "python-api.selectorLabels" . | nindent 4 }}
+    app: spring-config-server
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
