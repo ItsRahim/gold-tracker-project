@@ -1,5 +1,7 @@
 spring:
   cloud:
+    vault:
+      enabled: false
     config:
       server:
         native:

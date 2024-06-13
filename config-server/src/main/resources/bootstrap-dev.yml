@@ -1,20 +1,11 @@
 spring:
+  config:
+    import: classpath:/dev/vaultConfig-dev.yml
   cloud:
     config:
       server:
         native:
           search-locations: classpath:/dev
-    vault:
-      enabled: true
-      kv:
-        enabled: true
-        backend: kv
-        application-name: config-server
-      host: localhost
-      port: 8200
-      scheme: http
-      authentication: TOKEN
-      token: dev_token
 
 eureka:
   client:
