@@ -1,1 +1,2 @@
-helm install postgres bitnami/postgresql -f values.yaml -n qa
+helm install postgresql bitnami/postgresql --set postgresqlUsername=postgres --set postgresqlPassword=password
+WhePBlhLFi
