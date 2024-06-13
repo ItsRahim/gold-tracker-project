@@ -1,0 +1,4 @@
+spring:
+  cloud:
+    config:
+      uri: ${CONFIG_SVC_URI}
