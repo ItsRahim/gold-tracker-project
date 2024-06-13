@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-service
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ .Values.container.name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["java", "-jar", "/app/database.jar"]
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "{{ .Values.springProfilesActive }}"
+            - name: DISCOVERY_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.appConfig.name }}
+                  key: discoverySvcUri
+            - name: CONFIG_SVC_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.appConfig.name }}
+                  key: configSvcUri
+      restartPolicy: Never
+  backoffLimit: {{ .Values.job.backoffLimit }}

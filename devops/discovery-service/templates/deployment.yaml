@@ -21,4 +21,4 @@ spec:
             - containerPort: {{ .Values.service.port }}
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: {{ .Values.springProfilesActive }}
+              value: "{{ .Values.springProfilesActive }}"

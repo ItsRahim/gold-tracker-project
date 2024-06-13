@@ -12,10 +12,8 @@ container:
 
 configMap:
   appConfig:
-    # Config map name value to be updated with one found in discovery-service/values.yaml
+    # Config Map name created in config-server
     name: rgts-appconfig
-    data:
-      configSvcUri: configSvcUri
 
 job:
   backoffLimit: 4

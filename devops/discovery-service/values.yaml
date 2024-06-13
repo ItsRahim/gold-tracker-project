@@ -13,10 +13,3 @@ container:
 service:
   name: discovery-service
   port: 8761
-
-configMap:
-  discoveryService:
-    name: rgts-discoveryservice
-    data:
-      discoverySvc: "discovery-service.qa.svc.cluster.local"
-      discoveryPort: "8761"

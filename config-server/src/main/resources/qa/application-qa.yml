@@ -1,7 +1,7 @@
 eureka:
   client:
     service-url:
-      defaultZone: http://${DISCOVERY_SVC}:${DISCOVERY_PORT}/eureka
+      defaultZone: ${DISCOVERY_SVC}/eureka
     fetch-registry: true
     register-with-eureka: true
 

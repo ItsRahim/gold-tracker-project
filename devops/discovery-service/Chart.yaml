@@ -3,12 +3,3 @@ name: discovery-service
 description: A Helm chart for deploying the Discovery Service in Kubernetes
 version: 0.1.0
 appVersion: "1.16.0"
-keywords:
-  - discovery
-  - microservices
-  - kubernetes
-maintainers:
-  - name: Rahim Ahmed
-    email: rahim1605@gmail.com
-sources:
-  - https://github.com/ItsRahim/gold-tracker-project/tree/main/discovery-service

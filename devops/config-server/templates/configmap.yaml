@@ -5,8 +5,9 @@ metadata:
   labels:
     app: rgts
   annotations:
-    description: Configuration for Discovery Service
+    description: Configuration for Application
 data:
+  configSvcUri: {{ .Values.configMap.appConfig.data.configSvcUri | quote }}
+  discoverySvcUri: {{ .Values.configMap.appConfig.data.discoverySvcUri | quote }}
   kafkaBroker: {{ .Values.configMap.appConfig.data.kafkaBroker | quote }}
   pythonApiSvcUri: {{ .Values.configMap.appConfig.data.pythonApiSvcUri | quote }}
-  configSvcUri: {{ .Values.configMap.appConfig.data.configSvcUri | quote }}
