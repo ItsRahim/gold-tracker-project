@@ -21,7 +21,8 @@ configMap:
       # To be updated with the broker url of kafka deployed in K8
       kafkaBroker: "localhost:9092"
       # To be updated with the svc name of python api deployed in K8
-      pythonApiSvc: "python-service.qa.svc.cluster.local"
+      pythonApiSvcUri: "http://python-service.default.svc.cluster.local:8000"
+      configSvcUri: "http://config-server.default.svc.cluster.local:8888"
   discoveryService:
     # Config map name value to be updated with one found in discovery-service/values.yaml
     name: rgts-discoveryservice

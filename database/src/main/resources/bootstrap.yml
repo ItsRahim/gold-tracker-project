@@ -1,9 +1,8 @@
 spring:
   application:
     name: database-service
+
   cloud:
     config:
+      uri: ${CONFIG_SVC_URI}
       name: dbConfig,database-service
-      discovery:
-        enabled: true
-        service-id: CONFIG-SERVER

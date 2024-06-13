@@ -10,5 +10,12 @@ springProfilesActive: qa
 container:
   name: database-service
 
+configMap:
+  appConfig:
+    # Config map name value to be updated with one found in discovery-service/values.yaml
+    name: rgts-appconfig
+    data:
+      configSvcUri: configSvcUri
+
 job:
   backoffLimit: 4
