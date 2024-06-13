@@ -16,7 +16,7 @@ RUN mvn clean package -DskipTests
 # Runtime Stage
 FROM amazoncorretto:17
 
-RUN yum update -y
+RUN yum update -y && yum install -y nano
 
 WORKDIR /app
 
