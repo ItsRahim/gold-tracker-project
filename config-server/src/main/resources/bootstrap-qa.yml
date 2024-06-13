@@ -9,6 +9,7 @@ spring:
 
 eureka:
   client:
+    enabled: false
     service-url:
       defaultZone: ${DISCOVERY_SVC}/eureka
 

@@ -28,8 +28,9 @@ spring:
 
 eureka:
   client:
+    enabled: false
     service-url:
-      defaultZone: http://${DISCOVERY_SVC}:${DISCOVERY_PORT}/eureka
+      defaultZone: ${DISCOVERY_SVC}/eureka
 
 encrypt:
   key: ${CONFIG_SERVER_ENCRYPTION_KEY}

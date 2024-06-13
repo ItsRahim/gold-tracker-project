@@ -14,6 +14,14 @@ def load_config(element: str) -> str:
 class Config:
 
     @staticmethod
+    def get_deployment_type():
+        return load_config('DEPLOYMENT_TYPE')
+
+    @staticmethod
+    def get_encryption_key():
+        return load_config('ENCRYPTION_KEY')
+
+    @staticmethod
     def get_db_host():
         return os.getenv('DB_HOST')
 

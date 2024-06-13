@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.pythonApi.name }}
+data:
+  dbHost: {{ .Values.configMap.data.dbHost | quote }}
+  dbName: {{ .Values.configMap.data.dbName | quote }}
+  dbPort: {{ .Values.configMap.data.dbPort | quote }}
+  kafkaBootstrapServers: {{ .Values.configMap.data.kafkaBootstrapServers | quote }}
+  kafkaTopic: {{ .Values.configMap.data.kafkaTopic | quote }}
