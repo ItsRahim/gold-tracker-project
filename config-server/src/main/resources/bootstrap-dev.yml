@@ -24,9 +24,7 @@ eureka:
 encrypt:
   key: dev_key
   rsa:
-    algorithm: oaep
     salt: dev_salt
-    strong: true
 
 python-api:
   encrypt: encrypt
