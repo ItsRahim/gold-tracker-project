@@ -9,5 +9,9 @@ spec:
         - name: {{ .Values.container.name}}
           image: {{ .Values.image.repository}}:{{ .Values.image.tag}}
           imagePullPolicy: {{ .Values.image.pullPolicy}}
+          command: ["java", "-jar", "app/database-service.jar"]
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.springProfilesActive }}
       restartPolicy: Never
   backoffLimit: {{ .Values.job.backoffLimit}}
