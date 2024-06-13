@@ -12,10 +12,18 @@ service:
   name: config-server
   port: 8888
 
-configMaps:
-  vault: vault-config
-  discovery: discovery-config
-  app: app-config
+configMap:
+  appConfig:
+    name: rgts-appconfig
+    data:
+      kafkaBroker: "localhost:9092"
+      pythonApiSvc: "python-service.qa.svc.cluster.local"
 
-secrets:
-  name: config-server-secrets
+secret:
+  configServer:
+    name: rgts-configserver
+    data:
+      encryptRsaKey: changeMe
+      encryptRsaSalt: letMeIn
+  discoveryService:
+    name: rgts-discoveryservice

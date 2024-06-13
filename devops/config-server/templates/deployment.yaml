@@ -37,10 +37,10 @@ spec:
             - name: CONFIG_SERVER_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secrets.name }}
-                  key: config-server-encryption-key
+                  name: {{ .Values.secret.configServer }}
+                  key: encryptRsaKey
             - name: CONFIG_SERVER_SALT
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secrets.name }}
-                  key: config-server-salt
+                  name: {{ .Values.secret.configServer }}
+                  key: encryptRsaSalt
