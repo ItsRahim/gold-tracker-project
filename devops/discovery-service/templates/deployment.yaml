@@ -16,5 +16,6 @@ spec:
         - name: {{ .Values.container.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["java", "-jar", "/app/discovery-service.jar", "-Dspring.profiles.active={{ .Values.springProfilesActive }}"]
           ports:
             - containerPort: {{ .Values.service.port }}

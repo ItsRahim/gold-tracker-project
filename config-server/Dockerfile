@@ -16,7 +16,7 @@ RUN mvn clean package -DskipTests
 # Runtime Stage
 FROM amazoncorretto:17
 
-RUN yum update -y
+RUN yum update -y && yum install -y nano
 
 WORKDIR /app
 
@@ -27,7 +27,3 @@ COPY ../config-server/src/main/resources/qa /app/opt/configs
 EXPOSE 8888
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=native,qa
-
-ENTRYPOINT ["java", "-jar", "/app/config-server.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

@@ -43,7 +43,3 @@ COPY --from=build /build/target/investment-service-*.jar /app/investment-service
 EXPOSE 8087
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=native,qa
-
-ENTRYPOINT ["java", "-jar", "/app/investment-service.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

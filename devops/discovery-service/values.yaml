@@ -5,6 +5,8 @@ image:
   tag: latest
   pullPolicy: Always
 
+springProfilesActive: qa
+
 container:
   name: discovery-service
 

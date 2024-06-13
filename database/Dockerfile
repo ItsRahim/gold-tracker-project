@@ -24,7 +24,3 @@ COPY database/src/main/resources/db/base/ /app/database
 COPY --from=build /build/target/database-service-*.jar /app/database-service.jar
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=qa
-
-ENTRYPOINT ["java", "-jar", "/app/database-service.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-service
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ .Values.container.name}}
+          image: {{ .Values.image.repository}}:{{ .Values.image.tag}}
+          imagePullPolicy: {{ .Values.image.pullPolicy}}
+      restartPolicy: Never
+  backoffLimit: {{ .Values.job.backoffLimit}}

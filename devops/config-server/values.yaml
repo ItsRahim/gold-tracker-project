@@ -5,6 +5,8 @@ image:
   tag: latest
   pullPolicy: Always
 
+springProfilesActive: qa,native
+
 container:
   name: config-server
 
@@ -16,8 +18,17 @@ configMap:
   appConfig:
     name: rgts-appconfig
     data:
+      # To be updated with the broker url of kafka deployed in K8
       kafkaBroker: "localhost:9092"
+      # To be updated with the svc name of python api deployed in K8
       pythonApiSvc: "python-service.qa.svc.cluster.local"
+  discoveryService:
+    # Config map name value to be updated with one found in discovery-service/values.yaml
+    name: rgts-discoveryservice
+    data:
+      # These values are references to the keys in the discovery service config map
+      svc: discoverySvc
+      port: discoveryPort
 
 secret:
   configServer:
@@ -25,5 +36,3 @@ secret:
     data:
       encryptRsaKey: changeMe
       encryptRsaSalt: letMeIn
-  discoveryService:
-    name: rgts-discoveryservice

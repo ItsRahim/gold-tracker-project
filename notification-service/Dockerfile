@@ -43,7 +43,3 @@ COPY --from=build /build/target/notification-service-*.jar /app/notification-ser
 EXPOSE 8085
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=native,qa
-
-ENTRYPOINT ["java", "-jar", "/app/notification-service.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
