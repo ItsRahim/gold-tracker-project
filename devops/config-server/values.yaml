@@ -5,6 +5,8 @@ image:
   tag: latest
   pullPolicy: Always
 
+springProfilesActive: qa,native
+
 container:
   name: config-server
 

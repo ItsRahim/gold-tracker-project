@@ -27,7 +27,3 @@ COPY ../config-server/src/main/resources/qa /app/opt/configs
 EXPOSE 8888
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=native,qa
-
-ENTRYPOINT ["java", "-jar", "/app/config-server.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

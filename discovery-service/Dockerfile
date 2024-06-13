@@ -29,7 +29,3 @@ COPY --from=build /build/target/discovery-service-*.jar /app/discovery-service.j
 EXPOSE 8761
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=qa
-
-ENTRYPOINT ["java", "-jar", "/app/discovery-service.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

@@ -43,7 +43,3 @@ COPY --from=build /build/target/pricing-service-*.jar /app/pricing-service.jar
 EXPOSE 8081
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=native,qa
-
-ENTRYPOINT ["java", "-jar", "/app/pricing-service.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

@@ -43,7 +43,3 @@ COPY --from=build /build/target/email-service-*.jar /app/email-service.jar
 EXPOSE 8083
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=qa
-
-ENTRYPOINT ["java", "-jar", "/app/email-service.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

@@ -43,7 +43,3 @@ COPY --from=build /build/target/account-service-*.jar /app/account-service.jar
 EXPOSE 8081
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=qa
-
-ENTRYPOINT ["java", "-jar", "/app/account-service.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

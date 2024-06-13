@@ -43,7 +43,3 @@ COPY --from=build /build/target/scheduler-service-*.jar /app/scheduler-service.j
 EXPOSE 8082
 
 LABEL authors="Rahim Ahmed"
-
-ENV SPRING_PROFILES_ACTIVE=qa
-
-ENTRYPOINT ["java", "-jar", "/app/scheduler-service.jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
