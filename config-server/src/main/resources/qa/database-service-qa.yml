@@ -4,6 +4,7 @@ spring:
     hibernate:
       ddl-auto: update
   flyway:
+    locations: filesystem:/app/database
     enabled: true
     clean-disabled: true
     schemas: rgts, batch_schema
