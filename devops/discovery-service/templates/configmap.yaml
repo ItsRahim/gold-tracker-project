@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.discoveryService.name }}
+  labels:
+    app: rgts
+  annotations:
+    description: Configuration for Discovery Service
+data:
+  discoverySvc: {{ .Values.configMap.discoveryService.data.discoverySvc | quote }}
+  discoveryPort: {{ .Values.configMap.discoveryService.data.discoveryPort | quote }}
