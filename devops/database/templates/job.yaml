@@ -6,17 +6,17 @@ spec:
   template:
     spec:
       containers:
-        - name: {{ .Values.container.name}}
-          image: {{ .Values.image.repository}}:{{ .Values.image.tag}}
-          imagePullPolicy: {{ .Values.image.pullPolicy}}
+        - name: {{ .Values.container.name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["java", "-jar", "/app/database.jar"]
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: {{ .Values.springProfilesActive }}
+              value: "{{ .Values.springProfilesActive }}"
             - name: CONFIG_SVC_URI
               valueFrom:
                 configMapKeyRef:
                   name: {{ .Values.configMap.appConfig.name }}
-                  key: {{ .Values.configMap.appConfig.data.configSvcUri }}
+                  key: configSvcUri
       restartPolicy: Never
-  backoffLimit: {{ .Values.job.backoffLimit}}
+  backoffLimit: {{ .Values.job.backoffLimit }}

@@ -22,21 +22,16 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.springProfilesActive }}
-            - name: DISCOVERY_SVC
+            - name: DISCOVERY_SVC_URI
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.configMap.discoveryService.name }}
-                  key: {{ .Values.configMap.discoveryService.data.svc }}
-            - name: DISCOVERY_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configMap.discoveryService.name }}
-                  key: {{ .Values.configMap.discoveryService.data.port }}
+                  name: {{ .Values.configMap.appConfig.name }}
+                  key: discoverySvcUri
             - name: PYTHON_API_SVC
               valueFrom:
                 configMapKeyRef:
                   name: {{ .Values.configMap.appConfig.name }}
-                  key: pythonApiSvc
+                  key: pythonApiSvcUri
             - name: CONFIG_SERVER_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:

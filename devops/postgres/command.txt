@@ -1,2 +1,0 @@
-helm install postgresql bitnami/postgresql --set postgresqlUsername=postgres --set postgresqlPassword=password
-WhePBlhLFi

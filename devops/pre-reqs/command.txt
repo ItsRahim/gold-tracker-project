@@ -1,0 +1,16 @@
+Download Database:
+helm install postgresql bitnami/postgresql
+
+Get Svc url from helm installation
+postgresql.default.svc.cluster.local
+
+Get Password:
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace default postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+echo $POSTGRES_PASSWORD
+WhePBlhLFi
+
+Download Kafka
+helm install kafka bitnami/kafka
+
+Get Svc
+kafka.default.svc.cluster.local
