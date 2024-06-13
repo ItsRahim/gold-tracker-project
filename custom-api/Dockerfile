@@ -28,6 +28,3 @@ EXPOSE 8000
 
 # Add a label for the author
 LABEL authors="Rahim Ahmed"
-
-# Command to run the application using uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
