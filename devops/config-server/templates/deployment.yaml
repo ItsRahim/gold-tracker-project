@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spring-config-server
+  name: config-server
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: spring-config-server
+      app: config-server
   template:
     metadata:
       labels:
-        app: spring-config-server
+        app: config-server
     spec:
       containers:
         - name: {{ .Values.container.name }}
@@ -27,12 +27,12 @@ spec:
                 configMapKeyRef:
                   name: {{ .Values.configMap.appConfig.name }}
                   key: pythonApiSvcUri
-            - name: CONFIG_SERVER_ENCRYPTION_KEY
+            - name: ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secret.configServer.name }}
                   key: encryptRsaKey
-            - name: CONFIG_SERVER_SALT
+            - name: SALT
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secret.configServer.name }}

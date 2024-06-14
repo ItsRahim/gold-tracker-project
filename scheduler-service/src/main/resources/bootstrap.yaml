@@ -3,7 +3,7 @@ spring:
     name: scheduler-service
   cloud:
     config:
-      name: dbConfig,appConfig,scheduler-service
+      name: appConfig,dbConfig,scheduler-service
       discovery:
         enabled: true
         service-id: CONFIG-SERVER

@@ -7,6 +7,5 @@ metadata:
   annotations:
     description: Configuration for Application
 data:
-  configSvcUri: {{ .Values.configMap.appConfig.data.configSvcUri | quote }}
   kafkaBroker: {{ .Values.configMap.appConfig.data.kafkaBroker | quote }}
   pythonApiSvcUri: {{ .Values.configMap.appConfig.data.pythonApiSvcUri | quote }}
