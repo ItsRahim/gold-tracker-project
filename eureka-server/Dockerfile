@@ -8,11 +8,11 @@ ENV SNAPSHOT_VERSION=${SNAPSHOT_VERSION}
 WORKDIR /build
 
 # Installing all maven dependencies for pom.xml
-COPY /pom.xml .
+COPY ../eureka-server/pom.xml .
 RUN mvn dependency:go-offline
 
 # Packaging source code into jar
-COPY /src ./src
+COPY ../eureka-server/src ./src
 RUN mvn clean package -DskipTests
 
 
