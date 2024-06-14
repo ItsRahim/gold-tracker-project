@@ -53,4 +53,4 @@ spec:
             successThreshold: {{ .Values.liveness.successThreshold }}
             failureThreshold: {{ .Values.liveness.failureThreshold }}
             timeoutSeconds: {{ .Values.liveness.timeoutSeconds }}
-          restartPolicy: Always
+      restartPolicy: Always
