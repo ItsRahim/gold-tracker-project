@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: rahimahmed/database
   tag: latest
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 springProfilesActive: qa
 
