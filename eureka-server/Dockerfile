@@ -8,11 +8,11 @@ ENV SNAPSHOT_VERSION=${SNAPSHOT_VERSION}
 WORKDIR /build
 
 # Installing all maven dependencies for pom.xml
-COPY ../discovery-service/pom.xml .
+COPY /pom.xml .
 RUN mvn dependency:go-offline
 
 # Packaging source code into jar
-COPY ../discovery-service/src ./src
+COPY /src ./src
 RUN mvn clean package -DskipTests
 
 
@@ -24,7 +24,7 @@ RUN yum update -y
 WORKDIR /app
 
 # Copy the JAR file from the build stage to the runtime stage
-COPY --from=build /build/target/discovery-service-*.jar /app/discovery-service.jar
+COPY --from=build /build/target/eureka-server-*.jar /app/eureka-server.jar
 
 EXPOSE 8761
 
