@@ -18,8 +18,6 @@ configMap:
   appConfig:
     name: rgts-appconfig
     data:
-      # Service endpoint of Config Server
-      configSvcUri: "http://config-server.qa.svc.cluster.local:8888"
       # Broker URL of Kafka deployed in Kubernetes
       kafkaBroker: "localhost:9092"
       # Service name of Python API deployed in Kubernetes

@@ -11,11 +11,13 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka-server:8761/eureka
+  instance:
+    prefer-ip-address: true
 
 encrypt:
-  key: ${CONFIG_SERVER_ENCRYPTION_KEY}
+  key: ${ENCRYPTION_KEY}
   rsa:
-    salt: ${CONFIG_SERVER_SALT}
+    salt: ${SALT}
 
 python-api:
   encrypt: encrypt

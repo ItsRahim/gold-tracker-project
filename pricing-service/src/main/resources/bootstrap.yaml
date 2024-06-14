@@ -3,7 +3,7 @@ spring:
     name: pricing-service
   cloud:
     config:
-      name: dbConfig,appConfig,pythonConfig,pricing-service
+      name: appConfig,dbConfig,pythonConfig,pricing-service
       discovery:
         enabled: true
         service-id: CONFIG-SERVER

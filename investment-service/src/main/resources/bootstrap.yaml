@@ -3,7 +3,7 @@ spring:
     name: investment-service
   cloud:
     config:
-      name: dbConfig,appConfig,hazelcastConfig,investment-service
+      name: appConfig,dbConfig,hazelcast,investment-service
       discovery:
         enabled: true
         service-id: CONFIG-SERVER

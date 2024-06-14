@@ -1,11 +1,9 @@
 spring:
   application:
     name: account-service
-  profiles:
-    active: dev
   cloud:
     config:
-      name: dbConfig,appConfig,hazelcastConfig,account-service
+      name: appConfig,dbConfig,hazelcast,account-service
       discovery:
         enabled: true
         service-id: CONFIG-SERVER

@@ -1,11 +1,9 @@
 spring:
   application:
     name: email-service
-  profiles:
-    active: dev
   cloud:
     config:
-      name: dbConfig,appConfig,hazelcastConfig,email-service
+      name: appConfig,dbConfig,email-service
       discovery:
         enabled: true
         service-id: CONFIG-SERVER

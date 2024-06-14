@@ -3,7 +3,7 @@ spring:
     name: notification-service
   cloud:
     config:
-      name: dbConfig,appConfig,notification-service
+      name: appConfig,dbConfig,notification-service
       discovery:
         enabled: true
         service-id: CONFIG-SERVER

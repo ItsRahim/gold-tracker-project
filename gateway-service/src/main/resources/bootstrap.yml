@@ -3,7 +3,7 @@ spring:
     name: gateway-service
   cloud:
     config:
-      name: gateway-service,dbConfig
+      name: appConfig,dbConfig,gateway-service
       discovery:
         enabled: true
         service-id: CONFIG-SERVER
