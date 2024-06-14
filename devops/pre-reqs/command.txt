@@ -4,10 +4,12 @@ helm install postgresql bitnami/postgresql
 Get Password:
 Get Svc url from helm installation
 postgresql.qa.svc.cluster.local
-'{cipher}08bc5969ee58aec763a1fe042370f08142e6ed47c8cdccc57b7b71bb14907c20cbf99c1c5bb6a2857999c2c29297f6667901781d16edfacb2b0e83c400a3c3493ec71e47a02e3596cd66b199b887b87fd7370e8038b9b51a14550ac2fd3f9f11'
+'{cipher}67e441db9c838352c3c4ddc6569409155a36110e523db606ade4b8dbf2b2a49c77af0c753396c342c9763fc9ef4a1c74a022a4c647054f25f219cf296acd2e3f2b6ae61cd75a5d088dcb4d2a5bfffc41b9e5016b150443280b85f039f3d9a999'
+'{cipher}67feabbaf7b6b9c3dee79f9b24a42246586f0ebeffd038505b3c15a16a9b39d8'
+'{cipher}c3cd1d79a80ccc0c31b8f7e1359ce032335960a91e059e34834232c3a03b4987'
 export POSTGRES_PASSWORD=$(kubectl get secret --namespace qa postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
 echo $POSTGRES_PASSWORD
-8lxfhrFxuT
+5vhoeAFkrE
 
 Download Kafka
 helm install kafka bitnami/kafka

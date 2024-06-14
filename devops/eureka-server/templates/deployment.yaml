@@ -2,6 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: eureka-server
+  labels:
+    app: eureka-server
+    environment: {{ .Values.environment | default "qa"}}
+    version: {{ .Values.version | default "1.0.0" }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -11,6 +15,8 @@ spec:
     metadata:
       labels:
         app: eureka-server
+        environment: {{ .Values.environment | default "qa" }}
+        version: {{ .Values.version | default "1.0.0" }}
     spec:
       containers:
         - name: {{ .Values.container.name }}
@@ -22,3 +28,29 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "{{ .Values.springProfilesActive }}"
+          resources:
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.readinessProbe.healthCheckPort }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.liveness.healthCheckPort }}
+            initialDelaySeconds: {{ .Values.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.liveness.periodSeconds }}
+            successThreshold: {{ .Values.liveness.successThreshold }}
+            failureThreshold: {{ .Values.liveness.failureThreshold }}
+            timeoutSeconds: {{ .Values.liveness.timeoutSeconds }}
+      restartPolicy: Always

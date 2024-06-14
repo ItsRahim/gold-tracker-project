@@ -1,15 +1,58 @@
+# Environment and Version
+environment: qa
+version: 1.0.0
+
+# Replica Configuration
 replicaCount: 1
 
+###########################################
+# Docker Image Configuration
 image:
   repository: rahimahmed/eureka-server
   tag: latest
   pullPolicy: Always
 
+###########################################
+# Spring Profile Configuration
 springProfilesActive: qa
 
+###########################################
+# Container Configuration
 container:
   name: eureka-server
 
+###########################################
+# Readiness Probe Configuration
+readinessProbe:
+  healthCheckPort: 8761
+  initialDelaySeconds: 20
+  periodSeconds: 15
+  successThreshold: 1
+  failureThreshold: 10
+  timeoutSeconds: 5
+
+###########################################
+# Liveness Probe Configuration
+liveness:
+  healthCheckPort: 8761
+  initialDelaySeconds: 20
+  periodSeconds: 15
+  successThreshold: 1
+  failureThreshold: 10
+  timeoutSeconds: 5
+
+###########################################
+# Kubernetes Service Configuration
 service:
   name: eureka-server
   port: 8761
+
+###########################################
+# Resource Limits and Requests
+resources:
+  limits:
+    memory: 512Mi
+    cpu: 500m
+  requests:
+    memory: 256Mi
+    cpu: 250m
