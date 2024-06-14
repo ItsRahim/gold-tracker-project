@@ -3,4 +3,7 @@ spring:
     name: database-service
   cloud:
     config:
+      discovery:
+        enabled: true
+        service-id: CONFIG-SERVER
       name: dbConfig,database-service
