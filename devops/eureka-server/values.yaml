@@ -1,15 +1,15 @@
 replicaCount: 1
 
 image:
-  repository: rahimahmed/discovery-service
+  repository: rahimahmed/eureka-server
   tag: latest
   pullPolicy: Always
 
 springProfilesActive: qa
 
 container:
-  name: discovery-service
+  name: eureka-server
 
 service:
-  name: discovery-service
+  name: eureka-server
   port: 8761

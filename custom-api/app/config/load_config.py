@@ -15,11 +15,11 @@ class Config:
 
     @staticmethod
     def get_deployment_type():
-        return load_config('DEPLOYMENT_TYPE')
+        return os.getenv('DEPLOYMENT_TYPE')
 
     @staticmethod
     def get_encryption_key():
-        return load_config('ENCRYPTION_KEY')
+        return os.getenv('ENCRYPTION_KEY')
 
     @staticmethod
     def get_db_host():

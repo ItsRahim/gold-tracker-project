@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: discovery-service
+  name: eureka-server
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: discovery-service
+      app: eureka-server
   template:
     metadata:
       labels:
-        app: discovery-service
+        app: eureka-server
     spec:
       containers:
         - name: {{ .Values.container.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["java", "-jar", "/app/discovery-service.jar"]
+          command: ["java", "-jar", "/app/eureka-server.jar"]
           ports:
             - containerPort: {{ .Values.service.port }}
           env:
