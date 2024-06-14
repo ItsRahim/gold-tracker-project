@@ -1,8 +1,8 @@
 eureka:
   client:
-    enabled: false
+    enabled: true
     service-url:
-      defaultZone: ${DISCOVERY_SVC}/eureka
+      defaultZone: http://eureka-server:8761/eureka
     fetch-registry: true
     register-with-eureka: true
 

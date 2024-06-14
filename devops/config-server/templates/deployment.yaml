@@ -22,11 +22,6 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.springProfilesActive }}
-            - name: DISCOVERY_SVC
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configMap.appConfig.name }}
-                  key: discoverySvcUri
             - name: PYTHON_API_SVC
               valueFrom:
                 configMapKeyRef:

@@ -20,8 +20,6 @@ configMap:
     data:
       # Service endpoint of Config Server
       configSvcUri: "http://config-server.qa.svc.cluster.local:8888"
-      # Service endpoint of Discovery Service
-      discoverySvcUri: "http://discovery-service.qa.svc.cluster.local:8761"
       # Broker URL of Kafka deployed in Kubernetes
       kafkaBroker: "localhost:9092"
       # Service name of Python API deployed in Kubernetes
