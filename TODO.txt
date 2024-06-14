@@ -75,6 +75,9 @@ Performance Testing:
 - VisualVM
 - Apache JMeter
 
+Cloud:
+- Look into pod affinity
+- Look into mounting configs from pod/container to volume mount that can be edited from K8
 Can be analysed after above is complete:
 - DB Indexes
 - Caching
