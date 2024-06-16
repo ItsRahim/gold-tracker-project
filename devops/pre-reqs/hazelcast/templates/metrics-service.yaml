@@ -1,0 +1,33 @@
+{{- if and .Values.hazelcast.enabled .Values.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "hazelcast.fullname" . }}-metrics
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    helm.sh/chart: {{ template "hazelcast.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    app.kubernetes.io/component: metrics
+    {{- range $key, $value := .Values.commonLabels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- if or .Values.metrics.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- merge nil .Values.metrics.service.annotations .Values.commonAnnotations | toYaml | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.metrics.service.type }}
+  {{- if (and (eq .Values.metrics.service.type "LoadBalancer") (.Values.metrics.service.loadBalancerIP)) }}
+  loadBalancerIP: {{ .Values.metrics.service.loadBalancerIP }}
+  {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  ports:
+  - protocol: TCP
+    port: {{ .Values.metrics.service.port }}
+    targetPort: {{ .Values.metrics.service.portName }}
+    name: {{ .Values.metrics.service.portName }}
+{{- end }}
