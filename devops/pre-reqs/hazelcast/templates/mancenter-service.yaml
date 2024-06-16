@@ -1,0 +1,39 @@
+{{- if .Values.mancenter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "mancenter.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "mancenter.name" . }}
+    helm.sh/chart: {{ template "hazelcast.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    {{- range $key, $value := (merge nil .Values.mancenter.service.labels .Values.commonLabels) }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- if or .Values.mancenter.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- merge nil .Values.mancenter.service.annotations .Values.commonAnnotations | toYaml | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.mancenter.service.type }}
+  {{- if .Values.mancenter.service.clusterIP }}
+  clusterIP: {{ .Values.mancenter.service.clusterIP }}
+  {{- end }}
+  {{- if (and (eq .Values.mancenter.service.type "LoadBalancer") (.Values.mancenter.service.loadBalancerIP)) }}
+  loadBalancerIP: {{ .Values.mancenter.service.loadBalancerIP }}
+  {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ template "mancenter.name" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    role: mancenter
+  ports:
+  - protocol: TCP
+    port: {{ .Values.mancenter.service.port }}
+    targetPort: mancenter
+    name: http
+  - protocol: TCP
+    port: {{ .Values.mancenter.service.httpsPort }}
+    targetPort: mancenter
+    name: https
+{{- end }}

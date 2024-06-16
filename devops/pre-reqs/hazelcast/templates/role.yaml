@@ -1,0 +1,35 @@
+{{- if .Values.rbac.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+{{- if .Values.rbac.useClusterRole }}
+kind: ClusterRole
+{{- else }}
+kind: Role
+{{- end }}
+metadata:
+  name: {{ template "hazelcast.fullname" . }}-{{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    helm.sh/chart: {{ template "hazelcast.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    {{- range $key, $value := .Values.commonLabels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- with .Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  - pods
+{{- if .Values.rbac.useClusterRole }}
+  - nodes
+{{- end }}
+  - services
+  verbs:
+  - get
+  - list
+{{- end -}}
