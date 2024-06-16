@@ -17,7 +17,7 @@ app = FastAPI()
 
 app.include_router(price_router, prefix=API_PREFIX)
 
-if DEPLOYMENT_TYPE == "local":
+if DEPLOYMENT_TYPE == "dev":
     app.include_router(encryptor_router, prefix=API_PREFIX)
 
 

@@ -25,7 +25,7 @@ class DatabaseManager:
         password = Config.get_db_password()
         deployment_type = Config.get_deployment_type()
 
-        if user and password and deployment_type == "local":
+        if user and password and deployment_type == "dev":
             user = get_credentials(user)
             password = get_credentials(password)
 

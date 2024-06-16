@@ -7,7 +7,7 @@ encryptor_router = APIRouter()
 
 DEPLOYMENT_TYPE = Config.get_deployment_type()
 
-if DEPLOYMENT_TYPE == "local":
+if DEPLOYMENT_TYPE == "dev":
     encryptor = EncryptionHandler()
 else:
     encryptor = None
