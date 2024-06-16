@@ -33,10 +33,8 @@ class EncryptionHandler:
         deployment_type = Config.get_deployment_type()
         if deployment_type == 'local':
             self.key = load_key_from_vault()
-        elif deployment_type == 'cloud':
-            self.key = Config.get_encryption_key()
         else:
-            raise Exception("Deployment type not supported")
+            raise Exception(f"Vault integration not supported for deployment type {deployment_type}")
 
     def encrypt_value(self, plaintext):
         if not self.key:

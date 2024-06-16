@@ -7,16 +7,18 @@ from starlette.routing import Route
 
 from app.api.encryptor import encryptor_router
 from app.api.price_endpoint import price_router
-from app.config.load_config import load_config
+from app.config.load_config import load_config, Config
 
 config = load_config('app')
 
 API_PREFIX = "/api/v1"
-
+DEPLOYMENT_TYPE = Config.get_deployment_type()
 app = FastAPI()
 
 app.include_router(price_router, prefix=API_PREFIX)
-app.include_router(encryptor_router, prefix=API_PREFIX)
+
+if DEPLOYMENT_TYPE == "local":
+    app.include_router(encryptor_router, prefix=API_PREFIX)
 
 
 @app.exception_handler(HTTPException)
@@ -31,6 +33,7 @@ async def validation_exception_handler(request, exc):
 
 async def catch_all(request: Request):
     raise HTTPException(status_code=404, detail=f'Endpoint {request.method} {request.url.path} not found')
+
 
 catch_all_route = Route("/{path:path}", catch_all, methods=["GET", "POST", "PUT", "DELETE"])
 app.router.routes.append(catch_all_route)
