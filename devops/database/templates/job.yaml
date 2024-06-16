@@ -13,15 +13,5 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "{{ .Values.springProfilesActive }}"
-{{/*            - name: DISCOVERY_SVC*/}}
-{{/*              valueFrom:*/}}
-{{/*                configMapKeyRef:*/}}
-{{/*                  name: {{ .Values.configMap.appConfig.name }}*/}}
-{{/*                  key: discoverySvcUri*/}}
-{{/*            - name: CONFIG_SVC_URI*/}}
-{{/*              valueFrom:*/}}
-{{/*                configMapKeyRef:*/}}
-{{/*                  name: {{ .Values.configMap.appConfig.name }}*/}}
-{{/*                  key: configSvcUri*/}}
       restartPolicy: Never
   backoffLimit: {{ .Values.job.backoffLimit }}
