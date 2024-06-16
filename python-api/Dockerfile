@@ -5,8 +5,8 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy the Pipfile and Pipfile.lock into the container
-COPY /Pipfile ./
-COPY /Pipfile.lock ./
+COPY ../python-api/Pipfile ./
+COPY ../python-api/Pipfile.lock ./
 
 # Install system dependencies
 RUN apt-get update \
@@ -18,9 +18,9 @@ RUN apt-get update \
 RUN pip install pipenv
 
 # Copy the rest of the application code into the container
-COPY /app /app/app
+COPY ../python-api/app /app/app
 
-COPY /main.py /app
+COPY ../python-api/main.py /app
 
 # Install the required packages
 RUN pipenv install --deploy --system
