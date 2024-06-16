@@ -69,6 +69,7 @@ Issues/Enhancements:
 -Keystore and Truststore of vault to be kept on local container with yml pointing to it
 -Keystore and Truststore for Kafka to be stored base64 on vault
 -All passwords to be stored using '{cipher}myPassword' with keys being stored on vault
+-May not need config map for config-server everything can be changed in yml, no need to secret encryption key for python
 -Prod and Cloud configs will be similar, except cloud one is for testing - will not include ssl configs but will include env variable etc
 -Create parent pom, move all dependencies there, update all dependency and java version and add owasp for
 Performance Testing:
