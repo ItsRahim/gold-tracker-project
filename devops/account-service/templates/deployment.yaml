@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-server
+  labels:
+    app: config-server
+    environment: {{ .Values.environment | default "qa"}}
+    version: {{ .Values.version | default "1.0.0" }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: config-server
+  template:
+    metadata:
+      labels:
+        app: config-server
+        environment: {{ .Values.environment | default "qa" }}
+        version: {{ .Values.version | default "1.0.0" }}
+    spec:
+      containers:
+        - name: {{ .Values.container.name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["java", "-jar", "/app/config-server.jar"]
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.springProfilesActive }}
+            - name: PYTHON_API_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.appConfig.name }}
+                  key: pythonApiSvcUri
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.configServer.name }}
+                  key: encryptRsaKey
+            - name: SALT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.configServer.name }}
+                  key: encryptRsaSalt
+          resources:
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.readinessProbe.healthCheckPort }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.liveness.healthCheckPort }}
+            initialDelaySeconds: {{ .Values.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.liveness.periodSeconds }}
+            successThreshold: {{ .Values.liveness.successThreshold }}
+            failureThreshold: {{ .Values.liveness.failureThreshold }}
+            timeoutSeconds: {{ .Values.liveness.timeoutSeconds }}
+      restartPolicy: Always

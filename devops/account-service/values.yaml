@@ -1,0 +1,78 @@
+# Environment and Version
+environment: qa
+version: 1.0.0
+
+# Replica Configuration
+replicaCount: 1
+
+###########################################
+# Docker Image Configuration
+image:
+  repository: rahimahmed/config-server
+  tag: latest
+  pullPolicy: Always
+
+###########################################
+# Spring Profile Configuration
+springProfilesActive: "native,qa"
+
+###########################################
+# Container Configuration
+container:
+  name: config-server
+
+###########################################
+# Kubernetes Service Configuration
+service:
+  name: config-server
+  port: 8888
+
+###########################################
+# Kubernetes Config Map Configuration
+configMap:
+  appConfig:
+    name: rgts-appconfig
+    data:
+      # Broker URL of Kafka deployed in Kubernetes
+      kafkaBroker: "localhost:9092"
+      # Service name of Python API deployed in Kubernetes
+      pythonApiSvcUri: "http://python-service.default.svc.cluster.local:8000"
+
+###########################################
+# Kubernetes Secret Configuration
+secret:
+  configServer:
+    name: rgts-configserver
+    data:
+      encryptRsaKey: changeMe
+      encryptRsaSalt: letMeIn
+
+###########################################
+# Readiness Probe Configuration
+readinessProbe:
+  healthCheckPort: 8761
+  initialDelaySeconds: 20
+  periodSeconds: 15
+  successThreshold: 1
+  failureThreshold: 10
+  timeoutSeconds: 5
+
+###########################################
+# Liveness Probe Configuration
+liveness:
+  healthCheckPort: 8761
+  initialDelaySeconds: 20
+  periodSeconds: 15
+  successThreshold: 1
+  failureThreshold: 10
+  timeoutSeconds: 5
+
+###########################################
+# Resource Limits and Requests
+resources:
+  limits:
+    memory: 512Mi
+    cpu: 500m
+  requests:
+    memory: 256Mi
+    cpu: 250m
