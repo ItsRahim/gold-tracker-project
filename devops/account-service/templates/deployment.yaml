@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: config-server
+  name: account-service
   labels:
-    app: config-server
+    app: account-service
     environment: {{ .Values.environment | default "qa"}}
     version: {{ .Values.version | default "1.0.0" }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: config-server
+      app: account-service
   template:
     metadata:
       labels:
-        app: config-server
+        app: account-service
         environment: {{ .Values.environment | default "qa" }}
         version: {{ .Values.version | default "1.0.0" }}
     spec:
@@ -22,27 +22,12 @@ spec:
         - name: {{ .Values.container.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["java", "-jar", "/app/config-server.jar"]
+          command: ["java", "-jar", "/app/account-service.jar"]
           ports:
             - containerPort: {{ .Values.service.port }}
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.springProfilesActive }}
-            - name: PYTHON_API_SVC
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configMap.appConfig.name }}
-                  key: pythonApiSvcUri
-            - name: ENCRYPTION_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secret.configServer.name }}
-                  key: encryptRsaKey
-            - name: SALT
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secret.configServer.name }}
-                  key: encryptRsaSalt
           resources:
             limits:
               memory: {{ .Values.resources.limits.memory }}

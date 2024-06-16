@@ -8,49 +8,29 @@ replicaCount: 1
 ###########################################
 # Docker Image Configuration
 image:
-  repository: rahimahmed/config-server
+  repository: rahimahmed/account-service
   tag: latest
   pullPolicy: Always
 
 ###########################################
 # Spring Profile Configuration
-springProfilesActive: "native,qa"
+springProfilesActive: "qa"
 
 ###########################################
 # Container Configuration
 container:
-  name: config-server
+  name: account-service
 
 ###########################################
 # Kubernetes Service Configuration
 service:
-  name: config-server
-  port: 8888
-
-###########################################
-# Kubernetes Config Map Configuration
-configMap:
-  appConfig:
-    name: rgts-appconfig
-    data:
-      # Broker URL of Kafka deployed in Kubernetes
-      kafkaBroker: "localhost:9092"
-      # Service name of Python API deployed in Kubernetes
-      pythonApiSvcUri: "http://python-service.default.svc.cluster.local:8000"
-
-###########################################
-# Kubernetes Secret Configuration
-secret:
-  configServer:
-    name: rgts-configserver
-    data:
-      encryptRsaKey: changeMe
-      encryptRsaSalt: letMeIn
+  name: account-service
+  port: 8081
 
 ###########################################
 # Readiness Probe Configuration
 readinessProbe:
-  healthCheckPort: 8761
+  healthCheckPort: 8081
   initialDelaySeconds: 20
   periodSeconds: 15
   successThreshold: 1
@@ -60,7 +40,7 @@ readinessProbe:
 ###########################################
 # Liveness Probe Configuration
 liveness:
-  healthCheckPort: 8761
+  healthCheckPort: 8081
   initialDelaySeconds: 20
   periodSeconds: 15
   successThreshold: 1
