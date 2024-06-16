@@ -26,6 +26,7 @@ public class HazelcastInstanceFactory {
     @Bean(name = "defaultHazelcastCluster")
     public HazelcastInstance hazelcastInstance() {
         try {
+            hazelcastClientProperties.applyRetryConfig();
             return HazelcastClient.newHazelcastClient(hazelcastClientProperties);
         } catch (RuntimeException e) {
             LOG.error("Failed to create Hazelcast client instance, falling back to local instance: {}", e.getMessage());
