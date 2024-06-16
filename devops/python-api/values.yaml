@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: rahimahmed/custom-api
+  repository: rahimahmed/python-api
   tag: latest
   pullPolicy: Always
 
