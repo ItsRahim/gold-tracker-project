@@ -1,6 +1,5 @@
 package com.rahim.common.config.health;
 
-import com.rahim.common.config.hazelcast.HazelcastInstanceFactory;
 import com.rahim.common.service.hazelcast.HazelcastFailover;
 import com.rahim.common.service.kafka.KafkaFailover;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,6 @@ import java.lang.reflect.Method;
 public class HealthCheckAspect {
 
     private static final Logger LOG = LoggerFactory.getLogger(HealthCheckAspect.class);
-    private final HazelcastInstanceFactory hazelcastInstanceFactory;
     private final HazelcastFailover hazelcastFailover;
     private final KafkaFailover kafkaFailover;
 
@@ -49,7 +47,6 @@ public class HealthCheckAspect {
             Object[] args = joinPoint.getArgs();
 
             if (HAZELCAST_TYPE.equals(type) && !HealthStatus.isHzHealthy) {
-                hazelcastInstanceFactory.fallbackHazelcastInstance();
                 hazelcastFailover.init();
                 return handleHazelcastFallback(args, method, returnType);
             } else if (KAFKA_TYPE.equals(type) && !HealthStatus.isKafkaHealthy) {

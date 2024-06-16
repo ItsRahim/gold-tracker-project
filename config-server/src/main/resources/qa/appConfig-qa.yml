@@ -1,6 +1,6 @@
 spring:
   hazelcast:
-    config: classpath:hazelcastConfig.yml
+    config: classpath:hazelcast-qa.yml
   kafka:
     security:
       protocol: PLAINTEXT

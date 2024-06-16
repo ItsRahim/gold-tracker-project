@@ -14,16 +14,13 @@ import org.springframework.stereotype.Component;
 public class HazelcastMonitor {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastMonitor.class);
-    private final HazelcastInstanceFactory hazelcastInstanceFactory;
     private final HazelcastInstance hazelcastInstance;
 
     private static final long INITIAL_DELAY = 60000;
     private static final long HEARTBEAT_INTERVAL = 10000;
-    private volatile boolean previousClusterHealth = false;
+    private volatile boolean previousClusterHealth = true;
 
-    public HazelcastMonitor(HazelcastInstanceFactory hazelcastInstanceFactory,
-                            @Qualifier("defaultHazelcastCluster")HazelcastInstance hazelcastInstance) {
-        this.hazelcastInstanceFactory = hazelcastInstanceFactory;
+    public HazelcastMonitor(@Qualifier("defaultHazelcastCluster")HazelcastInstance hazelcastInstance) {
         this.hazelcastInstance = hazelcastInstance;
     }
 
@@ -46,7 +43,6 @@ public class HazelcastMonitor {
     private void handleUnhealthyCluster() {
         LOG.info("Unhealthy Hazelcast cluster detected. Using fallback cluster");
         HealthStatus.setHzHealthy(false);
-        hazelcastInstanceFactory.fallbackHazelcastInstance();
     }
 
     private void handleHealthyCluster() {
