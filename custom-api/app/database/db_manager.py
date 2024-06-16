@@ -8,10 +8,15 @@ from app.config.load_config import Config
 from app.config.logging import log
 from app.util.encryptor import EncryptionHandler
 
-encryption_handler = EncryptionHandler()
+DEPLOYMENT_TYPE = Config.get_deployment_type()
+
+if DEPLOYMENT_TYPE == "dev":
+    encryption_handler = EncryptionHandler()
+else:
+    encryptor = None
 
 
-def get_credentials(encrypted_value:  str) -> str:
+def get_credentials(encrypted_value: str) -> str:
     return encryption_handler.decrypt_value(encrypted_value)
 
 
@@ -23,8 +28,9 @@ class DatabaseManager:
         port = Config.get_db_port()
         user = Config.get_db_user()
         password = Config.get_db_password()
+        deployment_type = Config.get_deployment_type()
 
-        if user and password:
+        if user and password and deployment_type == "dev":
             user = get_credentials(user)
             password = get_credentials(password)
 
@@ -57,4 +63,3 @@ class DatabaseManager:
 
     def close_connection(self):
         self.engine.dispose()
-

@@ -31,12 +31,10 @@ def unpad_data(text):
 class EncryptionHandler:
     def __init__(self):
         deployment_type = Config.get_deployment_type()
-        if deployment_type == 'local':
+        if deployment_type == 'dev':
             self.key = load_key_from_vault()
-        elif deployment_type == 'cloud':
-            self.key = Config.get_encryption_key()
         else:
-            raise Exception("Deployment type not supported")
+            raise Exception(f"Vault integration not supported for deployment type {deployment_type}")
 
     def encrypt_value(self, plaintext):
         if not self.key:
