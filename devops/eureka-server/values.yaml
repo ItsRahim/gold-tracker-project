@@ -22,6 +22,12 @@ container:
   name: eureka-server
 
 ###########################################
+# Kubernetes Service Configuration
+service:
+  name: eureka-server
+  port: 8761
+
+###########################################
 # Readiness Probe Configuration
 readinessProbe:
   healthCheckPort: 8761
@@ -40,12 +46,6 @@ liveness:
   successThreshold: 1
   failureThreshold: 10
   timeoutSeconds: 5
-
-###########################################
-# Kubernetes Service Configuration
-service:
-  name: eureka-server
-  port: 8761
 
 ###########################################
 # Resource Limits and Requests
