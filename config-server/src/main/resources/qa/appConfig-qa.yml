@@ -68,6 +68,23 @@ management:
     metrics:
       export:
         enabled: true
+  zipkin:
+    base-url: http://zipkin.default.svc.cluster.local::9411
+    enabled: true
+    sender:
+      type: web
+    encoder:
+      type: json
+    properties:
+      compression:
+        enabled: true
+    connection:
+      timeout: 5s
+      read-timeout: 10s
+    reporter:
+      message-max-bytes: 524288
+      queued-max-spans: 1000
+      queued-max-bytes: 10485760
 
 springdoc:
   swagger-ui:
