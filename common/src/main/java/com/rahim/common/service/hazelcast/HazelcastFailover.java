@@ -34,28 +34,26 @@ public class HazelcastFailover {
     private final HazelcastInstanceFactory hazelcastInstanceFactory;
     private final HzPersistenceService setResilienceService;
     private final HzPersistenceService mapResilienceService;
-    private final HazelcastInstance hazelcastInstance;
+    private HazelcastInstance hazelcastInstance;
     private final JdbcTemplate jdbcTemplate;
 
     private static final String INITIALISED_FLAG_KEY = "initialisedFlag";
 
     @Autowired
     public HazelcastFailover(HazelcastInstanceFactory hazelcastInstanceFactory,
-                             @Qualifier("fallbackHazelcastCluster") HazelcastInstance hazelcastInstance,
                              @Qualifier("hzSetResilienceService") HzPersistenceService setResilienceService,
                              @Qualifier("hzMapResilienceService") HzPersistenceService mapResilienceService,
                              JdbcTemplate jdbcTemplate) {
         this.hazelcastInstanceFactory = hazelcastInstanceFactory;
-        this.hazelcastInstance = hazelcastInstance;
         this.setResilienceService = setResilienceService;
         this.mapResilienceService = mapResilienceService;
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void init() {
-        if (!hazelcastInstance.getLifecycleService().isRunning()) {
-            LOG.error("Fallback Hazelcast instance is not running!");
-            hazelcastInstanceFactory.fallbackHazelcastInstance();
+        if (hazelcastInstance == null || !hazelcastInstance.getLifecycleService().isRunning()) {
+            LOG.warn("Fallback Hazelcast instance is not running!");
+            hazelcastInstance = hazelcastInstanceFactory.fallbackHazelcastInstance();
         }
 
         initialiseHazelcastData();
