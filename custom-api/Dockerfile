@@ -18,7 +18,7 @@ RUN apt-get update \
 RUN pip install pipenv
 
 # Copy the rest of the application code into the container
-COPY ../custom-api/app /app
+COPY ../custom-api/app /app/app
 
 COPY ../custom-api/main.py /app
 
