@@ -26,7 +26,7 @@ hazelcast:
   # The name of the cluster. All members of a single cluster must have the
   # same cluster name configured and a client connecting to this cluster
   # must use it as well.
-  cluster-name: dev
+  cluster-name: qa
   network:
     # The preferred port number where the Hazelcast instance will listen. The
     # convention is to use 5701 and it is the default both here and in
@@ -85,9 +85,9 @@ hazelcast:
       # Specifies whether the member use the Kubernetes APIs to get a list of candidate IPs to
       # check.
       kubernetes:
-        enabled: false
+        enabled: true
       eureka:
-        enabled: false
+        enabled: true
         # Specifies if the Eureka Discovery SPI plugin will register itself
         # with the Eureka 1 service discovery. It is optional. Default value
         # is true.
