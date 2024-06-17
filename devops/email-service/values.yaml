@@ -8,7 +8,7 @@ replicaCount: 1
 ###########################################
 # Docker Image Configuration
 image:
-  repository: rahimahmed/account-service
+  repository: rahimahmed/email-service
   tag: latest
   pullPolicy: Always
 
@@ -19,18 +19,18 @@ springProfilesActive: "qa"
 ###########################################
 # Container Configuration
 container:
-  name: account-service
+  name: email-service
 
 ###########################################
 # Kubernetes Service Configuration
 service:
-  name: account-service
-  port: 8081
+  name: email-service
+  port: 8083
 
 ###########################################
 # Readiness Probe Configuration
 readinessProbe:
-  healthCheckPort: 8081
+  healthCheckPort: 8083
   initialDelaySeconds: 20
   periodSeconds: 15
   successThreshold: 1
@@ -40,7 +40,7 @@ readinessProbe:
 ###########################################
 # Liveness Probe Configuration
 liveness:
-  healthCheckPort: 8081
+  healthCheckPort: 8083
   initialDelaySeconds: 20
   periodSeconds: 15
   successThreshold: 1

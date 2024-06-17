@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: account-service
+  name: email-service
   labels:
-    app: account-service
+    app: email-service
     environment: {{ .Values.environment | default "qa"}}
     version: {{ .Values.version | default "1.0.0" }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: account-service
+      app: email-service
   template:
     metadata:
       labels:
-        app: account-service
+        app: email-service
         environment: {{ .Values.environment | default "qa" }}
         version: {{ .Values.version | default "1.0.0" }}
     spec:
@@ -22,7 +22,7 @@ spec:
         - name: {{ .Values.container.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["java", "-jar", "/app/account-service.jar"]
+          command: ["java", "-jar", "/app/email-service.jar"]
           ports:
             - containerPort: {{ .Values.service.port }}
           env:
