@@ -103,25 +103,28 @@ services:
 
 # Python Pricing Service
   pricing-api:
-    image: rahim/pricingapi
-    container_name: pricing-service
+    image: rahimahmed/python-api
+    container_name: python-api
     ports:
       - "8000:8000"
     depends_on:
       - vault
       - postgres
     environment:
+      - DEPLOYMENT_TYPE=dev
+      - ENCRYPTION_KEY=letMeIn
       - DB_NAME=gold
-      - DB_HOST=postgres
+      - DB_HOST=localhost
       - DB_PORT=5432
-      - DB_USERNAME=Vny+H/dXlFBwKCRbGCAyP/b7ZqM8SAWb+sGhLftCbw4=
-      - DB_PASSWORD=cdmak3vJcvdu8c5OdldjBabaNgpnHqfL4HLCXbyHSj0=
+      - DB_USERNAME=fq0aKhPeiuYiiqg2uKUbaKOKsVyMXWCfYFqJe9RWLpg=
+      - DB_PASSWORD=f1YNWc7EGk5KfHoRxs89H3cAypTJWiadhRFeT2wkD24=
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_TOPIC=gold-price-stream
       - VAULT_URL=http://vault:8200
       - VAULT_TOKEN=dev_token
       - VAULT_BACKEND_PATH=kv/config-server
       - VAULT_ENCRYPTION_KEY_NAME=gold.api.encryption.key
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
     networks:
       - my-network
 
