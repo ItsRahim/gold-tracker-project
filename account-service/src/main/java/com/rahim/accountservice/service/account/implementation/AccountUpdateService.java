@@ -94,23 +94,23 @@ public class AccountUpdateService implements IAccountUpdateService {
     private void updateNotification(Account account, String value) {
         try {
             Boolean newNotificationSetting = parseNotificationSetting(value);
-            if (isValidChange(account.getNotificationSetting(), newNotificationSetting)) {
-                account.setNotificationSetting(newNotificationSetting);
-                updateNotificationSet(account.getId(), newNotificationSetting);
-                log.debug("Notification setting updated successfully for account with ID {}: {}", account.getId(), newNotificationSetting);
-            } else {
+
+            if (account.getNotificationSetting() == newNotificationSetting) {
                 log.debug("Invalid value passed or no change in notificationSetting. Not updating for account with ID {}", account.getId());
+                return;
             }
+
+            account.setNotificationSetting(newNotificationSetting);
+            updateNotificationSet(account.getId(), newNotificationSetting);
+            log.debug("Notification setting updated successfully for account with ID {}: {}", account.getId(), newNotificationSetting);
         } catch (IllegalArgumentException e) {
             log.error("Failed to update notificationSetting for account with ID {}: {}", account.getId(), e.getMessage());
         }
     }
 
     private boolean parseNotificationSetting(String value) {
-        if (value.equalsIgnoreCase("true")) {
-            return true;
-        } else if (value.equalsIgnoreCase("false")) {
-            return false;
+        if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+            return Boolean.parseBoolean(value);
         } else {
             throw new ValidationException("Invalid value for notificationSetting: " + value);
         }
@@ -122,9 +122,5 @@ public class AccountUpdateService implements IAccountUpdateService {
         } else {
             hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, id);
         }
-    }
-
-    private <T> boolean isValidChange(T oldValue, T newValue) {
-        return (newValue != null) && (!newValue.equals(oldValue));
     }
 }
