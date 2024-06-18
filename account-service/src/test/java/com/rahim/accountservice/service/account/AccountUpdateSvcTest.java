@@ -73,13 +73,13 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
         assertThat(userRequest).isNotNull();
 
         // Getting original account
-        Optional<Account> accountOptional = accountRepositoryHandler.getAllAccounts()
+        Account originalAccount = accountRepositoryHandler.getAllAccounts()
                 .stream()
                 .filter(account -> account.getEmail().equals(userRequest.getAccount().getEmail()))
-                .findFirst();
+                .findFirst()
+                .get();
 
-        assertThat(accountOptional).isNotEmpty();
-        Account originalAccount = accountOptional.get();
+        assertThat(originalAccount).isNotNull();
         Integer accountId = originalAccount.getId();
 
         // Creating update account request data
