@@ -1,6 +1,7 @@
 package com.rahim.investmentservice.controller;
 
 import com.rahim.investmentservice.entity.Holding;
+import com.rahim.investmentservice.model.HoldingResponse;
 import com.rahim.investmentservice.service.holding.HoldingDeletionService;
 import com.rahim.investmentservice.service.repository.HoldingRepositoryHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.rahim.investmentservice.constants.HoldingControllerEndpoint.*;
 
@@ -66,12 +68,23 @@ public class HoldingController {
     public ResponseEntity<Object> getHoldingByAccountId(
             @Parameter(description = "The account id to get all holdings for", required = true) @PathVariable int accountId) {
         try {
-            List<Holding> allHoldings = holdingRepositoryHandler.getHoldingsByAccountId(accountId);
-            if (allHoldings.isEmpty()) {
+            log.info("Fetching holdings for account ID: {}", accountId);
+            List<Holding> holdings = holdingRepositoryHandler.getHoldingsByAccountId(accountId);
+
+            if (holdings.isEmpty()) {
+                log.warn("No holdings found for account with ID {}", accountId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No holdings found for account with ID " + accountId);
             }
-            return ResponseEntity.status(HttpStatus.OK).body(allHoldings);
+
+            List<HoldingResponse> holdingResponse = holdings.stream()
+                    .map(holding -> new HoldingResponse(holding.getPurchaseAmount(), holding.getCurrentValue(), holding.getProfitLoss()))
+                    .toList();
+
+            log.info("Holdings found for account ID: {}", accountId);
+            return ResponseEntity.status(HttpStatus.OK).body(holdingResponse);
+
         } catch (Exception e) {
+            log.error("Error occurred while fetching holdings for account ID: {}", accountId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
