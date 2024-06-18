@@ -3,15 +3,24 @@ package com.rahim.investmentservice.service.repository.implementation;
 import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
+import com.rahim.investmentservice.dao.HoldingDataAccess;
+import com.rahim.investmentservice.dao.InvestmentsDataAccess;
 import com.rahim.investmentservice.entity.Investment;
+import com.rahim.investmentservice.model.InvestmentResponse;
 import com.rahim.investmentservice.repository.InvestmentRepository;
 import com.rahim.investmentservice.service.repository.InvestmentRepositoryHandler;
+import com.rahim.investmentservice.util.InvestmentRowMapper;
+import com.rahim.investmentservice.util.ProfitLossUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Rahim Ahmed
@@ -23,6 +32,7 @@ public class InvestmentRepositoryHandlerService implements InvestmentRepositoryH
 
     private static final Logger LOG = LoggerFactory.getLogger(InvestmentRepositoryHandlerService.class);
     private final InvestmentRepository investmentRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     @Transactional
@@ -58,4 +68,25 @@ public class InvestmentRepositoryHandlerService implements InvestmentRepositoryH
         getInvestmentById(investmentId);
         investmentRepository.deleteById(investmentId);
     }
+
+    @Override
+    public List<InvestmentResponse> getInvestmentByAccountId(int accountId) {
+        String query = "SELECT "
+                + "(SELECT SUM(h." + HoldingDataAccess.COL_CURRENT_VALUE + ") FROM " + HoldingDataAccess.TABLE_NAME + " h"
+                + " WHERE h." + HoldingDataAccess.COL_INVESTMENT_ID + " = i." + InvestmentsDataAccess.COL_INVESTMENT_ID
+                + " AND h." + HoldingDataAccess.COL_ACCOUNT_ID + " = i." + InvestmentsDataAccess.COL_ACCOUNT_ID + ") AS total_current_value, "
+                + "i." + InvestmentsDataAccess.COL_PURCHASE_PRICE + ", "
+                + "i." + InvestmentsDataAccess.COL_PURCHASE_DATE + " "
+                + "FROM " + InvestmentsDataAccess.TABLE_NAME + " i "
+                + "WHERE i." + InvestmentsDataAccess.COL_ACCOUNT_ID + " = ?";
+
+        List<InvestmentResponse> investmentResponses = jdbcTemplate.query(query, new InvestmentRowMapper(), accountId);
+        for (InvestmentResponse investmentResponse : investmentResponses) {
+            BigDecimal profitLossPercentage = ProfitLossUtil.calculateProfitLossPercentage(investmentResponse.getPurchasePrice(), investmentResponse.getCurrentValue());
+            investmentResponse.setProfitLoss(profitLossPercentage);
+        }
+
+        return investmentResponses;
+    }
+
 }
