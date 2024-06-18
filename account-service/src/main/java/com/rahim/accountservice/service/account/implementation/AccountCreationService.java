@@ -29,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-public class AccountCreationService implements IAccountCreationService {
+public class AccountCreationImpl implements IAccountCreationService {
 
-    private static final Logger log = LoggerFactory.getLogger(AccountCreationService.class);
+    private static final Logger log = LoggerFactory.getLogger(AccountCreationImpl.class);
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IProfileCreationService profileCreation;
