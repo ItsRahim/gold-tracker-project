@@ -10,6 +10,8 @@ import lombok.*;
 @Getter
 @Setter
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class Address {
     private String street;
     private String city;
