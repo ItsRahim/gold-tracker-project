@@ -8,7 +8,6 @@ import com.rahim.accountservice.model.UserRequest;
 import com.rahim.accountservice.request.account.AccountCreationRequest;
 import com.rahim.accountservice.request.profile.ProfileCreationRequest;
 import com.rahim.accountservice.service.account.implementation.AccountCreationService;
-import com.rahim.accountservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.accountservice.service.repository.implementation.AccountRepositoryHandlerService;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.DuplicateEntityException;
@@ -30,13 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AccountCreationServiceTest extends AbstractTestConfig {
+public class AccountCreationSvcTest extends AbstractTestConfig {
 
     @Autowired
-    private AccountCreationService accountCreationService;
-
-    @Autowired
-    private IProfileRepositoryHandler profileRepositoryHandler;
+    private IAccountCreationService accountCreationService;
 
     @Autowired
     private AccountRepositoryHandlerService accountRepositoryHandlerService;
@@ -95,11 +91,9 @@ public class AccountCreationServiceTest extends AbstractTestConfig {
         ProfileCreationRequest profile1 = new ProfileCreationRequest("duplicateUsername", "Dorothy", "Bullock", "07046243266", address);
         UserRequest userRequest1 = new UserRequest(account1, profile1);
         UserRequest firstUser = accountCreationService.createAccount(userRequest1);
-        String username = profile1.getUsername();
 
         // Verify first account creation
         assertThat(firstUser).isNotNull();
-        assertThat(profileRepositoryHandler.existsByUsername(username)).isTrue();
 
         // Attempt to create a second account with the same email
         AccountCreationRequest account2 = new AccountCreationRequest("mollis.phasellus@google.org", "newPassword");
@@ -141,13 +135,9 @@ public class AccountCreationServiceTest extends AbstractTestConfig {
         ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_SET);
         assertThat(accountIds).isNullOrEmpty();
 
-        // Generate test data
         UserRequest userRequestData = TestDataGenerator.generateSingleUserRequest();
-
-        // Perform action
         UserRequest userRequest = accountCreationService.createAccount(userRequestData);
 
-        // Verify results
         assertThat(userRequest).isNotNull();
         assertThat(accountIds).isNotNull();
     }

@@ -70,15 +70,21 @@ public class AccountUpdateService implements IAccountUpdateService {
     }
 
     private void updateFields(Account account, AccountUpdateRequest updateRequest) {
-        if (updateRequest.getEmail() != null && !updateRequest.getEmail().isEmpty()) {
+        String email = updateRequest.getEmail();
+        String password = updateRequest.getPasswordHash();
+        String notificationSetting = updateRequest.getNotificationSetting();
+
+        if (email != null && !email.isEmpty()) {
             log.debug("Updating email");
             updateEmail(account, updateRequest.getEmail());
         }
-        if (updateRequest.getPasswordHash() != null && !updateRequest.getPasswordHash().isEmpty()) {
+
+        if (password != null && !password.isEmpty()) {
             log.debug("Updating password");
             account.setPasswordHash(updateRequest.getPasswordHash());
         }
-        if (updateRequest.getNotificationSetting() != null && !updateRequest.getNotificationSetting().isEmpty()) {
+
+        if (notificationSetting != null && !notificationSetting.isEmpty()) {
             log.debug("Updating notification setting");
             updateNotification(account, updateRequest.getNotificationSetting());
         }
