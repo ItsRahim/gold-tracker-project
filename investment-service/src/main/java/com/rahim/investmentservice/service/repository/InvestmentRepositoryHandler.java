@@ -1,6 +1,9 @@
 package com.rahim.investmentservice.service.repository;
 
 import com.rahim.investmentservice.entity.Investment;
+import com.rahim.investmentservice.model.InvestmentResponse;
+
+import java.util.List;
 
 /**
  * @author Rahim Ahmed
@@ -15,4 +18,6 @@ public interface InvestmentRepositoryHandler {
     Investment getInvestmentById(int investmentId);
 
     void deleteInvestment(int investmentId);
+
+    List<InvestmentResponse> getInvestmentByAccountId(int accountId);
 }

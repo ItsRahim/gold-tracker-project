@@ -14,5 +14,5 @@ public class InvestmentsDataAccess {
     public static final String COL_GOLD_TYPE_ID = "gold_type_id";
     public static final String COL_QUANTITY = "quantity";
     public static final String COL_PURCHASE_PRICE = "purchase_price";
-    public static final String COL_PURCHASE_DATA = "purchase_date";
+    public static final String COL_PURCHASE_DATE = "purchase_date";
 }

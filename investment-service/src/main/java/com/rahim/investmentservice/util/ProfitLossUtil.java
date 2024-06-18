@@ -11,6 +11,14 @@ import java.math.RoundingMode;
  */
 public class ProfitLossUtil {
 
+    /**
+     * Method to calculate profit loss percentage
+     *
+     * @param initialValue - initial value of investment/holding
+     * @param currentValue - current value of investment/holding
+     * @return BigDecimal representing the profit/loss percentage
+     * @throws ValidationException if initialValue is null or zero, or currentValue is null
+     */
     public static BigDecimal calculateProfitLossPercentage(BigDecimal initialValue, BigDecimal currentValue) {
         if (initialValue == null || currentValue == null || initialValue.compareTo(BigDecimal.ZERO) == 0) {
             throw new ValidationException("Total purchase amount must not be null or zero, and current value must not be null");

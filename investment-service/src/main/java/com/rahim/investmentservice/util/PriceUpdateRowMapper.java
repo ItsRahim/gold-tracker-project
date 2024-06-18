@@ -16,7 +16,7 @@ import java.sql.SQLException;
  */
 public class PriceUpdateRowMapper implements RowMapper<PriceUpdate> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PriceUpdateRowMapper.class);
+    private static final Logger log = LoggerFactory.getLogger(PriceUpdateRowMapper.class);
 
     @Override
     public PriceUpdate mapRow(ResultSet rs, int rowNum) {
@@ -28,7 +28,7 @@ public class PriceUpdateRowMapper implements RowMapper<PriceUpdate> {
             model.setCurrentValue(rs.getBigDecimal(HoldingDataAccess.COL_CURRENT_VALUE));
             return model;
         } catch (SQLException e) {
-            LOG.error("Error mapping row number {} to PriceUpdate: {}", rowNum, e.getMessage(), e);
+            log.error("Error mapping row number {} to PriceUpdate: {}", rowNum, e.getMessage(), e);
             throw new RuntimeException("Error mapping row to PriceUpdate", e);
         }
     }
