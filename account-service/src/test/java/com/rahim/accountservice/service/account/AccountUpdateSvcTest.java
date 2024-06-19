@@ -121,7 +121,30 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     @Test
     @DisplayName("No Updates Applied")
     void shouldNotUpdateAccount_NoChanges() {
-        // Test implementation
+        // Creating initial account
+        UserRequest userRequest = accountCreationService.createAccount(generateData());
+
+        // Verifying new account has been created
+        assertThat(userRequest).isNotNull();
+
+        // Creating update account request data with only notification setting (default false)
+        AccountUpdateRequest accountUpdateRequest = new AccountUpdateRequest(null, null, "false");
+
+        Integer accountId = accountRepositoryHandler.getAllAccounts()
+                .stream()
+                .filter(account -> account.getEmail().equals(userRequest.getAccount().getEmail()))
+                .findFirst()
+                .get()
+                .getId();
+
+        assertThat(accountId).isNotNull();
+
+        // Updating account
+        Object object = accountUpdateService.updateAccount(accountId, accountUpdateRequest);
+        assertThat(object).isInstanceOf(String.class);
+
+        String response = (String) object;
+        assertThat(response).isEqualTo("No Updates applied");
     }
 
     @Test

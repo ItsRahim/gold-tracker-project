@@ -6,8 +6,10 @@ import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -30,6 +32,12 @@ public abstract class AbstractTestConfig {
 
     @Autowired
     CacheManager hazelcastCacheManager;
+
+    @MockBean
+    HazelcastIntialiser hazelcastIntialiser;
+
+    @MockBean
+    KafkaListenerConfig kafkaListenerConfig;
 
     @ServiceConnection
     static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE);
