@@ -26,7 +26,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static com.rahim.accountservice.constant.AccountState.PENDING_DELETE;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
