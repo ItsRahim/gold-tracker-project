@@ -7,7 +7,6 @@ import com.rahim.accountservice.model.Address;
 import com.rahim.accountservice.model.UserRequest;
 import com.rahim.accountservice.request.account.AccountCreationRequest;
 import com.rahim.accountservice.request.profile.ProfileCreationRequest;
-import com.rahim.accountservice.service.account.IAccountCreationService;
 import com.rahim.accountservice.service.repository.implementation.AccountRepositoryHandlerService;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.DuplicateEntityException;

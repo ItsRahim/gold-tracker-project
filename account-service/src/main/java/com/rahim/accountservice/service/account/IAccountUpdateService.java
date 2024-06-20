@@ -1,9 +1,6 @@
 package com.rahim.accountservice.service.account;
 
-import com.rahim.accountservice.entity.Account;
 import com.rahim.accountservice.request.account.AccountUpdateRequest;
-
-import java.time.LocalDate;
 
 /**
  * @author Rahim Ahmed
@@ -19,5 +16,4 @@ public interface IAccountUpdateService {
      * @throws RuntimeException If an error occurs while updating the account.
      */
     Object updateAccount(int accountId, AccountUpdateRequest updatedData);
-    void updateAccountForDeletion(Account account, LocalDate deletionDate);
 }
