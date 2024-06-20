@@ -11,8 +11,8 @@
     <groupId>com.rahim</groupId>
     <artifactId>user-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>account-service</name>
-    <description>account-service</description>
+    <name>user-service</name>
+    <description>user-service</description>
     <properties>
         <!-- Library Versions -->
         <java.version>17</java.version>
