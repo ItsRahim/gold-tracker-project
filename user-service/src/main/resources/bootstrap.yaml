@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: user-service
+  cloud:
+    config:
+      name: appConfig,dbConfig,hazelcast,user-service
+      discovery:
+        enabled: true
+        service-id: CONFIG-SERVER

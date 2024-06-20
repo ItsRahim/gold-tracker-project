@@ -1,8 +1,0 @@
-spring:
-  cloud:
-    config:
-      enabled: false
-    vault:
-      enabled: false
-    discovery:
-      enabled: false

@@ -1,5 +1,0 @@
-apiVersion: v1
-name: account-service
-description: A Helm chart for deploying the Account Microservice in Kubernetes
-version: 0.1.0
-appVersion: "1.16.0"
