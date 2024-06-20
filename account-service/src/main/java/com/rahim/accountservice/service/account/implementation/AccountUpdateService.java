@@ -36,6 +36,7 @@ public class AccountUpdateService implements IAccountUpdateService {
         Account originalAccount = new Account(account);
 
         updateFields(account, updateRequest);
+
         if (account.equals(originalAccount)) {
             log.debug("No updates were applied to the account");
             return "No updates were applied to the account.";

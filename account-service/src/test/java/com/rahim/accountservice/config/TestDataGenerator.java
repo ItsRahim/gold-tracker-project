@@ -1,5 +1,6 @@
 package com.rahim.accountservice.config;
 
+import com.rahim.accountservice.model.Address;
 import com.rahim.accountservice.request.account.AccountCreationRequest;
 import com.rahim.accountservice.request.profile.ProfileCreationRequest;
 import com.rahim.accountservice.model.UserRequest;
@@ -10,26 +11,21 @@ import java.util.List;
 
 public class TestDataGenerator {
 
-    private static TestDataGenerator testDataGenerator = null;
-
-    private TestDataGenerator() {}
-
-    public static TestDataGenerator getInstance() {
-        if (testDataGenerator == null) {
-            testDataGenerator = new TestDataGenerator();
-        }
-
-        return testDataGenerator;
+    private TestDataGenerator() {
     }
 
-    public List<AccountCreationRequest> generateAccountData(int numOfData) {
+    public static Address generateAddress() {
+        return new Address("20 Bond Street", "London", "EC1V 3JT", "England");
+    }
+
+    public static List<AccountCreationRequest> generateAccountData(int numOfData) {
         return Instancio
                 .ofList(AccountCreationRequest.class)
                 .size(numOfData)
                 .create();
     }
 
-    public List<ProfileCreationRequest> generateProfileData(int numOfData) {
+    public static List<ProfileCreationRequest> generateProfileData(int numOfData) {
         return Instancio
                 .ofList(ProfileCreationRequest.class)
                 .size(numOfData)
@@ -54,7 +50,7 @@ public class TestDataGenerator {
         return userRequests;
     }
 
-    public UserRequest generateSingleUserRequest() {
+    public static UserRequest generateSingleUserRequest() {
         AccountCreationRequest account = Instancio.create(AccountCreationRequest.class);
         ProfileCreationRequest profile = Instancio.create(ProfileCreationRequest.class);
 

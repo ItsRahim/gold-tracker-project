@@ -1,5 +1,0 @@
-spring:
-  hazelcast:
-    config: null
-  kafka:
-    bootstrap-servers:

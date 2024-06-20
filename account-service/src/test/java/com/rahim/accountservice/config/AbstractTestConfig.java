@@ -1,5 +1,7 @@
 package com.rahim.accountservice.config;
 
+import com.rahim.common.constant.HazelcastConstant;
+import com.rahim.common.service.hazelcast.CacheManager;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,8 +31,14 @@ public abstract class AbstractTestConfig {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    CacheManager hazelcastCacheManager;
+
     @MockBean
     HazelcastIntialiser hazelcastIntialiser;
+
+    @MockBean
+    KafkaListenerConfig kafkaListenerConfig;
 
     @ServiceConnection
     static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE);
@@ -67,6 +75,9 @@ public abstract class AbstractTestConfig {
         for (String table : tables) {
             truncateTableWithIdentityRestart(table);
         }
+
+        hazelcastCacheManager.clearSet(HazelcastConstant.ACCOUNT_ID_SET);
+        hazelcastCacheManager.clearSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET);
     }
 
     private void truncateTableWithIdentityRestart(String tableName) {

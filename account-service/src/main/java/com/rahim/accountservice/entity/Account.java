@@ -8,9 +8,9 @@ import org.hibernate.annotations.DynamicInsert;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
- *
  * @author Rahim Ahmed
  * @created 05/11/2023
  */
@@ -98,5 +98,22 @@ public class Account {
     public boolean isValid() {
         return !(email == null || email.isEmpty() ||
                 passwordHash == null || passwordHash.isEmpty());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(id, account.id) &&
+                notificationSetting == account.notificationSetting &&
+                Objects.equals(email, account.email) &&
+                Objects.equals(passwordHash, account.passwordHash) &&
+                Objects.equals(deleteDate, account.deleteDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, passwordHash, notificationSetting, deleteDate);
     }
 }
