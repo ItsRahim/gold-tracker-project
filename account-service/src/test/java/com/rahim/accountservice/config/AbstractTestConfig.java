@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -21,7 +20,6 @@ import org.testcontainers.utility.DockerImageName;
 @SpringBootTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public abstract class AbstractTestConfig {
 
     private static final String POSTGRES_IMAGE = "postgres:latest";
@@ -29,10 +27,10 @@ public abstract class AbstractTestConfig {
     private static final String HAZELCAST_IMAGE = "hazelcast/hazelcast:latest";
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    CacheManager hazelcastCacheManager;
+    private CacheManager hazelcastCacheManager;
 
     @MockBean
     HazelcastIntialiser hazelcastIntialiser;

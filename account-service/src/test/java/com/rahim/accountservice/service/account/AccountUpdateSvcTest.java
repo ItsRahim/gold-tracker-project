@@ -15,6 +15,7 @@ import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,12 +56,16 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     private CacheManager hazelcastCacheManager;
 
     private static final Address address = TestDataGenerator.generateAddress();
+    private UserRequest userRequest;
 
-    private UserRequest generateData() {
+    @BeforeEach
+    void generateTestData() {
         AccountCreationRequest accountCreationRequest = new AccountCreationRequest("metus@icloud.org", "metus123!");
         ProfileCreationRequest profileCreationRequest = new ProfileCreationRequest("metus", "Stephen", "Drake", "07678584701", address);
+        UserRequest initialCreationRequest = new UserRequest(accountCreationRequest, profileCreationRequest);
+        userRequest = accountCreationService.createAccount(initialCreationRequest);
 
-        return new UserRequest(accountCreationRequest, profileCreationRequest);
+        assertThat(userRequest).isNotNull();
     }
 
     private Integer getAccountIdForUserRequest(UserRequest userRequest) {
@@ -77,9 +82,6 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     void shouldUpdateAccountSuccessfully() {
         ISet<Integer> accountIdNotifs = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET);
         assertThat(accountIdNotifs).isEmpty();
-
-        UserRequest userRequest = accountCreationService.createAccount(generateData());
-        assertThat(userRequest).isNotNull();
 
         Integer accountId = getAccountIdForUserRequest(userRequest);
 
@@ -113,7 +115,6 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     @Test
     @DisplayName("No Updates Applied")
     void shouldNotUpdateAccount_NoChanges() {
-        UserRequest userRequest = accountCreationService.createAccount(generateData());
         assertThat(userRequest).isNotNull();
 
         Integer accountId = getAccountIdForUserRequest(userRequest);
@@ -129,7 +130,6 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     @Test
     @DisplayName("Email Already Exists")
     void shouldNotUpdateAccount_DuplicateEmail() {
-        UserRequest userRequest = accountCreationService.createAccount(generateData());
         assertThat(userRequest).isNotNull();
 
         Integer accountId = getAccountIdForUserRequest(userRequest);
@@ -149,7 +149,6 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     @Test
     @DisplayName("Invalid Notification Setting Value")
     void shouldThrowException_InvalidNotificationSettingValue() {
-        UserRequest userRequest = accountCreationService.createAccount(generateData());
         assertThat(userRequest).isNotNull();
 
         Integer accountId = getAccountIdForUserRequest(userRequest);
@@ -165,7 +164,6 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     @Test
     @DisplayName("Invalid Account ID")
     void shouldHandleInvalidAccountID() {
-        UserRequest userRequest = accountCreationService.createAccount(generateData());
         assertThat(userRequest).isNotNull();
 
         AccountUpdateRequest accountUpdateRequest = new AccountUpdateRequest("rahim@gmail.com", null, null);

@@ -25,7 +25,6 @@ public class EmailTokenRowMapper implements RowMapper<AccountEmailData> {
     @Override
     public AccountEmailData mapRow(ResultSet rs, int rowNum) throws SQLException {
         AccountEmailData accountEmailData = new AccountEmailData();
-
         try {
             if (emailProperty.isIncludeUsername()) {
                 accountEmailData.setUsername(rs.getString(ProfileJson.PROFILE_USERNAME));

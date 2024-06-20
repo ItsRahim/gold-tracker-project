@@ -14,11 +14,6 @@
     <name>account-service</name>
     <description>account-service</description>
     <properties>
-        <!-- SonarQube Config -->
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.projectKey>${project.artifactId}</sonar.projectKey>
-        <sonar.projectName>${project.name}</sonar.projectName>
-        <sonar.projectVersion>${project.version}</sonar.projectVersion>
         <!-- Library Versions -->
         <java.version>17</java.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
@@ -51,6 +46,16 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -169,17 +174,6 @@
             <version>${instancio.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
     </dependencies>
     <dependencyManagement>
         <dependencies>

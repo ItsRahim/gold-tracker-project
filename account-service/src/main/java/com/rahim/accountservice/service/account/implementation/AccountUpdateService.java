@@ -1,5 +1,6 @@
 package com.rahim.accountservice.service.account.implementation;
 
+import com.rahim.accountservice.constant.AccountState;
 import com.rahim.accountservice.entity.Account;
 import com.rahim.accountservice.model.EmailProperty;
 import com.rahim.accountservice.request.account.AccountUpdateRequest;
@@ -14,7 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +46,16 @@ public class AccountUpdateService implements IAccountUpdateService {
         generateEmailTokens(accountId, originalAccount.getEmail());
         log.info("Successfully updated account with id: {}", accountId);
         return account;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateAccountForDeletion(Account account, LocalDate deletionDate) {
+        account.setAccountStatus(AccountState.PENDING_DELETE);
+        account.setAccountLocked(true);
+        account.setNotificationSetting(false);
+        account.setDeleteDate(deletionDate);
+        accountRepositoryHandler.saveAccount(account);
+        hazelcastCacheManager.removeFromSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, account.getId());
     }
 
     private void generateEmailTokens(int accountId, String oldEmail) {
