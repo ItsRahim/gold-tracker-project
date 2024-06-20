@@ -20,9 +20,6 @@ name: Docker Image CI
 
 #       - name: Push the Docker image
 #         run: docker push rahimahmed/${{ matrix.folder }}
-
-#         
-name: Docker Image CI
 on:
   push:
     branches:
