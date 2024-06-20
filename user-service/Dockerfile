@@ -22,11 +22,11 @@ RUN mvn install:install-file -Dfile=target/common-${SNAPSHOT_VERSION}.jar -Dgrou
 WORKDIR /build
 
 # Installing all maven dependencies for pom.xml
-COPY ../account-service/pom.xml .
+COPY ../user-service/pom.xml .
 RUN mvn dependency:go-offline
 
 # Packaging source code into jar
-COPY ../account-service/src ./src
+COPY ../user-service/src ./src
 RUN mvn clean package -DskipTests
 
 
@@ -38,7 +38,7 @@ RUN yum update -y
 WORKDIR /app
 
 # Copy the JAR file from the build stage to the runtime stage
-COPY --from=build /build/target/account-service-*.jar /app/account-service.jar
+COPY --from=build /build/target/user-service-*.jar /app/user-service.jar
 
 EXPOSE 8081
 

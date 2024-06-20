@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <groupId>com.rahim</groupId>
-    <artifactId>account-service</artifactId>
+    <artifactId>user-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>account-service</name>
     <description>account-service</description>

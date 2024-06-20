@@ -8,7 +8,7 @@ replicaCount: 1
 ###########################################
 # Docker Image Configuration
 image:
-  repository: rahimahmed/account-service
+  repository: rahimahmed/user-service
   tag: latest
   pullPolicy: Always
 
@@ -19,12 +19,12 @@ springProfilesActive: "qa"
 ###########################################
 # Container Configuration
 container:
-  name: account-service
+  name: user-service
 
 ###########################################
 # Kubernetes Service Configuration
 service:
-  name: account-service
+  name: user-service
   port: 8081
 
 ###########################################

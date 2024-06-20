@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: account-service
+  name: user-service
   labels:
-    app: account-service
+    app: user-service
     environment: {{ .Values.environment | default "qa"}}
     version: {{ .Values.version | default "1.0.0" }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: account-service
+      app: user-service
   template:
     metadata:
       labels:
-        app: account-service
+        app: user-service
         environment: {{ .Values.environment | default "qa" }}
         version: {{ .Values.version | default "1.0.0" }}
     spec:

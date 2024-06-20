@@ -3,16 +3,21 @@ server:
 
 spring:
   application:
-    name: account-service
+    name: user-service
 
 logging:
-  package: com.rahim.accountservice
+  package: com.rahim.userservice
   level:
-    com.rahim.accountservice: DEBUG
+    com.rahim.userservice: DEBUG
     org.springframework: ERROR
     org.hibernate: ERROR
     root: WARN
   file:
-    name: logs/${spring.application.name}.log
+    name: opt/logs/${spring.application.name}.log
   pattern:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n"
+
+management:
+  zipkin:
+    service:
+      name: ${spring.application.name}
