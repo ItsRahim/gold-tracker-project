@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Build Code & Push to Docker
 on:
   push:
     branches:
@@ -23,33 +23,6 @@ jobs:
       matrix:
         folder: [ "config-server", "database", "eureka-server", "email-service", "gateway-service", "investment-service", "notification-service", "pricing-service", "python-api", "scheduler-service", "user-service" ]
     steps:
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-              apt-transport-https \
-              ca-certificates \
-              curl \
-              software-properties-common
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-          sudo add-apt-repository \
-              "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-              $(lsb_release -cs) \
-              stable"
-          sudo apt-get update
-          sudo apt-get install docker-ce docker-ce-cli containerd.io
-
-      - name: Verify Docker Installation
-        run: docker --version
-
-      - name: Start Docker Service
-        run: |
-          sudo systemctl start docker
-          sudo systemctl enable docker
-
-      - name: Verify Docker is running
-        run: sudo systemctl status docker
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:

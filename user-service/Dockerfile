@@ -27,9 +27,7 @@ RUN mvn dependency:go-offline
 
 # Packaging source code into jar
 COPY ../user-service/src ./src
-#RUN mvn clean package -DskipTests
-RUN mvn clean package
-
+RUN mvn clean package -DskipTests
 
 # Runtime Stage
 FROM amazoncorretto:17
