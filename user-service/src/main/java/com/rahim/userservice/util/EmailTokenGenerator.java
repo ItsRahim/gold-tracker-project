@@ -5,11 +5,12 @@ import com.rahim.common.model.kafka.AccountEmailData;
 import com.rahim.userservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
-import com.rahim.common.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import static com.rahim.common.util.JsonUtil.convertObjectToJson;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class EmailTokenGenerator {
         try {
             log.debug("Generating email tokens");
             AccountEmailData emailToken = profileRepositoryHandler.generateEmailTokens(emailProperty);
-            String emailData = JsonUtil.convertObjectToJson(emailToken);
+            String emailData = convertObjectToJson(emailToken);
             kafkaService.sendMessage(KafkaTopic.SEND_ACCOUNT_ALERT, emailData);
         } catch (Exception e) {
             log.error("An error occurred generating email tokens: {}", e.getMessage(), e);

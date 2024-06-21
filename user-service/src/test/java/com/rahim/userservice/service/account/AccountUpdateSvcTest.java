@@ -3,7 +3,6 @@ package com.rahim.userservice.service.account;
 import com.hazelcast.collection.ISet;
 import com.rahim.userservice.config.AbstractTestConfig;
 import com.rahim.userservice.config.TestDataGenerator;
-import com.rahim.userservice.entity.Account;
 import com.rahim.userservice.model.Address;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.repository.AccountRepository;

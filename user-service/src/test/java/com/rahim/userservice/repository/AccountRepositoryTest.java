@@ -1,7 +1,6 @@
 package com.rahim.userservice.repository;
 
 import com.rahim.userservice.config.AbstractTestConfig;
-import com.rahim.userservice.entity.Account;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

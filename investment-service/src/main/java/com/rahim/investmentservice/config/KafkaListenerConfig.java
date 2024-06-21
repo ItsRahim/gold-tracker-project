@@ -3,7 +3,6 @@ package com.rahim.investmentservice.config;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.model.kafka.GoldTypePrice;
 import com.rahim.common.service.kafka.MessageManager;
-import com.rahim.common.util.JsonUtil;
 import com.rahim.common.util.KafkaUtil;
 import com.rahim.investmentservice.service.holding.HoldingUpdateService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,8 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+
+import static com.rahim.common.util.JsonUtil.convertJsonToObject;
 
 /**
  * @author Rahim Ahmed
@@ -52,7 +53,7 @@ public class KafkaListenerConfig {
     }
 
     private void handleNewMessage(String priceData) {
-        GoldTypePrice goldTypePrice = JsonUtil.convertJsonToObject(priceData, GoldTypePrice.class);
+        GoldTypePrice goldTypePrice = convertJsonToObject(priceData, GoldTypePrice.class);
 
         Integer goldTypeId = Integer.valueOf(goldTypePrice.getId());
         BigDecimal price = goldTypePrice.getPrice();

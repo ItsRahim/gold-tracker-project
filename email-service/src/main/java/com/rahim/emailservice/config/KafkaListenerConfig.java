@@ -4,7 +4,6 @@ import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.model.kafka.AccountEmailData;
 import com.rahim.common.model.kafka.PriceAlertEmailData;
 import com.rahim.common.service.kafka.MessageManager;
-import com.rahim.common.util.JsonUtil;
 import com.rahim.common.util.KafkaUtil;
 import com.rahim.emailservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +16,8 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
+
+import static com.rahim.common.util.JsonUtil.convertJsonToObject;
 
 /**
  * @author Rahim Ahmed
@@ -45,7 +46,7 @@ public class KafkaListenerConfig {
             return;
         }
 
-        AccountEmailData accountEmailData = JsonUtil.convertJsonToObject(message, AccountEmailData.class);
+        AccountEmailData accountEmailData = convertJsonToObject(message, AccountEmailData.class);
         emailService.sendAccountAlert(accountEmailData);
         acknowledgment.acknowledge();
     }
@@ -65,7 +66,7 @@ public class KafkaListenerConfig {
             return;
         }
 
-        PriceAlertEmailData priceAlertData = JsonUtil.convertJsonToObject(message, PriceAlertEmailData.class);
+        PriceAlertEmailData priceAlertData = convertJsonToObject(message, PriceAlertEmailData.class);
         emailService.sendPriceAlert(priceAlertData);
         acknowledgment.acknowledge();
     }

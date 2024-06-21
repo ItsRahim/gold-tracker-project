@@ -5,12 +5,10 @@ import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.userservice.config.AbstractTestConfig;
 import com.rahim.userservice.config.TestDataGenerator;
 import com.rahim.userservice.constant.AccountState;
-import com.rahim.userservice.entity.Account;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.service.account.implementation.AccountCreationService;
 import com.rahim.userservice.service.account.implementation.AccountDeletionService;
 import com.rahim.userservice.service.repository.IAccountRepositoryHandler;
-import com.rahim.userservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.service.hazelcast.CacheManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,9 +46,6 @@ public class AccountDeletionSvcTest extends AbstractTestConfig {
 
     @Autowired
     private CacheManager hazelcastCacheManager;
-
-    @Autowired
-    private EmailTokenGenerator emailTokenGenerator;
 
     private Integer accountId;
 
