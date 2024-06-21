@@ -40,4 +40,3 @@ jobs:
         run: |
           docker build -t rahimahmed/${{ matrix.folder }} -f ${{ matrix.folder }}/Dockerfile .
           docker push rahimahmed/${{ matrix.folder }}
-
