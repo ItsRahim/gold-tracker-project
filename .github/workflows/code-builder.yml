@@ -21,7 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        folder: [ "config-server", "database", "eureka-server", "email-service", "gateway-service", "investment-service", "notification-service", "pricing-service", "python-api", "scheduler-service", "user-service" ]
+        folder: [
+          "config-server", "database", "eureka-server", "email-service", "gateway-service",
+          "investment-service", "notification-service", "pricing-service", "python-api",
+          "scheduler-service", "user-service"
+        ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,10 +37,16 @@ jobs:
 
       - name: Check if folder has changes
         id: check_changes
-        run: echo ::set-output name=changed::$(git diff --name-only HEAD^ HEAD "${{ matrix.folder }}")
+        run: |
+          changes=$(git diff --name-only HEAD^ HEAD "${{ matrix.folder }}")
+          if [ -n "$changes" ]; then
+            echo "changed=true" >> $GITHUB_ENV
+          else
+            echo "changed=false" >> $GITHUB_ENV
+          fi
 
       - name: Build and push Docker image
-        if: steps.check_changes.outputs.changed != ''
+        if: env.changed == 'true'
         run: |
           docker build -t rahimahmed/${{ matrix.folder }} -f ${{ matrix.folder }}/Dockerfile .
           docker push rahimahmed/${{ matrix.folder }}
