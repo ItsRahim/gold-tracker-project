@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -24,7 +23,6 @@ public abstract class AbstractTestConfig {
 
     private static final String POSTGRES_IMAGE = "postgres:latest";
     private static final DockerImageName KAFKA_IMAGE = DockerImageName.parse("confluentinc/cp-kafka:6.2.1");
-    private static final String HAZELCAST_IMAGE = "hazelcast/hazelcast:latest";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -41,19 +39,13 @@ public abstract class AbstractTestConfig {
     @ServiceConnection
     static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE);
     static final KafkaContainer kafkaContainer = new KafkaContainer(KAFKA_IMAGE);
-    static final GenericContainer<?> hazelcastContainer = new GenericContainer<>(HAZELCAST_IMAGE)
-            .withExposedPorts(5701);
 
     static {
         postgresContainer.start();
         kafkaContainer.start();
-        hazelcastContainer.start();
 
         String bootstrapServer = kafkaContainer.getBootstrapServers();
         System.setProperty("spring.kafka.bootstrap-servers", bootstrapServer);
-
-        String hazelcastAddress = hazelcastContainer.getHost() + ":" + hazelcastContainer.getFirstMappedPort();
-        System.setProperty("spring.hazelcast.address", hazelcastAddress);
     }
 
     @BeforeAll
