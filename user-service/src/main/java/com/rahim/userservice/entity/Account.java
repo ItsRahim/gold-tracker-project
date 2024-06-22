@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Objects;
  */
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "password")
 @Entity
 @DynamicInsert
 @AllArgsConstructor
@@ -35,9 +36,9 @@ public class Account {
     @JsonProperty("email")
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String passwordHash;
+    private char[] password;
 
     @Column(name = "account_status")
     @JsonProperty("accountStatus")
@@ -75,15 +76,15 @@ public class Account {
     @JsonProperty("deleteDate")
     private LocalDate deleteDate;
 
-    public Account(String email, String passwordHash) {
+    public Account(String email, char[] password) {
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.password = password;
     }
 
     public Account(Account account) {
         this.id = account.getId();
         this.email = account.getEmail();
-        this.passwordHash = account.getPasswordHash();
+        this.password = account.getPassword();
         this.accountStatus = account.getAccountStatus();
         this.accountLocked = account.getAccountLocked();
         this.credentialsExpired = account.getCredentialsExpired();
@@ -97,7 +98,7 @@ public class Account {
 
     public boolean isValid() {
         return !(email == null || email.isEmpty() ||
-                passwordHash == null || passwordHash.isEmpty());
+                password == null || password.length == 0);
     }
 
     @Override
@@ -108,12 +109,7 @@ public class Account {
         return Objects.equals(id, account.id) &&
                 notificationSetting == account.notificationSetting &&
                 Objects.equals(email, account.email) &&
-                Objects.equals(passwordHash, account.passwordHash) &&
+                Arrays.equals(password, account.password) &&
                 Objects.equals(deleteDate, account.deleteDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, passwordHash, notificationSetting, deleteDate);
     }
 }

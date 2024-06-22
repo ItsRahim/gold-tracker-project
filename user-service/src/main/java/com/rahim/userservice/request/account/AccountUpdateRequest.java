@@ -15,6 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AccountUpdateRequest {
     private String email;
-    private String passwordHash;
+    private String password;
     private String notificationSetting;
 }

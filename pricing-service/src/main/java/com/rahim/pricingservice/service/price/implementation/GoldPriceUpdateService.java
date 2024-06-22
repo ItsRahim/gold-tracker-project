@@ -2,7 +2,6 @@ package com.rahim.pricingservice.service.price.implementation;
 
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
-import com.rahim.common.util.JsonUtil;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.entity.GoldPrice;
 import com.rahim.pricingservice.entity.GoldType;
@@ -20,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+
+import static com.rahim.common.util.JsonUtil.convertObjectToJson;
 
 /**
  * @author Rahim Ahmed
@@ -100,7 +101,7 @@ public class GoldPriceUpdateService implements IGoldPriceUpdateService {
 
     private void sendInvestmentUpdate(Integer id, BigDecimal currentPrice) {
         GoldTypePrice update = new GoldTypePrice(id.toString(), currentPrice);
-        String json = JsonUtil.convertObjectToJson(update);
+        String json = convertObjectToJson(update);
         kafkaService.sendMessage(KafkaTopic.HOLDING_PRICE_UPDATE, json);
     }
 }

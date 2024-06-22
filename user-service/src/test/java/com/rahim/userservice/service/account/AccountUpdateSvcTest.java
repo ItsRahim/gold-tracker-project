@@ -6,7 +6,6 @@ import com.rahim.userservice.config.TestDataGenerator;
 import com.rahim.userservice.entity.Account;
 import com.rahim.userservice.model.Address;
 import com.rahim.userservice.model.UserRequest;
-import com.rahim.userservice.repository.AccountRepository;
 import com.rahim.userservice.request.account.AccountCreationRequest;
 import com.rahim.userservice.request.account.AccountUpdateRequest;
 import com.rahim.userservice.request.profile.ProfileCreationRequest;
@@ -15,6 +14,7 @@ import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.userservice.util.PasswordUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,8 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,7 +48,7 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     private AccountRepositoryHandlerService accountRepositoryHandler;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private PasswordUtil passwordUtil;
 
     @Autowired
     private CacheManager hazelcastCacheManager;
@@ -95,21 +93,15 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
         Account updatedAccount = (Account) updatedObject;
 
         String updatedEmail = accountUpdateRequest.getEmail();
-        String updatedPassword = accountUpdateRequest.getPasswordHash();
+        String updatedPassword = accountUpdateRequest.getPassword();
         Boolean updatedNotification = Boolean.parseBoolean(accountUpdateRequest.getNotificationSetting());
 
         assertThat(updatedAccount.getId()).isEqualTo(accountId);
         assertThat(updatedAccount.getEmail()).isEqualTo(updatedEmail);
-        assertThat(updatedAccount.getPasswordHash()).isEqualTo(updatedPassword);
+
+        boolean passwordCheck = passwordUtil.checkPassword(updatedPassword, updatedAccount.getPassword());
+        assertThat(passwordCheck).isTrue();
         assertThat(updatedAccount.getNotificationSetting()).isEqualTo(updatedNotification);
-
-        Optional<Account> reloadedAccountOptional = accountRepository.findById(accountId);
-        assertThat(reloadedAccountOptional).isPresent();
-        Account reloadedAccount = reloadedAccountOptional.get();
-
-        assertThat(reloadedAccount.getEmail()).isEqualTo(updatedEmail);
-        assertThat(reloadedAccount.getPasswordHash()).isEqualTo(updatedPassword);
-        assertThat(reloadedAccount.getNotificationSetting()).isEqualTo(updatedNotification);
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.rahim.pricingservice.util;
 
-import com.rahim.common.util.JsonUtil;
 import com.rahim.pricingservice.model.GoldData;
 import com.rahim.pricingservice.service.price.IGoldPriceUpdateService;
 import lombok.Getter;
@@ -8,8 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.rahim.common.util.JsonUtil.convertJsonToObject;
 
 /**
  * @author Rahim Ahmed
@@ -31,7 +31,7 @@ public class ApiDataProcessor {
                     .trim()
                     .replaceAll("\\\\", "");
 
-            processedData = JsonUtil.convertJsonToObject(kafkaData, GoldData.class);
+            processedData = convertJsonToObject(kafkaData, GoldData.class);
 
             if (processedData == null || processedData.getPrice() == null){
                 log.error("Price data is null. Unable to process");

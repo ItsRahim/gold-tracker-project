@@ -4,7 +4,6 @@ import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.KafkaTopic;
 import com.rahim.common.service.kafka.IKafkaService;
 import com.rahim.common.util.DateTimeUtil;
-import com.rahim.common.util.JsonUtil;
 import com.rahim.common.model.kafka.PriceAlertEmailData;
 import com.rahim.notificationservice.dao.NotificationDataAccess;
 import com.rahim.notificationservice.model.NotificationResult;
@@ -21,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import static com.rahim.common.util.JsonUtil.convertObjectToJson;
 
 @Service
 @RequiredArgsConstructor
@@ -91,7 +92,7 @@ public class KafkaDataProcessor implements IKafkaDataProcessor {
     }
 
     private void sendEmail(PriceAlertEmailData priceAlertEmailData) {
-        String jsonEmailData = JsonUtil.convertObjectToJson(priceAlertEmailData);
+        String jsonEmailData = convertObjectToJson(priceAlertEmailData);
         kafkaService.sendMessage(KafkaTopic.SEND_PRICE_ALERT, jsonEmailData);
     }
 }

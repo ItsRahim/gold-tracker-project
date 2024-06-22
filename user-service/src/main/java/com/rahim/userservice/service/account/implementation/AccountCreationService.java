@@ -1,9 +1,10 @@
 package com.rahim.userservice.service.account.implementation;
 
-import com.rahim.userservice.request.ModelMapper;
 import com.rahim.userservice.entity.Account;
 import com.rahim.userservice.entity.Profile;
 import com.rahim.userservice.model.UserRequest;
+import com.rahim.userservice.request.account.AccountCreationRequest;
+import com.rahim.userservice.request.profile.ProfileCreationRequest;
 import com.rahim.userservice.service.account.IAccountCreationService;
 import com.rahim.userservice.service.profile.IProfileCreationService;
 import com.rahim.userservice.service.repository.IAccountRepositoryHandler;
@@ -13,6 +14,7 @@ import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.exception.DuplicateEntityException;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.userservice.util.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,50 +22,66 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * This service class is responsible for creating new accounts.
- * It implements the IAccountCreationService interface.
- *
- * @author Rahim Ahmed
- * @created 30/12/2023
- */
 @Service
 @RequiredArgsConstructor
 public class AccountCreationService implements IAccountCreationService {
 
     private static final Logger log = LoggerFactory.getLogger(AccountCreationService.class);
+
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final IProfileRepositoryHandler profileRepositoryHandler;
     private final IProfileCreationService profileCreation;
     private final CacheManager hazelcastCacheManager;
+    private final PasswordUtil passwordUtil;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserRequest createAccount(UserRequest userRequest) {
-        Account account = ModelMapper.INSTANCE.toAccountEntity(userRequest.getAccount());
-        Profile profile = ModelMapper.INSTANCE.toProfileEntity(userRequest.getProfile());
+        if (userRequest.getAccount() == null || userRequest.getProfile() == null) {
+            log.error("Account and/or profile is null");
+            throw new ValidationException("Account and/or profile is null");
+        }
+
+        Account account = createAccountFromRequest(userRequest.getAccount());
+        Profile profile = createProfileFromRequest(account, userRequest.getProfile());
 
         validateInput(account, profile);
 
-        String email = account.getEmail();
-        String username = profile.getUsername();
-
-        if (accountRepositoryHandler.existsByEmail(email) || profileRepositoryHandler.existsByUsername(username)) {
-            log.warn("Account with email and/or username already exists. Not creating duplicate.");
-            throw new DuplicateEntityException("Account with email and/or username already exists. Not creating duplicate.");
+        if (accountRepositoryHandler.existsByEmail(account.getEmail()) ||
+                profileRepositoryHandler.existsByUsername(profile.getUsername())) {
+            String message = "Account with email and/or username already exists. Not creating duplicate.";
+            log.warn(message);
+            throw new DuplicateEntityException(message);
         }
 
         try {
+            log.debug("Creating account with email: {}", account.getEmail());
             accountRepositoryHandler.saveAccount(account);
             profileCreation.createProfile(account, profile);
             addToHazelcastSet(account.getId());
-
             log.info("Successfully created Account and Profile for: {}", profile.getUsername());
             return userRequest;
         } catch (DataAccessException e) {
-            log.error("Unexpected error creating Account and Account Profile: {}", e.getMessage(), e);
-            throw new DatabaseException("Unexpected error creating Account and Account Profile.");
+            String errorMessage = "Unexpected error creating Account and Account Profile.";
+            log.error(errorMessage, e);
+            throw new DatabaseException(errorMessage);
         }
+    }
+
+    private Account createAccountFromRequest(AccountCreationRequest accountRequest) {
+        String clearPassword = accountRequest.getPassword();
+        if (clearPassword == null || clearPassword.isEmpty()) {
+            log.error("Password is empty. Cannot create account.");
+            throw new ValidationException("Password is empty. Cannot create account.");
+        }
+
+        char[] encryptedPassword = passwordUtil.encryptPassword(accountRequest.getPassword());
+        return new Account(accountRequest.getEmail(), encryptedPassword);
+    }
+
+    private Profile createProfileFromRequest(Account account, ProfileCreationRequest profileRequest) {
+        return new Profile(account, profileRequest.getUsername(), profileRequest.getFirstName(),
+                profileRequest.getLastName(), profileRequest.getContactNumber(), profileRequest.getAddress());
     }
 
     private void addToHazelcastSet(Integer id) {
@@ -87,5 +105,4 @@ public class AccountCreationService implements IAccountCreationService {
             throw new ValidationException("Some fields are null or blank for profile: " + profile);
         }
     }
-
 }

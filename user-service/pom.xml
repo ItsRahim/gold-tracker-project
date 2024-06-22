@@ -20,7 +20,6 @@
         <jackson.version>2.16.0-rc1</jackson.version>
         <test-container.version>1.19.3</test-container.version>
         <instancio.version>3.7.1</instancio.version>
-        <org-mapstruct.version>1.6.0.Beta2</org-mapstruct.version>
     </properties>
     <dependencies>
         <!-- RGTS Dependencies -->
@@ -106,16 +105,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.14.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${org-mapstruct.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <version>${org-mapstruct.version}</version>
         </dependency>
 
         <!-- TEST DEPENDENCIES -->

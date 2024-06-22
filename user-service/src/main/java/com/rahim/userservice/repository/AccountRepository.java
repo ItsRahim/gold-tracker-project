@@ -27,9 +27,9 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
     @Query(value = "SELECT * FROM "
             + AccountDataAccess.TABLE_NAME
             + " WHERE "
-            + AccountDataAccess.COL_ACCOUNT_LAST_LOGIN
+            + AccountDataAccess.COL_LAST_LOGIN
             + " < :cutoffDate AND "
-            + AccountDataAccess.COL_ACCOUNT_STATUS
+            + AccountDataAccess.COL_STATUS
             + " = '"
             + AccountState.ACTIVE
             + "'", nativeQuery = true)
@@ -43,13 +43,13 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
      * @return a list of account ids which are eligible for deletion
      */
     @Query(value = "SELECT "
-            + AccountDataAccess.COL_ACCOUNT_ID
+            + AccountDataAccess.COL_ID
             + " FROM "
             + AccountDataAccess.TABLE_NAME
             + " WHERE "
-            + AccountDataAccess.COL_ACCOUNT_LAST_LOGIN
+            + AccountDataAccess.COL_LAST_LOGIN
             + " < :cutoffDate AND "
-            + AccountDataAccess.COL_ACCOUNT_STATUS
+            + AccountDataAccess.COL_STATUS
             + " = '"
             + AccountState.INACTIVE
             + "'", nativeQuery = true)
@@ -61,15 +61,15 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
      * @return a list of accounts which are pending deletion and ready to be processed.
      */
     @Query(value = "SELECT "
-            + AccountDataAccess.COL_ACCOUNT_ID
+            + AccountDataAccess.COL_ID
             + " FROM "
             + AccountDataAccess.TABLE_NAME
             + " WHERE "
-            + AccountDataAccess.COL_ACCOUNT_STATUS
+            + AccountDataAccess.COL_STATUS
             + " = '"
             + AccountState.PENDING_DELETE
             + "' AND "
-            + AccountDataAccess.COL_ACCOUNT_DELETE_DATE + " = :deleteDate", nativeQuery = true)
+            + AccountDataAccess.COL_DELETE_DATE + " = :deleteDate", nativeQuery = true)
     List<Integer> getUsersPendingDeletion(LocalDate deleteDate);
 
     /**
@@ -81,15 +81,15 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
     boolean existsAccountByEmail(String email);
 
     @Query(value = "SELECT "
-            + AccountDataAccess.COL_ACCOUNT_ID
+            + AccountDataAccess.COL_ID
             + " FROM "
             + AccountDataAccess.TABLE_NAME
             + " WHERE "
-            + AccountDataAccess.COL_ACCOUNT_NOTIFICATION_SETTING
+            + AccountDataAccess.COL_NOTIFICATION_SETTING
             + " = 'true'", nativeQuery = true)
     List<Integer> getAccountByNotificationSettingTrue();
 
-    @Query(value = "SELECT " + AccountDataAccess.COL_ACCOUNT_ID + " FROM " + AccountDataAccess.TABLE_NAME, nativeQuery = true)
+    @Query(value = "SELECT " + AccountDataAccess.COL_ID + " FROM " + AccountDataAccess.TABLE_NAME, nativeQuery = true)
     List<Integer> getAllAccountId();
 
 }

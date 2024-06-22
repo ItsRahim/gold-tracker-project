@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @RequiredArgsConstructor
@@ -21,8 +22,10 @@ public class HazelcastInstanceFactory {
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastInstanceFactory.class);
     private final HazelcastClientProperties hazelcastClientProperties;
     private static final String FALLBACK_CLUSTER_NAME = "fallback-cluster";
+    private static final String TEST_CLUSTER_NAME = "test-cluster";
 
     @Primary
+    @Profile("!test")
     @Bean(name = "defaultHazelcastCluster")
     public HazelcastInstance hazelcastInstance() {
         try {
@@ -33,6 +36,14 @@ public class HazelcastInstanceFactory {
             HealthStatus.setHzHealthy(false);
             return fallbackHazelcastInstance();
         }
+    }
+
+    @Profile("test")
+    @Bean(name = "defaultHazelcastCluster")
+    public HazelcastInstance testHazelcastInstance() {
+        Config config = new Config();
+        config.setClusterName(TEST_CLUSTER_NAME);
+        return Hazelcast.newHazelcastInstance(config);
     }
 
     public HazelcastInstance fallbackHazelcastInstance() {

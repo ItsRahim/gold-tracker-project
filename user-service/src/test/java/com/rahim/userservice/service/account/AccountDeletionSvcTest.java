@@ -1,6 +1,7 @@
 package com.rahim.userservice.service.account;
 
 import com.hazelcast.collection.ISet;
+import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.userservice.config.AbstractTestConfig;
 import com.rahim.userservice.config.TestDataGenerator;
 import com.rahim.userservice.constant.AccountState;
@@ -9,7 +10,6 @@ import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.service.account.implementation.AccountCreationService;
 import com.rahim.userservice.service.account.implementation.AccountDeletionService;
 import com.rahim.userservice.service.repository.IAccountRepositoryHandler;
-import com.rahim.userservice.util.EmailTokenGenerator;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.service.hazelcast.CacheManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.Assert.assertThrows;
 
 /**
  * @author Rahim Ahmed
@@ -46,9 +47,6 @@ public class AccountDeletionSvcTest extends AbstractTestConfig {
 
     @Autowired
     private CacheManager hazelcastCacheManager;
-
-    @Autowired
-    private EmailTokenGenerator emailTokenGenerator;
 
     private Integer accountId;
 
@@ -102,5 +100,9 @@ public class AccountDeletionSvcTest extends AbstractTestConfig {
         assertThat(accountIds.isEmpty()).isTrue();
     }
 
-
+    @Test
+    @DisplayName("Unsuccessful Delete - Invalid Account Id")
+    void deleteAccount_InvalidAccountId() {
+        assertThrows(EntityNotFoundException.class, ()-> accountDeletionService.requestAccountDelete(1000));
+    }
 }
