@@ -35,7 +35,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
      */
     @Query(value = "SELECT " + ProfileDataAccess.COL_PROFILE_ID + " FROM " +
             ProfileDataAccess.TABLE_NAME + " WHERE " +
-            AccountDataAccess.COL_ACCOUNT_ID + " = :id", nativeQuery = true)
+            AccountDataAccess.COL_ID + " = :id", nativeQuery = true)
     int getProfileIdByUserId(@Param("id") int id);
 
     /**

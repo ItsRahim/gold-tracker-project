@@ -5,6 +5,7 @@ import com.rahim.common.exception.EntityNotFoundException;
 import com.rahim.userservice.config.AbstractTestConfig;
 import com.rahim.userservice.config.TestDataGenerator;
 import com.rahim.userservice.constant.AccountState;
+import com.rahim.userservice.entity.Account;
 import com.rahim.userservice.model.UserRequest;
 import com.rahim.userservice.service.account.implementation.AccountCreationService;
 import com.rahim.userservice.service.account.implementation.AccountDeletionService;

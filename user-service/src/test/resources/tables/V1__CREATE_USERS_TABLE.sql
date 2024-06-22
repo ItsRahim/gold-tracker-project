@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS rgts;
 CREATE TABLE rgts.user_accounts (
     account_id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     account_status VARCHAR(255) DEFAULT 'ACTIVE' NOT NULL,
     account_locked BOOLEAN DEFAULT false,
     credentials_expired BOOLEAN DEFAULT false,
@@ -18,7 +18,7 @@ CREATE TABLE rgts.user_accounts (
 COMMENT ON TABLE rgts.user_accounts IS 'The account accounts table';
 COMMENT ON COLUMN rgts.user_accounts.account_id IS 'The account ID';
 COMMENT ON COLUMN rgts.user_accounts.email IS 'Unique account email';
-COMMENT ON COLUMN rgts.user_accounts.password_hash IS 'Hashed account password';
+COMMENT ON COLUMN rgts.user_accounts.password IS 'Hashed account password';
 COMMENT ON COLUMN rgts.user_accounts.account_status IS 'User account status';
 COMMENT ON COLUMN rgts.user_accounts.account_locked IS 'Is the account locked?';
 COMMENT ON COLUMN rgts.user_accounts.credentials_expired IS 'Are the credentials expired?';

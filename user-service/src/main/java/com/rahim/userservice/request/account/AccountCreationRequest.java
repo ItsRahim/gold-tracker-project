@@ -22,5 +22,5 @@ public class AccountCreationRequest {
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String passwordHash;
+    private String password;
 }

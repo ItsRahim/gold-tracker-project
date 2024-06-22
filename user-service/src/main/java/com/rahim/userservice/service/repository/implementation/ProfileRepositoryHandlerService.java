@@ -99,7 +99,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
         sqlBuilder.append("SELECT ");
         sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_FIRST_NAME).append(" AS ").append(ProfileJson.PROFILE_FIRST_NAME).append(", ");
         sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_LAST_NAME).append(" AS ").append(ProfileJson.PROFILE_LAST_NAME).append(", ");
-        sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_EMAIL).append(" AS ").append(AccountJson.ACCOUNT_EMAIL).append(", ");
+        sqlBuilder.append("ua.").append(AccountDataAccess.COL_EMAIL).append(" AS ").append(AccountJson.ACCOUNT_EMAIL).append(", ");
 
         if (emailProperty.isIncludeUsername()) {
             sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_USERNAME).append(" AS ").append(ProfileJson.PROFILE_USERNAME).append(", ");
@@ -108,9 +108,9 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
         if (emailProperty.isIncludeDate()) {
             EmailTemplate templateName = emailProperty.getTemplateName();
             if (templateName.equals(EmailTemplate.ACCOUNT_DELETION)) {
-                sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_DELETE_DATE).append(" AS ").append(AccountJson.ACCOUNT_DELETE_DATE).append(", ");
+                sqlBuilder.append("ua.").append(AccountDataAccess.COL_DELETE_DATE).append(" AS ").append(AccountJson.ACCOUNT_DELETE_DATE).append(", ");
             } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE)) {
-                sqlBuilder.append("ua.").append(AccountDataAccess.COL_ACCOUNT_UPDATED_AT).append(" AS ").append(AccountJson.ACCOUNT_UPDATED_AT).append(", ");
+                sqlBuilder.append("ua.").append(AccountDataAccess.COL_UPDATED_AT).append(" AS ").append(AccountJson.ACCOUNT_UPDATED_AT).append(", ");
             }
         }
 
@@ -118,7 +118,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
 
         sqlBuilder.append("FROM ").append(ProfileDataAccess.TABLE_NAME).append(" up ");
         sqlBuilder.append("JOIN ").append(AccountDataAccess.TABLE_NAME).append(" ua ");
-        sqlBuilder.append("ON up.").append(ProfileDataAccess.COL_ACCOUNT_ID).append(" = ua.").append(AccountDataAccess.COL_ACCOUNT_ID).append(" ");
+        sqlBuilder.append("ON up.").append(ProfileDataAccess.COL_ACCOUNT_ID).append(" = ua.").append(AccountDataAccess.COL_ID).append(" ");
         sqlBuilder.append("WHERE up.").append(ProfileDataAccess.COL_ACCOUNT_ID).append(" = ").append(emailProperty.getAccountId());
 
         String sql = sqlBuilder.toString();

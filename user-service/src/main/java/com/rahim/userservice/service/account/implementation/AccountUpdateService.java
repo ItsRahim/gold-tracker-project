@@ -11,6 +11,7 @@ import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.constant.HazelcastConstant;
 import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
+import com.rahim.userservice.util.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     private final IAccountRepositoryHandler accountRepositoryHandler;
     private final EmailTokenGenerator emailTokenGenerator;
     private final CacheManager hazelcastCacheManager;
+    private final PasswordUtil passwordUtil;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -71,15 +73,22 @@ public class AccountUpdateService implements IAccountUpdateService {
     }
 
     private void updateFields(Account account, AccountUpdateRequest updateRequest) {
-        if (updateRequest.getEmail() != null && !updateRequest.getEmail().isEmpty()) {
+        String email = updateRequest.getEmail();
+        String password = updateRequest.getPassword();
+        String notificationSetting = updateRequest.getNotificationSetting();
+
+        if (email != null && !email.isEmpty()) {
             log.debug("Updating email");
             updateEmail(account, updateRequest.getEmail());
         }
-        if (updateRequest.getPasswordHash() != null && !updateRequest.getPasswordHash().isEmpty()) {
+
+        if (password != null && !password.isEmpty()) {
             log.debug("Updating password");
-            account.setPasswordHash(updateRequest.getPasswordHash());
+            char[] encryptedPassword = passwordUtil.encryptPassword(password);
+            account.setPassword(encryptedPassword);
         }
-        if (updateRequest.getNotificationSetting() != null && !updateRequest.getNotificationSetting().isEmpty()) {
+
+        if (notificationSetting != null && !notificationSetting.isEmpty()) {
             log.debug("Updating notification setting");
             updateNotification(account, updateRequest.getNotificationSetting());
         }
