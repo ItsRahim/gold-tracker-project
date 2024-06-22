@@ -37,6 +37,11 @@ public class AccountCreationService implements IAccountCreationService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserRequest createAccount(UserRequest userRequest) {
+        if (userRequest.getAccount() == null || userRequest.getProfile() == null) {
+            log.error("Account and/or profile is null");
+            throw new ValidationException("Account and/or profile is null");
+        }
+
         Account account = createAccountFromRequest(userRequest.getAccount());
         Profile profile = createProfileFromRequest(account, userRequest.getProfile());
 
