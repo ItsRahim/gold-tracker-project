@@ -43,11 +43,10 @@ public class KafkaConsumerConfig extends KafkaBaseConfig {
         if (isSSLEnabled()) {
             log.info("SSL Protocol Detected. Configuring Kafka Consumer Factory in SSL");
             configureSSLProps(consumerProps);
+            validateSSLProps(consumerProps);
         } else {
             consumerProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
         }
-
-        validateSSLProps(consumerProps);
 
         log.debug("Initialised Kafka Consumer Factory with: {}", consumerProps);
         return new DefaultKafkaConsumerFactory<>(consumerProps);

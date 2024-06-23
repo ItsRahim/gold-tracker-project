@@ -42,11 +42,10 @@ public class KafkaProducerConfig extends KafkaBaseConfig {
         if (isSSLEnabled()) {
             log.info("SSL Protocol Detected. Configuring Kafka Producer Factory in SSL");
             configureSSLProps(producerProps);
+            validateSSLProps(producerProps);
         } else {
             producerProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
         }
-
-        validateSSLProps(producerProps);
 
         log.debug("Initialised Kafka Producer Factory with: {}", producerProps);
         return new DefaultKafkaProducerFactory<>(producerProps);
