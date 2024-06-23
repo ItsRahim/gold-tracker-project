@@ -1,8 +1,13 @@
 package com.rahim.common.config.kafka;
 
-import lombok.RequiredArgsConstructor;
+import com.rahim.common.config.kafka.properties.KafkaProducerProperties;
+import com.rahim.common.config.kafka.properties.KafkaProperties;
+import com.rahim.common.config.kafka.properties.KafkaSSLProperties;
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.config.SslConfigs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -17,11 +22,15 @@ import java.util.Map;
  * @created 18/11/2023
  */
 @Configuration
-@RequiredArgsConstructor
-public class KafkaProducerConfig implements KafkaConstants {
+public class KafkaProducerConfig extends KafkaBaseConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(KafkaProducerConfig.class);
     private final KafkaProducerProperties kafkaProducerProperties;
-    private final KafkaProperties kafkaProperties;
+
+    public KafkaProducerConfig(KafkaProperties kafkaProperties, KafkaSSLProperties kafkaSSLProperties, KafkaProducerProperties kafkaProducerProperties) {
+        super(kafkaSSLProperties, kafkaProperties);
+        this.kafkaProducerProperties = kafkaProducerProperties;
+    }
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
@@ -30,19 +39,25 @@ public class KafkaProducerConfig implements KafkaConstants {
         producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProducerProperties.getKeySerializer());
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProducerProperties.getValueSerializer());
 
-        if (SSL.equalsIgnoreCase(kafkaProperties.getSecurityProtocol())) {
-            configureSSL(producerProps);
+        if (isSSLEnabled()) {
+            log.debug("Configuring SSL Kafka Producer Properties.");
+            configureSSLProps(producerProps);
+        } else {
+            log.debug("Configuring Kafka Producer with PLAINTEXT");
+            producerProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
         }
 
+        validateSSLProps(producerProps);
         return new DefaultKafkaProducerFactory<>(producerProps);
     }
 
-    private void configureSSL(Map<String, Object> producerProps) {
-        producerProps.put(SECURITY_PROTOCOL, kafkaProperties.getSecurityProtocol());
-        producerProps.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, kafkaProperties.getKeystoreFile());
-        producerProps.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, kafkaProperties.getKeystorePassword());
-        producerProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, kafkaProperties.getTruststoreFile());
-        producerProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, kafkaProperties.getTruststorePassword());
+    private void configureSSLProps(Map<String, Object> producerProps) {
+        producerProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, kafkaProperties.getSecurityProtocol());
+        producerProps.put(SslConfigs.SSL_PROTOCOL_CONFIG, kafkaSSLProperties.getProtocol());
+        producerProps.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, kafkaSSLProperties.getKeystoreFile());
+        producerProps.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, kafkaSSLProperties.getKeystorePassword());
+        producerProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, kafkaSSLProperties.getTruststoreFile());
+        producerProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, kafkaSSLProperties.getTruststorePassword());
     }
 
     @Bean

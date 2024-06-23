@@ -1,8 +1,13 @@
 package com.rahim.common.config.kafka;
 
-import lombok.RequiredArgsConstructor;
+import com.rahim.common.config.kafka.properties.KafkaConsumerProperties;
+import com.rahim.common.config.kafka.properties.KafkaProperties;
+import com.rahim.common.config.kafka.properties.KafkaSSLProperties;
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.config.SslConfigs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -18,11 +23,15 @@ import java.util.Map;
  * @created 15/11/2023
  */
 @Configuration
-@RequiredArgsConstructor
-public class KafkaConsumerConfig implements KafkaConstants {
+public class KafkaConsumerConfig extends KafkaBaseConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(KafkaConsumerConfig.class);
     private final KafkaConsumerProperties kafkaConsumerProperties;
-    private final KafkaProperties kafkaProperties;
+
+    public KafkaConsumerConfig(KafkaProperties kafkaProperties, KafkaSSLProperties kafkaSSLProperties, KafkaConsumerProperties kafkaConsumerProperties) {
+        super(kafkaSSLProperties, kafkaProperties);
+        this.kafkaConsumerProperties = kafkaConsumerProperties;
+    }
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -31,17 +40,23 @@ public class KafkaConsumerConfig implements KafkaConstants {
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaConsumerProperties.getKeyDeserializer());
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaConsumerProperties.getValueDeserializer());
 
-        if (SSL.equalsIgnoreCase(kafkaProperties.getSecurityProtocol())) {
-            configureSSL(consumerProps);
+        if (isSSLEnabled()) {
+            log.debug("Configuring SSL Kafka Consumer Properties.");
+            configureSSLProps(consumerProps);
+        } else {
+            log.debug("Configuring Kafka Consumer with PLAINTEXT");
+            consumerProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
         }
 
+        validateSSLProps(consumerProps);
         return new DefaultKafkaConsumerFactory<>(consumerProps);
     }
 
-    private void configureSSL(Map<String, Object> consumerProps) {
-        consumerProps.put(SECURITY_PROTOCOL, kafkaProperties.getSecurityProtocol());
-        consumerProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, kafkaProperties.getTruststoreFile());
-        consumerProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, kafkaProperties.getTruststorePassword());
+    private void configureSSLProps(Map<String, Object> consumerProps) {
+        consumerProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, kafkaProperties.getSecurityProtocol());
+        consumerProps.put(SslConfigs.SSL_PROTOCOL_CONFIG, kafkaSSLProperties.getProtocol());
+        consumerProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, kafkaSSLProperties.getTruststoreFile());
+        consumerProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, kafkaSSLProperties.getTruststorePassword());
     }
 
     @Bean

@@ -1,11 +1,9 @@
-package com.rahim.common.config.kafka;
+package com.rahim.common.config.kafka.properties;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-
-import java.util.Base64;
 
 /**
  * @author Rahim Ahmed
@@ -14,12 +12,8 @@ import java.util.Base64;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "spring.kafka")
+@ConfigurationProperties(prefix = "kafka")
 public class KafkaProperties {
-    private String bootstrapServers;
     private String securityProtocol;
-    private String keystoreFile;
-    private String keystorePassword;
-    private String truststoreFile;
-    private String truststorePassword;
+    private String bootstrapServers;
 }
