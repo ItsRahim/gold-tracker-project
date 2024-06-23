@@ -35,6 +35,8 @@ public class KafkaConsumerConfig extends KafkaBaseConfig {
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
+        log.debug("Initialising Kafka ConsumerFactory");
+
         Map<String, Object> consumerProps = new HashMap<>();
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaConsumerProperties.getKeyDeserializer());
@@ -49,6 +51,8 @@ public class KafkaConsumerConfig extends KafkaBaseConfig {
         }
 
         validateSSLProps(consumerProps);
+
+        log.info("Successfully Initialised Kafka ConsumerFactory");
         return new DefaultKafkaConsumerFactory<>(consumerProps);
     }
 

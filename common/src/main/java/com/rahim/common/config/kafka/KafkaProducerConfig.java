@@ -34,6 +34,8 @@ public class KafkaProducerConfig extends KafkaBaseConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
+        log.debug("Initialising Kafka ProducerFactory");
+
         Map<String, Object> producerProps = new HashMap<>();
         producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
         producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProducerProperties.getKeySerializer());
@@ -48,6 +50,8 @@ public class KafkaProducerConfig extends KafkaBaseConfig {
         }
 
         validateSSLProps(producerProps);
+
+        log.info("Successfully Initialised Kafka ProducerFactory");
         return new DefaultKafkaProducerFactory<>(producerProps);
     }
 
