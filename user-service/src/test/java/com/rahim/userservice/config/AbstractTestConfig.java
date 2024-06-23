@@ -45,7 +45,7 @@ public abstract class AbstractTestConfig {
         kafkaContainer.start();
 
         String bootstrapServer = kafkaContainer.getBootstrapServers();
-        System.setProperty("spring.kafka.bootstrap-servers", bootstrapServer);
+        System.setProperty("kafka.bootstrap-servers", bootstrapServer);
     }
 
     @BeforeAll
