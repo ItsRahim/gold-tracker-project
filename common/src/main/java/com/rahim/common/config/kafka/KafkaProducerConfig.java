@@ -34,24 +34,21 @@ public class KafkaProducerConfig extends KafkaBaseConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
-        log.debug("Initialising Kafka ProducerFactory");
-
         Map<String, Object> producerProps = new HashMap<>();
         producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
         producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProducerProperties.getKeySerializer());
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProducerProperties.getValueSerializer());
 
         if (isSSLEnabled()) {
-            log.debug("Configuring SSL Kafka Producer Properties.");
+            log.info("SSL Protocol Detected. Configuring Kafka Producer Factory in SSL");
             configureSSLProps(producerProps);
         } else {
-            log.debug("Configuring Kafka Producer with PLAINTEXT");
             producerProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
         }
 
         validateSSLProps(producerProps);
 
-        log.info("Successfully Initialised Kafka ProducerFactory");
+        log.debug("Initialised Kafka Producer Factory with: {}", producerProps);
         return new DefaultKafkaProducerFactory<>(producerProps);
     }
 

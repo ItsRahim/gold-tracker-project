@@ -35,24 +35,21 @@ public class KafkaConsumerConfig extends KafkaBaseConfig {
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
-        log.debug("Initialising Kafka ConsumerFactory");
-
         Map<String, Object> consumerProps = new HashMap<>();
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaConsumerProperties.getKeyDeserializer());
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaConsumerProperties.getValueDeserializer());
 
         if (isSSLEnabled()) {
-            log.debug("Configuring SSL Kafka Consumer Properties.");
+            log.info("SSL Protocol Detected. Configuring Kafka Consumer Factory in SSL");
             configureSSLProps(consumerProps);
         } else {
-            log.debug("Configuring Kafka Consumer with PLAINTEXT");
             consumerProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "PLAINTEXT");
         }
 
         validateSSLProps(consumerProps);
 
-        log.info("Successfully Initialised Kafka ConsumerFactory");
+        log.debug("Initialised Kafka Consumer Factory with: {}", consumerProps);
         return new DefaultKafkaConsumerFactory<>(consumerProps);
     }
 
