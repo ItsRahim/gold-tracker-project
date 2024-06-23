@@ -22,12 +22,4 @@ public class KafkaProperties {
     private String keystorePassword;
     private String truststoreFile;
     private String truststorePassword;
-
-    public byte[] getDecodedKeystore() {
-        return Base64.getDecoder().decode(keystoreFile);
-    }
-
-    public byte[] getDecodedTruststore() {
-        return Base64.getDecoder().decode(truststoreFile);
-    }
 }

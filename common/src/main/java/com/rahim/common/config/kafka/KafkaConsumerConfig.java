@@ -2,7 +2,7 @@ package com.rahim.common.config.kafka;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.kafka.common.config.SslConfigs;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -33,17 +33,15 @@ public class KafkaConsumerConfig implements KafkaConstants {
 
         if (SSL.equalsIgnoreCase(kafkaProperties.getSecurityProtocol())) {
             configureSSL(consumerProps);
-        } else {
-            consumerProps.put(SECURITY_PROTOCOL, PLAINTEXT);
         }
 
         return new DefaultKafkaConsumerFactory<>(consumerProps);
     }
 
     private void configureSSL(Map<String, Object> consumerProps) {
-        consumerProps.put(SECURITY_PROTOCOL, SSL);
-        consumerProps.put(SSL_TRUSTSTORE_LOCATION, kafkaProperties.getDecodedTruststore());
-        consumerProps.put(SSL_TRUSTSTORE_PASSWORD, kafkaProperties.getKeystorePassword());
+        consumerProps.put(SECURITY_PROTOCOL, kafkaProperties.getSecurityProtocol());
+        consumerProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, kafkaProperties.getTruststoreFile());
+        consumerProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, kafkaProperties.getTruststorePassword());
     }
 
     @Bean

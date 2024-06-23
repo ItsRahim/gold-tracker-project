@@ -2,6 +2,7 @@ package com.rahim.common.config.kafka;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.SslConfigs;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -31,19 +32,17 @@ public class KafkaProducerConfig implements KafkaConstants {
 
         if (SSL.equalsIgnoreCase(kafkaProperties.getSecurityProtocol())) {
             configureSSL(producerProps);
-        } else {
-            producerProps.put(SECURITY_PROTOCOL, PLAINTEXT);
         }
 
         return new DefaultKafkaProducerFactory<>(producerProps);
     }
 
     private void configureSSL(Map<String, Object> producerProps) {
-        producerProps.put(SECURITY_PROTOCOL, SSL);
-        producerProps.put(SSL_KEYSTORE_LOCATION, kafkaProperties.getDecodedKeystore());
-        producerProps.put(SSL_KEYSTORE_PASSWORD, kafkaProperties.getKeystorePassword());
-        producerProps.put(SSL_TRUSTSTORE_LOCATION, kafkaProperties.getDecodedTruststore());
-        producerProps.put(SSL_TRUSTSTORE_PASSWORD, kafkaProperties.getKeystorePassword());
+        producerProps.put(SECURITY_PROTOCOL, kafkaProperties.getSecurityProtocol());
+        producerProps.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, kafkaProperties.getKeystoreFile());
+        producerProps.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, kafkaProperties.getKeystorePassword());
+        producerProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, kafkaProperties.getTruststoreFile());
+        producerProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, kafkaProperties.getTruststorePassword());
     }
 
     @Bean
