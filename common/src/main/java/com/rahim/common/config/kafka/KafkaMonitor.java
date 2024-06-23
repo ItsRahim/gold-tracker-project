@@ -6,22 +6,20 @@ import com.rahim.common.exception.DatabaseException;
 import com.rahim.common.model.KafkaUnsentMessage;
 import com.rahim.common.service.kafka.IKafkaService;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author Rahim Ahmed
@@ -36,12 +34,10 @@ public class KafkaMonitor {
     private final IKafkaService kafkaService;
     private final JdbcTemplate jdbcTemplate;
 
+    private final KafkaTemplate<String, String> kafkaTemplate;
     private volatile boolean previousKafkaHealth = true;
     private static final long INITIAL_DELAY = 60000;
     private static final long HEARTBEAT_INTERVAL = 10000;
-
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServers;
 
     @Scheduled(initialDelay = INITIAL_DELAY, fixedRate = HEARTBEAT_INTERVAL)
     public void sendHeartBeat() {
@@ -59,20 +55,13 @@ public class KafkaMonitor {
         }
     }
 
-    private boolean checkKafkaHealth() {
-        Properties properties = new Properties();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-
-        try (Producer<String, String> producer = new KafkaProducer<>(properties)) {
-            ProducerRecord<String, String> record = new ProducerRecord<>("dummy-topic", "dummy-message");
-            producer.send(record).get();
-
+    public boolean checkKafkaHealth() {
+        try {
+            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send("dummy-topic", "dummy-message");
+            future.get(10, TimeUnit.SECONDS);
             return true;
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             Thread.currentThread().interrupt();
-            LOG.error("Error checking Kafka health: {}", e.getMessage());
             return false;
         }
     }

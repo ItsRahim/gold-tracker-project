@@ -1,4 +1,4 @@
-package com.rahim.common.config.kafka;
+package com.rahim.common.config.kafka.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "spring.kafka.consumer")
-public class KafkaConsumerProperties {
-    private String keyDeserializer;
-    private String valueDeserializer;
+@ConfigurationProperties(prefix = "kafka.producer")
+public class KafkaProducerProperties {
+    private String keySerializer;
+    private String valueSerializer;
 }
