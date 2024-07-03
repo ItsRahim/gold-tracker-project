@@ -1,5 +1,6 @@
 package com.rahim.userservice.service.repository.implementation;
 
+import com.rahim.common.exception.ValidationException;
 import com.rahim.userservice.dao.AccountDataAccess;
 import com.rahim.userservice.dao.ProfileDataAccess;
 import com.rahim.userservice.model.EmailProperty;
@@ -38,7 +39,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     public void createNewProfile(Profile profile) {
         if (profile == null) {
             log.error("Invalid profile. Unable to save.");
-            throw new IllegalArgumentException("Invalid profile. Unable to save.");
+            throw new ValidationException("Invalid profile. Unable to save.");
         }
 
         try {
@@ -54,7 +55,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     public void updateProfile(Profile profile) {
         if (profile == null || profile.getId() == null) {
             log.error("Invalid profile or profile ID is null. Unable to save.");
-            throw new IllegalArgumentException("Invalid profile or profile ID is null. Unable to save.");
+            throw new ValidationException("Invalid profile or profile ID is null. Unable to save.");
         }
 
         try {

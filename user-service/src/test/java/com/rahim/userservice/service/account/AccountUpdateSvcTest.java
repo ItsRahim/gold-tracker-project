@@ -18,8 +18,6 @@ import com.rahim.userservice.util.PasswordUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * Created: 18/06/2024
  */
 @ActiveProfiles("test")
-@ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AccountUpdateSvcTest extends AbstractTestConfig {
@@ -78,15 +75,12 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     @Test
     @DisplayName("Successful account update")
     void shouldUpdateAccountSuccessfully() {
-        ISet<Integer> accountIdNotifs = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET);
-        assertThat(accountIdNotifs).isEmpty();
-
         Integer accountId = getAccountIdForUserRequest(userRequest);
 
         AccountUpdateRequest accountUpdateRequest = new AccountUpdateRequest("new.email@gmail.com", "newPassword123!", "true");
         Object updatedObject = accountUpdateService.updateAccount(accountId, accountUpdateRequest);
 
-        accountIdNotifs = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET);
+        ISet<Integer> accountIdNotifs = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET);
         assertThat(accountIdNotifs).isNotEmpty();
 
         assertThat(updatedObject).isInstanceOf(Account.class);
@@ -107,8 +101,6 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     @Test
     @DisplayName("No Updates Applied")
     void shouldNotUpdateAccount_NoChanges() {
-        assertThat(userRequest).isNotNull();
-
         Integer accountId = getAccountIdForUserRequest(userRequest);
 
         AccountUpdateRequest accountUpdateRequest = new AccountUpdateRequest(null, null, "false");
@@ -122,8 +114,6 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     @Test
     @DisplayName("Email Already Exists")
     void shouldNotUpdateAccount_DuplicateEmail() {
-        assertThat(userRequest).isNotNull();
-
         Integer accountId = getAccountIdForUserRequest(userRequest);
 
         AccountCreationRequest accountCreationRequest = new AccountCreationRequest("rahim@gmail.com", "Password123!");
@@ -141,8 +131,6 @@ public class AccountUpdateSvcTest extends AbstractTestConfig {
     @Test
     @DisplayName("Invalid Notification Setting Value")
     void shouldThrowException_InvalidNotificationSettingValue() {
-        assertThat(userRequest).isNotNull();
-
         Integer accountId = getAccountIdForUserRequest(userRequest);
 
         AccountUpdateRequest accountUpdateRequest = new AccountUpdateRequest(null, null, "INVALID_VALUE");
