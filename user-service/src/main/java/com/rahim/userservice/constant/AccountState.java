@@ -6,10 +6,13 @@ package com.rahim.userservice.constant;
  */
 public class AccountState {
 
-    private AccountState() {}
+    private AccountState() {
+    }
 
     public static final String ACTIVE = "ACTIVE";
+
     public static final String INACTIVE = "INACTIVE";
+
     public static final String PENDING_DELETE = "PENDING DELETE";
 
 }

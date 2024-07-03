@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
  */
 public class KafkaUtil {
 
-    private KafkaUtil() {}
+    private KafkaUtil() {
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(KafkaUtil.class);
 
@@ -34,7 +35,7 @@ public class KafkaUtil {
         return priceData.substring(underscoreIndex + 1);
     }
 
-    public static void logReceivedMessage(String message, String key, ConsumerRecord<String, String> consumerRecord, long ts) {
+    public static void logKafkaMessage(String message, String key, ConsumerRecord<String, String> consumerRecord, long ts) {
         LOG.debug("""
                         \n \n######### Message received #########
                         Received Message: {}

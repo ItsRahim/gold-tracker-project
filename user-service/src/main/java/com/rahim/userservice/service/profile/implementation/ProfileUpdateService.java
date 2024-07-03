@@ -46,6 +46,12 @@ public class ProfileUpdateService implements IProfileUpdateService {
         }
     }
 
+    /**
+     * Updates the profile with the provided updated data.
+     *
+     * @param profile     The {@link Profile} object to be updated.
+     * @param updatedData The {@link ProfileUpdateRequest} object containing the updated profile data.
+     */
     private void updateProfileData(Profile profile, ProfileUpdateRequest updatedData) {
         log.info("Entering updateProfileData method with profile: {} and updatedData: {}", profile, updatedData);
 
@@ -67,6 +73,12 @@ public class ProfileUpdateService implements IProfileUpdateService {
         }
     }
 
+    /**
+     * Updates the address of the profile with the provided new address data.
+     *
+     * @param profile The {@link Profile} object whose address needs to be updated.
+     * @param address The new {@link Address} object containing the updated address data.
+     */
     private void updateAddress(Profile profile, Address address) {
         log.info("Entering updateAddress method with current address: {} and new address: {}", profile.getAddress(), address);
 

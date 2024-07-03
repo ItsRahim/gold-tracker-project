@@ -36,9 +36,6 @@ public class InternalAccountService implements IInternalAccountService {
     private final EmailTokenGenerator emailTokenGenerator;
     private final CacheManager hazelcastCacheManager;
 
-    /**
-     * @see IInternalAccountService
-     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void runCleanupJob() {

@@ -1,5 +1,6 @@
 package com.rahim.userservice.service.repository.implementation;
 
+import com.rahim.common.exception.ValidationException;
 import com.rahim.userservice.dao.AccountDataAccess;
 import com.rahim.userservice.dao.ProfileDataAccess;
 import com.rahim.userservice.model.EmailProperty;
@@ -7,8 +8,6 @@ import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.model.kafka.AccountEmailData;
 import com.rahim.userservice.entity.Profile;
 import com.rahim.userservice.repository.ProfileRepository;
-import com.rahim.userservice.json.AccountJson;
-import com.rahim.userservice.json.ProfileJson;
 import com.rahim.userservice.service.repository.IProfileRepositoryHandler;
 import com.rahim.userservice.util.EmailTokenRowMapper;
 import com.rahim.common.exception.DatabaseException;
@@ -40,7 +39,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     public void createNewProfile(Profile profile) {
         if (profile == null) {
             log.error("Invalid profile. Unable to save.");
-            throw new IllegalArgumentException("Invalid profile. Unable to save.");
+            throw new ValidationException("Invalid profile. Unable to save.");
         }
 
         try {
@@ -56,7 +55,7 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     public void updateProfile(Profile profile) {
         if (profile == null || profile.getId() == null) {
             log.error("Invalid profile or profile ID is null. Unable to save.");
-            throw new IllegalArgumentException("Invalid profile or profile ID is null. Unable to save.");
+            throw new ValidationException("Invalid profile or profile ID is null. Unable to save.");
         }
 
         try {
@@ -97,20 +96,20 @@ public class ProfileRepositoryHandlerService implements IProfileRepositoryHandle
     public AccountEmailData generateEmailTokens(EmailProperty emailProperty) {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("SELECT ");
-        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_FIRST_NAME).append(" AS ").append(ProfileJson.PROFILE_FIRST_NAME).append(", ");
-        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_LAST_NAME).append(" AS ").append(ProfileJson.PROFILE_LAST_NAME).append(", ");
-        sqlBuilder.append("ua.").append(AccountDataAccess.COL_EMAIL).append(" AS ").append(AccountJson.ACCOUNT_EMAIL).append(", ");
+        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_FIRST_NAME).append(", ");
+        sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_LAST_NAME).append(", ");
+        sqlBuilder.append("ua.").append(AccountDataAccess.COL_EMAIL).append(", ");
 
         if (emailProperty.isIncludeUsername()) {
-            sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_USERNAME).append(" AS ").append(ProfileJson.PROFILE_USERNAME).append(", ");
+            sqlBuilder.append("up.").append(ProfileDataAccess.COL_PROFILE_USERNAME).append(", ");
         }
 
         if (emailProperty.isIncludeDate()) {
             EmailTemplate templateName = emailProperty.getTemplateName();
             if (templateName.equals(EmailTemplate.ACCOUNT_DELETION)) {
-                sqlBuilder.append("ua.").append(AccountDataAccess.COL_DELETE_DATE).append(" AS ").append(AccountJson.ACCOUNT_DELETE_DATE).append(", ");
+                sqlBuilder.append("ua.").append(AccountDataAccess.COL_DELETE_DATE).append(", ");
             } else if (templateName.equals(EmailTemplate.ACCOUNT_UPDATE)) {
-                sqlBuilder.append("ua.").append(AccountDataAccess.COL_UPDATED_AT).append(" AS ").append(AccountJson.ACCOUNT_UPDATED_AT).append(", ");
+                sqlBuilder.append("ua.").append(AccountDataAccess.COL_UPDATED_AT).append(", ");
             }
         }
 

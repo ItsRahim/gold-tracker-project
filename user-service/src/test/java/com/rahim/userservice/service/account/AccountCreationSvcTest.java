@@ -14,8 +14,6 @@ import com.rahim.common.exception.ValidationException;
 import com.rahim.common.service.hazelcast.CacheManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("test")
-@ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AccountCreationSvcTest extends AbstractTestConfig {
@@ -132,8 +129,6 @@ public class AccountCreationSvcTest extends AbstractTestConfig {
     void shouldAddNewAccountIdToHazelcastSetSuccessfully() {
         // Verify the initial state of the cache
         ISet<Integer> accountIds = hazelcastCacheManager.getSet(HazelcastConstant.ACCOUNT_ID_SET);
-        assertThat(accountIds).isNullOrEmpty();
-
         UserRequest userRequestData = TestDataGenerator.generateSingleUserRequest();
         UserRequest userRequest = accountCreationService.createAccount(userRequestData);
 

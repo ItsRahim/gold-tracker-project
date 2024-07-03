@@ -30,7 +30,7 @@ public class KafkaListenerConfig {
                        ConsumerRecord<String, String> consumerRecord,
                        Acknowledgment acknowledgment) {
 
-        KafkaUtil.logReceivedMessage(priceData, key, consumerRecord, ts);
+        KafkaUtil.logKafkaMessage(priceData, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
             log.debug("Message '{}' has already been processed. Skipping sending email notification event", priceData);

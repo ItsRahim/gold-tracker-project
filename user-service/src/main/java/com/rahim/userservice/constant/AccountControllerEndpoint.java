@@ -8,8 +8,10 @@ package com.rahim.userservice.constant;
  */
 public final class AccountControllerEndpoint {
 
-    private AccountControllerEndpoint(){}
+    private AccountControllerEndpoint() {
+    }
 
     public static final String BASE_URL = "/api/v1/account";
+
     public static final String ACCOUNT_ID = "/{accountId}";
 }

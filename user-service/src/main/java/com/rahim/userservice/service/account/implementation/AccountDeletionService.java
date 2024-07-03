@@ -43,14 +43,25 @@ public class AccountDeletionService implements IAccountDeletionService {
         accountUpdateService.updateAccountForDeletion(account, deletionDate);
         sendAccountDeletionEmail(accountId);
         log.info("Successfully updated account with id: {}", accountId);
-        
+
         return true;
     }
 
+    /**
+     * Method to check if account is in a valid state to request a deletion
+     *
+     * @param account the {@link Account} object being requested to be deleted
+     * @return {@code true} if account is eligible for deletion, otherwise {@code false}
+     */
     private boolean isAccountEligibleForDeletion(Account account) {
         return account.getAccountStatus().equals(AccountState.ACTIVE);
     }
 
+    /**
+     * Method to begin the creation of email placeholders for email service
+     *
+     * @param accountId the id of the account being deleted
+     */
     private void sendAccountDeletionEmail(int accountId) {
         EmailProperty emailProperty = EmailProperty.builder()
                 .accountId(accountId)

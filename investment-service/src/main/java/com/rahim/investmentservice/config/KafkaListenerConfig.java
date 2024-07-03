@@ -39,7 +39,7 @@ public class KafkaListenerConfig {
                                    ConsumerRecord<String, String> consumerRecord,
                                    Acknowledgment acknowledgment) {
 
-        KafkaUtil.logReceivedMessage(message, key, consumerRecord, ts);
+        KafkaUtil.logKafkaMessage(message, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
             log.debug("Message '{}' has already been processed. Skipping.", message);

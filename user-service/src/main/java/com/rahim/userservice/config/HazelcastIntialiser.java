@@ -37,6 +37,9 @@ public class HazelcastIntialiser {
         initialiseAccountIds();
     }
 
+    /**
+     * Method to initialise Hazelcast Map with all account IDs that have notifications enabled on the database
+     */
     private void initialiseActiveNotification() {
         boolean isInitialised = initialiserMap.getOrDefault(ACTIVE_NOTIFICATION_ID_INITIALISED, false);
         if (isInitialised) {
@@ -66,6 +69,9 @@ public class HazelcastIntialiser {
         log.debug("Active notification initialisation complete.");
     }
 
+    /**
+     * Method to initialise Hazelcast Map with all account IDs on the database
+     */
     private void initialiseAccountIds() {
         boolean isInitialised = initialiserMap.getOrDefault(ACCOUNT_ID_INITIALISED, false);
         if (isInitialised) {
