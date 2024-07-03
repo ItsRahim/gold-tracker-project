@@ -72,6 +72,12 @@ public class AccountUpdateService implements IAccountUpdateService {
         emailTokenGenerator.generateEmailTokens(emailProperty);
     }
 
+    /**
+     * Updates the account based on values present in update request
+     *
+     * @param account       The account object being updated
+     * @param updateRequest A {@link AccountUpdateRequest} object containing update information for the account
+     */
     private void updateFields(Account account, AccountUpdateRequest updateRequest) {
         String email = updateRequest.getEmail();
         String password = updateRequest.getPassword();
@@ -104,7 +110,6 @@ public class AccountUpdateService implements IAccountUpdateService {
     private void updateNotification(Account account, String value) {
         try {
             Boolean newNotificationSetting = parseNotificationSetting(value);
-
             if (account.getNotificationSetting() == newNotificationSetting) {
                 log.debug("Invalid value passed or no change in notificationSetting. Not updating for account with ID {}", account.getId());
                 return;
@@ -126,6 +131,12 @@ public class AccountUpdateService implements IAccountUpdateService {
         }
     }
 
+    /**
+     * Adds or removed account id from Hazelcast set depending on the notificationEnabled field value
+     *
+     * @param id                  The account id
+     * @param notificationEnabled A boolean indicating if notifications are enabled or not
+     */
     private void updateNotificationSet(Integer id, boolean notificationEnabled) {
         if (notificationEnabled) {
             hazelcastCacheManager.addToSet(HazelcastConstant.ACCOUNT_ID_NOTIFICATION_SET, id);
