@@ -68,6 +68,13 @@ public class AccountCreationService implements IAccountCreationService {
         }
     }
 
+    /**
+     * Creates an account object with an encrypted password from the provided account creation request.
+     *
+     * @param accountRequest The request containing account details such as email and password.
+     * @return The created {@link Account} object with the encrypted password.
+     * @throws ValidationException if the password is empty.
+     */
     private Account createAccountFromRequest(AccountCreationRequest accountRequest) {
         String clearPassword = accountRequest.getPassword();
         if (clearPassword == null || clearPassword.isEmpty()) {
@@ -79,6 +86,13 @@ public class AccountCreationService implements IAccountCreationService {
         return new Account(accountRequest.getEmail(), encryptedPassword);
     }
 
+    /**
+     * Creates a profile object from the provided profile creation request and account object.
+     *
+     * @param account        The {@link Account} object created in the createAccountFromRequest method.
+     * @param profileRequest The request containing profile details such as username, first name, last name, contact number, and address.
+     * @return The created {@link Profile} object with the provided details.
+     */
     private Profile createProfileFromRequest(Account account, ProfileCreationRequest profileRequest) {
         return new Profile(account, profileRequest.getUsername(), profileRequest.getFirstName(),
                 profileRequest.getLastName(), profileRequest.getContactNumber(), profileRequest.getAddress());
@@ -89,6 +103,13 @@ public class AccountCreationService implements IAccountCreationService {
         log.debug("Added new account id to hazelcast set");
     }
 
+    /**
+     * Validates if the {@link Account} and {@link Profile} objects created from the user request are valid.
+     *
+     * @param account The {@link Account} object to be validated.
+     * @param profile The {@link Profile} object to be validated.
+     * @throws ValidationException if either the account or profile is null, or if any required fields in these objects are invalid.
+     */
     private void validateInput(Account account, Profile profile) {
         if (account == null || profile == null) {
             log.warn("Account or profile is null");

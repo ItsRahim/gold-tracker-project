@@ -8,9 +8,12 @@ package com.rahim.userservice.constant;
  */
 public final class ProfileControllerEndpoint {
 
-    private ProfileControllerEndpoint() {}
+    private ProfileControllerEndpoint() {
+    }
 
     public static final String BASE_URL = "/api/v1/profile";
-    public static final String PROFILE_ID= "/{profileId}";
+
+    public static final String PROFILE_ID = "/{profileId}";
+
     public static final String USERNAME = "/{username}";
 }

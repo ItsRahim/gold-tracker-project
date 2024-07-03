@@ -44,6 +44,7 @@ public class ProfileController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllProfiles() {
+        log.info("Received request to retrieve all profiles");
         List<Profile> profiles = profileRepositoryHandler.getAllProfiles();
         return ResponseEntity.status(HttpStatus.OK).body(profiles);
     }
@@ -57,6 +58,7 @@ public class ProfileController {
     public ResponseEntity<Profile> updateUserProfile(
             @Parameter(description = "ID of the profile to be updated", required = true) @PathVariable int profileId,
             @Parameter(description = "Map of updated profile data", required = true) @RequestBody ProfileUpdateRequest updatedData) {
+        log.info("Received request to update profile");
         Profile profile = profileUpdateService.updateProfile(profileId, updatedData);
         return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
@@ -70,6 +72,7 @@ public class ProfileController {
     })
     @GetMapping(value = USERNAME, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findProfileByUsername(@Parameter(description = "Username of the profile to be found", required = true) @PathVariable String username) {
+        log.info("Received request to find profile by username");
         Profile profile = profileRepositoryHandler.getProfileByUsername(username);
         return ResponseEntity.status(HttpStatus.OK).body(profile);
     }

@@ -49,7 +49,8 @@ public class AccountController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))
     })
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserRequest> createAccounts(@Parameter(description = "User account details", required = true) @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserRequest> createAccount(@Parameter(description = "User account details", required = true) @RequestBody UserRequest userRequest) {
+        log.info("Received request to create a new user account");
         UserRequest account = accountCreationService.createAccount(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(account);
     }
@@ -62,6 +63,7 @@ public class AccountController {
     })
     @GetMapping(value = ACCOUNT_ID, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> findAccountById(@Parameter(description = "ID of the account to fetch", required = true) @PathVariable int accountId) {
+        log.info("Received request to fetch account by account id");
         Account account = accountRepositoryHandler.findById(accountId);
         return ResponseEntity.status(HttpStatus.OK).body(account);
     }
@@ -75,6 +77,7 @@ public class AccountController {
     public ResponseEntity<Object> updateAccount(
             @Parameter(description = "ID of the account to be updated", required = true) @PathVariable int accountId,
             @Parameter(description = "Map of updated account data", required = true) @RequestBody AccountUpdateRequest updatedData) {
+        log.info("Received request to update an existing account");
         Object response = accountUpdateService.updateAccount(accountId, updatedData);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -86,6 +89,7 @@ public class AccountController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllAccounts() {
+        log.info("Received request to get all accounts");
         List<Account> accounts = accountRepositoryHandler.getAllAccounts();
         return ResponseEntity.status(HttpStatus.OK).body(accounts);
     }
@@ -98,8 +102,9 @@ public class AccountController {
     })
     @DeleteMapping(value = ACCOUNT_ID, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> deleteAccount(@Parameter(description = "ID of the account to be deleted", required = true) @PathVariable int accountId) {
-        boolean deletedRequested = accountDeletionService.requestAccountDelete(accountId);
+        log.info("Received request to delete an account");
 
+        boolean deletedRequested = accountDeletionService.requestAccountDelete(accountId);
         if (deletedRequested) {
             return ResponseEntity.status(HttpStatus.OK).body("Successfully requested deletion of account with ID: " + accountId);
         } else {

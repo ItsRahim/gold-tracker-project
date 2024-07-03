@@ -1,10 +1,10 @@
 package com.rahim.userservice.util;
 
+import com.rahim.userservice.dao.AccountDataAccess;
+import com.rahim.userservice.dao.ProfileDataAccess;
 import com.rahim.userservice.model.EmailProperty;
 import com.rahim.common.constant.EmailTemplate;
 import com.rahim.common.model.kafka.AccountEmailData;
-import com.rahim.userservice.json.AccountJson;
-import com.rahim.userservice.json.ProfileJson;
 import com.rahim.common.util.DateTimeUtil;
 import lombok.Setter;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,12 +27,12 @@ public class EmailTokenRowMapper implements RowMapper<AccountEmailData> {
         AccountEmailData accountEmailData = new AccountEmailData();
         try {
             if (emailProperty.isIncludeUsername()) {
-                accountEmailData.setUsername(rs.getString(ProfileJson.PROFILE_USERNAME));
+                accountEmailData.setUsername(rs.getString(ProfileDataAccess.COL_PROFILE_USERNAME));
             }
 
-            accountEmailData.setFirstName(rs.getString(ProfileJson.PROFILE_FIRST_NAME));
-            accountEmailData.setLastName(rs.getString(ProfileJson.PROFILE_LAST_NAME));
-            accountEmailData.setEmail(rs.getString(AccountJson.ACCOUNT_EMAIL));
+            accountEmailData.setFirstName(rs.getString(ProfileDataAccess.COL_PROFILE_FIRST_NAME));
+            accountEmailData.setLastName(rs.getString(ProfileDataAccess.COL_PROFILE_LAST_NAME));
+            accountEmailData.setEmail(rs.getString(AccountDataAccess.COL_EMAIL));
             accountEmailData.setEmailTemplate(emailProperty.getTemplateName());
 
             if (emailProperty.isIncludeDate()) {
@@ -66,7 +66,7 @@ public class EmailTokenRowMapper implements RowMapper<AccountEmailData> {
 
     private void setDeleteDate(ResultSet rs, AccountEmailData accountEmailData) throws SQLException {
         try {
-            LocalDate deleteDate = rs.getDate(AccountJson.ACCOUNT_DELETE_DATE).toLocalDate();
+            LocalDate deleteDate = rs.getDate(AccountDataAccess.COL_DELETE_DATE).toLocalDate();
             String formattedDate = DateTimeUtil.getFormattedDate(deleteDate);
             accountEmailData.setDeleteDate(formattedDate);
         } catch (SQLException e) {
