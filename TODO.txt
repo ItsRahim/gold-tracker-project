@@ -72,6 +72,7 @@ Issues/Enhancements:
 -May not need config map for config-server everything can be changed in yml, no need to secret encryption key for python
 -Prod and Cloud configs will be similar, except cloud one is for testing - will not include ssl configs but will include env variable etc
 -Create parent pom, move all dependencies there, update all dependency and java version and add owasp for
+-Make changes to dev yamls so that they can be ran from docker or IDE
 Performance Testing:
 - VisualVM
 - Apache JMeter
