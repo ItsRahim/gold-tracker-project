@@ -6,7 +6,8 @@ package com.rahim.common.constant;
  */
 public class HazelcastConstant {
 
-    private HazelcastConstant() {}
+    private HazelcastConstant() {
+    }
 
     /*Set containing account ids with notifications enabled*/
     public static final String ACCOUNT_ID_NOTIFICATION_SET = "account-id-notification";

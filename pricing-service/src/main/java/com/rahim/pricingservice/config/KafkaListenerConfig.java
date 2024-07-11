@@ -17,6 +17,9 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 
+import static com.rahim.common.util.KafkaUtil.extractPriceData;
+import static com.rahim.common.util.KafkaUtil.logKafkaMessage;
+
 /**
  * @author Rahim Ahmed
  * @created 01/12/2023
@@ -38,7 +41,7 @@ public class KafkaListenerConfig {
                             ConsumerRecord<String, String> consumerRecord,
                             Acknowledgment acknowledgment) {
 
-        KafkaUtil.logKafkaMessage(message, key, consumerRecord, ts);
+        logKafkaMessage(message, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
             log.debug("Message '{}' has already been processed. Skipping update price job.", message);
@@ -58,7 +61,7 @@ public class KafkaListenerConfig {
             return;
         }
 
-        String data = KafkaUtil.extractPriceData(priceData);
+        String data = extractPriceData(priceData);
 
         if (data == null) {
             log.error("Data format incorrect/null. Unable to process price data");
@@ -76,7 +79,7 @@ public class KafkaListenerConfig {
                             ConsumerRecord<String, String> consumerRecord,
                             Acknowledgment acknowledgment) {
 
-        KafkaUtil.logKafkaMessage(message, key, consumerRecord, ts);
+        logKafkaMessage(message, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
             log.debug("Message '{}' has already been processed. Skipping update price history job.", message);

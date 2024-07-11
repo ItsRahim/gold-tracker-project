@@ -13,7 +13,7 @@ public class KafkaUtil {
     private KafkaUtil() {
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaUtil.class);
 
     public static String extractDataFromKey(String message) {
         String[] parts = message.split(",", 2);
@@ -36,7 +36,7 @@ public class KafkaUtil {
     }
 
     public static void logKafkaMessage(String message, String key, ConsumerRecord<String, String> consumerRecord, long ts) {
-        LOG.debug("""
+        log.debug("""
                         \n \n######### Message received #########
                         Received Message: {}
                         Received Key: {}

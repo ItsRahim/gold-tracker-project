@@ -30,7 +30,7 @@ import java.util.concurrent.TimeoutException;
 @RequiredArgsConstructor
 public class KafkaMonitor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaMonitor.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaMonitor.class);
     private final IKafkaService kafkaService;
     private final JdbcTemplate jdbcTemplate;
 
@@ -43,7 +43,7 @@ public class KafkaMonitor {
     public void sendHeartBeat() {
         boolean isKafkaHealthy = checkKafkaHealth();
         if (isKafkaHealthy != previousKafkaHealth) {
-            LOG.debug("Change in Hazelcast cluster status...");
+            log.debug("Change in Hazelcast cluster status...");
 
             if (!isKafkaHealthy) {
                 handleUnhealthyKafka();
@@ -67,13 +67,13 @@ public class KafkaMonitor {
     }
 
     private void handleHealthyKafka() {
-        LOG.info("Healthy Kafka detected. Reattempting to send failed messages");
+        log.info("Healthy Kafka detected. Reattempting to send failed messages");
         HealthStatus.setKafkaHealthy(true);
         retryFailedMessages();
     }
 
     private void handleUnhealthyKafka() {
-        LOG.info("Unhealthy Kafka detected. Defaulting to local cluster instance");
+        log.info("Unhealthy Kafka detected. Defaulting to local cluster instance");
         HealthStatus.setKafkaHealthy(false);
     }
 
@@ -102,7 +102,7 @@ public class KafkaMonitor {
             }
 
         } catch (Exception e) {
-            LOG.error("Failed to retry failed messages: {}", e.getMessage(), e);
+            log.error("Failed to retry failed messages: {}", e.getMessage(), e);
         }
     }
 
@@ -114,9 +114,9 @@ public class KafkaMonitor {
                     + KafkaDataAccess.COL_ID + " = ?";
 
             jdbcTemplate.update(deleteQuery, messageId);
-            LOG.debug("Successfully deleted message with ID {} from the table.", messageId);
+            log.debug("Successfully deleted message with ID {} from the table.", messageId);
         } catch (Exception e) {
-            LOG.error("Failed to delete message with ID {} from the table: {}", messageId, e.getMessage(), e);
+            log.error("Failed to delete message with ID {} from the table: {}", messageId, e.getMessage(), e);
             throw new DatabaseException("Failed to delete unsent Kafka message from table");
         }
     }

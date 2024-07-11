@@ -15,6 +15,9 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 
+import static com.rahim.common.util.KafkaUtil.extractDataFromKey;
+import static com.rahim.common.util.KafkaUtil.logKafkaMessage;
+
 @Configuration
 @RequiredArgsConstructor
 public class KafkaListenerConfig {
@@ -30,7 +33,7 @@ public class KafkaListenerConfig {
                        ConsumerRecord<String, String> consumerRecord,
                        Acknowledgment acknowledgment) {
 
-        KafkaUtil.logKafkaMessage(priceData, key, consumerRecord, ts);
+        logKafkaMessage(priceData, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
             log.debug("Message '{}' has already been processed. Skipping sending email notification event", priceData);
@@ -38,7 +41,7 @@ public class KafkaListenerConfig {
             return;
         }
 
-        String kafkaData = KafkaUtil.extractDataFromKey(priceData);
+        String kafkaData = extractDataFromKey(priceData);
         kafkaDataProcessor.processKafkaData(kafkaData);
         messageManager.markAsProcessed(key);
         acknowledgment.acknowledge();

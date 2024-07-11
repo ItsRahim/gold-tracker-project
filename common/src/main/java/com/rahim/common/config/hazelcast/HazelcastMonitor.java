@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @EnableScheduling
 public class HazelcastMonitor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HazelcastMonitor.class);
+    private static final Logger log = LoggerFactory.getLogger(HazelcastMonitor.class);
     private final HazelcastInstance hazelcastInstance;
 
     private static final long INITIAL_DELAY = 60000;
@@ -28,7 +28,7 @@ public class HazelcastMonitor {
     public void sendHeartbeat() {
         boolean isClusterHealthy = checkClusterHealth();
         if (isClusterHealthy != previousClusterHealth) {
-            LOG.debug("Change in Hazelcast cluster status...");
+            log.debug("Change in Hazelcast cluster status...");
 
             if (!isClusterHealthy) {
                 handleUnhealthyCluster();
@@ -41,12 +41,12 @@ public class HazelcastMonitor {
     }
 
     private void handleUnhealthyCluster() {
-        LOG.info("Unhealthy Hazelcast cluster detected. Using fallback cluster");
+        log.info("Unhealthy Hazelcast cluster detected. Using fallback cluster");
         HealthStatus.setHzHealthy(false);
     }
 
     private void handleHealthyCluster() {
-        LOG.info("Healthy Hazelcast cluster detected");
+        log.info("Healthy Hazelcast cluster detected");
         HealthStatus.setHzHealthy(true);
     }
 

@@ -6,7 +6,8 @@ package com.rahim.common.constant;
  */
 public class KafkaTopic {
 
-    private KafkaTopic() {}
+    private KafkaTopic() {
+    }
 
     /*Data required to fill email template placeholders are sent to this topic consumed by email-service*/
     public static final String SEND_ACCOUNT_ALERT = "email-account-alert";

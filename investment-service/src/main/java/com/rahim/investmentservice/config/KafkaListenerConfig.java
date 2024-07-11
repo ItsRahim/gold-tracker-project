@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 import static com.rahim.common.util.JsonUtil.convertJsonToObject;
+import static com.rahim.common.util.KafkaUtil.logKafkaMessage;
 
 /**
  * @author Rahim Ahmed
@@ -39,7 +40,7 @@ public class KafkaListenerConfig {
                                    ConsumerRecord<String, String> consumerRecord,
                                    Acknowledgment acknowledgment) {
 
-        KafkaUtil.logKafkaMessage(message, key, consumerRecord, ts);
+        logKafkaMessage(message, key, consumerRecord, ts);
 
         if (messageManager.isProcessed(key)) {
             log.debug("Message '{}' has already been processed. Skipping.", message);

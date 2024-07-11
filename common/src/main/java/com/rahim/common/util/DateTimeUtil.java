@@ -16,8 +16,8 @@ import java.time.temporal.ChronoUnit;
  */
 public class DateTimeUtil {
 
-    // Prevent instantiation
-    private DateTimeUtil() {}
+    private DateTimeUtil() {
+    }
 
     private static final DateTimeFormatter INSTANT_FORMATTER = DateTimeFormatter
             .ofPattern("yyyy-MM-dd HH:mm:ss")

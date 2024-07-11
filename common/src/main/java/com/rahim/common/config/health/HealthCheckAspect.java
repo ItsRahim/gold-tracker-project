@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 @RequiredArgsConstructor
 public class HealthCheckAspect {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HealthCheckAspect.class);
+    private static final Logger log = LoggerFactory.getLogger(HealthCheckAspect.class);
     private final HazelcastFailover hazelcastFailover;
     private final KafkaFailover kafkaFailover;
 
@@ -55,7 +55,7 @@ public class HealthCheckAspect {
                 return joinPoint.proceed();
             }
         } catch (Throwable e) {
-            LOG.error("An error has occurred attempting to process HealthCheck annotation", e);
+            log.error("An error has occurred attempting to process HealthCheck annotation", e);
             throw new RuntimeException(e);
         }
     }
@@ -65,7 +65,7 @@ public class HealthCheckAspect {
         String operationType = getOperationType(methodName);
 
         if (operationType == null) {
-            LOG.error("Unsupported method: {}", methodName);
+            log.error("Unsupported method: {}", methodName);
             return null;
         }
 
@@ -73,7 +73,7 @@ public class HealthCheckAspect {
             case "set" -> handleSetOperations(methodName, args, returnType);
             case "map" -> handleMapOperations(methodName, args, returnType);
             default -> {
-                LOG.error("Unsupported operation type: {}", operationType);
+                log.error("Unsupported operation type: {}", operationType);
                 yield null;
             }
         };
@@ -89,7 +89,7 @@ public class HealthCheckAspect {
 
     private Object handleSetOperations(String methodName, Object[] args, Class<?> returnType) {
         if (args.length < 1 || !(args[0] instanceof String setName)) {
-            LOG.error("Invalid parameters for {} set fallback methods", methodName);
+            log.error("Invalid parameters for {} set fallback methods", methodName);
             return null;
         }
 
@@ -99,7 +99,7 @@ public class HealthCheckAspect {
             case "getSet" -> executeFallback(() -> hazelcastFailover.getSet(setName), returnType);
             case "addToSet" -> executeFallback(() -> {
                 if (value == null) {
-                    LOG.error("Value cannot be null for addToSet fallback method");
+                    log.error("Value cannot be null for addToSet fallback method");
                     return null;
                 }
                 hazelcastFailover.addToSet(setName, value);
@@ -107,7 +107,7 @@ public class HealthCheckAspect {
             }, returnType);
             case "removeFromSet" -> executeFallback(() -> {
                 if (value == null) {
-                    LOG.error("Invalid parameters for removeFromSet fallback method");
+                    log.error("Invalid parameters for removeFromSet fallback method");
                     return null;
                 }
                 hazelcastFailover.removeFromSet(setName, value);
@@ -123,7 +123,7 @@ public class HealthCheckAspect {
 
     private Object handleMapOperations(String methodName, Object[] args, Class<?> returnType) {
         if (args.length < 1 || !(args[0] instanceof String mapName)) {
-            LOG.error("Invalid parameters for {} map fallback methods", methodName);
+            log.error("Invalid parameters for {} map fallback methods", methodName);
             return null;
         }
 
@@ -142,7 +142,7 @@ public class HealthCheckAspect {
             case "getMap" -> executeFallback(() -> hazelcastFailover.getMap(mapName), returnType);
             case "addToMap" -> executeFallback(() -> {
                 if (key == null || value == null) {
-                    LOG.error("Key or value cannot be null for addToMap fallback method");
+                    log.error("Key or value cannot be null for addToMap fallback method");
                     return null;
                 }
                 hazelcastFailover.addToMap(mapName, key, value);
@@ -150,7 +150,7 @@ public class HealthCheckAspect {
             }, returnType);
             case "removeFromMap" -> executeFallback(() -> {
                 if (key == null) {
-                    LOG.error("Invalid parameters for removeFromMap fallback method");
+                    log.error("Invalid parameters for removeFromMap fallback method");
                     return null;
                 }
                 hazelcastFailover.removeFromMap(mapName, key);
@@ -168,7 +168,7 @@ public class HealthCheckAspect {
         try {
             return operation.execute();
         } catch (Exception e) {
-            LOG.error("Error during health check: {}", e.getMessage());
+            log.error("Error during health check: {}", e.getMessage());
             return getDefaultValueForReturnType(returnType);
         }
     }
@@ -191,7 +191,7 @@ public class HealthCheckAspect {
     private Object handleKafkaFallback(Object[] args, Class<?> returnType) {
         String topic = (String) args[0];
         String data = (String) args[1];
-        LOG.debug("Fallback triggered for Kafka send operation. Topic: {}", topic);
+        log.debug("Fallback triggered for Kafka send operation. Topic: {}", topic);
 
         kafkaFailover.persistToDb(topic, data);
         return getDefaultValueForReturnType(returnType);
