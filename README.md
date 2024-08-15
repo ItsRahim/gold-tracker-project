@@ -37,7 +37,7 @@ Send email notifications for price alerts when specific conditions are met.
 
 ### Python Api:
 - Implements a FastAPI-based API to retrieve the latest gold price and allow requests from Spring
-- Datasources configurable via database changes for flexible data retrieval
+- Data sources configurable via database changes for flexible data retrieval
 - Utilises encryption/decryption capabilities using Vault for secure data handling
 
 ### Reporting Service (TBD):
