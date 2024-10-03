@@ -274,3 +274,4 @@ pyrightconfig.json
 /vault/*
 /extra-code/*
 /certs/*
+/.idea/
