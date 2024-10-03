@@ -114,7 +114,7 @@ services:
       - DEPLOYMENT_TYPE=dev
       - ENCRYPTION_KEY=letMeIn
       - DB_NAME=gold
-      - DB_HOST=localhost
+      - DB_HOST=postgres
       - DB_PORT=5432
       - DB_USERNAME=fq0aKhPeiuYiiqg2uKUbaKOKsVyMXWCfYFqJe9RWLpg=
       - DB_PASSWORD=f1YNWc7EGk5KfHoRxs89H3cAypTJWiadhRFeT2wkD24=
