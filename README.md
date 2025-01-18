@@ -66,3 +66,6 @@ Send email notifications for price alerts when specific conditions are met.
 - Hashicorp Vault
 - Kafka
 - MiniKube
+
+
+18 Jan 2025 - No Longer Updating
