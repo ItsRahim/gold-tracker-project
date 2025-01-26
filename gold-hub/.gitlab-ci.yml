@@ -1,0 +1,39 @@
+stages:
+  - build
+  - test
+
+variables:
+  GO_VERSION: "1.23.5"
+  GO_DOWNLOAD_URL: "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+
+before_script:
+  - echo "Downloading Go ${GO_VERSION}..."
+  - curl -sSL ${GO_DOWNLOAD_URL} -o go.tar.gz
+  - tar -C /usr/local -xzf go.tar.gz
+  - export PATH="/usr/local/go/bin:$PATH"
+  - go version
+  - go env
+
+build:
+  stage: build
+  script:
+    - go mod tidy
+    - go build -v ./...
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_COMMIT_BRANCH == "main"
+
+test:
+  stage: test
+  script:
+    - go test -v ./...
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_COMMIT_BRANCH == "main"
+
+cache:
+  paths:
+    - vendor/
+    - .cache/go-build
+    - $GOPATH/pkg/mod
+  key: ${CI_COMMIT_REF_SLUG}
